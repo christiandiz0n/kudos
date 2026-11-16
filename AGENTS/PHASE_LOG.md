@@ -84,7 +84,8 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 5. **Phone tests:** web :3100 + fresh quick tunnel up for the human (HUMAN_INPUT #4).
 ### Delegated
 - CONTRACTS (session 2): v3 submitter change ✅ option (a) `msg.sender == auth.submitter` (D-519). Orchestrator re-ran: Vouch runtime **23,998 B (578 B margin)**; `forge test` 179 pass / 2 fail (QE-owned v2 pins in QeV2Reattack, expected) / 2 skipped.
-- CONTRACTS_QE (session 2): independent v3 review + re-pin of QE-owned v2 tests (running).
+- CONTRACTS_QE (session 2): independent v3 review **PASS-with-findings** (QE-C-10 order not bound to a submitter → relayer treats OrderAlreadySettled as terminal; QE-C-11 self-submit fee pre-check + stale wording; both Info). Mutation check: v2 rule / option (b) / deleted check all caught. Orchestrator re-ran: `forge test` **197 pass / 0 fail / 2 skipped**. Committed 5caef11 (not deployed).
+- CONTRACTS (session 2): v3 redeploy authorized by the Orchestrator (running).
 - STREAMS_INFRA (session 2): Railway prep ✅ (D-305): Dockerfile (prod-only filtered install), `.dockerignore` (.env* excluded), `railway.json`, `PORT`, `stream_deliveries` table (verified rows only; 500 persist-failed → QuickNode retries), `streams:deliveries --db`, `docs/deploy/RAILWAY.md`, runbook §P. Orchestrator re-ran: typecheck clean; tests shared 10, scripts 13, api 19, 0 fail. Live check = the Railway deploy smoke (health 200 db=postgres, unsigned POST 503/401).
 ### QE results / gate
 _pending_
