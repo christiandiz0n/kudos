@@ -52,9 +52,9 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 ### Delegated tasks
 | Task | Agent | Status |
 |---|---|---|
-| Vouch contract → testnet | CONTRACTS | 🟢 running |
-| Design system | UI_DESIGN | 🟢 running |
-| Adversarial review | CONTRACTS_QE | ⏳ after CONTRACTS |
+| Vouch contract → testnet | CONTRACTS | ✅ 85 tests; deployed + verified `0xfEe6…b2d3` @ 72580272; canonical smoke exact on chain (Orchestrator re-verified on Blockscout) |
+| Design system | UI_DESIGN | ✅ Orchestrator sign-off; human approval pending (MSG-007) |
+| Adversarial review | CONTRACTS_QE | 🟢 running |
 ### Human requirements recorded in advance
 - CONTRACTS_QE must explicitly test that USDC `receiveWithAuthorization` is called by the payee contract (see CONTRACTS_QE.md Next up, D-103).
 - L2 introducer rule approved (D-008): top-weight L1 referrer of the first purchase, frozen per (customer, venue).

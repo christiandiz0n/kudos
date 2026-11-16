@@ -1,0 +1,45 @@
+Ran 1 test for test/qe/QeForkPayee.t.sol:QeForkPayeeTest
+Suite result: ok. 0 passed; 0 failed; 1 skipped; finished in 8.27ms (0.00ns CPU time)
+Ran 1 test for test/qe/QeEdges.t.sol:QeReentrancyHookTest
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 17.40ms (8.12ms CPU time)
+Ran 12 tests for test/qe/QeEdges.t.sol:QeEdgesTest
+[FAIL: venue share stuck in Vouch forever: 6000000 != 0] test_BUG_payoutCanBeTheVouchContract_fundsStuckForever() (gas: 455663)
+Suite result: FAILED. 11 passed; 1 failed; 0 skipped; finished in 31.55ms (22.19ms CPU time)
+Ran 9 tests for test/qe/QeIntrosTerms.t.sol:QeIntrosTermsTest
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 33.91ms (24.56ms CPU time)
+Ran 11 tests for test/spikes/Hello.t.sol:HelloTest
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 195.96ms (186.64ms CPU time)
+Ran 13 tests for test/qe/QePayeeAuth.t.sol:QePayeeAuthTest
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 539.02ms (529.68ms CPU time)
+Ran 13 tests for test/qe/QeReplaySignatures.t.sol:QeReplaySignaturesTest
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 178.06ms (177.11ms CPU time)
+Ran 1 test for test/VouchFork.t.sol:VouchForkTest
+Suite result: ok. 0 passed; 0 failed; 1 skipped; finished in 344.00µs (0.00ns CPU time)
+Ran 4 tests for test/qe/QeGasStarvation.t.sol:QeGasStarvationTest
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 2.15s (3.97s CPU time)
+Ran 2 tests for test/VouchTypehash.t.sol:VouchTypehashTest
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 351.25µs (251.54µs CPU time)
+Ran 4 tests for test/VouchSplit.t.sol:VouchSplitTest
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 127.53ms (127.48ms CPU time)
+Ran 64 tests for test/Vouch.t.sol:VouchTest
+Suite result: ok. 64 passed; 0 failed; 0 skipped; finished in 281.85ms (279.33ms CPU time)
+Ran 5 tests for test/qe/QeGasStarvation.t.sol:QeGasStarvationNestedTest
+Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 4.82s (7.36s CPU time)
+Ran 4 tests for test/qe/QeWeights.t.sol:QeWeightsTest
+[FAIL: front-runner rewrote the committed attributor split/introducer: 0x4b6098a4ECd3919d9dE8D87F86B854AAC3Ed3a34 != 0x3587E4BE1D0C0800772CEEC64A788a4bE2B5fc5C] test_BUG_frontRunWithGarbageAttributorSigForcesFallback() (gas: 2683015)
+[FAIL: front-runner rewrote the committed attributor split/introducer: 0x4b6098a4ECd3919d9dE8D87F86B854AAC3Ed3a34 != 0x3587E4BE1D0C0800772CEEC64A788a4bE2B5fc5C] test_BUG_frontRunWithSwappedWeightsForcesFallback() (gas: 2650631)
+Suite result: FAILED. 2 passed; 2 failed; 0 skipped; finished in 4.20s (4.23s CPU time)
+Ran 3 tests for test/VouchFuzz.t.sol:VouchFuzzTest
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 3.72s (6.24s CPU time)
+Ran 1 test for test/VouchInvariant.t.sol:VouchInvariantTest
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 9.06s (9.05s CPU time)
+Ran 3 tests for test/qe/QeEvents.t.sol:QeEventsTest
+[FAIL: customersCredited cannot be rebuilt from events: 0 != 1] test_BUG_ambassadorCreditNotRecoverableFromEvents() (gas: 1361071)
+Suite result: FAILED. 2 passed; 1 failed; 0 skipped; finished in 11.21s (11.21s CPU time)
+Ran 1 test for test/qe/QeInvariant.t.sol:QeLedgerInvariantTest
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 15.79s (15.78s CPU time)
+Ran 18 test suites in 15.82s (52.37s CPU time): 146 tests passed, 4 failed, 2 skipped (152 total tests)
+[FAIL: venue share stuck in Vouch forever: 6000000 != 0] test_BUG_payoutCanBeTheVouchContract_fundsStuckForever() (gas: 455663)
+[FAIL: customersCredited cannot be rebuilt from events: 0 != 1] test_BUG_ambassadorCreditNotRecoverableFromEvents() (gas: 1361071)
+[FAIL: front-runner rewrote the committed attributor split/introducer: 0x4b6098a4ECd3919d9dE8D87F86B854AAC3Ed3a34 != 0x3587E4BE1D0C0800772CEEC64A788a4bE2B5fc5C] test_BUG_frontRunWithGarbageAttributorSigForcesFallback() (gas: 2683015)
+[FAIL: front-runner rewrote the committed attributor split/introducer: 0x4b6098a4ECd3919d9dE8D87F86B854AAC3Ed3a34 != 0x3587E4BE1D0C0800772CEEC64A788a4bE2B5fc5C] test_BUG_frontRunWithSwappedWeightsForcesFallback() (gas: 2650631)

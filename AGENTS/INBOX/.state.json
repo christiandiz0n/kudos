@@ -1,5 +1,5 @@
 {
- "counter": 13,
+ "counter": 23,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -29,9 +29,10 @@
    "from": "ORCHESTRATOR",
    "to": "CONTRACTS_QE",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Human requirement: prove receiveWithAuthorization is called by the payee contract",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-022"
   },
   "MSG-004": {
    "id": "MSG-004",
@@ -131,9 +132,110 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list",
+   "re": null,
+   "resolution": "see MSG-023"
+  },
+  "MSG-014": {
+   "id": "MSG-014",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "blocker",
+   "status": "open",
+   "subject": "QE-C-01 Anyone can front-run pay() to force the fallback split and rewrite the frozen introducer",
    "re": null
+  },
+  "MSG-015": {
+   "id": "MSG-015",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "blocker",
+   "status": "open",
+   "subject": "QE-C-02 Venue payout can be the Vouch contract itself: venue share stuck forever (invariant 1)",
+   "re": null
+  },
+  "MSG-016": {
+   "id": "MSG-016",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-03 Ambassador customersCredited/venues are not rebuildable from events (zero-amount L1)",
+   "re": null
+  },
+  "MSG-017": {
+   "id": "MSG-017",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-04 Stale relayed owner signature overrides a newer direct owner action (no nonce cancel path)",
+   "re": null
+  },
+  "MSG-018": {
+   "id": "MSG-018",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-05 Referrer can back-date issuedAt to pick a superseded, better terms version (D-505 text says it can't)",
+   "re": null
+  },
+  "MSG-019": {
+   "id": "MSG-019",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-06 Mempool griefing of intros: personal-intro sniping and submitter-chosen eviction victim",
+   "re": null
+  },
+  "MSG-020": {
+   "id": "MSG-020",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-07 _tryTransfer 63/64 guard has false negatives with nested-call tokens (Arc USDC -> precompile); safe today only by margin",
+   "re": null
+  },
+  "MSG-021": {
+   "id": "MSG-021",
+   "ts": "2026-11-16T13:02:27-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-08 Info bundle: sybil self-referral, customer-unbound orders, gas-burning ERC-1271 attributor",
+   "re": null
+  },
+  "MSG-022": {
+   "id": "MSG-022",
+   "ts": "2026-11-16T13:03:59-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Human requirement: prove receiveWithAuthorization is called by the payee contract",
+   "re": "MSG-003"
+  },
+  "MSG-023": {
+   "id": "MSG-023",
+   "ts": "2026-11-16T13:03:59-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list",
+   "re": "MSG-013"
   }
  }
 }

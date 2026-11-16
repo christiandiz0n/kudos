@@ -328,3 +328,20 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Date:** 2026-11-16
 - **Decision:** On a Foundry fork, Arc USDC (`NativeFiatTokenV2_2`) runs for real (payee check, EIP-712 signature, authorization nonces), but its balance move calls the Arc precompile `0x1800…0000` `transfer(from, to, value18)`, which revm lacks. `VouchForkTest` etches a shim there that moves the native balance with `vm.deal`. The fork tests are opt-in: `VOUCH_FORK=true` or `bash scripts/deploy/fork-test.sh`.
 - **Who:** CONTRACTS
+
+## D-701 — QE test conventions for contracts (test_BUG_ fail by design; LIMIT/INFO pass)
+- **Date:** 2026-11-16
+- **Decision:**
+  - Tests in `contracts/test/qe/` named `test_BUG_*` assert the EXPECTED (secure) behaviour, so they FAIL until CONTRACTS fixes the matching finding (QE-C-01..03). A plain `forge test` is therefore red until MSG-014/015/016 are resolved.
+  - `test_LIMIT_*` and `test_INFO_*` pass and document accepted or known behaviour.
+  - Fork tests in `qe/` are opt-in (`VOUCH_FORK=true`), like the builder's.
+  - CI/gates should treat "only `test_BUG_*` failing" as "open QE findings", not as a broken build.
+- **Reason:** keeps every repro executable and self-verifying. When a fix lands, its test turns green with no QE edit.
+- **Who:** CONTRACTS_QE
+
+## D-012 — QE-C-01 fix: bind the submitter in PaymentAuth (keeps invariant 6 as written)
+- **Date:** 2026-11-16
+- **Decision:** Add `address submitter` to `PaymentAuth` (and therefore to the EIP-3009 nonce). `pay` requires `submitter == address(0) || msg.sender == submitter`. The app always signs with `submitter = RELAYER`. `submitter = 0` ("anyone may submit") is reserved for the documented kill-the-backend path, where front-running is an accepted, documented risk. Invariant 6 is unchanged: an invalid or missing attributor signature still falls back on-chain and never blocks payment.
+- **Reason:** CONTRACTS_QE (QE-C-01 / MSG-014) showed that public `pay` calldata can be front-run with a garbage attributor signature or swapped weights, forcing the fallback split (in the demo: Priya 792,000 instead of 198,000 of L1, plus a permanently wrong introducer) while the honest tx reverts. Binding the submitter removes the attacker's ability to submit at all, without changing the human's invariant 6. The alternative (revert when a customer-committed attributor signature is invalid) would have required rewording invariant 6 and needed a human decision.
+- **Alternatives:** (a) revert on invalid committed weights (changes invariant 6; deferred to the human); (c) accept the risk (rejected: it corrupts the frozen introducer, which is permanent).
+- **Who:** ORCHESTRATOR (default taken to keep the gate moving; flagged to the human, who can override)

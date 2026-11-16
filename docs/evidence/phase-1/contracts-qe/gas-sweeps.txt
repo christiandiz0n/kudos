@@ -1,0 +1,51 @@
+[PASS] test_gasSweep_erc1271Attributor_far_cannotBeStarvedIntoFallback() (gas: 656360740)
+  sweep: mock USDC, ERC-1271 attributor, far
+    threshold T (min successful gas limit): 413119
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 0
+[PASS] test_gasSweep_erc1271Attributor_near_cannotBeStarvedIntoFallback() (gas: 758112625)
+  sweep: mock USDC, ERC-1271 attributor, near
+    threshold T (min successful gas limit): 413119
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 0
+[PASS] test_gasSweep_mockUsdc_far() (gas: 654201011)
+  sweep: mock USDC, EOA attributor, far
+    threshold T (min successful gas limit): 412145
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 0
+[PASS] test_gasSweep_mockUsdc_near_1gas() (gas: 756400778)
+  sweep: mock USDC, EOA attributor, near
+    threshold T (min successful gas limit): 412145
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 0
+[PASS] test_INFO_guardFalseNegativeWithNestedToken() (gas: 149692518)
+  starved transfers reported as plain failures (guard missed): 1656
+  starved transfers caught by the guard: 344
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_far() (gas: 662165598)
+  sweep: nested USDC, burn 0, far
+    threshold T (min successful gas limit): 415505
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 0
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_near() (gas: 767355866)
+  sweep: nested USDC, burn 0, near
+    threshold T (min successful gas limit): 415505
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 0
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_far() (gas: 805235672)
+  sweep: nested USDC, burn 300, far
+    threshold T (min successful gas limit): 1077698
+    successes: 0
+    reverts: 812
+    TransferOutOfGas guard fired: 43
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_near() (gas: 853612862)
+  sweep: nested USDC, burn 300, near
+    threshold T (min successful gas limit): 1077698
+    successes: 242
+    reverts: 500
+    TransferOutOfGas guard fired: 0
