@@ -43,3 +43,7 @@ test-results/
 .vscode/*
 !.vscode/extensions.json
 *.log
+
+# --- python ---
+__pycache__/
+*.pyc

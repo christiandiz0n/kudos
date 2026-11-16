@@ -73,10 +73,10 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 - 2026-11-15: File initialized by ORCHESTRATOR.
 
 ## Next up
-- [ ] S1 Arc network facts (chain ID, RPC, explorer, USDC address + decimals, permit support, EVM differences)
+- [x] S1 Arc network facts: VERIFIED (D-101..D-103, INTERFACES §1, evidence `docs/evidence/phase-0/research-s1-s3-s4.md`). Orchestrator independently re-checked chainId/decimals/DOMAIN_SEPARATOR with `cast`.
+- [x] S4 Wallet approach: decided option B, a passkey-gated local EOA plus our relayer (D-104). PRF support on the demo phone is still to be confirmed in S6.
 - [ ] S2 Hello contract deployed to Arc testnet (event + USDC transferFrom), confirmed on explorer. Code is ready: `cd contracts && forge script script/spikes/DeployHello.s.sol --rpc-url arc_testnet --broadcast` (env `DEPLOYER_PRIVATE_KEY`, `USDC_ADDRESS`). Then run `ping`.
-- [ ] S3 QuickNode Stream → webhook → event received; backfill from past block works
-- [ ] S4 Wallet approach decision (Circle passkey/modular wallets vs. fallback)
+- [ ] S3 QuickNode Stream → webhook → event received; backfill from past block works. Desk research done, feasible (D-105). Recipe in the research evidence §S3.3. Needs the human's QuickNode API key. Public URL: `cloudflared tunnel --url http://localhost:4000` (quick tunnel, no account).
 - [ ] S5 testnet run: fund the relayer and spike user from the faucet, then run `pnpm --filter @wom/scripts s5:relayer` with `RPC_URL`/`USDC_ADDRESS`/`HELLO_ADDRESS`/`RELAYER_PRIVATE_KEY`/`SPIKE_USER_PRIVATE_KEY`, `SPLIT_TOTAL_USD=1.20`
 - [ ] S6 human runs `/spike/scan` on a phone (see "How to run")
 - [ ] Optional: an S5b spike exercising EIP-3009 `receiveWithAuthorization` on Arc USDC (D-103), since only the approve path is proven
@@ -103,7 +103,13 @@ pnpm spike:s5:local                  # anvil e2e relayer spike (prints fee in US
 pnpm --filter web build
 pnpm dev:api                         # Fastify on :4000 (PGlite at data/local/pglite); curl localhost:4000/health
 pnpm dev:web                         # Next on :3000
-pnpm --filter web dev:https          # S6 on a phone: https://<LAN-IP>:3000/spike/scan (accept the self-signed cert)
+pnpm --filter web dev:https          # LAN alternative (self-signed cert; iOS often refuses camera)
+# Preferred S6 / public HTTPS: build, then `cd apps/web && node node_modules/next/dist/bin/next start -p 3100`
+#   + `cloudflared tunnel --no-autoupdate --url http://localhost:3100` → https://<random>.trycloudflare.com
+# NOTE: port 3000 on this machine is used by an unrelated long-running next-server; don't kill it.
+python3 scripts/setup/gen-env.py     # HUMAN runs once: creates .env with fresh keys, prints addresses only
+# NOTE: a PreToolUse hook blocks agents from any Bash that references .env. Agents never read .env;
+#   tools load it themselves (forge auto-loads .env; node scripts use dotenv). Public addresses: packages/shared/src/wallets.public.json
 pnpm --filter @wom/api db:generate   # after editing apps/api/src/db/schema.ts
 ```
 
