@@ -97,8 +97,12 @@ export const WEIGHTS_TYPES = {
  * `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)`, so the relayer can
  * never pull funds for anything else. EIP-3009 nonces are unique per authorizer (no sequential nonce).
  * `weightsHash` = hashStruct(Weights) of the quoted weights, or bytes32(0) to accept the on-chain fallback.
- * `submitter` = the only address allowed to submit pay() (the RELAYER) — blocks mempool front-running that would
- * force the fallback split (D-012, QE-C-01). zeroAddress = anyone may submit (kill-the-backend path).
+ * `submitter` = the only address allowed to submit pay(): `msg.sender` must equal it (v3, D-519). The app signs the
+ * RELAYER; the kill-the-backend demo signs the customer's own address and the customer's EOA calls pay() (gas is
+ * paid in USDC from the same balance, so check balance >= amount + gasLimit × maxFeePerGas first, QE-C-11).
+ * Binding the submitter blocks mempool front-running that would force the fallback split (D-012, QE-C-01).
+ * zeroAddress is NOT "anyone": a PaymentAuth with submitter = 0 can never be paid. Never use a public forwarder
+ * or multicall as submitter (D-013).
  */
 export const PAYMENT_AUTH_TYPES = {
   PaymentAuth: [
@@ -218,7 +222,7 @@ export interface PaymentAuth {
   amount: bigint;
   weightsHash: Hex;
   deadline: bigint;
-  /** Only this address may call pay() with the authorization (the app's relayer); zeroAddress = anyone (D-012). */
+  /** Only this address may call pay() with the authorization: the RELAYER, or the customer to self-submit. zeroAddress is unpayable (D-519). */
   submitter: Address;
 }
 export interface ReceiveWithAuthorization {

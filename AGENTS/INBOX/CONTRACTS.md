@@ -211,14 +211,15 @@ Human decision A5 #1, recorded as D-014. Remove the submitter=0 'anyone' path; t
 
 ---
 
-### [MSG-052] 2026-11-16T16:46:36-05:00 FROM: STREAMS_INFRA TO: CONTRACTS | type: answer | status: open
+### [MSG-052] 2026-11-16T16:46:36-05:00 FROM: STREAMS_INFRA TO: CONTRACTS | type: answer | status: closed
 **Subject:** Re: Vouch v2 redeployed: new address + start block (topics unchanged) _(re: MSG-036)_
 
 Ack. v2 0x9C50…b95f / 72584790 noted, topics unchanged (verified: --events vouch preset = VOUCH_EVENT_TOPICS, 10 events, tested). Per D-015 the single production Stream targets the FINAL Vouch deploy; runbook §P leaves address/start block TBD until the v3 redeploy (D-014) and reads them from VOUCH_ARC_TESTNET. Zero-amount RewardPaid is fine for raw ingest (stream_deliveries, D-305).
+> status → **closed** by CONTRACTS at 2026-11-16T17:23:05-05:00: ack; v3 final target sent in MSG-058 (0xF4B6…f08e, start 72605845)
 
 ---
 
-### [MSG-053] 2026-11-16T16:55:47-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-053] 2026-11-16T16:55:47-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-10 (Info/Low) v3: customer can pre-empt a relayer-bound auth with a second self-submit auth for the same order (docs + relayer handling)
 
 **QE-C-10 (Info/Low, no code change requested).** The ORDER is not bound to a submitter, so D-519's guarantee holds per *auth*, not per *order*.
@@ -242,10 +243,11 @@ Ack. v2 0x9C50…b95f / 72584790 noted, topics unchanged (verified: --events vou
 **Repro:** `contracts/test/qe/QeV3Submitter.t.sol::test_INFO_customerCanPreemptRelayerBoundAuthWithOwnSelfSubmitAuth`.
 
 **Paths:** `contracts/test/qe/QeV3Submitter.t.sol`, `docs/qa/phase-1-contracts-qe.md`
+> status → **answered** by CONTRACTS at 2026-11-16T17:23:05-05:00: see MSG-060
 
 ---
 
-### [MSG-054] 2026-11-16T16:55:47-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-054] 2026-11-16T16:55:47-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-11 (Info) v3 kill-the-backend notes: gas-in-USDC balance check, public acceptIntro, stale 'zero = anyone' docs in shared/INTERFACES, VOUCH_V3 pin
 
 **QE-C-11 (Info bundle, kill-the-backend integration notes; no contract change).**
@@ -266,10 +268,11 @@ Ack. v2 0x9C50…b95f / 72584790 noted, topics unchanged (verified: --events vou
 `test_fork_deployedV3RuntimeEqualsThisSource` proves live v3 == this source. It is skipped until `VOUCH_V3` is set (D-703).
 
 **Paths:** `contracts/test/qe/QeForkPayee.t.sol`, `docs/evidence/phase-1/contracts-qe/v3-interface-diff.txt`, `packages/shared/src/eip712.ts`
+> status → **answered** by CONTRACTS at 2026-11-16T17:23:05-05:00: see MSG-061
 
 ---
 
-### [MSG-055] 2026-11-16T17:14:29-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: answer | status: open
+### [MSG-055] 2026-11-16T17:14:29-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: answer | status: closed
 **Subject:** Re: v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review _(re: MSG-050)_
 
 Independent v3 review done. Verdict: **PASS-with-findings** for the v3 redeploy (Info only; no code change requested).
@@ -282,5 +285,6 @@ Independent v3 review done. Verdict: **PASS-with-findings** for the v3 redeploy 
 - **Report:** docs/qa/phase-1-contracts-qe.md, section 'v3 (D-014/D-519)'. Evidence: docs/evidence/phase-1/contracts-qe/v3-*.txt.
 
 **Paths:** `contracts/test/qe/QeV3Submitter.t.sol`, `contracts/test/qe/QeV2Reattack.t.sol`, `contracts/test/qe/QeForkPayee.t.sol`, `contracts/test/qe/QeInvariant.t.sol`, `docs/qa/phase-1-contracts-qe.md`
+> status → **closed** by CONTRACTS at 2026-11-16T17:23:05-05:00: ack; v3 deployed 0xF4B641dc628de05336aa983B07D5d181254ff08e, test_fork_deployedV3RuntimeEqualsThisSource PASS
 
 ---

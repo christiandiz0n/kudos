@@ -67,8 +67,23 @@ done
 
 DEPLOYED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 python3 -I - "$ROOT/packages/shared/src/deployments.ts" "$CHAIN_ID" "$VOUCH" "$DEPLOY_BLOCK" "$DEPLOY_TX" "$USDC" "$VERIFIED" "$DEPLOYED_AT" <<'PY'
-import sys
+import os, re, sys
 out, chain, addr, block, tx, usdc, verified, at = sys.argv[1:9]
+# Keep history: the previous current deployment (if it is a different address) moves to VOUCH_RETIRED_DEPLOYMENTS,
+# and earlier retired entries are preserved verbatim (newest first).
+old = open(out).read() if os.path.exists(out) else ""
+retired = []  # (address, deployBlock, deployTx, retiredBy)
+m = re.search(r"VOUCH_RETIRED_DEPLOYMENTS[^=]*=\s*\[(.*?)\];", old, re.S)
+if m:
+    for e in re.finditer(r"address: '(0x[0-9a-fA-F]{40})',\s*deployBlock: (\d+),\s*deployTx: '(0x[0-9a-fA-F]{64})',\s*retiredBy: '(0x[0-9a-fA-F]{40})'", m.group(1)):
+        retired.append(e.groups())
+cur = re.search(r"VOUCH_DEPLOYMENTS[^=]*=\s*\{.*?address: '(0x[0-9a-fA-F]{40})',\s*deployBlock: (\d+),\s*deployTx: '(0x[0-9a-fA-F]{64})'", old, re.S)
+if cur and cur.group(1).lower() != addr.lower() and all(r[0].lower() != cur.group(1).lower() for r in retired):
+    retired.insert(0, (cur.group(1), cur.group(2), cur.group(3), addr))
+retired = [r for r in retired if r[0].lower() != addr.lower()]
+ret_src = "".join(
+    f"  {{ chainId: {chain}, address: '{a}', deployBlock: {b}, deployTx: '{t}', retiredBy: '{r}' }},\n" for a, b, t, r in retired
+)
 src = f"""/**
  * Deployed Vouch contracts. WRITTEN BY scripts/deploy/deploy-vouch.sh — do not edit by hand.
  * `deployBlock` is the backfill / Streams start_range.
@@ -99,9 +114,22 @@ export const VOUCH_DEPLOYMENTS: Record<number, VouchDeployment> = {{
 
 /** The Arc Testnet deployment (the one the app, relayer and Streams use). */
 export const VOUCH_ARC_TESTNET: VouchDeployment = VOUCH_DEPLOYMENTS[{chain}]!;
+
+export interface RetiredVouchDeployment {{
+  chainId: number;
+  address: Address;
+  deployBlock: number;
+  deployTx: Hex;
+  /** The deployment that replaced it. */
+  retiredBy: Address;
+}}
+
+/** RETIRED deployments, newest first. Never send transactions to these; listed only for history and log forensics. */
+export const VOUCH_RETIRED_DEPLOYMENTS: readonly RetiredVouchDeployment[] = [
+{ret_src}];
 """
 open(out, 'w').write(src)
-print(f"wrote {out}")
+print(f"wrote {out} ({len(retired)} retired)")
 PY
 echo "Explorer: $EXPLORER/address/$VOUCH"
 echo "Deploy tx: $EXPLORER/tx/$DEPLOY_TX"

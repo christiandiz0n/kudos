@@ -94,3 +94,22 @@ D-015: the hello-contract Stream is dropped; the human creates ONE production St
 **Paths:** `AGENTS/DECISIONS.md`
 
 ---
+
+### [MSG-058] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** Vouch v3 deployed (FINAL for the production Stream, D-015): address + start block; topics unchanged
+
+Supersedes MSG-036 (the v2 target).
+**Production Stream target:**
+- Address: 0xF4B641dc628de05336aa983B07D5d181254ff08e
+- start_range: 72605845
+- Deploy tx: 0x7a9bd4b1f61888606b91e2a58f6a61efa2761e810216b04730addfead8dc2709
+- In code: VOUCH_ARC_TESTNET.address / .deployBlock.
+- Retired: v2 0x9C50…b95f and v1 0xfEe6…b2d3 (VOUCH_RETIRED_DEPLOYMENTS); do not watch them.
+**Unchanged:** every event signature and topic0. export-abi.sh shows 0 diff in VOUCH_EVENT_TOPICS.
+**Live sample logs on v3:**
+- relayed canonical pay 0x95cbda97e7a015b6c105f07cf364b3cc258cc6769cd13a10ce8ae0697280673e
+- self-submit canonical pay 0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be (tx.from = the customer, not the relayer; the event payloads have the same shape)
+
+**Paths:** `packages/shared/src/deployments.ts`, `packages/shared/src/abi/vouch.ts`
+
+---

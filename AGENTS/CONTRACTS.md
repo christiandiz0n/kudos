@@ -1,5 +1,5 @@
 # CONTRACTS
-_Last updated: 2026-11-16T15:15:00-05:00 by CONTRACTS — Phase 1.5 (v3 submitter rule in the working tree, not deployed)_
+_Last updated: 2026-11-16T17:40:00-05:00 by CONTRACTS — Phase 1.5 (v3 deployed, verified, smoked; uncommitted tooling/shared changes)_
 
 ## Mission
 Owns all production Solidity: venue registry + versioned terms, intro acceptance, `pay` with atomic two-level split, frozen terms, on-chain fallback attribution, verified-customer and ambassador counters. Owns Foundry unit/fuzz/invariant tests, deploy scripts, and exporting ABIs + addresses to `packages/shared`. Does NOT touch frontend or backend code.
@@ -12,14 +12,17 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 - `scripts/deploy/`, `docs/proposals/` (Phase 1)
 
 ## Current status
-🟡 Phase 1.5 v3 (D-014/D-519): the submitter rule is implemented in the working tree, UNCOMMITTED and NOT deployed. It waits for an independent CONTRACTS_QE review, then the Orchestrator authorizes the redeploy.
-- **Live deployment (still v2):** `Vouch` at `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f`, Arc Testnet block 72584790, Blockscout-verified. Its `submitter = 0` is still "anyone" until v3 is deployed.
-- **v1 retired:** `0xfEe6…b2d3`; do not use it.
-- **v3 source:** `pay` requires `msg.sender == auth.submitter` (no zero path). Runtime 23,998 B (578 B margin).
-- **Builder tests:** 101 green (`forge test --skip "test/qe/**"`).
-- **QE suites:**
-  - Full `forge test`: 179 pass, 2 skipped, and 2 fail. Both failures are in QE-owned `QeV2Reattack` and pin v2's zero-submitter behaviour (MSG-050).
-  - Fork: the QE v2 bytecode pin fails by construction until the redeploy.
+🟢 Phase 1.5 v3 is DEPLOYED (D-520).
+- **Live deployment (v3):** `Vouch` at `0xF4B641dc628de05336aa983B07D5d181254ff08e`, Arc Testnet block **72605845**, Blockscout-verified.
+  - This is the production Stream's start block (D-015).
+  - Runtime 23,998 B, keccak `0x58517bb0…330c6795`. QE's `test_fork_deployedV3RuntimeEqualsThisSource` passes.
+- **Retired** (both listed in `VOUCH_RETIRED_DEPLOYMENTS`; never use them):
+  - v2 `0x9C50…b95f` (block 72584790)
+  - v1 `0xfEe6…b2d3` (block 72580272)
+- **Rule:** `pay` requires `msg.sender == auth.submitter`, and `submitter = 0` is unpayable (D-519).
+- **Smoke on v3:** relayed and `--self-submit` runs both OK, with the exact canonical split.
+- **Tests:** `forge test` 197 pass / 0 fail / 2 skipped. Fork suites 17/17 with `VOUCH_V3` set.
+- **Uncommitted** (the Orchestrator commits): `deployments.ts`, `eip712.ts` comments, `deploy-vouch.sh` (keeps retired entries), `smoke-canonical.ts` (`--self-submit`, `--fund-from-payout`).
 
 ## Mental model (read this first)
 - **One contract, no admin.** `contracts/src/Vouch.sol` (≈800 lines). It inherits OZ `EIP712("Vouch","1")`, `Nonces` and `ReentrancyGuardTransient`. Types, events and errors live in `src/interfaces/IVouch.sol`. EIP-712 type strings and struct hashing live in `src/libraries/VouchHash.sol`. The pure split math (slices, fallback weights, top index) lives in `src/libraries/VouchSplit.sol`. USDC is the immutable `USDC` (Arc `0x3600…`). The contract is non-payable.
@@ -69,7 +72,7 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 | `contracts/script/DeployVouch.s.sol` | Deploy script | refuses non-0x3600 USDC on Arc |
 | `contracts/script/export-abi.sh` | Regenerates `packages/shared/src/abi/vouch.ts` | run after ANY contract change |
 | `scripts/deploy/deploy-vouch.sh` | Deploy + Blockscout verify + write deployments.ts | `--verify 0xADDR` re-verifies |
-| `scripts/deploy/smoke-canonical.ts` | Testnet canonical story (fresh venue per run) | `pnpm --filter @vouch/scripts smoke:canonical` |
+| `scripts/deploy/smoke-canonical.ts` | Testnet canonical story (fresh venue per run) | `smoke:canonical [-- --self-submit] [--fund-from-payout]` |
 | `scripts/deploy/fork-test.sh` | Runs the fork tests | |
 | `packages/shared/src/abi/vouch.ts` | GENERATED ABI + event topics + type strings | do not hand-edit |
 | `packages/shared/src/abi/vouchConstants.ts` | WEIGHTS_MODE / RETURN_REASON / INTRO_DROP_REASON / VOUCH_LIMITS | hand-written mirror |
@@ -82,6 +85,15 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 - Consumes: §1 network facts (D-101..D-103), USDC `0x3600…` EIP-3009.
 
 ## Done (rolling, newest first)
+- 2026-11-16 — Phase 1.5 v3 deployed (D-520; Orchestrator go after the CONTRACTS_QE v3 PASS-with-findings, MSG-055).
+  - **Deploy:** `0xF4B6…f08e`, block 72605845, tx `0x7a9bd4b1…8dc2709`, fee $0.155. Blockscout "Pass - Verified".
+  - **Fork pin:** passes.
+  - **Smoke, relayed:** pay tx `0x95cbda97…7280673e`, 409,801 gas.
+  - **Smoke, self-submit:** Ben's EOA, pay tx `0xfca0e1ae…aa18c7be`, 371,065 gas, paid by Ben. It passed the QE-C-11 pre-flight balance check.
+  - **Funding:** Ben was short, so Lena (the payout) funded him via `--fund-from-payout`, keeping DEPLOYER's reserve.
+  - **Round spend:** ≈ $0.255 (deploy 0.155 + smokes 0.051 + 0.049, including 2 funding transfers).
+  - **Handoffs:** MSG-056..059 supersede MSG-034/035/036/037.
+  - **QE findings:** answered MSG-053 (QE-C-10) and MSG-054 (QE-C-11).
 - 2026-11-16 — Phase 1.5 v3 submitter rule (D-014 → D-519, MSG-045). Working tree only; nothing deployed or committed.
   - **Rule:** option (a), `msg.sender == auth.submitter`.
   - **Size:** 24,036 → 23,998 B. Option (b) measured 24,042 B.
@@ -107,12 +119,9 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
   - ABI, typed data and deployments exported; D-501..D-511 recorded.
 
 ## Next up
-- [ ] **v3 redeploy after QE.** Wait for CONTRACTS_QE's independent v3 review and the Orchestrator's go. Then:
-  - commit, run `deploy-vouch.sh` (writes `deployments.ts`), Blockscout-verify, run the smoke;
-  - add a self-submit smoke variant if asked;
-  - hand off the new address and start block (BACKEND_RELAYER, STREAMS_INFRA, FRONTEND_INTEGRATION, ATTRIBUTION_AI);
-  - apply the INTERFACES §2/§3 text proposed in the D-519 report.
-- [ ] If the contract changes again: keep `previewPayment` consistent with `_plan` / `_distribute`, and re-check `forge build --sizes`.
+- [ ] Orchestrator: commit the v3 deploy changes and apply the proposed INTERFACES §2/§3 edits (D-520 report).
+- [ ] Optional (D-013(2)): reject system-address payouts `0x1800…` / `0xffff…fffe`. Only if a future redeploy happens for other reasons; 578 B of headroom.
+- [ ] If the contract changes again: keep `previewPayment` consistent with `_plan` / `_distribute`, re-check `forge build --sizes`, and re-pin the QE fork test.
 
 ## Struggles, open questions, known issues
 ### Known limits (accepted, documented; D-515..D-517)
@@ -120,8 +129,15 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
   - A personal intro names no customer, so an observer can accept it first ("sniping").
   - With ≥ 6 pending acceptances for one customer, the submitter picks which referrer the 5-slot cap evicts.
   - Mitigation: relay `acceptIntro` privately.
-- **`submitter = 0` (D-012):** on the LIVE v2 contract anyone may submit `pay`, so front-running can force the fallback. v3 (D-519, not yet deployed) makes it unpayable.
-- **Self-submit (D-519):** the customer's balance must cover `amount` plus the tx fee, since on Arc both are paid in USDC.
+- **`submitter = 0`:** unpayable on v3 (D-519). The retired v2 let anyone submit it.
+- **Order not bound to a submitter (QE-C-10):** D-519 binds per AUTH, not per order.
+  - A customer can pre-empt their own relayer-bound auth: they sign a second auth for the same order with `submitter = self` (e.g. `weightsHash = 0` → fallback) and settle it first. The customer is charged once.
+  - The relayer's tx then reverts `OrderAlreadySettled`. The relayer must treat that as terminal (simulate first) and read the real split from `PaymentSettled` / `RewardPaid`, never from the quote.
+  - This is no new power for the customer.
+- **Self-submit (D-519, QE-C-11):** the customer's balance must cover `amount + gasLimit × maxFeePerGas`, since on Arc both are paid in USDC.
+  - If it doesn't, the pull fails and the customer still pays the gas of the reverted tx.
+  - The smoke checks this as a pre-flight.
+  - Without the relayer, `acceptIntro` goes through the public mempool, which increases exposure to the D-517 limits.
 - **Submitter choice (D-013):** a public forwarder as submitter is still no binding. The submitter must be the relayer EOA, the customer, or an access-controlled contract.
 - **Sybil clusters (QE-C-08):** a customer's own second address can capture the pool. Each sybil costs one real purchase and the gain is capped by rewardBps. This needs off-chain risk flags.
 - **Orders are not bound to a customer (QE-C-08):** a third party can pay a QR order first. That is griefing only, since they pay real money.
@@ -147,6 +163,8 @@ bash scripts/deploy/fork-test.sh               # real Arc USDC on a fork (from r
 bash contracts/script/export-abi.sh            # regenerate packages/shared/src/abi/vouch.ts
 bash scripts/deploy/deploy-vouch.sh            # deploy + verify + deployments.ts (DEPLOYER key, ~$0.13)
 pnpm --filter @vouch/scripts smoke:canonical   # canonical story on testnet (~$0.05 gas)
+pnpm --filter @vouch/scripts smoke:canonical -- --self-submit --fund-from-payout   # Ben's EOA sends pay() (D-519)
+VOUCH_V3=0xF4B641dc628de05336aa983B07D5d181254ff08e VOUCH_FORK=true forge test --match-path 'test/**/*Fork*'  # live v3 == source
 pnpm -r typecheck && pnpm -r --if-present run test
 ```
 

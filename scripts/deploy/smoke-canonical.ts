@@ -14,13 +14,21 @@
  * Each run registers a FRESH venue (unique salt), so it is repeatable. Customer payments only move USDC between our
  * own wallets (Ana $1.00, Priya $1.00, Ben $12.00). Gas is capped (default $0.50 total, aborts before exceeding).
  *
+ * --self-submit (v3, D-519 kill-the-backend variant): Ben signs PaymentAuth.submitter = Ben and his OWN EOA sends
+ *   the final pay(), paying its gas in USDC from the same balance. Pre-flight (QE-C-11): Ben's balance must be
+ *   >= amount + gasLimit × maxFeePerGas, else the run aborts before sending. Everything else is still relayed.
+ * --fund-from-payout: if Ben is short for the final pay, Lena (the venue payout, which receives most of Ben's
+ *   payment back) first sends him the shortfall + $0.05 with a USDC transfer. Off by default.
+ *
  * Run (repo root):  pnpm --filter @vouch/scripts smoke:canonical [-- --amount 12.00 --gas-cap 0.50]
+ *                   pnpm --filter @vouch/scripts smoke:canonical -- --self-submit [--fund-from-payout]
  * Env (loaded by the pnpm script from the root env file; never printed): RELAYER/ATTRIBUTOR/VENUE_SIGNER/
  * SPIKE_USER/DEMO_LENA/DEMO_ANA/DEMO_PRIYA/DEMO_BEN _PRIVATE_KEY, optional ARC_RPC_URL.
  */
 import {
   createPublicClient,
   createWalletClient,
+  erc20Abi,
   http,
   keccak256,
   parseEventLogs,
@@ -53,6 +61,7 @@ import {
   formatNativeAsUsdc,
   formatUsdc,
   introDigest,
+  nativeToUsdcBaseUnits,
   parseUsdc,
   receiveAuthForPayment,
   vouchAbi,
@@ -72,6 +81,10 @@ const arg = (name: string, dflt: string) => {
 };
 const AMOUNT = parseUsdc(arg('amount', '12.00'));
 const GAS_CAP = parseUsdc(arg('gas-cap', '0.50')); // USDC 6-dec
+const SELF_SUBMIT = args.includes('--self-submit');
+const FUND_FROM_PAYOUT = args.includes('--fund-from-payout');
+/** Upper bound for the self-submit pay() gas used only to size the up-front funding (QE-C-11 measured ~425-479k). */
+const SELF_SUBMIT_GAS_BOUND = 700_000n;
 const FIRST_PURCHASE = parseUsdc('1.00');
 const RATE = 1_500; // 15%
 const MIN_ORDER = parseUsdc('1.00');
@@ -104,7 +117,7 @@ const who = (a: string) => NAMES.get(a.toLowerCase()) ?? a;
 
 const rpcUrl = process.env.ARC_RPC_URL || ARC_TESTNET_RPC_URL;
 const pub = createPublicClient({ chain: arcTestnet, transport: http(rpcUrl) });
-const wallet = createWalletClient({ account: relayer, chain: arcTestnet, transport: http(rpcUrl) });
+const walletFor = (account: PrivateKeyAccount) => createWalletClient({ account, chain: arcTestnet, transport: http(rpcUrl) });
 const VOUCH = VOUCH_ARC_TESTNET.address;
 const domain = vouchDomain(ARC_TESTNET_CHAIN_ID, VOUCH);
 
@@ -120,14 +133,21 @@ async function fees() {
 }
 
 // biome-ignore lint: viem's generic writeContract args are verbose; the ABI keeps calls type-checked
-async function send(label: string, functionName: any, fnArgs: any): Promise<TransactionReceipt> {
+async function send(
+  label: string,
+  functionName: any,
+  fnArgs: any,
+  from: PrivateKeyAccount = relayer,
+  preflight?: (gasLimit: bigint, maxFeePerGas: bigint) => Promise<void>,
+): Promise<TransactionReceipt> {
   const f = await fees();
-  const gas = await pub.estimateContractGas({ address: VOUCH, abi: vouchAbi, functionName, args: fnArgs, account: relayer });
+  const gas = await pub.estimateContractGas({ address: VOUCH, abi: vouchAbi, functionName, args: fnArgs, account: from });
   const worst = ((gas * 12n) / 10n) * f.maxFeePerGas;
   if ((gasSpentNative + worst) / 10n ** 12n > GAS_CAP) {
     throw new Error(`gas cap: spent ${formatNativeAsUsdc(gasSpentNative)} + worst ${formatNativeAsUsdc(worst)} > cap`);
   }
-  const hash = await wallet.writeContract({
+  if (preflight) await preflight((gas * 12n) / 10n, f.maxFeePerGas);
+  const hash = await walletFor(from).writeContract({
     address: VOUCH,
     abi: vouchAbi,
     functionName,
@@ -184,7 +204,13 @@ async function introduce(venue: Address, referrer: PrivateKeyAccount, customer: 
   ]);
 }
 
-async function pay(venue: Address, customer: PrivateKeyAccount, amount: bigint, w?: { referrers: Address[]; bps: number[] }) {
+async function pay(
+  venue: Address,
+  customer: PrivateKeyAccount,
+  amount: bigint,
+  w?: { referrers: Address[]; bps: number[] },
+  selfSubmit = false,
+) {
   const t = await now();
   const order: Order = { venue, orderId: rand32(), amount, expiresAt: t + 600n };
   const orderSig = await venueSigner.signTypedData({ domain, types: ORDER_TYPES, primaryType: 'Order', message: order });
@@ -203,7 +229,8 @@ async function pay(venue: Address, customer: PrivateKeyAccount, amount: bigint, 
     amount,
     weightsHash,
     deadline: t + 600n,
-    submitter: relayer.address, // D-012: only our relayer may submit this payment (blocks mempool front-running)
+    // D-519: msg.sender must equal submitter. The app names the relayer; the kill-the-backend demo names the customer.
+    submitter: selfSubmit ? customer.address : relayer.address,
   };
   // The ONE signature the customer makes: USDC ReceiveWithAuthorization (to = Vouch, nonce = hashStruct(auth)).
   const usdcSig = await customer.signTypedData({
@@ -218,14 +245,17 @@ async function pay(venue: Address, customer: PrivateKeyAccount, amount: bigint, 
     functionName: 'previewPayment',
     args: [venue, customer.address, order.orderId, amount, weights, weightsSig, weightsHash],
   });
-  const r = await send(`pay ${who(customer.address)} $${formatUsdc(amount)}`, 'pay', [
-    order,
-    orderSig,
-    weights,
-    weightsSig,
-    auth,
-    usdcSig,
-  ]);
+  // QE-C-11: a self-submitting customer pays gas in USDC from the same balance; refuse to send unless it covers both.
+  const preflight = selfSubmit
+    ? async (gasLimit: bigint, maxFeePerGas: bigint) => {
+        const bal = await balanceOf(customer.address);
+        const need = amount + nativeToUsdcBaseUnits(gasLimit * maxFeePerGas);
+        console.log(`  pre-flight: ${who(customer.address)} balance $${formatUsdc(bal)} ≥ amount + ${gasLimit} gas × ${maxFeePerGas} = $${formatUsdc(need)}`);
+        if (bal < need) throw new Error(`self-submit pre-flight failed: balance ${bal} < amount + max gas fee ${need} (nothing sent)`);
+      }
+    : undefined;
+  const label = `pay ${who(customer.address)} $${formatUsdc(amount)}${selfSubmit ? ' (self-submit)' : ''}`;
+  const r = await send(label, 'pay', [order, orderSig, weights, weightsSig, auth, usdcSig], selfSubmit ? customer : relayer, preflight);
   return { r, quote, order };
 }
 
@@ -246,12 +276,45 @@ function expectedSplit(amount: bigint, bps: bigint[], rate: bigint) {
   return { cashback, l1, l2, venue: amount - paid, pool: slices.reduce((a, b) => a + b, 0n) };
 }
 
+/** Opt-in (--fund-from-payout): Lena tops Ben up to `need` (+ $0.05) with a USDC transfer that Lena signs and pays. */
+async function fundFromPayout(customer: PrivateKeyAccount, need: bigint) {
+  const bal = await balanceOf(customer.address);
+  if (bal >= need) return;
+  const amount = need - bal + parseUsdc('0.05');
+  const lenaBal = await balanceOf(lena.address);
+  if (lenaBal < amount + parseUsdc('0.10')) throw new Error(`Lena (payout) cannot fund ${amount}: balance ${lenaBal}`);
+  const f = await fees();
+  const hash = await walletFor(lena).writeContract({
+    address: ARC_TESTNET_USDC_ADDRESS,
+    abi: erc20Abi,
+    functionName: 'transfer',
+    args: [customer.address, amount],
+    ...f,
+  });
+  const r = await pub.waitForTransactionReceipt({ hash });
+  if (r.status !== 'success') throw new Error(`funding transfer reverted: ${hash}`);
+  const feeNative = r.gasUsed * r.effectiveGasPrice;
+  gasSpentNative += feeNative;
+  txLog.push({ label: `fund ${who(customer.address)} from Lena`, hash, gasUsed: r.gasUsed, feeNative });
+  console.log(`  ✓ fund ${who(customer.address)} +$${formatUsdc(amount)} from Lena (payout)  gas ${r.gasUsed}  ${explorerTxUrl(hash)}`);
+}
+
 // ------------------------------------------------------------------------------------------------ main
 async function main() {
   const chainId = await pub.getChainId();
   if (chainId !== ARC_TESTNET_CHAIN_ID) throw new Error(`wrong chain ${chainId}`);
   console.log(`Vouch ${VOUCH} (deploy block ${VOUCH_ARC_TESTNET.deployBlock}) on Arc Testnet ${chainId}`);
   console.log(`relayer ${relayer.address} · amount $${formatUsdc(AMOUNT)} · gas cap $${formatUsdc(GAS_CAP)}`);
+  console.log(`final pay(): ${SELF_SUBMIT ? 'SELF-SUBMIT (Ben signs submitter = Ben, his EOA sends it, gas in USDC)' : 'relayed (submitter = RELAYER)'}`);
+
+  // Fail fast before any tx: Ben must be able to cover the final payment (+ its gas when self-submitting).
+  {
+    const f = await fees();
+    const need = AMOUNT + (SELF_SUBMIT ? nativeToUsdcBaseUnits(SELF_SUBMIT_GAS_BOUND * f.maxFeePerGas) : 0n);
+    if (FUND_FROM_PAYOUT) await fundFromPayout(ben, need);
+    const have = await balanceOf(ben.address);
+    if (have < need) throw new Error(`Ben has $${formatUsdc(have)} < $${formatUsdc(need)} needed (use --fund-from-payout or topup); nothing sent`);
+  }
 
   const salt = keccak256(toHex(`smoke-canonical-${Date.now()}`));
   const venue = computeVenueId(lena.address, salt);
@@ -297,8 +360,19 @@ async function main() {
   console.log(`\n[5] Ben pays $${formatUsdc(AMOUNT)} — attributor weights Ana 70% / Priya 30%`);
   const people = [lena, ben, ana, priya, sam].map((a) => a.address);
   const before = await Promise.all(people.map(balanceOf));
-  const { r, quote } = await pay(venue, ben, AMOUNT, { referrers: [ana.address, priya.address], bps: [7_000, 3_000] });
+  const benNative0 = await pub.getBalance({ address: ben.address });
+  const { r, quote } = await pay(
+    venue,
+    ben,
+    AMOUNT,
+    { referrers: [ana.address, priya.address], bps: [7_000, 3_000] },
+    SELF_SUBMIT,
+  );
   const after = await Promise.all(people.map(balanceOf));
+  const benNative1 = await pub.getBalance({ address: ben.address });
+  // Ben's gas when self-submitting (18-dec native). USDC balanceOf floors native/1e12, so check Ben on native exactly.
+  const benGasNative = SELF_SUBMIT ? r.gasUsed * r.effectiveGasPrice : 0n;
+  check(r.from.toLowerCase() === (SELF_SUBMIT ? ben.address : relayer.address).toLowerCase(), `pay() sent by ${SELF_SUBMIT ? 'Ben (self-submit)' : 'the relayer'}`);
 
   const logs = parseEventLogs({ abi: vouchAbi, logs: r.logs }).filter((l) => l.address.toLowerCase() === VOUCH.toLowerCase());
   const settled = logs.find((l) => l.eventName === 'PaymentSettled');
@@ -323,21 +397,25 @@ async function main() {
     check(exp.l2[0] === 252_000n && exp.l2[1] === 108_000n, 'canonical L2: 252,000 (→Sam) · 108,000 (→Ana)');
   }
   check(delta[0] === exp.venue, `Lena (payout) +${exp.venue} (got ${delta[0]})`);
-  check(delta[1] === -AMOUNT + exp.cashback, `Ben ${-AMOUNT + exp.cashback} (got ${delta[1]})`);
+  if (SELF_SUBMIT) {
+    const expNative = (-AMOUNT + exp.cashback) * 10n ** 12n - benGasNative;
+    check(benNative1 - benNative0 === expNative, `Ben ${-AMOUNT + exp.cashback} USDC − own gas ${formatNativeAsUsdc(benGasNative)} (native delta ${benNative1 - benNative0})`);
+  } else check(delta[1] === -AMOUNT + exp.cashback, `Ben ${-AMOUNT + exp.cashback} (got ${delta[1]})`);
   check(delta[2] === exp.l1[0]! + exp.l2[1]!, `Ana +${exp.l1[0]! + exp.l2[1]!} = L1 ${exp.l1[0]} + L2-via-Priya ${exp.l2[1]} (got ${delta[2]})`);
   check(delta[3] === exp.l1[1], `Priya +${exp.l1[1]} (got ${delta[3]})`);
   check(delta[4] === exp.l2[0], `Sam +${exp.l2[0]} (got ${delta[4]})`);
-  check(delta.reduce((a, b) => a + b, 0n) === 0n, 'Σ deltas == 0 (every unit of the payment is accounted for)');
+  const benSplit = SELF_SUBMIT ? (benNative1 - benNative0 + benGasNative) / 10n ** 12n : delta[1]!;
+  check(delta[0]! + benSplit + delta[2]! + delta[3]! + delta[4]! === 0n, 'Σ deltas == 0 (every unit of the payment is accounted for)');
   check(settled?.eventName === 'PaymentSettled' && settled.args.weightsMode === 1, 'weightsMode = ATTRIBUTOR (1)');
   check(quote.venueAmount === exp.venue && quote.cashback === exp.cashback, 'previewPayment matched the settled split');
   const cs = await pub.readContract({ address: VOUCH, abi: vouchAbi, functionName: 'getCustomer', args: [venue, ben.address] });
   check(cs.verified && cs.rewarded && cs.introducer === ana.address, 'Ben verified + rewarded, introducer = Ana');
 
-  console.log('\n[7] gas (paid by the relayer in USDC)');
+  console.log(`\n[7] gas (in USDC; ${SELF_SUBMIT ? 'final pay() paid by Ben, the rest by the relayer' : 'paid by the relayer'})`);
   for (const t of txLog) console.log(`    ${t.label.padEnd(34)} ${t.gasUsed.toString().padStart(8)} gas  ${formatNativeAsUsdc(t.feeNative)} USDC`);
   console.log(`    TOTAL ${txLog.length} txs: ${formatNativeAsUsdc(gasSpentNative)} USDC (cap $${formatUsdc(GAS_CAP)})`);
   const payBen = txLog[txLog.length - 1]!;
-  console.log(`    canonical pay(): ${payBen.gasUsed} gas = ${formatNativeAsUsdc(payBen.feeNative)} USDC`);
+  console.log(`    canonical pay()${SELF_SUBMIT ? ' (self-submit)' : ''}: ${payBen.gasUsed} gas = ${formatNativeAsUsdc(payBen.feeNative)} USDC  tx ${payBen.hash}`);
   console.log(`\nvenue ${venue} · explorer ${arcTestnet.blockExplorers.default.url}/address/${VOUCH}`);
   if (process.exitCode) console.error('\nSMOKE FAILED');
   else console.log('\nSMOKE OK');

@@ -65,7 +65,7 @@ The estimates were accurate; the smoke script adds 20% headroom.
 
 ---
 
-### [MSG-034] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: BACKEND_RELAYER | type: fyi | status: open
+### [MSG-034] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: BACKEND_RELAYER | type: fyi | status: closed
 **Subject:** Vouch v2: new address + PaymentAuth.submitter (bind RELAYER)
 
 **What changed:** Vouch is redeployed after the QE gate.
@@ -88,6 +88,7 @@ The estimates were accurate; the smoke script adds 20% headroom.
 - A credited L1 with a share that floors to 0 now appears as `RewardPaid` with amount 0. Hide those in feeds if you like.
 
 **Reference:** `scripts/deploy/smoke-canonical.ts`, smoke OK on v2. Canonical pay = 409,981 gas = $0.0102.
+> status → **closed** by CONTRACTS at 2026-11-16T17:23:05-05:00: superseded by MSG-056 (v3)
 
 ---
 
@@ -106,5 +107,25 @@ Requirements for the relayer/API (from CONTRACTS_QE MSG-038, decision D-013): (1
 Human A5 #1. The app keeps signing submitter = RELAYER. The kill-the-backend demo no longer uses submitter = 0: the customer signs submitter = their own address and calls pay() directly, paying gas in USDC. If v3 lands, submitter = 0 is unpayable by anyone; if it doesn't, the API must still never produce submitter = 0. A v3 address/start block will arrive as a CONTRACTS handoff (EIP-712 types expected unchanged). Also: apps/api now deploys to Railway (D-016); PORT is honored and raw Stream deliveries are persisted (STREAMS_INFRA).
 
 **Paths:** `AGENTS/DECISIONS.md`
+
+---
+
+### [MSG-056] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: BACKEND_RELAYER | type: fyi | status: open
+**Subject:** Vouch v3 deployed: new address + block; submitter rule is msg.sender == submitter (sign RELAYER); OrderAlreadySettled is terminal (supersedes MSG-034)
+
+Supersedes MSG-034. Everything there still applies except the submitter = 0 line.
+**Address:** Vouch v3 0xF4B641dc628de05336aa983B07D5d181254ff08e, deploy block 72605845, tx 0x7a9bd4b1f61888606b91e2a58f6a61efa2761e810216b04730addfead8dc2709, Blockscout-verified. It is in code as VOUCH_ARC_TESTNET (@vouch/shared). v2 0x9C50…b95f and v1 0xfEe6…b2d3 are retired (VOUCH_RETIRED_DEPLOYMENTS); never send to them.
+**Unchanged:** ABI, events, topic0s, every EIP-712 type and the PaymentAuth typehash (vouchAbi has 0 diff), so only the address changes.
+**Submitter rule (D-014/D-519):**
+- pay() requires msg.sender == auth.submitter, otherwise UnauthorizedSubmitter().
+- ALWAYS sign submitter = RELAYER in the app flow. submitter = 0 is now UNPAYABLE (no 'anyone' path), so never default to 0.
+- Never use a public forwarder or multicall as submitter (D-013).
+**OrderAlreadySettled is terminal (QE-C-10).** The order itself isn't bound to a submitter, so a customer can sign a second auth for the same order with submitter = self and settle it first. Your relayer-bound tx then reverts OrderAlreadySettled; your auth stays unused and the customer is charged once. Handle it like this:
+  (1) simulate pay() before sending, so you don't pay gas for the revert;
+  (2) treat OrderAlreadySettled as terminal, not as an error to retry;
+  (3) always read the actual split from PaymentSettled/RewardPaid, never from the quote (the customer may have chosen the fallback).
+**Reference:** smoke OK on v3. Relayed canonical pay tx 0x95cbda97e7a015b6c105f07cf364b3cc258cc6769cd13a10ce8ae0697280673e, 409,801 gas = 0.0102 USDC, exact 10.20/0.45/0.693/0.297/0.252/0.108.
+
+**Paths:** `packages/shared/src/deployments.ts`, `scripts/deploy/smoke-canonical.ts`, `AGENTS/DECISIONS.md`
 
 ---

@@ -1,5 +1,5 @@
 {
- "counter": 55,
+ "counter": 61,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -365,9 +365,10 @@
    "from": "CONTRACTS",
    "to": "BACKEND_RELAYER",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v2: new address + PaymentAuth.submitter (bind RELAYER)",
-   "re": null
+   "re": null,
+   "resolution": "superseded by MSG-056 (v3)"
   },
   "MSG-035": {
    "id": "MSG-035",
@@ -375,9 +376,10 @@
    "from": "CONTRACTS",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v2: the customer's payment signature now includes submitter",
-   "re": null
+   "re": null,
+   "resolution": "superseded by MSG-057 (v3)"
   },
   "MSG-036": {
    "id": "MSG-036",
@@ -396,9 +398,10 @@
    "from": "CONTRACTS",
    "to": "ATTRIBUTION_AI",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v2 address + QE note on sybil risk flags",
-   "re": null
+   "re": null,
+   "resolution": "superseded by MSG-059 (v3)"
   },
   "MSG-038": {
    "id": "MSG-038",
@@ -553,9 +556,10 @@
    "from": "STREAMS_INFRA",
    "to": "CONTRACTS",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Vouch v2 redeployed: new address + start block (topics unchanged)",
-   "re": "MSG-036"
+   "re": "MSG-036",
+   "resolution": "ack; v3 final target sent in MSG-058 (0xF4B6\u2026f08e, start 72605845)"
   },
   "MSG-053": {
    "id": "MSG-053",
@@ -563,9 +567,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "QE-C-10 (Info/Low) v3: customer can pre-empt a relayer-bound auth with a second self-submit auth for the same order (docs + relayer handling)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-060"
   },
   "MSG-054": {
    "id": "MSG-054",
@@ -573,9 +578,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "QE-C-11 (Info) v3 kill-the-backend notes: gas-in-USDC balance check, public acceptIntro, stale 'zero = anyone' docs in shared/INTERFACES, VOUCH_V3 pin",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-061"
   },
   "MSG-055": {
    "id": "MSG-055",
@@ -583,9 +589,70 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review",
-   "re": "MSG-050"
+   "re": "MSG-050",
+   "resolution": "ack; v3 deployed 0xF4B641dc628de05336aa983B07D5d181254ff08e, test_fork_deployedV3RuntimeEqualsThisSource PASS"
+  },
+  "MSG-056": {
+   "id": "MSG-056",
+   "ts": "2026-11-16T17:22:52-05:00",
+   "from": "CONTRACTS",
+   "to": "BACKEND_RELAYER",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vouch v3 deployed: new address + block; submitter rule is msg.sender == submitter (sign RELAYER); OrderAlreadySettled is terminal (supersedes MSG-034)",
+   "re": null
+  },
+  "MSG-057": {
+   "id": "MSG-057",
+   "ts": "2026-11-16T17:22:52-05:00",
+   "from": "CONTRACTS",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vouch v3 deployed: new address; self-submit only for the kill-the-backend demo, with a balance >= amount + fee check (supersedes MSG-035)",
+   "re": null
+  },
+  "MSG-058": {
+   "id": "MSG-058",
+   "ts": "2026-11-16T17:22:52-05:00",
+   "from": "CONTRACTS",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vouch v3 deployed (FINAL for the production Stream, D-015): address + start block; topics unchanged",
+   "re": null
+  },
+  "MSG-059": {
+   "id": "MSG-059",
+   "ts": "2026-11-16T17:22:52-05:00",
+   "from": "CONTRACTS",
+   "to": "ATTRIBUTION_AI",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vouch v3 address (supersedes MSG-037)",
+   "re": null
+  },
+  "MSG-060": {
+   "id": "MSG-060",
+   "ts": "2026-11-16T17:23:05-05:00",
+   "from": "CONTRACTS",
+   "to": "CONTRACTS_QE",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE-C-10 (Info/Low) v3: customer can pre-empt a relayer-bound auth with a second self-submit auth for the same order (docs + relayer handling)",
+   "re": "MSG-053"
+  },
+  "MSG-061": {
+   "id": "MSG-061",
+   "ts": "2026-11-16T17:23:05-05:00",
+   "from": "CONTRACTS",
+   "to": "CONTRACTS_QE",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE-C-11 (Info) v3 kill-the-backend notes: gas-in-USDC balance check, public acceptIntro, stale 'zero = anyone' docs in shared/INTERFACES, VOUCH_V3 pin",
+   "re": "MSG-054"
   }
  }
 }

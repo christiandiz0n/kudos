@@ -43,7 +43,8 @@ Plan each phase, delegate to subagents with self-contained briefs (template: pro
 ## Deployed addresses (Arc Testnet)
 | What | Address | Block |
 |---|---|---|
-| **Vouch v2 (production)** | `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` | 72584790 |
+| **Vouch v3 (production)** | `0xF4B641dc628de05336aa983B07D5d181254ff08e` | 72605845 |
+| Vouch v2 (retired, D-520) | `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` | 72584790 |
 | Vouch v1 (retired) | `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` | 72580272 |
 | Hello (S3 spike target) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 |
 | Hello (QE re-deploy) | `0xc6282732b1852726F73D7Cea98cE6D03f9021906` | 72569134 |

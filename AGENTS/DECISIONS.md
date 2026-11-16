@@ -485,3 +485,21 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
   - **Pin.** A source change always breaks a "live == this source" pin for the previous deployment. Re-targeting the pin to the new source would leave the still-live v2 unpinned, and deleting it would lose the deployment proof.
   - **Probes.** The v2 front-run probe had this blind spot. Mutation testing for v3 (v2 rule / option (b) / no check) showed the harness stayed green until it was fixed.
 - **Who:** CONTRACTS_QE
+
+## D-520 — Redeploy v3 (final Stream target)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **v3.** Arc Testnet `0xF4B641dc628de05336aa983B07D5d181254ff08e`.
+    - Block **72605845**, which is the production Stream's `start_range` (D-015).
+    - Tx `0x7a9bd4b1f61888606b91e2a58f6a61efa2761e810216b04730addfead8dc2709`; fee 0.155 USDC.
+    - Blockscout-verified.
+    - Deployed from commit `5caef11` (D-519 source).
+    - Runtime 23,998 B, keccak `0x58517bb04fc9c29faa513490884edb03c918e3656e1785bf7434e5ae330c6795`. QE's `test_fork_deployedV3RuntimeEqualsThisSource` passes (D-703).
+  - **Retired.** v2 `0x9C50…b95f` (block 72584790) and v1 `0xfEe6…b2d3` (block 72580272) are listed in `@vouch/shared` `VOUCH_RETIRED_DEPLOYMENTS`. `deploy-vouch.sh` now moves the previous deployment there automatically.
+  - **Unchanged.** ABI, events, topic0s, EIP-712 types and the typehash (`export-abi.sh`: 0 diff). Only the address and start block change.
+  - **Smoke on v3** (exact 10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108 both times):
+    - Relayed (`submitter = RELAYER`): pay tx `0x95cbda97e7a015b6c105f07cf364b3cc258cc6769cd13a10ce8ae0697280673e`, 409,801 gas.
+    - Self-submit (`submitter = Ben`, sent from Ben's EOA, gas in USDC): pay tx `0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be`, 371,065 gas. It passed the QE-C-11 pre-flight (`balance ≥ amount + gasLimit × maxFeePerGas`).
+  - **Integration rules (QE-C-10 / QE-C-11).** D-519 binds per auth, not per order. A customer may settle a second self-submit auth for the same order first. The relayer treats `OrderAlreadySettled` as terminal and reads the split from events. Self-submit needs the balance pre-flight.
+  - **Funding.** Ben's smoke funding came from Lena, the venue payout wallet (new `--fund-from-payout`), not from DEPLOYER, so the deployer keeps its reserve for deploys.
+- **Who:** CONTRACTS (Orchestrator-authorized after the CONTRACTS_QE v3 PASS-with-findings)

@@ -54,7 +54,7 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 
 ---
 
-### [MSG-035] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-035] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** Vouch v2: the customer's payment signature now includes submitter
 
 **What changed:** Vouch v2 is deployed at 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f. `VOUCH_ARC_TESTNET` in `@vouch/shared` is updated.
@@ -67,6 +67,7 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 - (1) A referral link on an old terms version stops working 72h after the venue changes its terms. Show "this link is outdated, ask for a new one" on `TermsNotInForce`.
 - (2) A `RewardPaid` with amount 0 can appear (credited referrer whose share rounded to 0). Hide or label it.
 - (3) The previous warnings still apply (first purchase below minimum = no reward ever).
+> status → **closed** by CONTRACTS at 2026-11-16T17:23:05-05:00: superseded by MSG-057 (v3)
 
 ---
 
@@ -85,5 +86,22 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 Human A5 #1. App flow: the customer signs PaymentAuth with submitter = RELAYER (unchanged, MSG-041). Kill-the-backend demo: the customer signs submitter = their own address and submits pay() from their own key (gas in USDC). Never offer submitter = 0. Design copy approved (D-017): 'Confirm with Face ID or fingerprint'; ink-black buttons; Instrument Sans.
 
 **Paths:** `AGENTS/DECISIONS.md`
+
+---
+
+### [MSG-057] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** Vouch v3 deployed: new address; self-submit only for the kill-the-backend demo, with a balance >= amount + fee check (supersedes MSG-035)
+
+Supersedes MSG-035. Its UX notes (1)-(3) still apply.
+**Address:** Vouch v3 0xF4B641dc628de05336aa983B07D5d181254ff08e (VOUCH_ARC_TESTNET in @vouch/shared). v2 is retired. Typed data and the ABI are unchanged.
+**App flow (default):** unchanged. Sign receiveAuthForPayment(paymentAuth, VOUCH) exactly as the backend returns it (submitter = RELAYER). Don't rebuild it.
+**Kill-the-backend demo ONLY (D-014/D-519):**
+- The customer builds PaymentAuth with submitter = THEIR OWN address, signs the USDC ReceiveWithAuthorization, and sends pay() from their own EOA.
+- Nobody else can submit it, the relayer included. submitter = 0 can never be paid, so never use it.
+**Pre-flight (QE-C-11):** on Arc, gas is paid in USDC from the SAME balance. Before offering self-submit, require balance >= amount + gasLimit × maxFeePerGas. Use eth_estimateGas from the customer's account plus about a 20% margin (measured: self-submit canonical pay used 371,065 gas on chain; estimate about 437k → limit about 525k). Otherwise the receiveWithAuthorization pull fails and the customer still pays gas for the revert.
+**Also:** without the relayer, acceptIntro goes through the public mempool. The D-517 limits (personal-intro sniping, submitter-chosen eviction) are more exposed; mention it in the demo script.
+**Reference:** smoke --self-submit OK on v3, Ben's own tx 0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be (371,065 gas = 0.0093 USDC paid by Ben, exact split).
+
+**Paths:** `packages/shared/src/deployments.ts`, `packages/shared/src/eip712.ts`, `scripts/deploy/smoke-canonical.ts`
 
 ---

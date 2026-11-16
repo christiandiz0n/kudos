@@ -1,5 +1,5 @@
 # INTERFACES — cross-agent source of truth
-_Last updated: 2026-11-16 by ORCHESTRATOR — §2–§4 FINAL v2 from CONTRACTS after the QE gate (D-501..D-517, D-012). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
+_Last updated: 2026-11-16 (session 2) by ORCHESTRATOR — §2–§4 v3 (D-014, D-519, D-520; CONTRACTS_QE PASS-with-findings); §6–§7 Railway + delivery persistence (D-016, D-305). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
 
 ## 1. Network (Arc Testnet)
 _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence/phase-0/research-s1-s3-s4.md. Decisions D-101..D-105._
@@ -31,13 +31,14 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 |---|---|---|---|
 | `Hello` (**spike only**, canonical for S3, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
 | `Hello` (QE gate re-deploy, Blockscout-verified; not watched by the Stream) | `0xc6282732b1852726F73D7Cea98cE6D03f9021906` | 72569134 | see `docs/evidence/phase-0/qe/` |
-| **`Vouch` (production, Blockscout-verified)** | `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` | 72584790 | `0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab` |
+| **`Vouch` v3 (production, Blockscout-verified; runtime keccak `0x58517bb0…c6795`)** | `0xF4B641dc628de05336aa983B07D5d181254ff08e` | 72605845 | `0x7a9bd4b1f61888606b91e2a58f6a61efa2761e810216b04730addfead8dc2709` |
+| `Vouch` v2 (**RETIRED**, D-520: superseded by the v3 submitter rule) | `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` | 72584790 | `0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab` |
 | `Vouch` v1 (**RETIRED**, QE-C-01/02, do not use) | `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` | 72580272 | `0xe3648ea6…016f` |
 
-Constructor: `Vouch(IFiatTokenV2_2 usdc = 0x3600…0000)`. No owner, no admin, no upgradeability, non-payable. Code: `packages/shared/src/deployments.ts` (`VOUCH_ARC_TESTNET`), ABI `packages/shared/src/abi/vouch.ts` (`vouchAbi`, regenerate with `bash contracts/script/export-abi.sh`).
+Constructor: `Vouch(IFiatTokenV2_2 usdc = 0x3600…0000)`. No owner, no admin, no upgradeability, non-payable. Code: `packages/shared/src/deployments.ts` (`VOUCH_ARC_TESTNET`; retired ones in `VOUCH_RETIRED_DEPLOYMENTS`), ABI `packages/shared/src/abi/vouch.ts` (`vouchAbi`, regenerate with `bash contracts/script/export-abi.sh`).
 
 ## 3. EIP-712
-**Domain** (main contract): `{ name: "Vouch", version: "1", chainId: 5042002, verifyingContract: 0x9C50…b95f }` (ERC-5267 `eip712Domain()` available; TS `vouchDomain(chainId, address)`).
+**Domain** (main contract): `{ name: "Vouch", version: "1", chainId: 5042002, verifyingContract: 0xF4B6…f08e }` (ERC-5267 `eip712Domain()` available; TS `vouchDomain(chainId, address)`).
 
 | Type | Signed by | Fields (in order) | typehash |
 |---|---|---|---|
@@ -107,7 +108,7 @@ Rules (contract-enforced):
 **PaymentAuth / pay (D-103, D-509)**
 - The customer signs USDC `ReceiveWithAuthorization{from: customer, to: Vouch, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(PaymentAuth)}`. TS helper: `receiveAuthForPayment(auth, VOUCH)`.
 - The call is `pay(order, venueSig, weights, attributorSig, auth, customerUsdcSig)`, with `auth.{venue, orderId, amount}` equal to the order's. `now < auth.deadline`.
-- **`auth.submitter` (D-012, QE-C-01):** if it is non-zero, only `msg.sender == submitter` may call `pay`; anyone else gets `UnauthorizedSubmitter()` (checked last in the order checks, no state change). The app always signs `submitter = RELAYER`. `submitter = 0` lets anyone submit (the kill-the-backend path; there, mempool front-running can force the fallback). **Normative (D-013):** `submitter` MUST be the relayer EOA or an access-controlled contract, never a public forwarder/multicall/meta-tx relay (Vouch has no ERC-2771), and never `0` outside the kill-the-backend demo.
+- **`auth.submitter` (D-012, D-014, D-519):** `msg.sender` MUST equal `submitter`; anyone else gets `UnauthorizedSubmitter()` (checked last in the order checks, no state change). The app signs `submitter = RELAYER`. The kill-the-backend demo signs `submitter = customer`, and the customer's EOA calls `pay`; its USDC balance must be ≥ `amount + gasLimit × maxFeePerGas` (QE-C-11). `submitter = 0` is unpayable. The binding is per auth, not per order (QE-C-10): a customer can settle a second self-submit auth first, so the relayer treats `OrderAlreadySettled` as terminal and reads the split from events. **Normative (D-013):** never a public forwarder, multicall or meta-tx relay (Vouch has no ERC-2771).
 - `weightsHash = 0` selects the fallback.
 - The pull is `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)` (bytes overload, ERC-1271-ready), followed by `transfer`s, all in one tx.
 
@@ -150,7 +151,7 @@ SplitAuth(spike) 0xa539384164e343b0ca91506ffcd85c6cabf826e8dda0690ff23c9b0aa1050
 ```
 
 ## 4. Events (Streams filter targets)
-> `topic0 = keccak256("Name(types)")`. Filter by the Vouch address `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` only (never the `0xffff…fffe` system emitter). Start block **72584790**. Code: `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` in `@vouch/shared`.
+> `topic0 = keccak256("Name(types)")`. Filter by the Vouch v3 address `0xF4B641dc628de05336aa983B07D5d181254ff08e` only (never the `0xffff…fffe` system emitter). Start block **72605845**. Topics unchanged from v2. Render the production filter with the `--events vouch` preset (= `VOUCH_EVENT_TOPICS` minus `EIP712DomainChanged`, D-305). Code: `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` in `@vouch/shared`.
 
 | Event | Signature (indexed marked) | topic0 |
 |---|---|---|
@@ -222,12 +223,13 @@ Semantics:
 
 ## 6. Webhook (QuickNode Streams → api)
 _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only items still UNVERIFIED until the first real delivery._
-- **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route).
+- **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route). Production: `https://<api>.up.railway.app/webhooks/streams` (D-016; URL recorded here once deployed). Quick tunnels: local fallback only.
 - **Auth (D-301):** headers `X-QN-Nonce`, `X-QN-Timestamp`, `X-QN-Signature` = `hex(HMAC-SHA256(key = utf8(STREAMS_WEBHOOK_SECRET), msg = nonce + timestamp + body))` over the exact decoded bytes (gunzip first if `Content-Encoding: gzip`). Constant-time compare.
-- **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400 body-decode-failed` bad gzip · `200` accepted. Timestamp skew is logged, not rejected.
+- **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400 body-decode-failed` bad gzip · `500 persist-failed` verified but not stored (QuickNode retries, D-305) · `200` accepted. Timestamp skew is logged, not rejected.
 - **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, batchSource: "metadata"|"logs", events: [ {address, topics, data, blockNumber, transactionHash, logIndex, event, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
 - **Idempotency key for ingestion (Phase 2):** `(transactionHash, logIndex)`.
-- **Spike log:** each POST is appended to `data/local/streams-spike.ndjson` (`receivedAt, verified, status, reason, headers, body, summary`). View it with `pnpm --filter @vouch/scripts streams:deliveries`.
+- **Persistence (D-305):** every *verified* delivery becomes one `stream_deliveries` row before the 200 (`id, received_at, verified, stream_id, batch_start, batch_end, event_count, bytes, gzip, headers jsonb (allow-list, no signature), summary jsonb, body jsonb, body_text`; stream/batch from headers first, then body; no dedupe). 503/401/400 store nothing. One structured log line `streams delivery` per request (no token/signature/body). Read hosted rows: `pnpm --filter @vouch/scripts streams:deliveries --db [--db-url …]` (uses `DATABASE_PUBLIC_URL` then `DATABASE_URL`; refuses `*.railway.internal`).
+- **Spike log (local dev only):** NDJSON at `data/local/streams-spike.ndjson`; off when `NODE_ENV=production` unless `STREAMS_SPIKE_LOG` names a path; `STREAMS_SPIKE_LOG=off` disables it. View with `pnpm --filter @vouch/scripts streams:deliveries`.
 - **UNVERIFIED (live):** the timestamp unit (seconds?), whether the raw dataset arrives 3-deep nested or unwrapped (the filter handles both), and whether `blockTimestamp` is present on logs.
 
 ## 7. Env vars
@@ -247,12 +249,15 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `VENUE_SIGNER_PRIVATE_KEY` | api | Signs `Order` for demo venues (**secret**) |
 | `SPIKE_USER_PRIVATE_KEY` | scripts (S5) | Throwaway customer key for spikes (**secret**) |
 | `QUICKNODE_STREAMS_API_KEY` | scripts/infra | Create/manage Streams (**secret**) |
-| `STREAMS_WEBHOOK_SECRET` | api | Verify Streams webhook signature (**secret**) |
-| `DATABASE_URL` | api | `postgres://…` (hosted) or `pglite://<path>` / `pglite://memory` (local/tests) |
-| `API_PORT` · `API_HOST` · `CORS_ORIGINS` | api | Listen address; comma-separated allowed origins |
+| `STREAMS_WEBHOOK_SECRET` | api | Verify Streams webhook signature (**secret**; on Railway: service `api` → Variables; mirrored in `.env`) |
+| `DATABASE_URL` | api | `postgres://…` (hosted; on Railway `${{Postgres.DATABASE_URL}}`, private network) or `pglite://<path>` / `pglite://memory` (local/tests) |
+| `DATABASE_PUBLIC_URL` | scripts | Railway Postgres public URL, only for `streams:deliveries --db` (needs Postgres public networking) |
+| `PORT` | api | Injected by the host (Railway; pinned 8080); wins over `API_PORT` (D-305) |
+| `NODE_ENV` | api | `production` on Railway (turns the NDJSON spike log off) |
+| `API_PORT` · `API_HOST` · `CORS_ORIGINS` | api | Local listen fallback (`PORT` wins); comma-separated allowed origins (Railway starts with `http://localhost:3100`; add the web origin when web deploys) |
 | `SESSION_SECRET` | api | Session signing (**secret**) |
 | `PUBLIC_API_URL` · `NEXT_PUBLIC_API_URL` | web | API base URL (server-side / browser) |
 | `LLM_PROVIDER` · `LLM_API_KEY` | api (Tier 3) | Optional AI attribution refinement (`none` disables) |
 | `STREAMS_SPIKE_LOG` _(optional)_ | api | Override path of the S3 NDJSON log |
 
-**Phase 1 note (D-510, v2):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` / `VOUCH_DEPLOY_BLOCK=72584790`. Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.
+**Phase 1 note (D-510, v2):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0xF4B641dc628de05336aa983B07D5d181254ff08e` / `VOUCH_DEPLOY_BLOCK=72605845` (v3, D-520). Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.
