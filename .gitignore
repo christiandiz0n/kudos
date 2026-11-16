@@ -47,3 +47,7 @@ test-results/
 # --- python ---
 __pycache__/
 *.pyc
+
+# agent inbox tool lock/tmp
+AGENTS/INBOX/.lock
+AGENTS/INBOX/*.tmp

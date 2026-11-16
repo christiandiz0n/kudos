@@ -86,3 +86,4 @@ Full live procedure: `docs/streams/S3-RUNBOOK.md`.
 
 ## Handoff notes
 Read `AGENTS/README.md` (product story), `AGENTS/INTERFACES.md`, `AGENTS/DECISIONS.md` (D-105, D-301..D-303), and your phase section in `AGENTS/PHASE_LOG.md` before working. Update this file before returning. You may only edit this file, append to DECISIONS.md, and propose INTERFACES.md changes in your report.
+**Comms (D-009):** before working, read `AGENTS/INBOX/STREAMS_INFRA.md` and answer/ack everything open addressed to you; post questions, handoffs and bugs to the recipient's inbox with `python3 scripts/agents/msg.py` instead of guessing; list messages sent + unresolved in your report.

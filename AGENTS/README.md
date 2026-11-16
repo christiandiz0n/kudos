@@ -1,7 +1,7 @@
 # AGENTS/ — rolling project memory
 _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 
-**Current phase:** Phase 0 — Bootstrap, verification spikes, human setup
+**Current phase:** Phase 1 — Contracts (+ design system in parallel); Phase 0 S3-live still open (QuickNode key)
 **Display name:** **Vouch** (`APP_NAME` in `packages/shared/src/constants.ts`; package scope `@vouch/*`; D-007)
 **Deadline:** submit by Fri Nov 20, 2026 12:00 PM CST (target 9:00 AM CST)
 
@@ -10,6 +10,24 @@ _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 - "Mental model" and "Key files map" are rewritten to stay true. "Done" is append-only, newest first. Prune "Next up". Keep files under ~300 lines.
 - Agents edit only their own file, append to `DECISIONS.md`, and *propose* `INTERFACES.md` changes. The Orchestrator applies interface changes.
 - Fresh agent, cold start: *"Read AGENTS/<ROLE>.md and AGENTS/INTERFACES.md, then fix <bug>."*
+
+## Comms protocol (D-009) — mandatory for every agent
+- **Inboxes:** `AGENTS/INBOX/<ROLE>.md`, one per role. `AGENTS/INBOX/_INDEX.md` holds the global counter, the open-message list and the full log. Both are written **only** by `scripts/agents/msg.py`, which file-locks so parallel agents never collide on MSG numbers.
+- **Header format:** `### [MSG-###] <ISO timestamp> FROM: <role> TO: <role> | type: question/request/fyi/blocker/answer | status: open/answered/closed`, followed by the subject, the body and file paths.
+- **Commands:**
+  ```bash
+  python3 scripts/agents/msg.py list --to <ROLE> --open        # your open inbox
+  python3 scripts/agents/msg.py show MSG-012
+  python3 scripts/agents/msg.py send --from <ME> --to <ROLE> --type question --subject "…" --body "…" --paths a,b
+  python3 scripts/agents/msg.py reply MSG-012 --from <ME> --body "…"                  # sends an answer + marks MSG-012 answered
+  python3 scripts/agents/msg.py status MSG-012 --set closed --by <ME> --note "fix in <commit>"
+  ```
+- **Every agent:** (1) reads its inbox **first** and answers or acknowledges everything open addressed to it; (2) posts questions, requests and handoffs to the recipient's inbox **instead of guessing**; (3) lists the messages it sent and any still unresolved in its final report.
+- **Blockers:** use `type: blocker`. The Orchestrator relays blockers immediately (resuming the recipient with SendMessage when possible, otherwise quoting it in that role's next brief).
+- **Handoff packets:** when your output feeds another role (ABI + addresses, design components, API shapes), send a `request`/`fyi` to the consumer's inbox covering **what changed, where it is, how to use it, and known gaps**. Interface changes still go through `INTERFACES.md` + a `DECISIONS.md` entry.
+- **QE bugs:** QE agents file each bug as a message to the **owner's** inbox (type `blocker` if it blocks the gate, otherwise `request`). The owner marks it `answered` with the fix commit, and QE `closes` it after re-verifying.
+- **Gate rule:** after each agent returns, the Orchestrator routes or resolves its open messages. **No phase gate passes with an open `blocker`.** Every phase report has a **Comms** section.
+- **Registry:** `AGENTS/AGENT_REGISTRY.md` maps roles to agent IDs, phase and status.
 
 ## Files
 | File | Purpose |
@@ -20,6 +38,8 @@ _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 | `DECISIONS.md` | Append-only decision log |
 | `INTERFACES.md` | Source of truth: addresses, ABIs, EIP-712 types, events, API, env vars, webhook payload |
 | `PHASE_LOG.md` | Per-phase plan, delegations, QE results, gate outcome |
+| `AGENT_REGISTRY.md` | Role → agent ID, phase, status |
+| `INBOX/` | Per-role inboxes + `_INDEX.md` (D-009) |
 | `<ROLE>.md` | One per agent role (below) |
 
 ## Roster

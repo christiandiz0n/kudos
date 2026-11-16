@@ -190,3 +190,15 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
   - (f) `render-filter` writes its preamble to stderr, so stdout is valid JS (QE-05).
 - **Reason:** QE gate findings in `docs/qa/phase-0-qe-gate.md`. Each prevents a silent mismatch: the stream watching one contract while the ping hits another, the viewer reading a different file than the api, or forged labels being shown as evidence.
 - **Who:** STREAMS_INFRA
+
+## D-009 — Inter-agent communication: inboxes, registry, handoff packets, gate rule
+- **Date:** 2026-11-16
+- **Decision:** Per-role inboxes `AGENTS/INBOX/<ROLE>.md` with header `### [MSG-###] <ts> FROM: <role> TO: <role> | type: question/request/fyi/blocker/answer | status: open/answered/closed`. The global counter + open list + log live in `AGENTS/INBOX/_INDEX.md`. All writes go through `scripts/agents/msg.py` (flock-serialized; tested with 8 concurrent sends → unique IDs). `AGENTS/AGENT_REGISTRY.md` maps roles → agent IDs/phase/status. Every agent reads its inbox first, posts instead of guessing, and reports sent/unresolved messages. Producers write handoff packets to consumers' inboxes. QE files bugs to owners' inboxes; owners answer with the fix commit. The Orchestrator relays blockers immediately and routes open messages after each agent returns. **No gate passes with an open blocker.** Phase reports include a Comms section.
+- **Reason:** Human requirement (2026-11-16). Parallel agents need a durable, auditable channel; a scripted writer avoids counter races between agents.
+- **Alternatives:** hand-edited markdown with manual counters (rejected: races between parallel agents); per-role counters (rejected: the human asked for a global counter).
+- **Who:** HUMAN (requirement) / ORCHESTRATOR (implementation)
+
+## D-010 — L2 scope confirmed per (customer, venue); QuickNode key still rejected
+- **Date:** 2026-11-16
+- **Decision:** The human confirmed D-008's interpretation: the introducer is per (customer, venue). The second QuickNode key also returns 403 on `GET https://api.quicknode.com/streams/rest/v1/streams` with header `x-api-key`. Per the human's instruction, S3 live is stopped (no retries) and escalated. Phase 1 proceeds because it doesn't depend on S3.
+- **Who:** HUMAN / ORCHESTRATOR

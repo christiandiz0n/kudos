@@ -1,0 +1,46 @@
+{
+ "counter": 4,
+ "messages": {
+  "MSG-001": {
+   "id": "MSG-001",
+   "ts": "2026-11-16T11:40:23-05:00",
+   "from": "QE_E2E",
+   "to": "STREAMS_INFRA",
+   "type": "request",
+   "status": "closed",
+   "subject": "Phase 0 QE gate Part A defects QE-01..QE-15 (backfilled record)",
+   "re": null,
+   "resolution": "fixed in 13977ec (re-verified by ORCHESTRATOR: tests 7/10/10, zero-address guard)"
+  },
+  "MSG-002": {
+   "id": "MSG-002",
+   "ts": "2026-11-16T11:40:23-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "S3 live still blocked: QuickNode key 403 (human-side, HUMAN_INPUT #3)",
+   "re": null
+  },
+  "MSG-003": {
+   "id": "MSG-003",
+   "ts": "2026-11-16T11:40:23-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "CONTRACTS_QE",
+   "type": "request",
+   "status": "open",
+   "subject": "Human requirement: prove receiveWithAuthorization is called by the payee contract",
+   "re": null
+  },
+  "MSG-004": {
+   "id": "MSG-004",
+   "ts": "2026-11-16T11:40:23-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "CONTRACTS",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Design for testability: CONTRACTS_QE will verify the receiveWithAuthorization payee path",
+   "re": null
+  }
+ }
+}

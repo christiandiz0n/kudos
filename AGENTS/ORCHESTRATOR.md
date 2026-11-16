@@ -56,3 +56,4 @@ Read `AGENTS/README.md` (product story), `AGENTS/INTERFACES.md`, `AGENTS/DECISIO
 |---|---|---|---|
 | 0 | 3–4 h | ~3.5 h (Sun 21:30–23:20 + Mon session) | Remaining work waits on the human; ~1 h of agent work left after the inputs |
 Budget: ~40–50 h to Fri 9:00 AM CST (10:00 AM ET). Next: Phase 1 Mon (6–8 h).
+**Comms (D-009):** before working, read `AGENTS/INBOX/ORCHESTRATOR.md` and answer/ack everything open addressed to you; post questions, handoffs and bugs to the recipient's inbox with `python3 scripts/agents/msg.py` instead of guessing; list messages sent + unresolved in your report.
