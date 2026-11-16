@@ -151,11 +151,13 @@ contract VouchTest is VouchBase {
     function test_register_relayedWithOwnerSig() public {
         IVouch.VenueConfig memory c = _cfg(1000, 0);
         uint64 dl = uint64(block.timestamp + 1 hours);
-        bytes memory sig = _registerSig(LENA_PK, bytes32("two"), c, 0, dl);
+        uint256 n = vouch.nonces(lena); // 1: the direct registration in setUp consumed nonce 0 (QE-C-04)
+        assertEq(n, 1);
+        bytes memory sig = _registerSig(LENA_PK, bytes32("two"), c, n, dl);
         vm.prank(relayer);
         address v2 = vouch.registerVenue(lena, bytes32("two"), c, dl, sig);
         assertEq(vouch.getVenue(v2).owner, lena);
-        assertEq(vouch.nonces(lena), 1);
+        assertEq(vouch.nonces(lena), n + 1);
         // replay of the same signature (nonce consumed / venue exists) fails
         vm.prank(relayer);
         vm.expectRevert(IVouch.InvalidOwnerSignature.selector);
@@ -207,7 +209,8 @@ contract VouchTest is VouchBase {
         assertEq(vouch.getTerms(venue, 1).rewardBps, RATE, "v1 unchanged");
 
         uint64 dl = uint64(block.timestamp + 1 hours);
-        bytes memory sig = _sign(LENA_PK, _digest(keccak256(abi.encode(T_TERMS, venue, uint16(2_000), uint256(0), 0, dl))));
+        bytes memory sig =
+            _sign(LENA_PK, _digest(keccak256(abi.encode(T_TERMS, venue, uint16(2_000), uint256(0), vouch.nonces(lena), dl))));
         vm.prank(relayer);
         vouch.updateTerms(venue, 2_000, 0, dl, sig);
         (tv,) = vouch.currentTerms(venue);
@@ -232,7 +235,7 @@ contract VouchTest is VouchBase {
         address np = makeAddr("newPayout");
         bytes memory sig = _sign(
             LENA_PK,
-            _digest(keccak256(abi.encode(T_KEYS, venue, np, vm.addr(newSignerPk), attributor, uint256(0), dl)))
+            _digest(keccak256(abi.encode(T_KEYS, venue, np, vm.addr(newSignerPk), attributor, vouch.nonces(lena), dl)))
         );
         vm.prank(relayer);
         vouch.setKeys(venue, np, vm.addr(newSignerPk), attributor, dl, sig);
@@ -245,6 +248,7 @@ contract VouchTest is VouchBase {
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, 0);
         usdc.mint(ben, o.amount);
         vm.expectRevert(IVouch.InvalidVenueSignature.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
 
         vm.prank(lena);
@@ -254,7 +258,8 @@ contract VouchTest is VouchBase {
 
     function test_seedAmbassador_relayedAndRevocable() public {
         uint64 dl = uint64(block.timestamp + 1 hours);
-        bytes memory sig = _sign(LENA_PK, _digest(keccak256(abi.encode(T_SEED, venue, sam, true, uint256(0), dl))));
+        bytes memory sig =
+            _sign(LENA_PK, _digest(keccak256(abi.encode(T_SEED, venue, sam, true, vouch.nonces(lena), dl))));
         vm.prank(relayer);
         vouch.setSeedAmbassador(venue, sam, true, dl, sig);
         assertTrue(vouch.isSeedAmbassador(venue, sam));
@@ -517,13 +522,16 @@ contract VouchTest is VouchBase {
             orderId: o.orderId,
             amount: o.amount,
             weightsHash: 0,
-            deadline: uint64(block.timestamp + 10 minutes)
+            deadline: uint64(block.timestamp + 10 minutes),
+            submitter: relayer
         });
         bytes32 sh = keccak256(
             abi.encode(T_RWA, pa.customer, address(vouch), pa.amount, uint256(0), uint256(pa.deadline), _authNonce(pa))
         );
+        // (submitter = relayer, see the prank before pay below)
         bytes memory usig = _sign(custPk, keccak256(abi.encodePacked("\x19\x01", usdc.DOMAIN_SEPARATOR(), sh)));
         usdc.mint(address(custWallet), o.amount);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", pa, usig);
         assertTrue(vouch.getCustomer(venue, address(custWallet)).rewarded);
         assertEq(usdc.balanceOf(address(refWallet)), 10e6 * 1500 / 10_000 * 5500 / 10_000);
@@ -541,6 +549,7 @@ contract VouchTest is VouchBase {
         emit CustomerVerified(venue, ben, address(0), o.orderId);
         vm.expectEmit(address(vouch));
         emit PaymentSettled(venue, ben, o.orderId, 3e6, 3e6, 0, true, false, 0);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         assertEq(usdc.balanceOf(payout), 3e6);
         IVouch.CustomerState memory cs = vouch.getCustomer(venue, ben);
@@ -581,6 +590,7 @@ contract VouchTest is VouchBase {
         usdc.mint(ben, o.amount);
         vm.expectEmit(address(vouch));
         emit PaymentSettled(venue, ben, o.orderId, 12e6, 12e6, 0, false, false, 0);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         assertEq(usdc.balanceOf(ana), ana0);
         assertEq(usdc.balanceOf(payout) - p0, 12e6);
@@ -605,6 +615,7 @@ contract VouchTest is VouchBase {
         usdc.mint(ben, o.amount);
         vm.expectEmit(address(vouch));
         emit RewardReturned(o.orderId, address(0), venue, ben, 2, 300_000, sam, 0);
+        vm.prank(relayer);
         vouch.pay(o, osig, w, wsig, a, usig);
         // pool 1.5: cashback .375, L1 .825, L2 .30 → venue
         assertEq(usdc.balanceOf(payout), 10e6 - 375_000 - 825_000);
@@ -624,6 +635,7 @@ contract VouchTest is VouchBase {
         usdc.mint(ben, o.amount);
         vm.expectEmit(address(vouch));
         emit RewardReturned(o.orderId, ben, venue, ben, 2, 300_000, ana, 1);
+        vm.prank(relayer);
         vouch.pay(o, osig, w, wsig, a, usig);
         // Ben gets only his cashback, not the L2 through Ana
         assertEq(usdc.balanceOf(ben) - ben0, 375_000);
@@ -641,6 +653,7 @@ contract VouchTest is VouchBase {
         usdc.mint(ben, o.amount);
         vm.expectEmit(address(vouch));
         emit RewardReturned(o.orderId, priya, venue, ben, 1, 297_000, priya, 2);
+        vm.prank(relayer);
         vouch.pay(o, osig, w, wsig, a, usig);
         assertEq(usdc.balanceOf(priya), priya0);
         assertEq(usdc.balanceOf(payout) - p0, 10_200_000 + 297_000);
@@ -654,6 +667,7 @@ contract VouchTest is VouchBase {
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, 0);
         usdc.mint(ben, o.amount);
         vm.expectRevert(IVouch.PayoutTransferFailed.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 
@@ -672,6 +686,7 @@ contract VouchTest is VouchBase {
         for (uint256 g = 150_000; g < 700_000; g += 2_500) {
             uint256 snap = vm.snapshotState();
             vm.recordLogs();
+            vm.prank(relayer);
             (bool ok,) = address(vouch).call{gas: g}(cd);
             if (ok) {
                 successes++;
@@ -722,6 +737,7 @@ contract VouchTest is VouchBase {
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, committed);
         usdc.mint(ben, o.amount);
         vm.recordLogs();
+        vm.prank(relayer);
         vouch.pay(o, osig, w, wsig, a, usig);
         Vm.Log[] memory logs = vm.getRecordedLogs();
         bool found;
@@ -903,6 +919,7 @@ contract VouchTest is VouchBase {
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, ANA_PK, 0);
         usdc.mint(ana, o.amount);
         vm.expectRevert(IVouch.OrderAlreadySettled.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 
@@ -914,49 +931,59 @@ contract VouchTest is VouchBase {
         IVouch.PaymentAuth memory bad = _copy(a);
         bad.amount = 5e6;
         vm.expectRevert(IVouch.AuthMismatch.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", bad, usig);
         bad = _copy(a);
         bad.orderId = bytes32("other");
         vm.expectRevert(IVouch.AuthMismatch.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", bad, usig);
         bad = _copy(a);
         bad.venue = address(0xbeef);
         vm.expectRevert(IVouch.AuthMismatch.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", bad, usig);
         bad = _copy(a);
         bad.customer = address(0);
         vm.expectRevert(IVouch.ZeroAddress.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", bad, usig);
 
         bytes memory wrongSig = _sign(ATTR_PK, keccak256("x"));
         vm.expectRevert(IVouch.InvalidVenueSignature.selector);
+        vm.prank(relayer);
         vouch.pay(o, wrongSig, _emptyWeights(), "", a, usig);
 
         IVouch.Order memory o2 =
             IVouch.Order({venue: address(0xbeef), orderId: o.orderId, amount: o.amount, expiresAt: o.expiresAt});
         vm.expectRevert(IVouch.UnknownVenue.selector);
+        vm.prank(relayer);
         vouch.pay(o2, osig, _emptyWeights(), "", a, usig);
 
         vm.warp(a.deadline); // USDC validBefore is exclusive
         vm.expectRevert(IVouch.AuthExpired.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         vm.warp(o.expiresAt + 1);
         vm.expectRevert(IVouch.OrderExpired.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 
     function _copy(IVouch.PaymentAuth memory a) internal pure returns (IVouch.PaymentAuth memory) {
-        return IVouch.PaymentAuth(a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline);
+        return IVouch.PaymentAuth(a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline, a.submitter);
     }
 
     function test_pay_amountBounds() public {
         (IVouch.Order memory o, bytes memory osig) = _order(venue, 0);
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, 0);
         vm.expectRevert(IVouch.InvalidAmount.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         (o, osig) = _order(venue, 1_000_000e6 + 1);
         (a, usig) = _auth(o, BEN_PK, 0);
         vm.expectRevert(IVouch.InvalidAmount.selector);
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 
@@ -967,10 +994,12 @@ contract VouchTest is VouchBase {
         usdc.mint(ben, o.amount);
         a.weightsHash = bytes32(uint256(1));
         vm.expectRevert("FiatTokenV2: invalid signature");
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         a.weightsHash = 0;
         a.deadline += 1;
         vm.expectRevert("FiatTokenV2: invalid signature");
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 
@@ -1021,6 +1050,7 @@ contract VouchTest is VouchBase {
             ben, _authNonce(a), _sign(BEN_PK, keccak256(abi.encodePacked("\x19\x01", usdc.DOMAIN_SEPARATOR(), cancelHash)))
         );
         vm.expectRevert("FiatTokenV2: authorization is used or canceled");
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
         assertFalse(vouch.isOrderSettled(venue, o.orderId));
         assertFalse(vouch.getCustomer(venue, ben).verified);
@@ -1031,6 +1061,7 @@ contract VouchTest is VouchBase {
         (IVouch.Order memory o, bytes memory osig) = _order(venue, 6e6);
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, 0);
         vm.expectRevert("ERC20: transfer amount exceeds balance");
+        vm.prank(relayer);
         vouch.pay(o, osig, _emptyWeights(), "", a, usig);
     }
 

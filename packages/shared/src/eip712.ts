@@ -97,6 +97,8 @@ export const WEIGHTS_TYPES = {
  * `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)`, so the relayer can
  * never pull funds for anything else. EIP-3009 nonces are unique per authorizer (no sequential nonce).
  * `weightsHash` = hashStruct(Weights) of the quoted weights, or bytes32(0) to accept the on-chain fallback.
+ * `submitter` = the only address allowed to submit pay() (the RELAYER) — blocks mempool front-running that would
+ * force the fallback split (D-012, QE-C-01). zeroAddress = anyone may submit (kill-the-backend path).
  */
 export const PAYMENT_AUTH_TYPES = {
   PaymentAuth: [
@@ -106,6 +108,7 @@ export const PAYMENT_AUTH_TYPES = {
     { name: 'amount', type: 'uint256' },
     { name: 'weightsHash', type: 'bytes32' },
     { name: 'deadline', type: 'uint64' },
+    { name: 'submitter', type: 'address' },
   ],
 } as const;
 
@@ -215,6 +218,8 @@ export interface PaymentAuth {
   amount: bigint;
   weightsHash: Hex;
   deadline: bigint;
+  /** Only this address may call pay() with the authorization (the app's relayer); zeroAddress = anyone (D-012). */
+  submitter: Address;
 }
 export interface ReceiveWithAuthorization {
   from: Address;

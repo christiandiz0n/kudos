@@ -19,7 +19,7 @@ abstract contract VouchBase is Test {
     bytes32 internal constant T_WEIGHTS =
         keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
     bytes32 internal constant T_AUTH = keccak256(
-        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
     );
     bytes32 internal constant T_REGISTER = keccak256(
         "RegisterVenue(address owner,bytes32 salt,address payout,address signer,address attributor,uint16 rewardBps,uint256 minOrder,string metadataURI,uint256 nonce,uint64 deadline)"
@@ -247,7 +247,9 @@ abstract contract VouchBase is Test {
     function _emptyWeights() internal pure returns (IVouch.Weights memory w) {}
 
     function _authNonce(IVouch.PaymentAuth memory a) internal pure returns (bytes32) {
-        return keccak256(abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline));
+        return keccak256(
+            abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline, a.submitter)
+        );
     }
 
     function _auth(IVouch.Order memory o, uint256 customerPk, bytes32 weightsHash)
@@ -261,7 +263,8 @@ abstract contract VouchBase is Test {
             orderId: o.orderId,
             amount: o.amount,
             weightsHash: weightsHash,
-            deadline: uint64(block.timestamp + 10 minutes)
+            deadline: uint64(block.timestamp + 10 minutes),
+            submitter: relayer // D-012: only the relayer may submit (tests prank `relayer` before pay)
         });
         sig = _usdcSig(customerPk, a);
     }

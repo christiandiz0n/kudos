@@ -72,9 +72,11 @@ contract VouchTypehashTest is Test {
         );
         assertEq(
             h.paymentAuth(
-                IVouch.PaymentAuth(A(0xc1), A(0xa1), bytes32(uint256(7)), 12_000_000, bytes32(uint256(0x77)), 1_800_000_600)
+                IVouch.PaymentAuth(
+                    A(0xc1), A(0xa1), bytes32(uint256(7)), 12_000_000, bytes32(uint256(0x77)), 1_800_000_600, A(0xe1)
+                )
             ),
-            0x9c467d24e100878416549589aa43ce1bc27ce24374c2ab19bee49bcb5a01d752
+            0xfb440a874850757a8f393d28c80bab807cc706b202fb457d4c81c04df9ab02bf
         );
         assertEq(
             h.registerVenue(

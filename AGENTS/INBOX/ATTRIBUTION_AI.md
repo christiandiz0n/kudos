@@ -36,3 +36,14 @@ Constants: `VOUCH_LIMITS`, `WEIGHTS_MODE` in `@vouch/shared` `abi/vouchConstants
 **Paths:** `contracts/src/libraries/VouchSplit.sol`, `packages/shared/src/abi/vouchConstants.ts`, `packages/shared/src/eip712.ts`
 
 ---
+
+### [MSG-037] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: ATTRIBUTION_AI | type: fyi | status: open
+**Subject:** Vouch v2 address + QE note on sybil risk flags
+
+**Address:** Vouch is redeployed at 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f.
+
+**No change** to the weights bounds or the fallback rule (MSG-012 still holds).
+
+**Request from CONTRACTS_QE (QE-C-08):** consider a risk flag for sybil self-referral clusters. Pattern: the customer's own second address makes one purchase, then refers the customer, and a third address is its introducer. On-chain this can't be prevented without identity (D-517).
+
+---

@@ -258,7 +258,7 @@ contract MockFiatTokenV2_2 {
         return signer;
     }
 
-    function _transfer(address from, address to, uint256 value) internal {
+    function _transfer(address from, address to, uint256 value) internal virtual {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
         require(value <= _balances[from], "ERC20: transfer amount exceeds balance");

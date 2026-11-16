@@ -262,6 +262,19 @@ export const vouchAbi = [
   },
   {
     "type": "function",
+    "name": "SUPERSEDED_GRACE",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "UPDATE_TERMS_TYPEHASH",
     "inputs": [],
     "outputs": [
@@ -1170,6 +1183,11 @@ export const vouchAbi = [
             "name": "deadline",
             "type": "uint64",
             "internalType": "uint64"
+          },
+          {
+            "name": "submitter",
+            "type": "address",
+            "internalType": "address"
           }
         ]
       },
@@ -1220,6 +1238,11 @@ export const vouchAbi = [
             "name": "deadline",
             "type": "uint64",
             "internalType": "uint64"
+          },
+          {
+            "name": "submitter",
+            "type": "address",
+            "internalType": "address"
           }
         ]
       }
@@ -2059,6 +2082,11 @@ export const vouchAbi = [
   },
   {
     "type": "error",
+    "name": "InvalidPayout",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidReferrerSignature",
     "inputs": []
   },
@@ -2135,6 +2163,11 @@ export const vouchAbi = [
   },
   {
     "type": "error",
+    "name": "UnauthorizedSubmitter",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "UnknownVenue",
     "inputs": []
   },
@@ -2185,7 +2218,7 @@ export const VOUCH_TYPE_STRINGS = {
   "Intro": "Intro(address venue,address referrer,uint32 termsVersion,uint8 linkType,uint64 issuedAt,uint64 expiresAt,bytes32 nonce)",
   "IntroAcceptance": "IntroAcceptance(bytes32 introHash,address customer,uint64 deadline)",
   "Order": "Order(address venue,bytes32 orderId,uint256 amount,uint64 expiresAt)",
-  "PaymentAuth": "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)",
+  "PaymentAuth": "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)",
   "RegisterVenue": "RegisterVenue(address owner,bytes32 salt,address payout,address signer,address attributor,uint16 rewardBps,uint256 minOrder,string metadataURI,uint256 nonce,uint64 deadline)",
   "SetSeedAmbassador": "SetSeedAmbassador(address venue,address ambassador,bool allowed,uint256 nonce,uint64 deadline)",
   "SetVenueKeys": "SetVenueKeys(address venue,address payout,address signer,address attributor,uint256 nonce,uint64 deadline)",

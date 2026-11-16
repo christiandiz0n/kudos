@@ -345,3 +345,60 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Reason:** CONTRACTS_QE (QE-C-01 / MSG-014) showed that public `pay` calldata can be front-run with a garbage attributor signature or swapped weights, forcing the fallback split (in the demo: Priya 792,000 instead of 198,000 of L1, plus a permanently wrong introducer) while the honest tx reverts. Binding the submitter removes the attacker's ability to submit at all, without changing the human's invariant 6. The alternative (revert when a customer-committed attributor signature is invalid) would have required rewording invariant 6 and needed a human decision.
 - **Alternatives:** (a) revert on invalid committed weights (changes invariant 6; deferred to the human); (c) accept the risk (rejected: it corrupts the frozen introducer, which is permanent).
 - **Who:** ORCHESTRATOR (default taken to keep the gate moving; flagged to the human, who can override)
+
+## D-512 — D-012 implemented: PaymentAuth.submitter (QE-C-01)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Type.** `PaymentAuth` gains `address submitter` as its last field: `PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)`, typehash `0xf9bd6d8f…7abcba4`. Because the field is in the struct hash, it is also in the EIP-3009 nonce.
+  - **Check.** `pay` reverts `UnauthorizedSubmitter()` when `submitter != 0 && msg.sender != submitter`. The check runs LAST in `_checkOrder`, so malformed orders and signatures still report their own errors, and a rejected attempt changes no state.
+  - **Unchanged.** Fallback semantics (D-502) and `previewPayment`.
+  - **Usage.** The app and the smoke script sign `submitter = RELAYER`.
+- **Who:** CONTRACTS (implements ORCHESTRATOR D-012)
+
+## D-513 — Payout guard (QE-C-02)
+- **Date:** 2026-11-16
+- **Decision:** `_checkKeys` (used by registerVenue and setKeys) rejects `payout == address(this)` and `payout == address(USDC)` with `InvalidPayout()`, in addition to zero addresses. Vouch has no sweep, so either would strand venue shares forever.
+- **Who:** CONTRACTS
+
+## D-514 — Zero-amount L1 credits are emitted (QE-C-03)
+- **Date:** 2026-11-16
+- **Decision:** For every credited L1 referrer (bps > 0) whose L1 share floors to 0, `_distribute` records `RewardPaid(role 1, amount 0, via = referrer)` with no transfer. Other zero shares are still skipped. Ambassador `customersCredited` / `venues` are now rebuildable from events alone. This was the smallest change; an extra per-referrer event would have cost size we don't have (≈540 B headroom).
+- **Who:** CONTRACTS
+
+## D-515 — Every owner action consumes the owner nonce (QE-C-04)
+- **Date:** 2026-11-16
+- **Decision:** `registerVenue`, `updateTerms`, `setKeys` and `setSeedAmbassador` call `_useNonce(owner)` on the direct path too, so a direct action invalidates any outstanding signed action carrying the current nonce. Residual limit: a signature pre-signed for a FUTURE nonce (n+1) becomes valid once n is used. Clients should sign only the current nonce, with short deadlines.
+- **Who:** CONTRACTS
+
+## D-516 — Superseded-terms grace window; corrects D-505 (QE-C-05)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Correction.** D-505's claim that "a referrer can't pick a superseded, better version" was wrong: `issuedAt` is chosen by the referrer and can be back-dated.
+  - **New rule.** An intro whose `termsVersion` has been superseded is accepted only while `now ≤ effectiveAt(version + 1) + SUPERSEDED_GRACE` (72 h). The in-force-at-issuedAt check is unchanged.
+  - **Effect.** Back-dating reaches old terms only during the 72 h after a terms change. Links legitimately shared before a change also stop being acceptable 72 h after it; the frontend should ask the referrer to re-share. Intros accepted earlier stay frozen (invariant 8).
+- **Alternative rejected:** `issuedAt ≥ now − 72h` for all intros, because it would break 7–30-day broadcast links.
+- **Who:** CONTRACTS
+
+## D-517 — Gas floor per reward transfer + pinned ordering (QE-C-07); documented limits (QE-C-06, QE-C-08)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Gas floor and ordering (QE-C-07).**
+    - `_tryTransfer` reverts `TransferOutOfGas()` unless `gasleft() ≥ 100,000` before the call. The token frame then always gets ≥ 98k, far above a USDC transfer, so a failure is a genuine refusal. This closes the nested-call false negative of the 63/64 post-check, which is kept as well.
+    - `_distribute` ordering is pinned by a comment and by `test_distribute_orderingPinned_*`: all reward transfers, then stats, then the venue payout, then events.
+  - **Accepted limits** (no code change; mitigate off-chain):
+    - **Personal-intro sniping (QE-C-06):** a personal intro names no customer, so a mempool observer can accept it first.
+    - **Submitter-chosen eviction order (QE-C-06):** when 6+ acceptances are pending, whoever submits picks which referrer the 5-slot cap evicts.
+    - **Sybil self-referral clusters (QE-C-08):** cost one real purchase per sybil and are capped by rewardBps. Flag them in ATTRIBUTION_AI risk flags.
+    - **Orders not bound to a customer (QE-C-08):** a third party paying first is griefing only, since they pay real money. Treat QR orders as single-use.
+    - **Gas-burning ERC-1271 attributor (QE-C-08):** needs ~64× gas; this is the venue's own misconfiguration.
+  - **Mitigations:** submit `acceptIntro` / `pay` through the relayer (private path where possible) and keep deadlines short.
+- **Who:** CONTRACTS
+
+## D-518 — Redeploy v2
+- **Date:** 2026-11-16
+- **Decision:**
+  - **v2.** Arc Testnet `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f`, block 72584790, tx `0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab`, Blockscout-verified. Runtime 24,036 B.
+  - **v1 retired.** `0xfEe6…b2d3` (block 72580272) must not be used.
+  - **Unchanged.** Event signatures and topic0s; only the address and start block change for Streams.
+  - **Builds.** Production builds (`export-abi.sh`, `deploy-vouch.sh`) now pass `--skip test`, so a broken test file can't block deploy or export.
+- **Who:** CONTRACTS

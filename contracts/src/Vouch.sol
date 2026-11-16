@@ -33,6 +33,10 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     uint256 public constant MAX_LIVE_INTROS = 5;
     uint64 public constant MAX_INTRO_TTL = 30 days;
     uint64 public constant MAX_CLOCK_SKEW = 15 minutes;
+    uint64 public constant SUPERSEDED_GRACE = 72 hours;
+    /// @dev Gas floor before each reward transfer: the token frame always gets >= 63/64 of it, far above a USDC
+    ///      transfer's cost, so a failed transfer is a genuine refusal, never starvation (QE-C-07).
+    uint256 internal constant MIN_TRANSFER_GAS = 100_000;
 
     // Enum-like codes are internal to stay under the EIP-170 size limit; mirrored in
     // packages/shared/src/abi/vouchConstants.ts (WEIGHTS_MODE, RETURN_REASON, INTRO_DROP_REASON) and constants.ts.
@@ -137,7 +141,7 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     // ================================================================================================
 
     /// @notice Register a venue. Called by `owner` directly (ownerSig ignored) or by anyone (the relayer) with the
-    ///         owner's `RegisterVenue` signature (consumes `nonces(owner)`).
+    ///         owner's `RegisterVenue` signature. Every owner action (direct or relayed) consumes `nonces(owner)`.
     /// @return venue The venue id = address(uint160(uint256(keccak256(abi.encode(owner, salt))))).
     function registerVenue(
         address owner,
@@ -147,8 +151,9 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         bytes calldata ownerSig
     ) external returns (address venue) {
         if (owner == address(0)) revert ZeroAddress();
+        uint256 nonce = _useNonce(owner); // consumed on direct calls too: invalidates pending signed actions (QE-C-04)
         if (msg.sender != owner) {
-            _checkOwnerSig(owner, VouchHash.registerVenue(owner, salt, cfg, _useNonce(owner), deadline), deadline, ownerSig);
+            _checkOwnerSig(owner, VouchHash.registerVenue(owner, salt, cfg, nonce, deadline), deadline, ownerSig);
         }
         venue = computeVenueId(owner, salt);
         Venue storage v = _venues[venue];
@@ -169,9 +174,10 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     {
         Venue storage v = _venue(venue);
         address owner = v.owner;
+        uint256 nonce = _useNonce(owner); // consumed on direct calls too: invalidates pending signed actions (QE-C-04)
         if (msg.sender != owner) {
             _checkOwnerSig(
-                owner, VouchHash.updateTerms(venue, rewardBps, minOrder, _useNonce(owner), deadline), deadline, ownerSig
+                owner, VouchHash.updateTerms(venue, rewardBps, minOrder, nonce, deadline), deadline, ownerSig
             );
         }
         _pushTerms(venue, v, rewardBps, minOrder);
@@ -188,10 +194,11 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     ) external {
         Venue storage v = _venue(venue);
         address owner = v.owner;
+        uint256 nonce = _useNonce(owner); // consumed on direct calls too: invalidates pending signed actions (QE-C-04)
         if (msg.sender != owner) {
             _checkOwnerSig(
                 owner,
-                VouchHash.setVenueKeys(venue, payout, signer, attributor, _useNonce(owner), deadline),
+                VouchHash.setVenueKeys(venue, payout, signer, attributor, nonce, deadline),
                 deadline,
                 ownerSig
             );
@@ -209,10 +216,11 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     {
         Venue storage v = _venue(venue);
         address owner = v.owner;
+        uint256 nonce = _useNonce(owner); // consumed on direct calls too: invalidates pending signed actions (QE-C-04)
         if (msg.sender != owner) {
             _checkOwnerSig(
                 owner,
-                VouchHash.setSeedAmbassador(venue, ambassador, allowed, _useNonce(owner), deadline),
+                VouchHash.setSeedAmbassador(venue, ambassador, allowed, nonce, deadline),
                 deadline,
                 ownerSig
             );
@@ -460,8 +468,10 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         }
     }
 
-    function _checkKeys(address payout, address signer, address attributor) internal pure {
+    function _checkKeys(address payout, address signer, address attributor) internal view {
         if (payout == address(0) || signer == address(0) || attributor == address(0)) revert ZeroAddress();
+        // Vouch has no sweep: a payout of this contract (or the token) would strand every venue share (QE-C-02).
+        if (payout == address(this) || payout == address(USDC)) revert InvalidPayout();
     }
 
     function _pushTerms(address venue, Venue storage v, uint16 rewardBps, uint256 minOrder) internal {
@@ -478,7 +488,13 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     function _checkTermsInForce(address venue, uint32 version, uint64 issuedAt, uint32 current) internal view {
         if (version == 0 || version > current) revert TermsNotInForce();
         if (_terms[venue][version].effectiveAt > issuedAt) revert TermsNotInForce();
-        if (version < current && _terms[venue][version + 1].effectiveAt <= issuedAt) revert TermsNotInForce();
+        if (version < current) {
+            uint64 supersededAt = _terms[venue][version + 1].effectiveAt;
+            if (supersededAt <= issuedAt) revert TermsNotInForce();
+            // QE-C-05: an intro on a superseded version must be ACCEPTED within SUPERSEDED_GRACE of the cut, so a
+            // back-dated issuedAt can reach old terms only during that window (not for the whole MAX_INTRO_TTL).
+            if (block.timestamp > supersededAt + SUPERSEDED_GRACE) revert TermsNotInForce();
+        }
     }
 
     // ================================================================================================
@@ -570,6 +586,9 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         if (!SignatureChecker.isValidSignatureNow(v.signer, _hashTypedDataV4(VouchHash.order(order)), venueSig)) {
             revert InvalidVenueSignature();
         }
+        // D-012 / QE-C-01: only the bound submitter (the app's relayer) may submit; 0 = anyone (kill-the-backend path).
+        // Checked last so malformed orders/auths report their specific error first.
+        if (auth.submitter != address(0) && msg.sender != auth.submitter) revert UnauthorizedSubmitter();
     }
 
     /// @dev Live, unexpired intros whose frozen minOrder <= amount, in slot order.
@@ -705,6 +724,10 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     }
 
     /// @dev Transfers every share (failed recipient transfers → venue, D-506), then the venue payout, then events.
+    ///      ORDERING IS LOAD-BEARING (QE-C-07, pinned by test_distribute_orderingPinned_*): ALL reward transfers come
+    ///      first; the stats SSTOREs, the venue payout transfer and the event emission come after them. Starving any reward
+    ///      transfer therefore also starves this tail, so an under-funded tx reverts instead of redirecting shares.
+    ///      Do not move the venue payout or the stats writes before the reward transfers.
     function _distribute(
         address venue,
         address customer,
@@ -775,7 +798,13 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         internal
         returns (uint256)
     {
-        if (amount == 0) return m;
+        // Zero-amount L1 credits are still recorded (RewardPaid amount 0, no transfer) so ambassador credit is
+        // rebuildable from events (QE-C-03). Other zero shares are skipped.
+        if (amount == 0) {
+            if (role != ROLE_L1) return m;
+            outs[m] = Payout(to, via, role, true, 0, 0);
+            return m + 1;
+        }
         bool ok = _tryTransfer(to, amount);
         outs[m] = Payout(to, via, role, ok, ok ? 0 : RETURN_TRANSFER_FAILED, amount);
         return m + 1;
@@ -794,6 +823,7 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         address token = address(USDC);
         bytes memory data = abi.encodeCall(IFiatTokenV2_2.transfer, (to, amount));
         uint256 gasBefore = gasleft();
+        if (gasBefore < MIN_TRANSFER_GAS) revert TransferOutOfGas();
         bool success;
         assembly ("memory-safe") {
             mstore(0x00, 0)

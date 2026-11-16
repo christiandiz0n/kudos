@@ -1,5 +1,5 @@
 # INTERFACES — cross-agent source of truth
-_Last updated: 2026-11-16 by ORCHESTRATOR — §2–§4 v1 FINAL from CONTRACTS (D-501..D-511). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
+_Last updated: 2026-11-16 by ORCHESTRATOR — §2–§4 FINAL v2 from CONTRACTS after the QE gate (D-501..D-517, D-012). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
 
 ## 1. Network (Arc Testnet)
 _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence/phase-0/research-s1-s3-s4.md. Decisions D-101..D-105._
@@ -31,12 +31,13 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 |---|---|---|---|
 | `Hello` (**spike only**, canonical for S3, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
 | `Hello` (QE gate re-deploy, Blockscout-verified; not watched by the Stream) | `0xc6282732b1852726F73D7Cea98cE6D03f9021906` | 72569134 | see `docs/evidence/phase-0/qe/` |
-| **`Vouch` (production, Blockscout-verified)** | `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` | 72580272 | `0xe3648ea62c60c46f92c30ff3753d907bc4b626417ffcee282883ff1f3a16016f` |
+| **`Vouch` (production, Blockscout-verified)** | `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` | 72584790 | `0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab` |
+| `Vouch` v1 (**RETIRED**, QE-C-01/02, do not use) | `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` | 72580272 | `0xe3648ea6…016f` |
 
 Constructor: `Vouch(IFiatTokenV2_2 usdc = 0x3600…0000)`. No owner, no admin, no upgradeability, non-payable. Code: `packages/shared/src/deployments.ts` (`VOUCH_ARC_TESTNET`), ABI `packages/shared/src/abi/vouch.ts` (`vouchAbi`, regenerate with `bash contracts/script/export-abi.sh`).
 
 ## 3. EIP-712
-**Domain** (main contract): `{ name: "Vouch", version: "1", chainId: 5042002, verifyingContract: 0xfEe6…b2d3 }` (ERC-5267 `eip712Domain()` available; TS `vouchDomain(chainId, address)`).
+**Domain** (main contract): `{ name: "Vouch", version: "1", chainId: 5042002, verifyingContract: 0x9C50…b95f }` (ERC-5267 `eip712Domain()` available; TS `vouchDomain(chainId, address)`).
 
 | Type | Signed by | Fields (in order) | typehash |
 |---|---|---|---|
@@ -44,7 +45,7 @@ Constructor: `Vouch(IFiatTokenV2_2 usdc = 0x3600…0000)`. No owner, no admin, n
 | `IntroAcceptance` | customer | `bytes32 introHash, address customer, uint64 deadline` | `0x400ca88e…a469d0` |
 | `Order` | venue **signer** key | `address venue, bytes32 orderId, uint256 amount, uint64 expiresAt` | `0xd418cbc9…11d8a3` |
 | `Weights` | venue **attributor** key | `address venue, address customer, bytes32 orderId, address[] referrers, uint16[] bps` | `0x6d9e3bfc…27720c` |
-| `PaymentAuth` | (not signed; its hashStruct is the EIP-3009 nonce) | `address customer, address venue, bytes32 orderId, uint256 amount, bytes32 weightsHash, uint64 deadline` | `0x83204ea1…35b253` |
+| `PaymentAuth` | (not signed; its hashStruct is the EIP-3009 nonce) | `address customer, address venue, bytes32 orderId, uint256 amount, bytes32 weightsHash, uint64 deadline, address submitter` | `0xf9bd6d8f…7abcba4` |
 | `RegisterVenue` | venue **owner** | `address owner, bytes32 salt, address payout, address signer, address attributor, uint16 rewardBps, uint256 minOrder, string metadataURI, uint256 nonce, uint64 deadline` | `0x8c44f0dc…be789d` |
 | `UpdateTerms` | venue owner | `address venue, uint16 rewardBps, uint256 minOrder, uint256 nonce, uint64 deadline` | `0x4a721d19…e52d54` |
 | `SetVenueKeys` | venue owner | `address venue, address payout, address signer, address attributor, uint256 nonce, uint64 deadline` | `0x93435561…3d98c6` |
@@ -57,7 +58,7 @@ Intro              0xdc4192f6970873be49c69a70fecca1bd4ec35227b3516fe7213b516246d
 IntroAcceptance    0x400ca88e9ec28bb1f7e73d44cb8743cd861d151b07da51fae9ff083083a469d0
 Order              0xd418cbc9a68e3abda5b09e4e1b5c5404de5701543ff1c0c5a807f80f9d11d8a3
 Weights            0x6d9e3bfc06d45d14351cb1d560fee0b175c5b21e7134c820b3c65deab627720c
-PaymentAuth        0x83204ea1500cc20bbe24158546e6acd5b12f1284315bff525545b80a5635b253
+PaymentAuth        0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4  (v2: + address submitter, D-012)
 RegisterVenue      0x8c44f0dcdc50560c5ff9c175514985b60426873e5e734c2cd9d1ca80acbe789d
 UpdateTerms        0x4a721d19699712def4975cf0278ea92f7a6e53f7c54df3c211bfd9c525e52d54
 SetVenueKeys       0x93435561eda21e37e71f216160aa9814f9afe1da95bc8cdb71f25c44213d98c6
@@ -106,6 +107,7 @@ Rules (contract-enforced):
 **PaymentAuth / pay (D-103, D-509)**
 - The customer signs USDC `ReceiveWithAuthorization{from: customer, to: Vouch, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(PaymentAuth)}`. TS helper: `receiveAuthForPayment(auth, VOUCH)`.
 - The call is `pay(order, venueSig, weights, attributorSig, auth, customerUsdcSig)`, with `auth.{venue, orderId, amount}` equal to the order's. `now < auth.deadline`.
+- **`auth.submitter` (D-012, QE-C-01):** if it is non-zero, only `msg.sender == submitter` may call `pay`; anyone else gets `UnauthorizedSubmitter()` (checked last in the order checks, no state change). The app always signs `submitter = RELAYER`. `submitter = 0` lets anyone submit (the kill-the-backend path; there, mempool front-running can force the fallback).
 - `weightsHash = 0` selects the fallback.
 - The pull is `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)` (bytes overload, ERC-1271-ready), followed by `transfer`s, all in one tx.
 
@@ -120,6 +122,11 @@ Rules (contract-enforced):
 **Contract-wide**
 - `SignatureChecker` (ECDSA + ERC-1271) is used for every signature.
 - `nonReentrant` on `pay`; non-payable.
+- **v2 hardening (QE-C-02..C-07):**
+  - `payout` can't be the Vouch contract or USDC (`InvalidPayout()`).
+  - Every owner action, direct OR relayed, consumes `nonces(owner)`, so a direct action invalidates a pending signed one.
+  - An intro on a superseded terms version is accepted only until `effectiveAt(next version) + 72 h` (`SUPERSEDED_GRACE`).
+  - Every reward transfer requires ≥ 100k gas left (`TransferOutOfGas()`).
 
 **Read helpers**
 - Venues and terms: `getVenue`, `getTerms`, `currentTerms`
@@ -143,7 +150,7 @@ SplitAuth(spike) 0xa539384164e343b0ca91506ffcd85c6cabf826e8dda0690ff23c9b0aa1050
 ```
 
 ## 4. Events (Streams filter targets)
-> `topic0 = keccak256("Name(types)")`. Filter by the Vouch address `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` only (never the `0xffff…fffe` system emitter). Start block **72580272**. Code: `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` in `@vouch/shared`.
+> `topic0 = keccak256("Name(types)")`. Filter by the Vouch address `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` only (never the `0xffff…fffe` system emitter). Start block **72584790**. Code: `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` in `@vouch/shared`.
 
 | Event | Signature (indexed marked) | topic0 |
 |---|---|---|
@@ -161,6 +168,7 @@ SplitAuth(spike) 0xa539384164e343b0ca91506ffcd85c6cabf826e8dda0690ff23c9b0aa1050
 
 Semantics:
 - **Order within one `pay` tx:** `CustomerVerified` (first purchase only, emitted before the USDC pull), then `PaymentSettled`, then N × `RewardPaid` / `RewardReturned` in this order: cashback, L1 (by referrer index), L2 (by referrer index). The USDC `Transfer` logs come from `0x3600…`, interleaved. Join key: `(venue, orderId)` or the txHash. orderIds are unique per venue only.
+- **Zero-amount L1 records (v2, QE-C-03):** every credited L1 referrer gets a `RewardPaid` with role 1, even when its L1 share floors to 0 (`amount = 0`, no transfer). Ambassador credit is therefore rebuildable from events alone. Feeds may hide amount-0 rows.
 - **Invariants:** `venueAmount + Σ RewardPaid.amount == amount`. `rewardPool = Σ slices = Σ RewardPaid + Σ RewardReturned + dust`, where dust ≤ 2 base units per referrer and goes to the venue.
 - **`role`:** 0 = CASHBACK (`viaReferrer` = 0), 1 = L1 (`viaReferrer` = the recipient), 2 = L2 (`viaReferrer` = the L1 whose introducer is paid; it draws the money-graph edge).
 - **`RewardReturned.reason`:** 0 = NO_INTRODUCER (`intendedRecipient` = 0), 1 = SELF_PAYMENT, 2 = TRANSFER_FAILED.
@@ -180,7 +188,7 @@ Semantics:
   | venue stats | verified = count of `CustomerVerified`; rewarded = count of `PaymentSettled.rewarded`; gross = Σ `amount`; rewardsPaid = Σ `RewardPaid`; rewardsReturned = Σ `RewardReturned` |
   | ambassador stats | customersCredited = count of distinct (venue, orderId) with `RewardPaid` role 1 to the address¹; venues = distinct venues among those; l1/l2 earned = Σ `RewardPaid` by role |
 
-  ¹ On-chain, `customersCredited` also counts an L1 whose transfer failed, i.e. `RewardReturned` role 1 with reason 2.
+  ¹ Count `RewardReturned` role 1 with reason 2 (TRANSFER_FAILED) too: on-chain, `customersCredited` includes an L1 whose transfer failed. Amount-0 L1 credits arrive as `RewardPaid` (v2).
 
 ## 5. API endpoints
 > **v0 DRAFT — BACKEND_RELAYER finalizes (Phase 2).** Fastify service (`apps/api`), JSON bodies, amounts as **decimal strings of base units** (never JS numbers), addresses checksummed, all signatures 0x-hex. Auth = session cookie/bearer from the passkey/wallet flow (S4 pending). "relay" = the backend relayer submits the tx and pays gas.
@@ -247,4 +255,4 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `LLM_PROVIDER` · `LLM_API_KEY` | api (Tier 3) | Optional AI attribution refinement (`none` disables) |
 | `STREAMS_SPIKE_LOG` _(optional)_ | api | Override path of the S3 NDJSON log |
 
-**Phase 1 note (D-510):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` / `VOUCH_DEPLOY_BLOCK=72580272`. Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.
+**Phase 1 note (D-510, v2):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` / `VOUCH_DEPLOY_BLOCK=72584790`. Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.

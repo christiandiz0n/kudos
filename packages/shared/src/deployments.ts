@@ -17,12 +17,12 @@ export interface VouchDeployment {
 export const VOUCH_DEPLOYMENTS: Record<number, VouchDeployment> = {
   5042002: {
     chainId: 5042002,
-    address: '0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3',
-    deployBlock: 72580272,
-    deployTx: '0xe3648ea62c60c46f92c30ff3753d907bc4b626417ffcee282883ff1f3a16016f',
+    address: '0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f',
+    deployBlock: 72584790,
+    deployTx: '0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab',
     usdc: '0x3600000000000000000000000000000000000000',
     verified: true,
-    deployedAt: '2026-11-16T17:21:41Z',
+    deployedAt: '2026-11-16T18:13:59Z',
   },
 };
 

@@ -1,5 +1,5 @@
 # CONTRACTS
-_Last updated: 2026-11-16T12:45:00-05:00 by CONTRACTS — Phase 1_
+_Last updated: 2026-11-16T14:30:00-05:00 by CONTRACTS — Phase 1 (v2 after the QE gate)_
 
 ## Mission
 Owns all production Solidity: venue registry + versioned terms, intro acceptance, `pay` with atomic two-level split, frozen terms, on-chain fallback attribution, verified-customer and ambassador counters. Owns Foundry unit/fuzz/invariant tests, deploy scripts, and exporting ABIs + addresses to `packages/shared`. Does NOT touch frontend or backend code.
@@ -12,29 +12,35 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 - `scripts/deploy/`, `docs/proposals/` (Phase 1)
 
 ## Current status
-🟢 Phase 1 done. `Vouch` deployed + Blockscout-verified at `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` (Arc Testnet, block 72580272). The canonical smoke test passed on chain. 85 Foundry tests green (fuzz 1,000 runs; invariants 256 × 64 = 16,384 calls). Awaiting the CONTRACTS_QE review.
+🟡 Phase 1 v2: the QE fixes are done, awaiting QE re-verification.
+- **v2 deployment:** `Vouch` at `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f`, Arc Testnet block 72584790, Blockscout-verified.
+- **v1 retired:** `0xfEe6…b2d3`; do not use it.
+- **Smoke:** canonical smoke OK on v2.
+- **Builder tests:** 96 green (`forge test --skip "test/qe/**"`).
+- **QE suites:** `test/qe/QeForkPayee.t.sol` and `test/qe/QeInvariant.t.sol` don't compile until CONTRACTS_QE adds the new `PaymentAuth.submitter` field (MSG sent). Use `--skip` on those two files meanwhile.
 
 ## Mental model (read this first)
 - **One contract, no admin.** `contracts/src/Vouch.sol` (≈800 lines). It inherits OZ `EIP712("Vouch","1")`, `Nonces` and `ReentrancyGuardTransient`. Types, events and errors live in `src/interfaces/IVouch.sol`. EIP-712 type strings and struct hashing live in `src/libraries/VouchHash.sol`. The pure split math (slices, fallback weights, top index) lives in `src/libraries/VouchSplit.sol`. USDC is the immutable `USDC` (Arc `0x3600…`). The contract is non-payable.
 - **Venues (D-501).**
   - Identity: `venue = address(uint160(uint256(keccak256(abi.encode(owner, salt)))))`.
-  - Owner actions: `registerVenue`, `updateTerms`, `setKeys`, `setSeedAmbassador`. Each takes `(…, deadline, ownerSig)`. If `msg.sender == owner` the signature is skipped. Otherwise `_checkOwnerSig` verifies an owner-signed typed message, using `_useNonce(owner)` inside the struct hash.
+  - Owner actions: `registerVenue`, `updateTerms`, `setKeys`, `setSeedAmbassador`. Each takes `(…, deadline, ownerSig)`. Every call consumes `_useNonce(owner)`, direct calls included (D-515). If `msg.sender == owner` the signature is skipped; otherwise `_checkOwnerSig` verifies an owner-signed typed message carrying that nonce.
+  - Payout guard: `payout` may not be zero, the Vouch contract or USDC (`InvalidPayout`, D-513).
   - Terms: append-only, stored in `_terms[venue][version]` as `{rewardBps, effectiveAt, minOrder}`.
 - **Intros (D-505).**
-  - `acceptIntro` → `_checkIntro` (window, terms-in-force at issuedAt, both signatures) → eligibility (referrer verified-or-seed, customer not verified) → use-key (personal: introHash; broadcast: keccak(introHash, customer)) → `_storeLiveIntro`.
+  - `acceptIntro` → `_checkIntro` (window, terms-in-force at issuedAt, + a superseded version is acceptable only ≤ 72 h after the cut (D-516), both signatures) → eligibility (referrer verified-or-seed, customer not verified) → use-key (personal: introHash; broadcast: keccak(introHash, customer)) → `_storeLiveIntro`.
   - Slots: a fixed `LiveIntro[5]` per (venue, customer). `CustomerState.introCount` counts used slots. Slot choice: replace same referrer → reuse expired → append → evict oldest.
 - **Pay** (`pay` → `_checkOrder` → `_settle` → `_pullPayment` → `_distribute`):
-  1. `_checkOrder`: venue exists, order unexpired, amount in bounds, auth matches the order, `now < auth.deadline`, order not settled, venue signer signature.
+  1. `_checkOrder`: venue exists, order unexpired, amount in bounds, auth matches the order, `now < auth.deadline`, order not settled, venue signer signature, and LAST the D-012 submitter check (`auth.submitter == 0 || msg.sender == auth.submitter`, else `UnauthorizedSubmitter`).
   2. `_settle`: sets the settled flag, adds gross volume. If the customer is not verified: `_plan` (view) builds the reward plan, then `_recordFirstPurchase` sets verified/rewarded/introducer, venue and ambassador counters, and emits `CustomerVerified`.
   3. `_pullPayment`: **the ONLY USDC pull**, `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, hashStruct(auth), sig)`.
-  4. `_distribute`: transfers cashback, then L1s, then L2s via `_tryTransfer` (low-level; a failure becomes `RewardReturned` reason 2, an out-of-gas failure reverts). An L2 share with introducer 0 or introducer == customer is returned without a transfer. Then the venue payout gets the remainder (it must succeed). Then events and stats.
+  4. `_distribute`: transfers cashback, then L1s, then L2s via `_tryTransfer` (low-level; requires ≥100k gas before each call; a failure becomes `RewardReturned` reason 2, an out-of-gas failure reverts). A zero L1 share is still recorded as `RewardPaid` with amount 0 (D-514). **The ordering is load-bearing (D-517): never move the payout or the stats writes before the reward transfers.** An L2 share with introducer 0 or introducer == customer is returned without a transfer. Then the venue payout gets the remainder (it must succeed). Then events and stats.
 - **`_plan`.**
   - `_eligible` lists live intros that are unexpired and have `amount ≥ frozen minOrder`. If there are none, the purchase is plain.
   - `_applyAttributorWeights` returns a `weightsMode`. Only mode 1 fills the plan. Otherwise `VouchSplit.fallbackWeights` is used.
   - Slices are computed per referrer at its intro's frozen rate. `l2To[i] = introducer of referrer i`.
   - `top = VouchSplit.topIndex` (ties → lower index).
 - **`previewPayment`** runs the same `_plan` as a view (the backend quote). Keep it in sync if `_plan` or `_distribute` change.
-- **Size.** Runtime is 23,570 B (EIP-170 limit 24,576), so there are about 1 KB of headroom. Enum-like constants are `internal` for that reason, and their values are mirrored in `packages/shared/src/abi/vouchConstants.ts`. When adding code, check `forge build --sizes`.
+- **Size.** Runtime is 24,036 B (EIP-170 limit 24,576), so there are only **540 B** of headroom. Enum-like constants are `internal` for that reason, and their values are mirrored in `packages/shared/src/abi/vouchConstants.ts`. When adding code, check `forge build --sizes`.
 - **Gotchas found while building:**
   - (a) `(cond ? 2 : 1) << 20` is uint8 and truncates to 0. Cast to uint256 first; this was a real bug, caught by tests.
   - (b) In tests, `T memory b = a;` aliases. Copy explicitly.
@@ -53,6 +59,8 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 | `contracts/test/Vouch.t.sol` | 64 unit tests (canonical exact, every revert path, fallbacks, griefing, payee path) | `test_gas_canonicalPay` logs the exact gas |
 | `contracts/test/VouchFuzz.t.sol` | Property fuzz (exact sum, cap, legit recipients, replays) | 1,000 runs |
 | `contracts/test/VouchInvariant.t.sol` | Handler + 4 invariants | 256 runs × depth 64 |
+| `contracts/test/VouchQeFixes.t.sol` | Regression tests for QE-C-01..C-07 (submitter, payout, zero L1, nonce, grace, ordering pin + nested-token sweep) | |
+| `contracts/test/mocks/MockNestedFiatToken.sol` | Arc-shaped token whose balance move is a nested call | used by the ordering-pin sweep |
 | `contracts/test/VouchSplit.t.sol` / `VouchTypehash.t.sol` | Library fuzz / golden vectors shared with TS | |
 | `contracts/test/VouchFork.t.sol` | Real Arc USDC on a fork (precompile shim, D-511) | opt-in `VOUCH_FORK=true` |
 | `contracts/test/mocks/MockFiatTokenV2_2.sol` | Faithful FiatTokenV2_2 test double (payee check, nonces, 1271, blacklist, cancel) | Circle's revert strings |
@@ -72,6 +80,18 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 - Consumes: §1 network facts (D-101..D-103), USDC `0x3600…` EIP-3009.
 
 ## Done (rolling, newest first)
+- 2026-11-16 — v2 after the QE gate (MSG-014..021):
+  - **Fixes:**
+    - D-012/D-512 `PaymentAuth.submitter`
+    - D-513 payout guard
+    - D-514 zero-amount L1 events
+    - D-515 owner nonce on direct calls
+    - D-516 72 h superseded-terms grace (D-505 corrected)
+    - D-517 gas floor + ordering pin + documented limits
+  - **Tests:** 11 new regression tests.
+  - **Redeploy:** v2 deployed and verified (`0x9C50…b95f`, block 72584790).
+  - **Smoke:** OK on v2. 9 txs, $0.0485 gas; canonical pay 409,981 gas.
+  - **Round spend:** $0.221 total (including an aborted first smoke: Ben was short of USDC after v1's smoke, so he was topped up $4.55 from DEPLOYER).
 - 2026-11-16 — Phase 1:
   - Vouch implemented and tested: 64 unit, 3 fuzz × 1,000, 2 library fuzz × 1,000, 4 invariants over 16,384 calls, golden vectors, 3 fork tests on real Arc USDC.
   - Deployed + Blockscout-verified (`0xfEe6…b2d3`, block 72580272, deploy fee $0.129).
@@ -83,17 +103,30 @@ Owns all production Solidity: venue registry + versioned terms, intro acceptance
 - [ ] If the contract changes: keep `previewPayment` consistent with `_plan` / `_distribute`, and re-check `forge build --sizes`.
 
 ## Struggles, open questions, known issues
-- **Size headroom ~1 KB.** Bigger features need via-IR or splitting `previewPayment` out to a lens contract.
-- **Fork test** shims Arc's native-transfer precompile `0x1800…` (revm lacks it). Everything else is the real USDC bytecode. The live smoke run covers the real precompile.
-- **Blockscout** reports `is_verified: true`, `is_fully_verified: false` (partial match, because `bytecode_hash = "none"`).
-- **Below-minimum first purchase.** A first purchase below the frozen minOrder (or with only expired intros) burns the customer's reward chance at that venue (D-509). The frontend should warn.
-- **`issuedAt` and terms changes.** `Intro.issuedAt` must come from chain time. A client clock that lags behind a just-made terms update makes `TermsNotInForce`.
-- **Stats.** `customersCredited` counts an L1 even if its transfer failed (blacklist). Earned amounts count only what was transferred.
+### Known limits (accepted, documented; D-515..D-517)
+- **Mempool, intros (QE-C-06):**
+  - A personal intro names no customer, so an observer can accept it first ("sniping").
+  - With ≥ 6 pending acceptances for one customer, the submitter picks which referrer the 5-slot cap evicts.
+  - Mitigation: relay `acceptIntro` privately.
+- **`submitter = 0` (D-012):** anyone may submit `pay`, so front-running can force the fallback. Use it only on the kill-the-backend path.
+- **Sybil clusters (QE-C-08):** a customer's own second address can capture the pool. Each sybil costs one real purchase and the gain is capped by rewardBps. This needs off-chain risk flags.
+- **Orders are not bound to a customer (QE-C-08):** a third party can pay a QR order first. That is griefing only, since they pay real money.
+- **Gas-burning ERC-1271 attributor (QE-C-08):** `pay` needs about 64× normal gas. This is the venue's own misconfiguration.
+- **Owner signatures (D-515):** an action pre-signed for a FUTURE owner nonce becomes valid once earlier nonces are used. Sign only the current nonce, with short deadlines.
+- **Superseded terms (D-516):** a link shared before a terms change becomes unacceptable 72 h after the change. The referrer must re-share.
+- **First purchase (D-509):** the first purchase always consumes the reward chance, even below the minimum order.
+- No `revokeIntro` and no venue ownership transfer.
+- **Stats:** `customersCredited` counts an L1 even if its transfer failed (blacklist).
+### Other notes
+- **Size headroom ~540 B.** Bigger features need via-IR or moving `previewPayment` into a lens contract.
+- **Fork test** shims Arc's native-transfer precompile `0x1800…` (D-511). The live smoke run covers the real precompile.
+- **Blockscout** reports a partial match (`bytecode_hash = "none"`).
+- **`Intro.issuedAt`** must come from chain time.
 
 ## How to run / test this area
 ```bash
 cd contracts && forge build                    # clean (lint classes excluded in foundry.toml with reasons)
-forge test                                     # 85 pass + fork suite skipped
+forge test --skip "test/qe/**"                 # builder suites: 96 pass (+ fork suite skipped)
 forge test --gas-report                        # gas table
 forge test --match-test test_gas_canonicalPay -vv   # exact canonical pay() gas (mock USDC)
 bash scripts/deploy/fork-test.sh               # real Arc USDC on a fork (from repo root)

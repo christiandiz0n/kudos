@@ -203,6 +203,7 @@ async function pay(venue: Address, customer: PrivateKeyAccount, amount: bigint, 
     amount,
     weightsHash,
     deadline: t + 600n,
+    submitter: relayer.address, // D-012: only our relayer may submit this payment (blocks mempool front-running)
   };
   // The ONE signature the customer makes: USDC ReceiveWithAuthorization (to = Vouch, nonce = hashStruct(auth)).
   const usdcSig = await customer.signTypedData({

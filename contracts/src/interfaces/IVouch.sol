@@ -46,6 +46,7 @@ interface IVouch {
 
     /// @notice Not signed directly: hashStruct(PaymentAuth) is the nonce of the customer's USDC
     ///         ReceiveWithAuthorization (D-103). weightsHash = hashStruct(Weights) or bytes32(0) for the fallback.
+    ///         submitter = the only address allowed to call pay() with it (the app's relayer), or 0 = anyone (D-012).
     struct PaymentAuth {
         address customer;
         address venue;
@@ -53,6 +54,7 @@ interface IVouch {
         uint256 amount;
         bytes32 weightsHash;
         uint64 deadline;
+        address submitter;
     }
 
     /// @notice Venue configuration passed to `registerVenue` (owner-signed as `RegisterVenue` when relayed).
@@ -229,6 +231,8 @@ interface IVouch {
     error InvalidAmount();
     error AuthMismatch();
     error AuthExpired();
+    error UnauthorizedSubmitter();
+    error InvalidPayout();
     error PayoutTransferFailed();
     error TransferOutOfGas();
 }

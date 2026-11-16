@@ -20,7 +20,7 @@ contract VouchHandler is Test {
     bytes32 internal constant T_WEIGHTS =
         keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
     bytes32 internal constant T_AUTH = keccak256(
-        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
     );
     bytes32 internal constant T_RWA = 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8;
     bytes32 internal constant SETTLED_SIG = keccak256(
@@ -197,7 +197,13 @@ contract VouchHandler is Test {
             _sign(signerPk, _digest(keccak256(abi.encode(T_ORDER, o.venue, o.orderId, o.amount, o.expiresAt))));
         (IVouch.Weights memory w, bytes memory wsig) = _weights(c, o, wseed, mode);
         IVouch.PaymentAuth memory a = IVouch.PaymentAuth(
-            c.customer, venue, o.orderId, c.amount, mode % 3 == 0 ? bytes32(0) : _wh(w), o.expiresAt
+            c.customer,
+            venue,
+            o.orderId,
+            c.amount,
+            mode % 3 == 0 ? bytes32(0) : _wh(w),
+            o.expiresAt,
+            wseed % 2 == 0 ? address(this) : address(0) // bound to this handler, or open (D-012)
         );
         bytes memory usig = _usig(c.cpk, a);
         return abi.encodeCall(vouch.pay, (o, osig, w, wsig, a, usig));
@@ -246,7 +252,9 @@ contract VouchHandler is Test {
     }
 
     function _usig(uint256 cpk, IVouch.PaymentAuth memory a) internal view returns (bytes memory) {
-        bytes32 nonce = keccak256(abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline));
+        bytes32 nonce = keccak256(
+            abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline, a.submitter)
+        );
         bytes32 sh = keccak256(abi.encode(T_RWA, a.customer, address(vouch), a.amount, 0, uint256(a.deadline), nonce));
         return _sign(cpk, keccak256(abi.encodePacked("\x19\x01", usdc.DOMAIN_SEPARATOR(), sh)));
     }

@@ -15,7 +15,7 @@ library VouchHash {
     bytes32 internal constant INTRO_ACCEPTANCE_TYPEHASH = keccak256("IntroAcceptance(bytes32 introHash,address customer,uint64 deadline)");
     bytes32 internal constant ORDER_TYPEHASH = keccak256("Order(address venue,bytes32 orderId,uint256 amount,uint64 expiresAt)");
     bytes32 internal constant WEIGHTS_TYPEHASH = keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
-    bytes32 internal constant PAYMENT_AUTH_TYPEHASH = keccak256("PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)");
+    bytes32 internal constant PAYMENT_AUTH_TYPEHASH = keccak256("PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)");
     bytes32 internal constant REGISTER_VENUE_TYPEHASH = keccak256("RegisterVenue(address owner,bytes32 salt,address payout,address signer,address attributor,uint16 rewardBps,uint256 minOrder,string metadataURI,uint256 nonce,uint64 deadline)");
     bytes32 internal constant UPDATE_TERMS_TYPEHASH = keccak256("UpdateTerms(address venue,uint16 rewardBps,uint256 minOrder,uint256 nonce,uint64 deadline)");
     bytes32 internal constant SET_VENUE_KEYS_TYPEHASH = keccak256("SetVenueKeys(address venue,address payout,address signer,address attributor,uint256 nonce,uint64 deadline)");
@@ -53,7 +53,9 @@ library VouchHash {
 
     function paymentAuth(IVouch.PaymentAuth calldata p) internal pure returns (bytes32) {
         return keccak256(
-            abi.encode(PAYMENT_AUTH_TYPEHASH, p.customer, p.venue, p.orderId, p.amount, p.weightsHash, p.deadline)
+            abi.encode(
+                PAYMENT_AUTH_TYPEHASH, p.customer, p.venue, p.orderId, p.amount, p.weightsHash, p.deadline, p.submitter
+            )
         );
     }
 

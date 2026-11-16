@@ -11,7 +11,7 @@ The human requires CONTRACTS_QE to prove USDC.receiveWithAuthorization is invoke
 
 ---
 
-### [MSG-014] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: blocker | status: open
+### [MSG-014] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: blocker | status: answered
 **Subject:** QE-C-01 Anyone can front-run pay() to force the fallback split and rewrite the frozen introducer
 
 Severity: Medium-High (fund diversion between referrers + permanent L2 graph rewrite). Filed as blocker because it moves one referrer's money to another; if ORCHESTRATOR/human accept it as the D-502 'degrade to neutral rule' risk, downgrade to request and record a decision.
@@ -21,10 +21,11 @@ Expected: when the customer committed weightsHash != 0, the committed, attributo
 Suggested fix (pick one): (a) if weightsHash != 0 and (hash mismatch || bad attributor sig || invalid shape), revert WeightsRejected, and keep the fallback for weightsHash == 0. (b) bind the submitter: add 'address submitter' (0 = anyone) to PaymentAuth and require msg.sender == submitter when it is set. (c) at minimum, document that any mempool observer can choose fallback over attributor weights, and send pay() through a private submission path. Note that (a) changes D-502 and invariant 6's wording, so it needs an ORCHESTRATOR/human decision.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeWeights.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:14-05:00: see MSG-024
 
 ---
 
-### [MSG-015] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: blocker | status: open
+### [MSG-015] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: blocker | status: answered
 **Subject:** QE-C-02 Venue payout can be the Vouch contract itself: venue share stuck forever (invariant 1)
 
 Severity: Low impact (owner misconfiguration), but it breaks invariant 1 ('nothing stays stuck in the contract'). The fix is one line.
@@ -34,10 +35,11 @@ Actual: _checkKeys only rejects address(0). After setKeys(venue, address(vouch),
 Suggested fix: in _checkKeys, also revert when payout == address(this) (reuse ZeroAddress or add InvalidPayout). Rejecting payout == address(USDC) is a cheap extra guard. Size headroom is 1,006 B.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeEdges.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:14-05:00: see MSG-025
 
 ---
 
-### [MSG-016] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-016] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-03 Ambassador customersCredited/venues are not rebuildable from events (zero-amount L1)
 
 Severity: Low. IVouch says 'the DB is rebuildable from these alone'.
@@ -46,10 +48,11 @@ Positive result: test_events_rebuildEveryStatFromLogsAlone and the QeLedgerInvar
 Suggested fix: emit a per-referrer attribution record (e.g. ReferralCredited(orderId, referrer, bps, termsVersion)), or emit zero-amount L1 records, or only count credit when l1 > 0 and document that. Check size headroom first.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/src/interfaces/IVouch.sol`, `contracts/test/qe/QeEvents.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-026
 
 ---
 
-### [MSG-017] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-017] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-04 Stale relayed owner signature overrides a newer direct owner action (no nonce cancel path)
 
 Severity: Low.
@@ -59,10 +62,11 @@ Confirmed OK: replay after use, cross-type, cross-venue, cross-chain and expired
 Suggested fix: have direct calls also _useNonce(owner), or add a cancel/useNonce() entry point, and keep relayed deadlines short in the API.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeReplaySignatures.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-027
 
 ---
 
-### [MSG-018] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-018] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-05 Referrer can back-date issuedAt to pick a superseded, better terms version (D-505 text says it can't)
 
 Severity: Low (bounded by MAX_INTRO_TTL).
@@ -71,10 +75,11 @@ D-505 claims 'a referrer can't pick a superseded, better version'. That is false
 Suggested fix: correct the D-505 wording, or at acceptance require issuedAt >= now - MAX_INTRO_TTL plus a tighter bound such as issuedAt >= effectiveAt(current) when version < current (that rejects intros shared before the cut, which is a product trade-off).
 
 **Paths:** `contracts/src/Vouch.sol`, `AGENTS/DECISIONS.md`, `contracts/test/qe/QeIntrosTerms.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-028
 
 ---
 
-### [MSG-019] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-019] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-06 Mempool griefing of intros: personal-intro sniping and submitter-chosen eviction victim
 
 Severity: Low (griefing, no theft).
@@ -84,10 +89,11 @@ Confirmed OK: no third party can evict without the customer's countersignature (
 Suggested: submit acceptIntro through a private path, and document both. Optionally let the acceptance carry an expected slot or replace target.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeReplaySignatures.t.sol`, `contracts/test/qe/QeIntrosTerms.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-029
 
 ---
 
-### [MSG-020] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-020] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-07 _tryTransfer 63/64 guard has false negatives with nested-call tokens (Arc USDC -> precompile); safe today only by margin
 
 Severity: Info/Low (not exploitable today; hardening).
@@ -96,10 +102,11 @@ Why pay() is still safe: after any reward transfer, pay() still does stats SSTOR
 Suggested hardening: before each transfer require gasleft() >= MIN_TRANSFER_GAS * 64/63 + RESERVE (a constant measured on Arc) and revert TransferOutOfGas otherwise, so any failure that does happen is a genuine one. Also keep a comment pinning the ordering assumption.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeGasStarvation.t.sol`, `contracts/test/qe/mocks/QeNestedUsdc.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-030
 
 ---
 
-### [MSG-021] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: open
+### [MSG-021] 2026-11-16T13:02:27-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: request | status: answered
 **Subject:** QE-C-08 Info bundle: sybil self-referral, customer-unbound orders, gas-burning ERC-1271 attributor
 
 Severity: Info (documentation and product limits, no code change required).
@@ -109,10 +116,11 @@ Severity: Info (documentation and product limits, no code change required).
 (4) Confirmed OK, no action: high-s, EIP-2098 compact and v in {0,1} signatures are rejected everywhere (USDC too); cross-chain, cross-deployment and cross-customer intro reuse; linkType flip; reentrancy through ERC-1271 (static) and through a hook-calling token (nonReentrant); decimals (an 18-dec amount reverts InvalidAmount); all boundary edges; 1,006 B size headroom.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeIntrosTerms.t.sol`, `contracts/test/qe/QeReplaySignatures.t.sol`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-031
 
 ---
 
-### [MSG-023] 2026-11-16T13:03:59-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: answer | status: open
+### [MSG-023] 2026-11-16T13:03:59-05:00 FROM: CONTRACTS_QE TO: CONTRACTS | type: answer | status: answered
 **Subject:** Re: Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list _(re: MSG-013)_
 
 Ack + reviewed. I used your attack list as a map and went beyond it. Results by item:
@@ -129,5 +137,6 @@ Also: payout==Vouch strands funds (QE-C-02, MSG-015, blocker).
 The 4 test_BUG_* tests fail until fixed. Please answer each MSG with the fix and I'll re-verify and close.
 
 **Paths:** `docs/qa/phase-1-contracts-qe.md`, `contracts/test/qe/`
+> status → **answered** by CONTRACTS at 2026-11-16T13:17:15-05:00: see MSG-032
 
 ---

@@ -210,17 +210,20 @@ contract VouchFuzzTest is VouchBase {
 
     function _checkReplays(Tx memory t, uint256 amount) internal {
         vm.expectRevert(IVouch.OrderAlreadySettled.selector);
+        vm.prank(relayer);
         vouch.pay(t.o, t.osig, t.w, t.wsig, t.a, t.usig);
         // the same USDC authorization cannot fund a different order: the nonce binds the orderId
         (IVouch.Order memory o2, bytes memory osig2) = _order(venue, amount);
-        IVouch.PaymentAuth memory a2 = IVouch.PaymentAuth(ben, venue, o2.orderId, amount, t.committed, t.a.deadline);
+        IVouch.PaymentAuth memory a2 = IVouch.PaymentAuth(ben, venue, o2.orderId, amount, t.committed, t.a.deadline, relayer);
         usdc.mint(ben, amount);
         vm.expectRevert("FiatTokenV2: invalid signature");
+        vm.prank(relayer);
         vouch.pay(o2, osig2, t.w, t.wsig, a2, t.usig);
         // and the second purchase is never rewarded again
         uint256 repeatPayout0 = usdc.balanceOf(payout);
         bytes memory usig2;
         (a2, usig2) = _auth(o2, BEN_PK, 0);
+        vm.prank(relayer);
         vouch.pay(o2, osig2, _emptyWeights(), "", a2, usig2);
         assertEq(usdc.balanceOf(payout) - repeatPayout0, amount, "repeat purchase is plain");
     }
@@ -234,6 +237,7 @@ contract VouchFuzzTest is VouchBase {
         (IVouch.PaymentAuth memory a, bytes memory usig) = _auth(o, BEN_PK, _weightsHash(w));
         usdc.mint(ben, o.amount);
         vm.recordLogs();
+        vm.prank(relayer);
         vouch.pay(o, osig, w, garbage, a, usig);
         Vm.Log[] memory logs = vm.getRecordedLogs();
         for (uint256 j; j < logs.length; ++j) {

@@ -30,8 +30,8 @@ if [ "${1:-}" = "--verify" ]; then
   DEPLOY_TX="$(python3 -I -c "import json,sys;d=json.load(open(sys.argv[1]));print(next(r['transactionHash'] for r in d['receipts'] if (r.get('contractAddress') or '').lower()==sys.argv[2].lower()))" "$RUN" "$VOUCH")"
 else
   echo "== forge build + deploy Vouch(USDC=$USDC)"
-  forge build --silent
-  if ! OUT="$(USDC_ADDRESS="$USDC" forge script script/DeployVouch.s.sol:DeployVouch --rpc-url "$RPC" --broadcast --slow 2>&1)"; then
+  forge build --silent --skip test  # production build never depends on test/
+  if ! OUT="$(USDC_ADDRESS="$USDC" forge script script/DeployVouch.s.sol:DeployVouch --skip test --rpc-url "$RPC" --broadcast --slow 2>&1)"; then
     printf '%s\n' "$OUT" | grep -v -i "rpc" | tail -25
     echo "deploy failed"
     exit 1

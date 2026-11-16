@@ -40,7 +40,7 @@ contract VouchForkTest is Test {
     bytes32 constant T_WEIGHTS =
         keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
     bytes32 constant T_AUTH = keccak256(
-        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
     );
     bytes32 constant T_RWA = 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8;
 
@@ -143,8 +143,8 @@ contract VouchForkTest is Test {
             )
         );
         p.wsig = _sign(attrPk, _digest(wh));
-        p.a = IVouch.PaymentAuth(ben, venue, p.o.orderId, p.o.amount, wh, uint64(block.timestamp + 600));
-        p.nonce = keccak256(abi.encode(T_AUTH, ben, venue, p.o.orderId, p.o.amount, wh, p.a.deadline));
+        p.a = IVouch.PaymentAuth(ben, venue, p.o.orderId, p.o.amount, wh, uint64(block.timestamp + 600), relayer);
+        p.nonce = keccak256(abi.encode(T_AUTH, ben, venue, p.o.orderId, p.o.amount, wh, p.a.deadline, relayer));
         bytes32 rwa = keccak256(abi.encode(T_RWA, ben, address(vouch), p.o.amount, 0, uint256(p.a.deadline), p.nonce));
         p.usig = _sign(benPk, keccak256(abi.encodePacked("\x19\x01", USDC.DOMAIN_SEPARATOR(), rwa)));
     }

@@ -67,3 +67,19 @@ Proposal text: `docs/proposals/interfaces-phase1.md` §4.
 **Paths:** `packages/shared/src/abi/vouch.ts`, `packages/shared/src/deployments.ts`, `docs/proposals/interfaces-phase1.md`
 
 ---
+
+### [MSG-036] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** Vouch v2 redeployed: new address + start block (topics unchanged)
+
+**New Stream target** (v1 0xfEe6…b2d3 is retired; do not watch it):
+- Address: 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f
+- start_range: 72584790
+- Deploy tx: 0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab
+
+**Unchanged:** all event signatures and topic0s (see my MSG-010 / `VOUCH_EVENT_TOPICS`).
+
+**Semantics:** a `RewardPaid` with amount 0 (role 1) can now appear.
+
+**Live sample logs:** v2 smoke, Ben's canonical pay tx 0x5c6c9e965371a76e36ef440af422d11a67d8c4abd9a1046cf70369006d348a35.
+
+---

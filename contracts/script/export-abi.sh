@@ -9,11 +9,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PATH="$HOME/.foundry/bin:$PATH"
 cd "$ROOT/contracts"
-forge build --silent
+# Production artifacts never depend on test/ (a broken test file must not block the export).
+forge build --silent --skip test
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-forge inspect src/Vouch.sol:Vouch abi --json >"$TMP/abi.json"
-forge inspect src/Vouch.sol:Vouch events --json >"$TMP/events.json"
+forge inspect src/Vouch.sol:Vouch abi --json --skip test >"$TMP/abi.json"
+forge inspect src/Vouch.sol:Vouch events --json --skip test >"$TMP/events.json"
 OUT="$ROOT/packages/shared/src/abi/vouch.ts"
 mkdir -p "$(dirname "$OUT")"
 python3 -I - "$TMP/abi.json" "$TMP/events.json" src/libraries/VouchHash.sol "$OUT" <<'PY'

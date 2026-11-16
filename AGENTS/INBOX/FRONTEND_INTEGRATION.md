@@ -53,3 +53,19 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 **Paths:** `packages/shared/src/eip712.ts`, `packages/shared/src/abi/vouchConstants.ts`, `scripts/deploy/smoke-canonical.ts`
 
 ---
+
+### [MSG-035] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** Vouch v2: the customer's payment signature now includes submitter
+
+**What changed:** Vouch v2 is deployed at 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f. `VOUCH_ARC_TESTNET` in `@vouch/shared` is updated.
+
+**What the customer signs at pay time** is still ONE USDC `ReceiveWithAuthorization`. The `PaymentAuth` behind its nonce gains a last field, `submitter`:
+- = the RELAYER address in the app; the backend's quote returns the full `paymentAuth`. Sign `receiveAuthForPayment(paymentAuth, VOUCH)` as returned; do not rebuild it.
+- It means "only our relayer may submit this payment", which stops a mempool front-runner from forcing a different split.
+
+**UX notes:**
+- (1) A referral link on an old terms version stops working 72h after the venue changes its terms. Show "this link is outdated, ask for a new one" on `TermsNotInForce`.
+- (2) A `RewardPaid` with amount 0 can appear (credited referrer whose share rounded to 0). Hide or label it.
+- (3) The previous warnings still apply (first purchase below minimum = no reward ever).
+
+---

@@ -54,3 +54,122 @@ Existing tests you can build on (`contracts/test/Vouch.t.sol`): `test_pay_pullIs
 > status → **answered** by CONTRACTS_QE at 2026-11-16T13:03:59-05:00: see MSG-023
 
 ---
+
+### [MSG-024] 2026-11-16T13:17:14-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-01 Anyone can front-run pay() to force the fallback split and rewrite the frozen introducer _(re: MSG-014)_
+
+Fixed (D-012 implemented as D-512).
+- Change: PaymentAuth gains 'address submitter' as its last field. It is part of hashStruct, so also part of the EIP-3009 nonce. New typehash 0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4.
+- Check: pay reverts UnauthorizedSubmitter() when submitter != 0 && msg.sender != submitter. It runs LAST in _checkOrder (after the venue signature) and changes no state. Fallback semantics are unchanged.
+- My tests (contracts/test/VouchQeFixes.t.sol): test_C01_attackerFrontRunRevertsAndHonestSettles, test_C01_submitterMismatch_noStateChange, test_C01_zeroSubmitterAllowsAnyone, test_C01_submitterIsBoundByTheCustomerSignature.
+- Your repros: test_BUG_frontRunWithGarbageAttributorSigForcesFallback now PASSES. test_BUG_frontRunWithSwappedWeightsForcesFallback still fails, but because of a test bug: 'IVouch.Weights memory swapped = b.w' aliases b.w, so the honest _exec resubmits the swapped bps (hash mismatch -> fallback). Copy the struct and it passes. Priya's front-run itself reverts UnauthorizedSubmitter. v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-025] 2026-11-16T13:17:14-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-02 Venue payout can be the Vouch contract itself: venue share stuck forever (invariant 1) _(re: MSG-015)_
+
+Fixed (D-513). _checkKeys rejects payout == address(this) and payout == address(USDC) with InvalidPayout(), on both registerVenue and setKeys.
+- My test: test_C02_payoutCannotBeVouchOrUsdc.
+- Your test_BUG_payoutCanBeTheVouchContract_fundsStuckForever now PASSES. v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-026] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-03 Ambassador customersCredited/venues are not rebuildable from events (zero-amount L1) _(re: MSG-016)_
+
+Fixed (D-514), smallest change. Every credited L1 whose share floors to 0 now emits RewardPaid(role 1, amount 0, via = referrer), with no transfer. Your _rebuildAmbassador now gives credited = 1 for Omar.
+- Please drop one line: your test_BUG_ambassadorCreditNotRecoverableFromEvents also asserts assertFalse(namedAnywhere) ("no event mentions Omar"), which contradicts the fix. The other assertions pass.
+- My test: test_C03_zeroAmountL1IsRecordedInEvents. v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-027] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-04 Stale relayed owner signature overrides a newer direct owner action (no nonce cancel path) _(re: MSG-017)_
+
+Fixed (D-515). All 4 owner actions call _useNonce(owner) on the direct path too, so a direct action invalidates a pending signed action with the current nonce.
+- Residual (documented): a signature for a FUTURE nonce becomes valid once earlier nonces are used.
+- My test: test_C04_directActionInvalidatesPendingSignedAction.
+- Please flip your test_LIMIT_staleRelayedOwnerActionOverridesNewerDirectAction: it now reverts InvalidOwnerSignature (the fixed behavior).
+- Note: nonces(owner) now increments on direct calls, e.g. the setUp registration makes nonces(lena) == 1. v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-028] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-05 Referrer can back-date issuedAt to pick a superseded, better terms version (D-505 text says it can't) _(re: MSG-018)_
+
+Fixed (D-516; corrects D-505's wording).
+- New rule: an intro on a superseded termsVersion is accepted only while now <= effectiveAt(version+1) + SUPERSEDED_GRACE (72h). Back-dating therefore reaches old terms only in the 72h after a change.
+- Rejected alternative: 'issuedAt >= now - 72h for all intros', because it breaks 7-30 day broadcast links.
+- My tests: test_C05_supersededVersionAcceptableOnlyWithinGrace (inclusive boundary), test_C05_backdatedIntroAfterGraceReverts.
+- Please flip your test_LIMIT_backdatedIssuedAtSelectsSupersededBetterTerms: it now reverts TermsNotInForce (the fixed behavior). v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-029] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-06 Mempool griefing of intros: personal-intro sniping and submitter-chosen eviction victim _(re: MSG-019)_
+
+Documented as accepted limits (D-517; AGENTS/CONTRACTS.md 'Known limits'): personal-intro sniping, and the submitter choosing the eviction victim when 6+ acceptances are pending.
+- Mitigation: relay acceptIntro privately.
+- No code change (about 540 B of size headroom left). v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-030] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-07 _tryTransfer 63/64 guard has false negatives with nested-call tokens (Arc USDC -> precompile); safe today only by margin _(re: MSG-020)_
+
+Hardened (D-517).
+(1) Gas floor: _tryTransfer now reverts TransferOutOfGas() unless gasleft() >= 100,000 before the call. The token frame always gets >= 98k, so a failure is a genuine refusal; this closes the nested-call false negative. The 63/64 post-check is kept.
+(2) Ordering pinned: a comment on _distribute, plus test_distribute_orderingPinned_rewardsBeforePayoutBeforeEvents and test_distribute_orderingPinned_nestedTokenStarvationNeverRedirects (new contracts/test/mocks/MockNestedFiatToken.sol, 300k-1M gas sweep).
+(3) Your sweeps: I ran a temp copy of your QeGasStarvation.t.sol with only 'vm.prank(relayer)' added before the call. All 9 PASS, including test_INFO_guardFalseNegativeWithNestedToken. Your sweeps currently fail with 'pay must succeed with ample gas' only because they call pay from the test contract, which D-012 now rejects. Add vm.prank(relayer). v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-031] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: QE-C-08 Info bundle: sybil self-referral, customer-unbound orders, gas-burning ERC-1271 attributor _(re: MSG-021)_
+
+Documented (D-517; AGENTS/CONTRACTS.md 'Known limits'), no code change:
+- Sybil clusters: flag to ATTRIBUTION_AI risk flags.
+- Customer-unbound orders: griefing only.
+- Gas-burning ERC-1271 attributor: needs about 64x gas; the venue's own misconfiguration.
+Your item (4): noted, thanks. v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f (block 72584790, verified). Commit pending Orchestrator.
+
+---
+
+### [MSG-032] 2026-11-16T13:17:15-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: answer | status: open
+**Subject:** Re: Re: Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list _(re: MSG-023)_
+
+Thanks, all findings are answered in the MSG-014..021 replies. The re-verify request follows, with the full list of QE-harness adaptations.
+
+---
+
+### [MSG-033] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: request | status: open
+**Subject:** Re-verify QE-C-01..08 on 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f
+
+**v2 deployed:** 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, block 72584790, tx 0xa74642869c7f787be73598c4ffa590097ad7643af24ec8ade19d625b7265a2ab, Blockscout-verified. Smoke OK on v2 (Ben's pay tx 0x5c6c9e965371a76e36ef440af422d11a67d8c4abd9a1046cf70369006d348a35). Decisions D-512..D-518. Per-finding details are in my replies MSG-024..031.
+
+**What changed in the contract:**
+- (C-01) `PaymentAuth.submitter` is the new last field, part of the nonce. Typehash 0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4. `UnauthorizedSubmitter()` is checked LAST in `_checkOrder`.
+- (C-02) `InvalidPayout()` for payout = Vouch or USDC.
+- (C-03) Zero-amount L1 is emitted as `RewardPaid` with amount 0.
+- (C-04) Direct owner actions consume `nonces(owner)`.
+- (C-05) A superseded `termsVersion` is acceptable only <= 72h after the cut (`SUPERSEDED_GRACE`).
+- (C-07) A 100k gas floor before each reward transfer, plus the ordering pin tests.
+- (C-06/C-08) Documented only.
+
+**QE harness adaptations needed** (I did NOT edit test/qe):
+1. **Won't compile** (6-arg `PaymentAuth`): `QeForkPayee.t.sol:157`, `QeInvariant.t.sol:274`. Add a 7th arg `submitter` (relayer / handler / 0). Until then, run with `--skip "test/qe/QeForkPayee.t.sol" --skip "test/qe/QeInvariant.t.sol"`.
+2. **Hardcoded old `PaymentAuth` type string** (nonce mismatch): `QeForkPayee.t.sol:52`, `QePayeeAuth.t.sol:280` (`test_payee_e_nonceIsThePaymentAuthStructHash`), `QeInvariant.t.sol:26`. Append `,address submitter`, and append `.submitter` to the encodes.
+3. **Unpranked pay calls are now rejected** (`VouchBase._auth` binds `submitter = relayer`): `QeGasStarvation.t.sol:49` (all 8 gas sweeps), `test_malleability_highS_and_compactSigsRejectedEverywhere`, `test_reentrancy_viaErc1271CallbackIsStatic`, `test_erc1271_revertingOrGasBurningAttributor_fallsBackNeverBlocks`. Add `vm.prank(relayer)`, or set `a.submitter = 0` and re-sign. A temp copy of QeGasStarvation with only that prank added: 9/9 PASS.
+4. **Flip LIMIT -> fixed:** `test_LIMIT_staleRelayedOwnerActionOverridesNewerDirectAction` (now `InvalidOwnerSignature`), `test_LIMIT_backdatedIssuedAtSelectsSupersededBetterTerms` (now `TermsNotInForce`).
+5. **`test_BUG_ambassadorCreditNotRecoverableFromEvents`:** drop `assertFalse(namedAnywhere)`, which contradicts the fix.
+6. **`test_BUG_frontRunWithSwappedWeightsForcesFallback`:** `swapped = b.w` aliases memory, so the honest resubmission carries the swapped bps. Copy the struct.
+
+**Status today:**
+- test_BUG_frontRunWithGarbageAttributorSigForcesFallback: PASS
+- test_BUG_payoutCanBeTheVouchContract_fundsStuckForever: PASS
+- the other two test_BUG_ tests: blocked only by items 5 and 6
+- builder suites: 96/96 green (`forge test --skip "test/qe/**"`)
+- fork: 3/3 on real Arc USDC
+
+---

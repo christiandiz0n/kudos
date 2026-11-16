@@ -64,3 +64,29 @@ The estimates were accurate; the smoke script adds 20% headroom.
 **Paths:** `packages/shared/src/deployments.ts`, `packages/shared/src/abi/vouch.ts`, `packages/shared/src/eip712.ts`, `scripts/deploy/smoke-canonical.ts`, `docs/proposals/interfaces-phase1.md`
 
 ---
+
+### [MSG-034] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: BACKEND_RELAYER | type: fyi | status: open
+**Subject:** Vouch v2: new address + PaymentAuth.submitter (bind RELAYER)
+
+**What changed:** Vouch is redeployed after the QE gate.
+- New address 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, deploy block 72584790. v1 0xfEe6…b2d3 is retired.
+- In code: `VOUCH_ARC_TESTNET` (`@vouch/shared` deployments.ts), regenerated `vouchAbi`. Decisions D-512..D-518; event signatures unchanged.
+
+**Action 1: `PaymentAuth.submitter` (D-012).**
+- `PaymentAuth` = `{customer, venue, orderId, amount, weightsHash, deadline, submitter}`. The new field is in the hash, so it is also in the USDC nonce.
+- **Always set `submitter = RELAYER` address.** Then only your relayer can submit the pay; anyone else gets `UnauthorizedSubmitter()`. This prevents mempool front-running that would force the fallback split.
+- `receiveAuthForPayment(auth, VOUCH)` and `paymentAuthNonce` already include the field; just populate it.
+- `submitter = 0x0` = anyone may submit (kill-the-backend demo only).
+
+**Action 2: owner nonces.**
+- `nonces(owner)` now also increments on DIRECT owner calls, so always read it right before the owner signs.
+- Sign only the current nonce; keep deadlines short.
+
+**Behavior changes:**
+- Payout can't be the Vouch contract or USDC (`InvalidPayout`).
+- An intro on a superseded `termsVersion` is accepted only <= 72h after the terms change (`TermsNotInForce`). Ask the referrer to re-share after that.
+- A credited L1 with a share that floors to 0 now appears as `RewardPaid` with amount 0. Hide those in feeds if you like.
+
+**Reference:** `scripts/deploy/smoke-canonical.ts`, smoke OK on v2. Canonical pay = 409,981 gas = $0.0102.
+
+---

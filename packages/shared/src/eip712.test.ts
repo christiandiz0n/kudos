@@ -47,7 +47,7 @@ test('golden struct hashes match contracts/test/VouchTypehash.t.sol', () => {
     IntroAcceptance: hashStruct({ types: E.INTRO_ACCEPTANCE_TYPES, primaryType: 'IntroAcceptance', data: { introHash: B(0x99), customer: A(0xc1), deadline: 1_800_003_600n } }),
     Order: E.orderStructHash({ venue: A(0xa1), orderId: B(7), amount: 12_000_000n, expiresAt: 1_800_000_600n }),
     Weights: E.weightsStructHash({ venue: A(0xa1), customer: A(0xc1), orderId: B(7), referrers: [A(0xb1), A(0xb2)], bps: [7000, 3000] }),
-    PaymentAuth: E.paymentAuthNonce({ customer: A(0xc1), venue: A(0xa1), orderId: B(7), amount: 12_000_000n, weightsHash: B(0x77), deadline: 1_800_000_600n }),
+    PaymentAuth: E.paymentAuthNonce({ customer: A(0xc1), venue: A(0xa1), orderId: B(7), amount: 12_000_000n, weightsHash: B(0x77), deadline: 1_800_000_600n, submitter: A(0xe1) }),
     RegisterVenue: hashStruct({ types: E.REGISTER_VENUE_TYPES, primaryType: 'RegisterVenue', data: { owner: A(0xd1), salt: B(0x5a), payout: A(0xd2), signer: A(0xd3), attributor: A(0xd4), rewardBps: 1500, minOrder: 5_000_000n, metadataURI: 'ipfs://lenas-cafe', nonce: 2n, deadline: 1_800_003_600n } }),
     UpdateTerms: hashStruct({ types: E.UPDATE_TERMS_TYPES, primaryType: 'UpdateTerms', data: { venue: A(0xa1), rewardBps: 1000, minOrder: 1_000_000n, nonce: 3n, deadline: 1_800_003_600n } }),
     SetVenueKeys: hashStruct({ types: E.SET_VENUE_KEYS_TYPES, primaryType: 'SetVenueKeys', data: { venue: A(0xa1), payout: A(0xd2), signer: A(0xd3), attributor: A(0xd4), nonce: 4n, deadline: 1_800_003_600n } }),
@@ -58,7 +58,7 @@ test('golden struct hashes match contracts/test/VouchTypehash.t.sol', () => {
     IntroAcceptance: '0x29c96781dbd1854510c1a2556b694876538a2e7f0d3546fc5b334857c8e0d7f2',
     Order: '0x4d2385e0b84bc32342452a9f9108d837d2d8218abf887812286145120fb0dd50',
     Weights: '0x909c63ab79908e26937c0ffe835d6e125b6b728763010a9ee4b2cf10d1e55ae4',
-    PaymentAuth: '0x9c467d24e100878416549589aa43ce1bc27ce24374c2ab19bee49bcb5a01d752',
+    PaymentAuth: '0xfb440a874850757a8f393d28c80bab807cc706b202fb457d4c81c04df9ab02bf',
     RegisterVenue: '0xe4331844ae4391c7e76bd8b8e5998c997fea731b961acdfbf853bbd0100e1b73',
     UpdateTerms: '0x60aae8e6da784d3d122ca18ced96e6166b7047b3164ee936814e2b67a9e562ae',
     SetVenueKeys: '0xfb9c844dff2b5cb746545d83b2373c1480785d69855d2b6a33f30959abfbec45',
@@ -79,7 +79,7 @@ test('PaymentAuth typehash + struct hash match Solidity keccak256(abi.encode(TYP
   const ts = typeString(PAYMENT_AUTH_TYPES.PaymentAuth, 'PaymentAuth');
   assert.equal(
     ts,
-    'PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)',
+    'PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)',
   );
   const p: PaymentAuth = {
     customer: '0x00000000000000000000000000000000000000c1',
@@ -88,6 +88,7 @@ test('PaymentAuth typehash + struct hash match Solidity keccak256(abi.encode(TYP
     amount: 12_000_000n,
     weightsHash: toHex(0n, { size: 32 }),
     deadline: 1_800_000_000n,
+    submitter: '0x00000000000000000000000000000000000000e1',
   };
   const manual = keccak256(
     encodeAbiParameters(
@@ -99,8 +100,9 @@ test('PaymentAuth typehash + struct hash match Solidity keccak256(abi.encode(TYP
         { type: 'uint256' },
         { type: 'bytes32' },
         { type: 'uint64' },
+        { type: 'address' },
       ],
-      [keccak256(toHex(ts)), p.customer, p.venue, p.orderId, p.amount, p.weightsHash, p.deadline],
+      [keccak256(toHex(ts)), p.customer, p.venue, p.orderId, p.amount, p.weightsHash, p.deadline, p.submitter],
     ),
   );
   assert.equal(paymentAuthNonce(p), manual);
