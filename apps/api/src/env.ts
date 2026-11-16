@@ -13,6 +13,12 @@ export interface ApiEnv {
   streamsWebhookSecret: string | undefined;
 }
 
+/** Empty values and `.env.example` placeholders (`__like_this__`) count as unset, so the webhook fails closed. */
+export function realSecret(v: string | undefined): string | undefined {
+  if (!v || /^__.*__$/.test(v.trim())) return undefined;
+  return v;
+}
+
 export function loadEnv(overrides: Partial<ApiEnv> = {}): ApiEnv {
   const e = process.env;
   return {
@@ -21,7 +27,7 @@ export function loadEnv(overrides: Partial<ApiEnv> = {}): ApiEnv {
     databaseUrl: e.DATABASE_URL || 'pglite://./data/local/pglite',
     corsOrigins: (e.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map((s) => s.trim()).filter(Boolean),
     streamsSpikeLog: e.STREAMS_SPIKE_LOG ?? path.join(REPO_ROOT, 'data/local/streams-spike.ndjson'),
-    streamsWebhookSecret: e.STREAMS_WEBHOOK_SECRET || undefined,
+    streamsWebhookSecret: realSecret(e.STREAMS_WEBHOOK_SECRET),
     ...overrides,
   };
 }

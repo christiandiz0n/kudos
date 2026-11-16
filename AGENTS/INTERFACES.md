@@ -29,7 +29,8 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 ## 2. Deployed contracts
 | Contract | Address | Deploy block | Tx |
 |---|---|---|---|
-| _none yet_ | | | |
+| `Hello` (**spike only**, S2/S3/S5, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
+| _Vouch main contract_ | _Phase 1_ | | |
 
 ## 3. EIP-712
 > **v0 DRAFT (ARCHITECT, 2026-11-15) — CONTRACTS/BACKEND finalize.** Code mirror: `packages/shared/src/eip712.ts` (field order = type string = typehash; keep them identical to the Solidity `*_TYPEHASH` constants).
@@ -132,22 +133,15 @@ Semantics:
 | GET (SSE) | `/events/venue/:venue` | Live stream: `payment.settled`, `reward.paid`, `customer.verified`, `order.status` |
 | POST | `/webhooks/streams` | QuickNode Streams delivery (exists as S3 stub; see §6) |
 
-## 6. Webhook payload (Streams → api)
-> **v0 DRAFT — STREAMS_INFRA finalizes after S3.**
-- Endpoint `POST /webhooks/streams` (Fastify). The raw body is kept as a Buffer for signature verification.
-- **Phase 0 stub:** appends `{receivedAt, method, url, headers, bytes, body | bodyBase64}` as one NDJSON line to `data/local/streams-spike.ndjson` (gitignored) and returns `200 {ok, bytes}`. `bodyBase64` is used when `content-encoding` is set.
-- **Pending S3:**
-  - exact payload shape (batch of blocks vs. filtered logs; field names);
-  - compression;
-  - QuickNode signature headers and HMAC scheme, verified with `STREAMS_WEBHOOK_SECRET`;
-  - retry/ordering semantics;
-  - the filter function that keeps only logs whose `address == WOM_CONTRACT_ADDRESS` and `topic0 ∈ §4`, dropping system logs from `0xffff…fffe`.
-  - D-105 has the research outcome: dataset `logs`, JS `main(stream)` filter, HMAC `X-QN-Signature` = hex HMAC-SHA256(token, nonce+timestamp+body).
-- **Planned processing:**
-  - Idempotent upsert keyed by `(txHash, logIndex)`.
-  - Reorg-safe: store `blockHash` and re-apply on mismatch.
-  - Then fan out to SSE channels.
-  - Backfill replays the same handler from `WOM_DEPLOY_BLOCK`.
+## 6. Webhook (QuickNode Streams → api)
+_Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only items still UNVERIFIED until the first real delivery._
+- **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route).
+- **Auth (D-301):** headers `X-QN-Nonce`, `X-QN-Timestamp`, `X-QN-Signature` = `hex(HMAC-SHA256(key = utf8(STREAMS_WEBHOOK_SECRET), msg = nonce + timestamp + body))` over the exact decoded bytes (gunzip first if `Content-Encoding: gzip`). Constant-time compare.
+- **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400` bad gzip · `200` accepted. Timestamp skew is logged, not rejected.
+- **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, events: [ {address, topics, data, blockNumber, transactionHash, logIndex, eventName, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
+- **Idempotency key for ingestion (Phase 2):** `(transactionHash, logIndex)`.
+- **Spike log:** each POST is appended to `data/local/streams-spike.ndjson` (`receivedAt, verified, status, reason, headers, body, summary`). View it with `pnpm --filter @vouch/scripts streams:deliveries`.
+- **UNVERIFIED (live):** the timestamp unit (seconds?), whether the raw dataset arrives 3-deep nested or unwrapped (the filter handles both), and whether `blockTimestamp` is present on logs.
 
 ## 7. Env vars
 > **v0 DRAFT.** Names match root `.env.example` (placeholders only). Real values live only in root `.env` / `apps/*/.env.local` (gitignored, D-003). `NEXT_PUBLIC_*` values are exposed to the browser and must never hold secrets.

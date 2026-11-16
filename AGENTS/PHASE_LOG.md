@@ -38,3 +38,9 @@ _Bootstrap, verification spikes, human setup — started 2026-11-15 ~21:30 ET, t
 
 ### Gate outcome
 **PARTIAL.** Everything that doesn't need the human is done. S2/S3/S5 testnet runs + S6 phone + the QE gate are pending human input. Phase 1 must not start until the human says go.
+
+## Phase 1
+_Not started; waiting for the human's "go"._
+### Human requirements recorded in advance
+- CONTRACTS_QE must explicitly test that USDC `receiveWithAuthorization` is called by the payee contract (see CONTRACTS_QE.md Next up, D-103).
+- L2 introducer rule approved (D-008): top-weight L1 referrer of the first purchase, frozen per (customer, venue).

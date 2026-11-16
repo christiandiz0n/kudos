@@ -27,7 +27,7 @@ export async function buildApp(overrides: Partial<ApiEnv> = {}, opts: { logger?:
     time: new Date().toISOString(),
   }));
 
-  await app.register(webhookRoutes, { logFile: env.streamsSpikeLog });
+  await app.register(webhookRoutes, { logFile: env.streamsSpikeLog, secret: env.streamsWebhookSecret });
 
   app.addHook('onClose', async () => {
     await db.close();

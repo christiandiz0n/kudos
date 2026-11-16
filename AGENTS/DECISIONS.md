@@ -152,3 +152,29 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Reason:** Approved by the human as proposed by ARCHITECT-scaffold. It is deterministic, cheap (one SSTORE at verification), and needs no off-chain input.
 - **Interpretation note:** scoped per (customer, venue), since verification is per venue and only verified customers of a venue can recommend it. Flagged in the Phase 0 report.
 - **Who:** HUMAN (applied by ORCHESTRATOR)
+
+## D-401 — Demo wallet top-up tool: deployer-funded, top-up-to-target, abort-not-cap
+- **Date:** 2026-11-16
+- **Decision:** `scripts/setup/topup-demo.ts` (`pnpm --filter @vouch/scripts topup`) funds demo wallets from the DEPLOYER with plain ERC-20 `transfer` on Arc USDC. Each target is topped up TO `--target` (default $5.00), and wallets at or above target are skipped, so the tool is idempotent. The safety limits (`--reserve`, default $5.00, counting a worst-case gas budget of estimateGas×1.2×maxFeePerGas on Arc, where gas is the same USDC; `--max-total`, default $25.00) **abort the whole run before any send**. They never trim or partially fill the plan. Sends are sequential with explicit nonces and a wait for each receipt, and the run stops at the first failure (exit 3). maxFeePerGas is clamped up to 20 gwei on every chain. On Arc the token is pinned to `0x3600…` (a mismatched `USDC_ADDRESS` is refused). A keyed `ARC_RPC_URL` is never printed.
+- **Reason:** The faucet gives each address 20 USDC per 2 h. One funded deployer with a predictable, bounded refill is simpler and safer than faucet runs for each persona. Aborting instead of trimming keeps the plan the human reviewed (dry-run) identical to what gets sent.
+- **Alternatives:** Send a fixed amount per run (rejected: not idempotent, drains on repeat). Cap by sending partial amounts up to max-total (rejected: surprising, order-dependent). Native-value sends (rejected: D-102, mixes 18-dec units).
+- **Who:** ARCHITECT
+
+## D-301 — Streams webhook auth: QuickNode HMAC, fail closed, verify over decoded raw bytes
+- **Date:** 2026-11-16
+- **Decision:** `POST /webhooks/streams` checks `X-QN-Signature == hex(HMAC-SHA256(key = utf8(security_token), msg = X-QN-Nonce + X-QN-Timestamp + body))`. The body is the exact request bytes, gunzipped when `Content-Encoding: gzip` or the gzip magic is present (Fastify does not inflate; QuickNode signs the decoded JSON). The signature must be 64 hex chars and is compared with `timingSafeEqual`. Responses: 503 when `STREAMS_WEBHOOK_SECRET` is unset or a `__placeholder__` (fail closed); 401 on missing headers or a bad signature; 400 if gunzip fails; otherwise 200. `X-QN-Timestamp` skew (> 300 s) is only logged, because the unit is unverified. Every POST, rejected ones included, is appended to the NDJSON spike log with `verified`, `reason`, headers, decoded body and a parsed summary.
+- **Reason:** Matches the QuickNode guide and its reference server (github.com/quiknode-labs/streams-webhook-validate-signature), re-checked 2026-11-16. Failing closed means a misconfigured api cannot accept forged events. Logging rejects gives S3 the raw material to debug a format mismatch.
+- **Alternatives:** Custom-header shared secret (weaker, no body integrity); mTLS only (proves QuickNode, not which stream; per the docs, keep HMAC too).
+- **Who:** STREAMS_INFRA
+
+## D-302 — Stream filter delivers an envelope v1 of matched raw logs; decoding stays in the api
+- **Date:** 2026-11-16
+- **Decision:** `infra/streams/filter-logs.js` (`main(stream)`, dataset `logs`) walks `stream.data` defensively: any array depth ≤ 8, receipt-like `.logs`, and no `{data, metadata}` wrapper. It keeps logs whose lower-cased `address` ∈ ADDRESSES and `topic0` ∈ TOPICS, and returns `null` when nothing matches. Otherwise it returns `{v:1, streamId, network, dataset, batchStart, batchEnd, events:[{event, address, topics, data, blockNumber, blockHash, transactionHash, transactionIndex, logIndex, removed, blockTimestamp?}]}`, with hex numbers converted to JS numbers. The CLI fills ADDRESSES/TOPICS from `--contract` and `--events` (viem `toEventSelector`).
+- **Reason:** The docs disagree on nesting (`[block][receipt][log]` in the JSON spec and the REST example, "array of arrays" in prose), so the filter tolerates both. ABI decoding stays in one place (`@vouch/shared` ABI + viem in the api). The batch range in the envelope makes delivery ordering and gaps auditable whether or not QuickNode wraps the body.
+- **Who:** STREAMS_INFRA
+
+## D-303 — Stream create defaults (REST) and token handling
+- **Date:** 2026-11-16
+- **Decision:** `scripts/streams/streams.ts create` sends `network arc-testnet`, `dataset logs`, `filter_language javascript`, `region usa_east`, `start_range <deploy block>`, `end_range -1`, `dataset_batch_size 5`, `elastic_batch_enabled true`, `fix_block_reorgs 0`, `keep_distance_from_tip 0`, webhook `{compression none, headers {}, max_retry 20, retry_interval_sec 1, post_timeout_sec 15}`, `status active|paused`, and `external_id` = `Idempotency-Key` = `vouch-<name>` so retries are safe. `security_token` is **omitted** ("one is generated for you; the stream response includes it", docs). The CLI writes it to the root env file as `STREAMS_WEBHOOK_SECRET` (replace or append, mode preserved, atomic rename) and never prints it. `set-webhook` PATCHes the URL plus the other required webhook attrs and omits `security_token`, which keeps the token. GET/list responses carry the token in clear text, so all CLI output is redacted. The runbook creates the stream **paused**, restarts the api, then activates it.
+- **Reason:** Docs: create-stream, update-stream, rest-api ("Batch Size and Elastic Batch": tip streams on sub-second chains need ≥ 5, else 422). `max_retry 20` stops a short api restart from auto-pausing the stream (the default is 3).
+- **Who:** STREAMS_INFRA

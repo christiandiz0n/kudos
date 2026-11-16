@@ -1,5 +1,5 @@
 # ARCHITECT
-_Last updated: 2026-11-15T22:45:00-05:00 by ARCHITECT-scaffold — Phase 0_
+_Last updated: 2026-11-16 by ARCHITECT (topup tooling) — Phase 0_
 
 ## Mission
 Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (single source of truth for ABIs, EIP-712 types, constants), draft versions of INTERFACES.md, and all Phase 0 technical spikes (S1–S6). Does NOT write feature code beyond scaffolding, contract business logic, API endpoints, or UI.
@@ -52,6 +52,8 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 | `contracts/script/spikes/DeployHello.s.sol` | Deploys Hello (and optionally MockUSDC); reads `DEPLOYER_PRIVATE_KEY` | Testnet run pending funded key |
 | `scripts/spikes/s5-relayer.ts` | viem: user signs SplitAuth, relayer submits 7-way split, prints gas and fee in USDC; clamps the Arc fee floor | Env-driven; works for anvil and Arc |
 | `scripts/spikes/s5-local.sh` | anvil → deploy → fund → run s5-relayer → kill anvil | Uses anvil's public dev mnemonic, port 8546 |
+| `scripts/setup/topup-demo.ts` | Deployer → demo wallets USDC top-up to `--target` (skips funded wallets); `--reserve`/`--max-total` abort before any send; `--dry-run`, `--only`, `--to`, `--include-relayer` | D-401. `pnpm --filter @vouch/scripts topup`. Exit 0 ok / 1 config / 2 safety abort / 3 send failure |
+| `scripts/setup/topup-local.sh` | anvil + MockUSDC proof of topup: dry-run, partial top-up, skip, re-run, reserve abort, max-total abort, ad-hoc, bad input (24 asserts) | Port 8547, anvil public mnemonic |
 | `apps/api/src/app.ts` | Fastify `buildApp()`: CORS, `/health`, webhook plugin, DB migrate on boot | `server.ts` listens; `app.test.ts` uses inject |
 | `apps/api/src/db/index.ts` | `createDb(DATABASE_URL)` → postgres-js or PGlite + Drizzle migrator | `schema.ts` holds only `app_meta` for now |
 | `apps/api/src/routes/webhooks.ts` | `POST /webhooks/streams` raw-body NDJSON logger (S3) | HMAC verification is added by STREAMS_INFRA (D-105) |
@@ -64,6 +66,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 - Consumed: §1 Network (verified by ARCHITECT-research and merged by the Orchestrator).
 
 ## Done (rolling, newest first)
+- 2026-11-16: Built the `topup` tool (D-401). Local proof: 24/24 asserts. Testnet: dry run OK. A real $1.00 deployer → DEMO_LENA transfer, tx `0xa3ba5c891eec4eea9a85b444dc3d655e60ff3f8ac132cabc07fe6d8d6a188ecd`, paid 0.000979 USDC gas at 24 gwei. Deployer went $19.982245 → $18.981266. All 4 personas plus SPIKE_USER already held ≥ $18.
 - 2026-11-15: Aligned the scaffold to verified S1 (D-209): canonical arc.io URLs, USDC domain, 20 gwei fee clamp, `prague`, Blockscout verifier, EIP-3009 PaymentAuth design in shared + INTERFACES §3.
 - 2026-11-15: Drafted INTERFACES §3–§7 v0 (Intro + IntroAcceptance two-step, Order, Weights, PaymentAuth; 7 events with topic0; ~25 endpoints; env table).
 - 2026-11-15: S6 pages `/spike/scan` + `/spike/qr` built (`next build` green). The phone test is pending the human.
@@ -108,6 +111,9 @@ pnpm --filter web dev:https          # LAN alternative (self-signed cert; iOS of
 #   + `cloudflared tunnel --no-autoupdate --url http://localhost:3100` → https://<random>.trycloudflare.com
 # NOTE: port 3000 on this machine is used by an unrelated long-running next-server; don't kill it.
 python3 scripts/setup/gen-env.py     # HUMAN runs once: creates .env with fresh keys, prints addresses only
+pnpm --filter @vouch/scripts topup --dry-run            # plan: top demo wallets up to $5 from DEPLOYER
+pnpm --filter @vouch/scripts topup [--only DEMO_LENA --target 1.00] [--include-relayer] [--to 0x..] [--reserve 5] [--max-total 25]
+bash scripts/setup/topup-local.sh    # anvil + MockUSDC proof of all topup cases
 # NOTE: a PreToolUse hook blocks agents from any Bash that references .env. Agents never read .env;
 #   tools load it themselves (forge auto-loads .env; node scripts use dotenv). Public addresses: packages/shared/src/wallets.public.json
 pnpm --filter @vouch/api db:generate   # after editing apps/api/src/db/schema.ts
