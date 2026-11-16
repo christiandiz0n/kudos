@@ -85,7 +85,17 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 ### Delegated
 - CONTRACTS (session 2): v3 submitter change ✅ option (a) `msg.sender == auth.submitter` (D-519). Orchestrator re-ran: Vouch runtime **23,998 B (578 B margin)**; `forge test` 179 pass / 2 fail (QE-owned v2 pins in QeV2Reattack, expected) / 2 skipped.
 - CONTRACTS_QE (session 2): independent v3 review **PASS-with-findings** (QE-C-10 order not bound to a submitter → relayer treats OrderAlreadySettled as terminal; QE-C-11 self-submit fee pre-check + stale wording; both Info). Mutation check: v2 rule / option (b) / deleted check all caught. Orchestrator re-ran: `forge test` **197 pass / 0 fail / 2 skipped**. Committed 5caef11 (not deployed).
-- CONTRACTS (session 2): v3 redeploy authorized by the Orchestrator (running).
+- CONTRACTS (session 2): **v3 deployed `0xF4B641dc628de05336aa983B07D5d181254ff08e` @ 72605845**, Blockscout-verified; relayed smoke 0x95cbda97…673e (409,801 gas) + self-submit smoke 0xfca0e1ae…c7be (371,065 gas), exact split. Orchestrator re-checked on chain: receipts status 1, code 23,998 B, keccak = QE pin.
+- ORCHESTRATOR: api on Railway `https://api-production-902bc54c.up.railway.app` (/health db=postgres; unsigned POST 503 secret-unset; delivery log lines visible). Production filter rendered → `docs/streams/filter-vouch.js`.
 - STREAMS_INFRA (session 2): Railway prep ✅ (D-305): Dockerfile (prod-only filtered install), `.dockerignore` (.env* excluded), `railway.json`, `PORT`, `stream_deliveries` table (verified rows only; 500 persist-failed → QuickNode retries), `streams:deliveries --db`, `docs/deploy/RAILWAY.md`, runbook §P. Orchestrator re-ran: typecheck clean; tests shared 10, scripts 13, api 19, 0 fail. Live check = the Railway deploy smoke (health 200 db=postgres, unsigned POST 503/401).
 ### QE results / gate
 _pending_
+
+## Phase 2 — Backend, relayer, Streams pipeline (human said "go", session 2, 2026-11-16)
+### Plan
+- BACKEND_RELAYER ∥ STREAMS_INFRA, started without waiting for the Stream (human instruction). Ownership split inside apps/api: STREAMS_INFRA = src/streams/**, routes/webhooks.ts, drizzle-streams/ (own migrations table); BACKEND_RELAYER = the rest (own drizzle/ journal). They agree the query/bus API via inbox.
+- Human-required rules: QE-C-10 (`OrderAlreadySettled` terminal; split read from PaymentSettled), QE-C-11 (balance ≥ amount, + gasLimit × maxFee for self-submit).
+- Human in parallel: production Stream (HUMAN_INPUT #3).
+- Gate: QE_E2E + SECURITY_REVIEW in parallel, independent (CLI canonical story through the api with the DB updated via Streams; replay determinism; secrets/rate limits/CORS).
+### Delegated
+- BACKEND_RELAYER (running), STREAMS_INFRA (running).

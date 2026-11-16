@@ -14,6 +14,8 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | CONTRACTS | `ad7b974ed746e5ac4` | 1 | Vouch v1→v2, tests, deploy/verify, smoke, ABI, handoffs | ✅ | v2 0x9C50…b95f; resumable |
 | UI_DESIGN | `a22d241dedf389e0f` | 1 | Design system, components, /design route, screen low-fi, screenshots | ✅ | Orchestrator signed off; human approval pending (MSG-007) |
 | CONTRACTS_QE | `aef55c194d7c6021d` | 1 | Adversarial review + MSG-003 + v2 re-verify | ✅ | PASS-with-findings; resumable |
-| CONTRACTS (session 2) | `a914bc3d449f4f20b` | 1.5 | D-014 v3: remove submitter=0 path, size check, tests (no deploy) | 🟢 | option (a) done; now running the authorized v3 redeploy + smoke + shared/handoffs |
+| CONTRACTS (session 2) | `a914bc3d449f4f20b` | 1.5 | D-014 v3: remove submitter=0 path, size check, tests (no deploy) | ✅ | v3 deployed 0xF4B6…f08e @ 72605845 (D-520); smokes exact; resumable |
 | STREAMS_INFRA (session 2) | `a7d6b022bcb70614d` | 1.5 | D-016 Railway prep: Dockerfile, PORT, raw delivery table, runbook | ✅ | D-305; resumed once after laptop sleep; the Orchestrator deploys after `railway login` |
 | CONTRACTS_QE (session 2) | `af2eb2c52e8488e91` | 1.5 | Independent v3 review + QE test re-pins (MSG-050) | ✅ | PASS-with-findings (QE-C-10/11 info, D-703); resumable |
+| BACKEND_RELAYER (session 2) | `a69d2dbd43cef70dd` | 2 | Schema, endpoints, relayer (QE-C-10 terminal, QE-C-11 balance+fee), SSE, story:api CLI | 🟢 | parallel with STREAMS_INFRA |
+| STREAMS_INFRA (session 2, Phase 2) | `adedd98f81bc90884` | 2 | Ingestion → derived tables, bus/query API, backfill/replay + hash check | 🟢 | filter frozen: docs/streams/filter-vouch.js |

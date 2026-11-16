@@ -1,7 +1,7 @@
 # AGENTS/ — rolling project memory
 _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 
-**Current phase:** Phase 1.5 (A5 follow-ups: v3 submitter rule, Railway API host, one production Stream; design approved D-017). Phase 2 waits for "go". **New orchestrator: start with `AGENTS/ORCHESTRATOR.md`.**
+**Current phase:** Phase 2 (go given in session 2): BACKEND_RELAYER ∥ STREAMS_INFRA running; Vouch v3 live; api on Railway; production Stream pending (human). **New orchestrator: start with `AGENTS/ORCHESTRATOR.md`.**
 **Display name:** **Vouch** (`APP_NAME` in `packages/shared/src/constants.ts`; package scope `@vouch/*`; D-007)
 **Deadline:** submit by Fri Nov 20, 2026 12:00 PM CST (target 9:00 AM CST)
 
