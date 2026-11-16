@@ -277,14 +277,15 @@ contract QePayeeAuthTest is QeBase {
         bytes32 independent = keccak256(
             abi.encode(
                 keccak256(
-                    "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+                    "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
                 ),
                 b.a.customer,
                 b.a.venue,
                 b.a.orderId,
                 b.a.amount,
                 b.a.weightsHash,
-                b.a.deadline
+                b.a.deadline,
+                b.a.submitter
             )
         );
         assertEq(vouch.paymentAuthNonce(b.a), independent);
@@ -293,16 +294,15 @@ contract QePayeeAuthTest is QeBase {
         assertTrue(usdc.authorizationState(ben, independent), "USDC marked exactly hashStruct(PaymentAuth) as used");
     }
 
-    /// @dev Each of the six PaymentAuth fields is changed while keeping every Vouch-level check satisfied (the venue
+    /// @dev Each of the seven PaymentAuth fields (v2 adds submitter) is changed while keeping every Vouch-level check satisfied (the venue
     ///      re-signs a matching order), so the ONLY thing that rejects the payment is USDC's signature check.
     function test_payee_e_everyFieldIsBoundByTheUsdcSignature() public {
         _register(lena, keccak256("venue-2"), RATE, MIN_ORDER); // same signer key
         address venue2 = vouch.computeVenueId(lena, keccak256("venue-2"));
-        for (uint8 f; f < 6; ++f) {
+        for (uint8 f; f < 7; ++f) {
             Bundle memory b = _bundle(venue, BEN_PK, 6e6, new address[](0), new uint16[](0));
             _mutate(b, f, venue2, uint256(keccak256("qe-mutation-seed")));
-            vm.expectRevert("FiatTokenV2: invalid signature");
-            _exec(b);
+            _expectUsdcRejects(b);
         }
     }
 
@@ -312,10 +312,9 @@ contract QePayeeAuthTest is QeBase {
         address venue2 = vouch.computeVenueId(lena, keccak256("venue-2"));
         Bundle memory b = _bundle(venue, BEN_PK, 6e6, new address[](0), new uint16[](0));
         bytes32 n0 = _authNonce(b.a);
-        _mutate(b, field % 6, venue2, seed);
+        _mutate(b, field % 7, venue2, seed);
         assertTrue(_authNonce(b.a) != n0, "mutation changes the nonce");
-        vm.expectRevert("FiatTokenV2: invalid signature");
-        _exec(b);
+        _expectUsdcRejects(b);
         assertEq(usdc.balanceOf(address(vouch)), 0);
         assertFalse(vouch.getCustomer(venue, ben).verified);
     }
@@ -347,11 +346,23 @@ contract QePayeeAuthTest is QeBase {
             usdc.mint(ben, amt);
         } else if (f == 4) {
             b.a.weightsHash = bytes32(seed | 1);
-        } else {
+        } else if (f == 5) {
             uint64 d = uint64(bound(seed, block.timestamp + 1, block.timestamp + 365 days));
             if (d == b.a.deadline) d += 1;
             b.a.deadline = d;
+        } else {
+            // v2 (D-012): submitter is the 7th field; whoever is named also submits, so only USDC can object
+            address s = address(uint160(bound(seed, 0x10000, type(uint160).max)));
+            if (s == relayer) s = attacker;
+            b.a.submitter = s;
         }
+    }
+
+    /// @dev Submits as the bound submitter (or the relayer when unbound) and expects USDC's signature check to refuse.
+    function _expectUsdcRejects(Bundle memory b) internal {
+        vm.prank(b.a.submitter == address(0) ? relayer : b.a.submitter);
+        vm.expectRevert("FiatTokenV2: invalid signature");
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
     }
 
     function _split(bytes memory sig) internal pure returns (bytes32 r, bytes32 s, uint8 v) {

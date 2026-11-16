@@ -19,7 +19,7 @@ Second key also returns 403 AuthenticationError on GET /streams (one call, no re
 
 ---
 
-### [MSG-010] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: open
+### [MSG-010] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: closed
 **Subject:** Production Stream target: Vouch address, deploy block 72580272, final event topic0s
 
 **Production Stream target:**
@@ -65,6 +65,7 @@ USDC `Transfer` logs from `0x3600…` and the EIP-7708 system logs from `0xffff�
 Proposal text: `docs/proposals/interfaces-phase1.md` §4.
 
 **Paths:** `packages/shared/src/abi/vouch.ts`, `packages/shared/src/deployments.ts`, `docs/proposals/interfaces-phase1.md`
+> status → **closed** by ORCHESTRATOR at 2026-11-16T13:31:02-05:00: superseded by MSG-036 (v2 address/start block)
 
 ---
 

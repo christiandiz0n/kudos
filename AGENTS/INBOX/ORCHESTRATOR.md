@@ -18,7 +18,7 @@ Please ask the human to approve or redirect the design direction. Evidence: docs
 
 ---
 
-### [MSG-022] 2026-11-16T13:03:59-05:00 FROM: CONTRACTS_QE TO: ORCHESTRATOR | type: answer | status: open
+### [MSG-022] 2026-11-16T13:03:59-05:00 FROM: CONTRACTS_QE TO: ORCHESTRATOR | type: answer | status: closed
 **Subject:** Re: Human requirement: prove receiveWithAuthorization is called by the payee contract _(re: MSG-003)_
 
 MSG-003 PROVEN. USDC receiveWithAuthorization is invoked only by the payee contract (msg.sender == to == Vouch). Each item is proven three ways: on the faithful mock (QePayeeAuth.t.sol, 13/13), on the REAL Arc USDC bytecode on a fork (QeForkPayee.t.sol, 7/7, VOUCH_FORK=true), and live on Arc Testnet with read-only eth_call (no tx, no funds).
@@ -30,5 +30,6 @@ MSG-003 PROVEN. USDC receiveWithAuthorization is invoked only by the payee contr
 Separately, the review found 2 blockers unrelated to MSG-003 (QE-C-01 front-run forced fallback, QE-C-02 payout==Vouch funds stuck). Details are in docs/qa/phase-1-contracts-qe.md and MSG-014..MSG-021.
 
 **Paths:** `docs/qa/phase-1-contracts-qe.md`, `docs/evidence/phase-1/contracts-qe/live-arc-eth-call.txt`, `contracts/test/qe/QePayeeAuth.t.sol`, `contracts/test/qe/QeForkPayee.t.sol`
+> status → **closed** by ORCHESTRATOR at 2026-11-16T13:30:56-05:00: MSG-003 evidence accepted (mock 13/13, fork 8/8, live eth_call on v2); relayed to the human in the Phase 1 report
 
 ---

@@ -46,6 +46,7 @@ abstract contract QeGasSweepBase is QeBase {
     function _one(bytes memory cd, uint256 g, Sweep memory s) internal {
         uint256 snap = vm.snapshotState();
         vm.recordLogs();
+        vm.prank(relayer); // v2 (D-012): the bundle binds submitter = relayer
         (bool ok, bytes memory ret) = address(vouch).call{gas: g}(cd);
         Vm.Log[] memory logs = vm.getRecordedLogs();
         if (ok) {
@@ -182,7 +183,7 @@ contract QeGasStarvationNestedTest is QeGasSweepBase {
         _chunk(_canonicalCalldata(), false, "nested USDC, burn 0, far");
     }
 
-    /// @dev burn 300 ≈ +40k gas per balance move: the shape most favourable to a starvation attack.
+    /// @dev burn 300 ≈ 95k gas per balance move (~2x real Arc USDC): the shape most favourable to a starvation attack.
     function test_gasSweep_nestedUsdc_expensivePrecompile_near() public {
         ledger.setBurn(300);
         _chunk(_canonicalCalldata(), true, "nested USDC, burn 300, near", 500, 0);
@@ -193,27 +194,38 @@ contract QeGasStarvationNestedTest is QeGasSweepBase {
         _chunk(_canonicalCalldata(), false, "nested USDC, burn 300, far", 900, 307);
     }
 
-    /// QE-C-INFO: in isolation, with a nested-call token, a starved transfer is NOT detected by the 63/64 guard
-    /// (gasleft after ≈ 1/32 of gasBefore > 1/63) and is reported as an ordinary failure (`false`, would be routed to
-    /// the venue). pay() is only safe because the work left after any reward transfer (stats writes + the venue payout
-    /// transfer) needs far more than the ~1/32 remaining — proven by the sweeps above, not by the guard.
-    function test_INFO_guardFalseNegativeWithNestedToken() public {
+    /// QE-C-07 — FIXED in v2 (D-517: MIN_TRANSFER_GAS = 100k floor before each transfer). With an Arc-shaped nested
+    /// token calibrated to the REAL Arc USDC cost (eth_estimateGas of transfer to a fresh address = 74,597 tx gas, i.e.
+    /// ~52k execution; burn 120 ≈ 55k per move here), no starved transfer is reported as a plain failure any more.
+    function test_FIXED_guardNoFalseNegativeWithNestedToken() public {
+        (uint256 falseNegatives, uint256 guardFired) = _probeGuard(120);
+        emit log_named_uint("burn 120 (~Arc cost): starved transfers reported as plain failures", falseNegatives);
+        emit log_named_uint("burn 120 (~Arc cost): refused by the guard / floor", guardFired);
+        assertEq(falseNegatives, 0, "no false negatives at a realistic token cost");
+        assertGt(guardFired, 0);
+    }
+
+    /// INFO: the floor's guarantee assumes the token's transfer costs < ~98k gas (63/64 of 100k). A hypothetical token
+    /// whose transfer costs more brings the false negative back. Real Arc USDC costs far less (fork threshold ~354k
+    /// for a whole 5-transfer pay), so this is an assumption to keep pinned, not a bug.
+    function test_INFO_floorAssumesTransferCostBelowFloor() public {
+        (uint256 falseNegatives,) = _probeGuard(300); // ~95k gas per move: above 63/64 of the 100k floor
+        emit log_named_uint("burn 300 (~95k/move): starved transfers reported as plain failures", falseNegatives);
+        assertGt(falseNegatives, 0, "documents the assumption MIN_TRANSFER_GAS > worst-case token transfer cost");
+    }
+
+    function _probeGuard(uint256 burn) internal returns (uint256 falseNegatives, uint256 guardFired) {
         VouchTryTransferHarness h = new VouchTryTransferHarness(IFiatTokenV2_2(address(usdc)));
-        ledger.setBurn(300);
+        ledger.setBurn(burn);
         usdc.mint(address(h), 10e6);
         address fresh = makeAddr("fresh");
-        uint256 falseNegatives;
-        uint256 guardFired;
-        for (uint256 g = 20_000; g < 120_000; g += 50) {
+        for (uint256 g = 20_000; g < 400_000; g += 97) {
             uint256 snap = vm.snapshotState();
             (bool ok, bytes memory ret) = address(h).call{gas: g}(abi.encodeCall(h.tryTransfer, (fresh, 1)));
             if (ok && !abi.decode(ret, (bool))) falseNegatives++;
             if (!ok && ret.length == 4 && bytes4(ret) == IVouch.TransferOutOfGas.selector) guardFired++;
             vm.revertToState(snap);
         }
-        emit log_named_uint("starved transfers reported as plain failures (guard missed)", falseNegatives);
-        emit log_named_uint("starved transfers caught by the guard", guardFired);
         assertTrue(h.tryTransfer(fresh, 1), "with enough gas the same transfer succeeds");
-        assertGt(falseNegatives, 0, "documents the false negative");
     }
 }

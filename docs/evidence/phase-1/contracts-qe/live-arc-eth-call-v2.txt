@@ -1,0 +1,63 @@
+chainId: 5042002   block: 72585953
+Vouch (deployed): 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f   USDC: 0x3600000000000000000000000000000000000000
+throwaway customer: 0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b  (USDC balance: 0)
+USDC DOMAIN_SEPARATOR: 0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0
+RECEIVE_WITH_AUTHORIZATION_TYPEHASH: 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8
+PaymentAuth{customer,venue=0x7658AaFA5cfc8768FA321846953DB686EF14112C,orderId=0x4316390ada4f525375e81e9beb5dd79a3e8b68dceae17a8dd95a9c8bc3f158fb,amount=12000000,weightsHash=0,deadline=1794857229,submitter=0x00000000000000000000000000000000000A11CE}
+nonce (independent keccak):        0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531
+nonce (deployed paymentAuthNonce): 0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531
+  => equal (nonce == hashStruct(PaymentAuth))
+
+### (b) third party (non-payee) redeems the customer's REAL signature for to=Vouch
+eth_call from=0x000000000000000000000000000000000000dEaD: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, value=12000000, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  Error: execution reverted: FiatTokenV2: caller must be the payee
+  
+  Context:
+  - server returned an error response: error code 3: execution reverted: FiatTokenV2: caller must be the payee, data: "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002546696174546f6b656e56323a2063616c6c6572206d75737420626520746865207061796565000000000000000000000000000000000000000000000000000000"
+  exit=1
+
+### (b) the customer itself calls it directly (also not the payee)
+eth_call from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, value=12000000, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  Error: execution reverted: FiatTokenV2: caller must be the payee
+  
+  Context:
+  - server returned an error response: error code 3: execution reverted: FiatTokenV2: caller must be the payee, data: "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002546696174546f6b656e56323a2063616c6c6572206d75737420626520746865207061796565000000000000000000000000000000000000000000000000000000"
+  exit=1
+
+### (c) attacker names itself as payee with the same signature
+eth_call from=0x00000000000000000000000000000000000A77AC: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x00000000000000000000000000000000000A77AC, value=12000000, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  Error: execution reverted: FiatTokenV2: invalid signature
+  
+  Context:
+  - server returned an error response: error code 3: execution reverted: FiatTokenV2: invalid signature, data: "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001e46696174546f6b656e56323a20696e76616c6964207369676e61747572650000"
+  exit=1
+
+### control: same call simulated FROM the payee (Vouch) -> passes payee + signature checks, fails only on the empty balance
+eth_call from=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, value=12000000, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  Error: execution reverted: ERC20: transfer amount exceeds balance
+  
+  Context:
+  - server returned an error response: error code 3: execution reverted: ERC20: transfer amount exceeds balance, data: "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002645524332303a207472616e7366657220616d6f756e7420657863656564732062616c616e63650000000000000000000000000000000000000000000000000041"
+  exit=1
+
+### control: value 0 signature simulated FROM the payee (Vouch) -> succeeds (signature valid, payee == caller)
+eth_call from=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, value=0, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  0x
+  exit=0
+
+### control: value 0 signature from a third party -> payee check
+eth_call from=0x000000000000000000000000000000000000dEaD: USDC.receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)(from=0xD53Eaa12308fff482D0E39b7Ff82c68e6cf32E8b, to=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f, value=0, validAfter=0, validBefore=1794857229, nonce=0x5e3ecfeb11b7fefcddc38b6f9a4d7579bda46073036794627d1db90310ae7531, sig)
+  Error: execution reverted: FiatTokenV2: caller must be the payee
+  
+  Context:
+  - server returned an error response: error code 3: execution reverted: FiatTokenV2: caller must be the payee, data: "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002546696174546f6b656e56323a2063616c6c6572206d75737420626520746865207061796565000000000000000000000000000000000000000000000000000000"
+  exit=1
+
+authorizationState(customer, nonce) after all eth_calls: false  (eth_call never mutates state)
+
+v2 PAYMENT_AUTH_TYPEHASH (deployed): 0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4
+v2 local keccak of the type string:  0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4
+USDC.transfer(1) to system addresses, simulated from the v2 deployer (payout-guard completeness):
+  -> 0x1800000000000000000000000000000000000000: true
+  -> 0xfffffffffffffffffffffffffffffffffffffffe: true
+  -> 0x3600000000000000000000000000000000000000: Error: execution reverted: Blocked address

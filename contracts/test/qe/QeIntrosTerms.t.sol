@@ -137,17 +137,15 @@ contract QeIntrosTermsTest is QeBase {
         vouch.acceptIntro(j, rsig, a, csig);
     }
 
-    /// LIMIT (Low, QE-C-05): D-505 says "a referrer can't pick a superseded, better version", but `issuedAt` is chosen
-    /// by the referrer. After the venue CUTS its rate (15% → 1%), a referrer can sign a NEW intro back-dated to before
-    /// the cut, naming v1, and it is accepted at 15% for up to 30 days after the cut (bounded by MAX_INTRO_TTL).
-    function test_LIMIT_backdatedIssuedAtSelectsSupersededBetterTerms() public {
+    /// QE-C-05 — FIXED in v2 (D-516: SUPERSEDED_GRACE = 72h). A back-dated intro naming the superseded (better) v1 is
+    /// refused once the 72h grace after the cut has passed (here: 5 days after the cut).
+    function test_FIXED_backdatedIssuedAtSelectsSupersededBetterTerms() public {
         _seed(venue, sam);
         uint64 beforeCut = uint64(block.timestamp);
         vm.warp(block.timestamp + 10 days);
         vm.prank(lena);
         vouch.updateTerms(venue, 100, MIN_ORDER, 0, ""); // 1% from now on
         vm.warp(block.timestamp + 5 days);
-        // Sam signs today, but claims issuedAt = before the cut and v1
         IVouch.Intro memory i = IVouch.Intro({
             venue: venue,
             referrer: sam,
@@ -157,10 +155,10 @@ contract QeIntrosTermsTest is QeBase {
             expiresAt: beforeCut + 30 days,
             nonce: bytes32("backdated")
         });
-        _acceptSigned(i, SAM_PK, BEN_PK);
-        Bundle memory b = _bundle(venue, BEN_PK, 100e6, _arr(sam), _bps(10_000));
-        _exec(b);
-        assertEq(vouch.getVenueStats(venue).rewardsPaid, 15e6 - 3e6, "paid at the superseded 15% (minus returned L2)");
+        (IVouch.IntroAcceptance memory a, bytes memory csig) = _acceptance(i, BEN_PK);
+        bytes memory rsig = _sign(SAM_PK, _introHash(i));
+        vm.expectRevert(IVouch.TermsNotInForce.selector);
+        vouch.acceptIntro(i, rsig, a, csig);
     }
 
     // ================================================================== self-referral / sybils

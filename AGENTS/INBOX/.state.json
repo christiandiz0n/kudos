@@ -1,5 +1,5 @@
 {
- "counter": 37,
+ "counter": 42,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -29,10 +29,10 @@
    "from": "ORCHESTRATOR",
    "to": "CONTRACTS_QE",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "Human requirement: prove receiveWithAuthorization is called by the payee contract",
    "re": null,
-   "resolution": "see MSG-022"
+   "resolution": "human requirement satisfied; see docs/qa/phase-1-contracts-qe.md"
   },
   "MSG-004": {
    "id": "MSG-004",
@@ -102,9 +102,10 @@
    "from": "CONTRACTS",
    "to": "STREAMS_INFRA",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Production Stream target: Vouch address, deploy block 72580272, final event topic0s",
-   "re": null
+   "re": null,
+   "resolution": "superseded by MSG-036 (v2 address/start block)"
   },
   "MSG-011": {
    "id": "MSG-011",
@@ -143,10 +144,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "blocker",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-01 Anyone can front-run pay() to force the fallback split and rewrite the frozen introducer",
    "re": null,
-   "resolution": "see MSG-024"
+   "resolution": "re-verified on v2 0x9C50\u2026b95f (deployed runtime == source, test_fork_deployedV2RuntimeEqualsThisSource).\n- Passing: test_FIXED_frontRunWithGarbageAttributorSigForcesFallback, test_FIXED_frontRunWithSwappedWeightsForcesFallback (after QE fixed its own memory-aliasing bug), test_v2_submitterMismatch_noStateChange_honestStillSettles, test_v2_submitterSwapBreaksTheUsdcSignature, test_v2_accessControlledContractSubmitterHolds, fork test_fork_e (7 fields incl. submitter), and the invariant handler (every pay front-run attempt refused with UnauthorizedSubmitter).\n- Residual: submitter=0 or a public forwarder as submitter re-opens the front-run; filed as QE-C-09."
   },
   "MSG-015": {
    "id": "MSG-015",
@@ -154,10 +155,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "blocker",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-02 Venue payout can be the Vouch contract itself: venue share stuck forever (invariant 1)",
    "re": null,
-   "resolution": "see MSG-025"
+   "resolution": "re-verified on v2.\n- Passing: test_FIXED_payoutCanBeTheVouchContract_fundsStuckForever, test_v2_payoutGuard_allEntryPoints (Vouch/USDC/0 on registerVenue, direct setKeys and relayed setKeys).\n- Info: system addresses (0x1800\u2026, 0xffff\u2026fffe) are still accepted. Live eth_call shows real USDC accepts transfers to them (it blocks only 0x3600). Nothing stays in Vouch (test_INFO_systemAddressPayoutAcceptedButNothingStuckInVouch), so invariant 1 holds; noted in QE-C-09."
   },
   "MSG-016": {
    "id": "MSG-016",
@@ -165,10 +166,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-03 Ambassador customersCredited/venues are not rebuildable from events (zero-amount L1)",
    "re": null,
-   "resolution": "see MSG-026"
+   "resolution": "re-verified on v2.\n- Passing: test_FIXED_ambassadorCreditRecoverableFromEvents. The builder's dispute is upheld: assertFalse(namedAnywhere) described the bug, so it is now assertTrue. Also passing: test_events_rebuildEveryStatFromLogsAlone, testFuzz_previewEqualsSettlement, and the QeLedger invariants.\n- Residual, accepted: per-referrer bps/termsVersion are still not emitted (transparency must derive the weights from the amounts)."
   },
   "MSG-017": {
    "id": "MSG-017",
@@ -176,10 +177,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-04 Stale relayed owner signature overrides a newer direct owner action (no nonce cancel path)",
    "re": null,
-   "resolution": "see MSG-027"
+   "resolution": "re-verified on v2.\n- Passing: test_FIXED_staleRelayedOwnerActionCannotOverrideNewerDirectAction (InvalidOwnerSignature), test_replay_ownerSigs_nonceTypeVenueChainAndDeadline.\n- Residual, documented: future-nonce pre-signed actions (test_LIMIT_futureNonceSignatureBecomesValidAfterDirectActions)."
   },
   "MSG-018": {
    "id": "MSG-018",
@@ -187,10 +188,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-05 Referrer can back-date issuedAt to pick a superseded, better terms version (D-505 text says it can't)",
    "re": null,
-   "resolution": "see MSG-028"
+   "resolution": "re-verified on v2.\n- Passing: test_FIXED_backdatedIssuedAtSelectsSupersededBetterTerms (TermsNotInForce), test_v2_graceBoundary_inclusiveAt72h, test_v2_graceBoundary_rejectedAt72hPlus1, test_v2_graceMeasuredPerVersion.\n- Product note: honest pre-cut links die 72h after a terms change (test_INFO_honestPreCutLinkDies72hAfterTermsChange)."
   },
   "MSG-019": {
    "id": "MSG-019",
@@ -198,10 +199,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-06 Mempool griefing of intros: personal-intro sniping and submitter-chosen eviction victim",
    "re": null,
-   "resolution": "see MSG-029"
+   "resolution": "accepted as documented limits (D-517). test_LIMIT_personalIntroCanBeSniped and test_LIMIT_submitterChoosesWhichReferrerIsEvicted still pass and document the behavior; the mitigation is a private acceptIntro relay."
   },
   "MSG-020": {
    "id": "MSG-020",
@@ -209,10 +210,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-07 _tryTransfer 63/64 guard has false negatives with nested-call tokens (Arc USDC -> precompile); safe today only by margin",
    "re": null,
-   "resolution": "see MSG-030"
+   "resolution": "re-verified on v2.\n- Passing: test_FIXED_guardNoFalseNegativeWithNestedToken (0 false negatives at the measured Arc cost: eth_estimateGas transfer = 74,597 tx gas, ~52k execution); all 8 QeGasStarvation sweeps (the guard now fires explicitly: 1,500-1,917 refusals per sweep); test_v2_maxSplitGasFloor_near_1gas/_far (5 referrers + 5 introducers: min gas 804,619 vs the 30M block limit, 151 under-funded successes all identical to the ample-gas outcome); fork test_fork_gasStarvation_noRedirectAtAnyGasLimit.\n- Assumption pinned in test_INFO_floorAssumesTransferCostBelowFloor: the token's transfer must cost < ~98k gas."
   },
   "MSG-021": {
    "id": "MSG-021",
@@ -220,10 +221,10 @@
    "from": "CONTRACTS_QE",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-C-08 Info bundle: sybil self-referral, customer-unbound orders, gas-burning ERC-1271 attributor",
    "re": null,
-   "resolution": "see MSG-031"
+   "resolution": "accepted as documented limits (D-517). The LIMIT/INFO tests still pass."
   },
   "MSG-022": {
    "id": "MSG-022",
@@ -231,9 +232,10 @@
    "from": "CONTRACTS_QE",
    "to": "ORCHESTRATOR",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Human requirement: prove receiveWithAuthorization is called by the payee contract",
-   "re": "MSG-003"
+   "re": "MSG-003",
+   "resolution": "MSG-003 evidence accepted (mock 13/13, fork 8/8, live eth_call on v2); relayed to the human in the Phase 1 report"
   },
   "MSG-023": {
    "id": "MSG-023",
@@ -252,9 +254,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-01 Anyone can front-run pay() to force the fallback split and rewrite the frozen introducer",
-   "re": "MSG-014"
+   "re": "MSG-014",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-025": {
    "id": "MSG-025",
@@ -262,9 +265,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-02 Venue payout can be the Vouch contract itself: venue share stuck forever (invariant 1)",
-   "re": "MSG-015"
+   "re": "MSG-015",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-026": {
    "id": "MSG-026",
@@ -272,9 +276,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-03 Ambassador customersCredited/venues are not rebuildable from events (zero-amount L1)",
-   "re": "MSG-016"
+   "re": "MSG-016",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-027": {
    "id": "MSG-027",
@@ -282,9 +287,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-04 Stale relayed owner signature overrides a newer direct owner action (no nonce cancel path)",
-   "re": "MSG-017"
+   "re": "MSG-017",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-028": {
    "id": "MSG-028",
@@ -292,9 +298,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-05 Referrer can back-date issuedAt to pick a superseded, better terms version (D-505 text says it can't)",
-   "re": "MSG-018"
+   "re": "MSG-018",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-029": {
    "id": "MSG-029",
@@ -302,9 +309,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-06 Mempool griefing of intros: personal-intro sniping and submitter-chosen eviction victim",
-   "re": "MSG-019"
+   "re": "MSG-019",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-030": {
    "id": "MSG-030",
@@ -312,9 +320,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-07 _tryTransfer 63/64 guard has false negatives with nested-call tokens (Arc USDC -> precompile); safe today only by margin",
-   "re": "MSG-020"
+   "re": "MSG-020",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-031": {
    "id": "MSG-031",
@@ -322,9 +331,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-C-08 Info bundle: sybil self-referral, customer-unbound orders, gas-burning ERC-1271 attributor",
-   "re": "MSG-021"
+   "re": "MSG-021",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-032": {
    "id": "MSG-032",
@@ -332,9 +342,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Re: Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list",
-   "re": "MSG-023"
+   "re": "MSG-023",
+   "resolution": "read and re-verified on v2; see the close note on the original QE message"
   },
   "MSG-033": {
    "id": "MSG-033",
@@ -342,9 +353,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Re-verify QE-C-01..08 on 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-039"
   },
   "MSG-034": {
    "id": "MSG-034",
@@ -385,6 +397,59 @@
    "status": "open",
    "subject": "Vouch v2 address + QE note on sybil risk flags",
    "re": null
+  },
+  "MSG-038": {
+   "id": "MSG-038",
+   "ts": "2026-11-16T13:28:04-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "closed",
+   "subject": "QE-C-09 v2 residuals: submitter binding is only as strong as the chosen submitter; info notes on payout/nonces/grace/floor",
+   "re": null,
+   "resolution": "see MSG-042"
+  },
+  "MSG-039": {
+   "id": "MSG-039",
+   "ts": "2026-11-16T13:28:04-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: Re-verify QE-C-01..08 on 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f",
+   "re": "MSG-033",
+   "resolution": "acknowledged on CONTRACTS' behalf (agent idle); re-verification accepted"
+  },
+  "MSG-040": {
+   "id": "MSG-040",
+   "ts": "2026-11-16T13:30:56-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "BACKEND_RELAYER",
+   "type": "request",
+   "status": "open",
+   "subject": "Phase 2 requirements from QE-C-09 (D-013): submitter, owner nonces, link re-issue",
+   "re": null
+  },
+  "MSG-041": {
+   "id": "MSG-041",
+   "ts": "2026-11-16T13:30:56-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "open",
+   "subject": "Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt",
+   "re": null
+  },
+  "MSG-042": {
+   "id": "MSG-042",
+   "ts": "2026-11-16T13:30:56-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "CONTRACTS_QE",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: QE-C-09 v2 residuals: submitter binding is only as strong as the chosen submitter; info notes on payout/nonces/grace/floor",
+   "re": "MSG-038",
+   "resolution": "routing recorded; nothing for QE to do"
   }
  }
 }

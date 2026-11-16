@@ -49,7 +49,7 @@ contract QeForkPayeeTest is Test {
     bytes32 constant T_WEIGHTS =
         keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
     bytes32 constant T_AUTH = keccak256(
-        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
     );
     bytes32 constant T_RWA = 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8;
 
@@ -127,7 +127,7 @@ contract QeForkPayeeTest is Test {
     }
 
     function _nonce(IVouch.PaymentAuth memory a) internal pure returns (bytes32) {
-        return keccak256(abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline));
+        return keccak256(abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline, a.submitter));
     }
 
     function _usdcSig(uint256 pk, IVouch.PaymentAuth memory a, address to) internal view returns (bytes memory) {
@@ -154,7 +154,7 @@ contract QeForkPayeeTest is Test {
             abi.encode(T_WEIGHTS, venue, ben, b.o.orderId, keccak256(abi.encodePacked(refs)), keccak256(abi.encodePacked(bps)))
         );
         b.wsig = _sign(attrPk, _digest(wh));
-        b.a = IVouch.PaymentAuth(ben, venue, b.o.orderId, b.o.amount, wh, uint64(block.timestamp + 600));
+        b.a = IVouch.PaymentAuth(ben, venue, b.o.orderId, b.o.amount, wh, uint64(block.timestamp + 600), relayer);
         b.usig = _usdcSig(benPk, b.a, address(vouch));
         vm.deal(ben, ben.balance + 12e6 * 1e12);
     }
@@ -171,6 +171,23 @@ contract QeForkPayeeTest is Test {
         assertEq(USDC.balanceOf(address(vouch)), 0);
         assertFalse(vouch.isOrderSettled(venue, orderId), "order not burned");
         assertFalse(vouch.getCustomer(venue, ben).verified, "customer not verified");
+    }
+
+    // ================================================================== deployed v2 == this source
+    /// @dev The fork tests deploy a fresh Vouch from this source; prove the LIVE v2 runs byte-identical code (same
+    ///      USDC immutable, bytecode_hash = none) and exposes the v2 PaymentAuth typehash (with submitter).
+    ///      OZ EIP712 bakes address(this) + the domain separator into immutables, so this source is re-deployed AT the
+    ///      v2 address on the fork (deployCodeTo) and the runtime bytes are compared exactly.
+    function test_fork_deployedV2RuntimeEqualsThisSource() public {
+        address v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f;
+        bytes memory live = v2.code;
+        assertGt(live.length, 0, "v2 deployed");
+        assertEq(Vouch(v2).PAYMENT_AUTH_TYPEHASH(), T_AUTH);
+        assertEq(address(Vouch(v2).USDC()), address(USDC));
+        deployCodeTo("Vouch.sol:Vouch", abi.encode(address(USDC)), v2);
+        assertEq(keccak256(live), keccak256(v2.code), "deployed v2 runtime == this source compiled");
+        assertEq(Vouch(v2).PAYMENT_AUTH_TYPEHASH(), T_AUTH);
+        assertEq(address(Vouch(v2).USDC()), address(USDC));
     }
 
     // ================================================================== (a)
@@ -315,7 +332,7 @@ contract QeForkPayeeTest is Test {
 
     // ================================================================== (e)
     function test_fork_e_everyPaymentFieldBoundByRealUsdcSignature() public {
-        for (uint256 f; f < 6; ++f) {
+        for (uint256 f; f < 7; ++f) {
             B memory b = _bundle();
             if (f == 0) {
                 b.a.customer = vm.addr(priyaPk); // someone else presents Ben's signature
@@ -335,10 +352,12 @@ contract QeForkPayeeTest is Test {
                 _signOrder(b);
             } else if (f == 4) {
                 b.a.weightsHash = bytes32(uint256(1));
-            } else {
+            } else if (f == 5) {
                 b.a.deadline += 1;
+            } else {
+                b.a.submitter = attacker; // v2 (D-012): the submitter is part of the nonce too
             }
-            vm.prank(relayer);
+            vm.prank(f == 6 ? attacker : relayer);
             vm.expectRevert("FiatTokenV2: invalid signature");
             vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
         }
@@ -354,6 +373,7 @@ contract QeForkPayeeTest is Test {
         while (hi - lo > 1) {
             uint256 mid = (lo + hi) / 2;
             uint256 snap = vm.snapshotState();
+            vm.prank(relayer);
             (bool ok,) = address(vouch).call{gas: mid}(cd);
             vm.revertToState(snap);
             if (ok) hi = mid;
@@ -370,6 +390,7 @@ contract QeForkPayeeTest is Test {
                 fmp := mload(0x40)
             }
             uint256 snap = vm.snapshotState();
+            vm.prank(relayer);
             (bool ok,) = address(vouch).call{gas: g}(cd);
             if (ok) {
                 successes++;

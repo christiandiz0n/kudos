@@ -1,0 +1,25 @@
+No files changed, compilation skipped
+Ran 3 tests for test/VouchFork.t.sol:VouchForkTest
+[PASS] test_fork_canonicalPayOnRealUsdc() (gas: 979170)
+Logs:
+  fork pay() gas (real Arc USDC, L2 returned): 393132
+[PASS] test_fork_payeeCheckOnRealUsdc() (gas: 46323)
+[PASS] test_fork_realUsdcFacts() (gas: 23915)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 1.79s (3.37s CPU time)
+Ran 1 test suite in 1.79s (1.79s CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)
+No files changed, compilation skipped
+Ran 8 tests for test/qe/QeForkPayee.t.sol:QeForkPayeeTest
+[PASS] test_fork_a_payPullsAsPayee_exactSplit_nativeDecimals() (gas: 676586)
+[PASS] test_fork_b_thirdPartyRedeemWithRealSignatureFailsPayeeCheck() (gas: 415708)
+[PASS] test_fork_c_signatureCannotBeRedirectedOrReused() (gas: 6321471)
+[PASS] test_fork_d_frontRunCancelAuthorization_revertsCleanly() (gas: 1016816)
+[PASS] test_fork_d_nonceConsumedByTransferWithAuthorization_revertsCleanly() (gas: 598591)
+[PASS] test_fork_deployedV2RuntimeEqualsThisSource() (gas: 128614)
+[PASS] test_fork_e_everyPaymentFieldBoundByRealUsdcSignature() (gas: 2231153)
+[PASS] test_fork_gasStarvation_noRedirectAtAnyGasLimit() (gas: 572453006)
+Logs:
+  fork: min successful gas limit: 425328
+  fork: gas limits tried: 1551
+  fork: successes (all exact): 201
+Suite result: ok. 8 passed; 0 failed; 0 skipped; finished in 1.62s (2.30s CPU time)
+Ran 1 test suite in 1.62s (1.62s CPU time): 8 tests passed, 0 failed, 0 skipped (8 total tests)

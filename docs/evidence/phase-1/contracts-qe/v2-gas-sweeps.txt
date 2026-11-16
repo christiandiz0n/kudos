@@ -1,0 +1,59 @@
+[PASS] test_gasSweep_erc1271Attributor_far_cannotBeStarvedIntoFallback() (gas: 752332468)
+  sweep: mock USDC, ERC-1271 attributor, far
+    threshold T (min successful gas limit): 482312
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1860
+[PASS] test_gasSweep_erc1271Attributor_near_cannotBeStarvedIntoFallback() (gas: 774212570)
+  sweep: mock USDC, ERC-1271 attributor, near
+    threshold T (min successful gas limit): 482312
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+[PASS] test_gasSweep_mockUsdc_far() (gas: 749866330)
+  sweep: mock USDC, EOA attributor, far
+    threshold T (min successful gas limit): 481338
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1860
+[PASS] test_gasSweep_mockUsdc_near_1gas() (gas: 772194507)
+  sweep: mock USDC, EOA attributor, near
+    threshold T (min successful gas limit): 481338
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+[PASS] test_FIXED_guardNoFalseNegativeWithNestedToken() (gas: 363142767)
+  burn 120 (~Arc cost): starved transfers reported as plain failures: 0
+  burn 120 (~Arc cost): refused by the guard / floor: 831
+[PASS] test_INFO_floorAssumesTransferCostBelowFloor() (gas: 518983081)
+  burn 300 (~95k/move): starved transfers reported as plain failures: 430
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_far() (gas: 752064766)
+  sweep: nested USDC, burn 0, far
+    threshold T (min successful gas limit): 483425
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1917
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_near() (gas: 780788634)
+  sweep: nested USDC, burn 0, near
+    threshold T (min successful gas limit): 483425
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_far() (gas: 793239387)
+  sweep: nested USDC, burn 300, far
+    threshold T (min successful gas limit): 1078503
+    successes: 0
+    reverts: 812
+    TransferOutOfGas guard fired: 520
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_near() (gas: 856162084)
+  sweep: nested USDC, burn 300, near
+    threshold T (min successful gas limit): 1078503
+    successes: 242
+    reverts: 500
+    TransferOutOfGas guard fired: 0
+[PASS] test_v2_maxSplitGasFloor_far() (gas: 639581125)
+  max split (5 referrers + 5 introducers): min successful gas limit: 804619
+  successes (all identical to the ample-gas outcome): 0
+[PASS] test_v2_maxSplitGasFloor_near_1gas() (gas: 758146114)
+  max split (5 referrers + 5 introducers): min successful gas limit: 804619
+  successes (all identical to the ample-gas outcome): 151

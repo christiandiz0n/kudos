@@ -149,21 +149,23 @@ contract QeReplaySignaturesTest is QeBase {
         vouch.updateTerms(venue, 1_200, MIN_ORDER, dl, sig2);
     }
 
-    /// LIMIT (Low, QE-C-06): direct owner calls do not consume `nonces(owner)`, so an owner-signed action that was
+    /// (QE-C-04, original LIMIT text) direct owner calls did not consume `nonces(owner)`, so an owner-signed action that was
     /// handed to the relayer but not yet submitted stays valid until its deadline and can be applied AFTER a newer
     /// direct action, silently undoing it (here: terms go back to 15% after the owner directly set 10%; a revoked seed
     /// is re-allowed). The owner's only cancel path is to sign and relay another action that consumes the nonce.
-    function test_LIMIT_staleRelayedOwnerActionOverridesNewerDirectAction() public {
+    /// FIXED in v2 (D-515: direct owner actions consume nonces(owner)): the stale signature is now dead.
+    function test_FIXED_staleRelayedOwnerActionCannotOverrideNewerDirectAction() public {
         uint64 dl = uint64(block.timestamp + 7 days);
         bytes memory allowSam = _seedSig(venue, sam, true, vouch.nonces(lena), dl);
-        // owner changes their mind and revokes directly (no nonce consumed)
+        // owner changes their mind and revokes directly (v2: consumes the nonce)
         vm.prank(lena);
         vouch.setSeedAmbassador(venue, sam, false, 0, "");
         // days later anyone replays the stale, never-used signature
         vm.warp(block.timestamp + 3 days);
         vm.prank(attacker);
+        vm.expectRevert(IVouch.InvalidOwnerSignature.selector);
         vouch.setSeedAmbassador(venue, sam, true, dl, allowSam);
-        assertTrue(vouch.isSeedAmbassador(venue, sam), "stale relayed action re-applied over the newer direct revoke");
+        assertFalse(vouch.isSeedAmbassador(venue, sam), "newer direct revoke stands");
     }
 
     // ================================================================== malleability
@@ -193,8 +195,10 @@ contract QeReplaySignaturesTest is QeBase {
         vm.expectRevert(IVouch.InvalidVenueSignature.selector);
         vouch.pay(b.o, _compact(b.osig), b.w, b.wsig, b.a, b.usig);
         // customer USDC signature: Circle's ECRecover rejects high-s and non-65-byte sigs
+        vm.prank(relayer);
         vm.expectRevert("ECRecover: invalid signature 's' value");
         vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, _highS(b.usig));
+        vm.prank(relayer);
         vm.expectRevert("ECRecover: invalid signature length");
         vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, _compact(b.usig));
     }
@@ -312,10 +316,13 @@ contract QeReplaySignaturesTest is QeBase {
         address burner = address(new QeGasBurner1271());
         vm.prank(lena);
         vouch.setKeys(venue, payout, venueSigner, burner, 0, "");
-        (bool okLow,) = address(vouch).call{gas: 1_000_000}(_payCalldata(b));
+        bytes memory cd = _payCalldata(b);
+        vm.prank(relayer);
+        (bool okLow,) = address(vouch).call{gas: 1_000_000}(cd);
         assertFalse(okLow, "1M gas is not enough next to a gas-burning attributor");
         vm.recordLogs();
-        (bool okHigh,) = address(vouch).call{gas: 40_000_000}(_payCalldata(b));
+        vm.prank(relayer);
+        (bool okHigh,) = address(vouch).call{gas: 40_000_000}(cd);
         assertTrue(okHigh, "with enough gas the payment completes");
         (mode,,) = _settledMode(vm.getRecordedLogs());
         assertEq(mode, 5);
@@ -338,7 +345,9 @@ contract QeReplaySignaturesTest is QeBase {
         Bundle memory b = _bundle(venue, BEN_PK, 12e6, _arr(ana, priya), _bps(7_000, 3_000));
         vm.recordLogs();
         // (a state change inside a STATICCALL halts and burns that frame's gas, so give the submitter a big budget)
-        (bool paid,) = address(vouch).call{gas: 60_000_000}(_payCalldata(b));
+        bytes memory cd = _payCalldata(b);
+        vm.prank(relayer);
+        (bool paid,) = address(vouch).call{gas: 60_000_000}(cd);
         assertTrue(paid);
         (uint8 mode,,) = _settledMode(vm.getRecordedLogs());
         assertEq(mode, 1, "evil attributor approved => its state-changing re-entry was rejected");

@@ -34,23 +34,30 @@ contract QeWeightsTest is QeBase {
         assertEq(vouch.introducerOf(venue, ben), ana, "front-runner rewrote the committed attributor split/introducer");
     }
 
-    /// QE-C-01 (Medium). EXPECTED: the attributor-signed weights the customer committed to (weightsHash in the USDC nonce)
+    /// QE-C-01 (Medium) — FIXED in v2 (D-012/D-512: PaymentAuth.submitter): Priya's front-run now reverts
+    /// UnauthorizedSubmitter and the honest relayer settles the attributor split. Original finding — EXPECTED: the attributor-signed weights the customer committed to (weightsHash in the USDC nonce)
     /// are honoured, or the tampered submission reverts. ACTUAL: Priya front-runs with attributorSig = "" →
     /// WEIGHTS_FALLBACK_BAD_SIGNATURE; Priya takes 80% of L1 (≈ $0.79 instead of $0.20) and becomes Ben's introducer forever.
-    function test_BUG_frontRunWithGarbageAttributorSigForcesFallback() public {
+    function test_FIXED_frontRunWithGarbageAttributorSigForcesFallback() public {
         Bundle memory b = _frontRunSetup();
         uint256 priya0 = usdc.balanceOf(priya);
         vm.prank(priya); // anyone; Priya is the one who benefits
-        try vouch.pay(b.o, b.osig, b.w, hex"deadbeef", b.a, b.usig) {} catch {}
+        try vouch.pay(b.o, b.osig, b.w, hex"deadbeef", b.a, b.usig) {}
+        catch (bytes memory err) {
+            assertEq(bytes4(err), IVouch.UnauthorizedSubmitter.selector, "v2: front-run refused by submitter binding");
+        }
         emit log_named_uint("priya L1 gained by front-running (base units)", usdc.balanceOf(priya) - priya0);
         _honestOutcomeAfterFrontRun(b);
     }
 
     /// QE-C-01 variant: swapped weights (hash mismatch) also degrade to the fallback.
-    function test_BUG_frontRunWithSwappedWeightsForcesFallback() public {
+    function test_FIXED_frontRunWithSwappedWeightsForcesFallback() public {
         Bundle memory b = _frontRunSetup();
-        IVouch.Weights memory swapped = b.w;
-        swapped.bps = _bps(2_000, 8_000);
+        // independent copy: `swapped = b.w` would alias b.w and make the HONEST resubmission carry the swapped bps
+        // (that aliasing bug in this test was found by CONTRACTS in MSG-024 and confirmed by QE)
+        IVouch.Weights memory swapped = IVouch.Weights({
+            venue: b.w.venue, customer: b.w.customer, orderId: b.w.orderId, referrers: b.w.referrers, bps: _bps(2_000, 8_000)
+        });
         vm.prank(priya);
         try vouch.pay(b.o, b.osig, swapped, b.wsig, b.a, b.usig) {} catch {}
         _honestOutcomeAfterFrontRun(b);

@@ -10,6 +10,6 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | ARCHITECT (top-up) | `a1d443e17788b2a90` | 0 | `scripts/setup/topup-demo.ts` | ✅ | D-401 |
 | STREAMS_INFRA | `a55dd50bb9a376571` | 0 | HMAC webhook, filter, Streams CLI, runbook; QE fixes | ⏸ | waits on a valid QuickNode key (HUMAN_INPUT #3) |
 | QE_E2E | `ae51ee4ecd9fe7bb9` | 0 | Phase 0 gate Part A (done); Part B = S3 live from runbook | ⏸ | resume for Part B once the key works |
-| CONTRACTS | `ad7b974ed746e5ac4` | 1 | Vouch.sol + tests + Arc deploy/verify + smoke + ABI export + handoffs | 🟢 | resumed: fixing QE-C-01..08 (D-012), redeploy |
+| CONTRACTS | `ad7b974ed746e5ac4` | 1 | Vouch v1→v2, tests, deploy/verify, smoke, ABI, handoffs | ✅ | v2 0x9C50…b95f; resumable |
 | UI_DESIGN | `a22d241dedf389e0f` | 1 | Design system, components, /design route, screen low-fi, screenshots | ✅ | Orchestrator signed off; human approval pending (MSG-007) |
-| CONTRACTS_QE | `aef55c194d7c6021d` | 1 | Adversarial review + MSG-003 payee proof (mock, fork, live eth_call) | ⏸ | FAIL (2 blockers MSG-014/015); MSG-003 PASS; resume to re-verify after fixes |
+| CONTRACTS_QE | `aef55c194d7c6021d` | 1 | Adversarial review + MSG-003 + v2 re-verify | ✅ | PASS-with-findings; resumable |

@@ -54,7 +54,17 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 |---|---|---|
 | Vouch contract → testnet | CONTRACTS | ✅ 85 tests; deployed + verified `0xfEe6…b2d3` @ 72580272; canonical smoke exact on chain (Orchestrator re-verified on Blockscout) |
 | Design system | UI_DESIGN | ✅ Orchestrator sign-off; human approval pending (MSG-007) |
-| Adversarial review | CONTRACTS_QE | 🟢 running |
+| Adversarial review | CONTRACTS_QE | ✅ v1 FAIL (2 blockers) → fixes → v2 PASS-with-findings; MSG-003 PASS |
 ### Human requirements recorded in advance
 - CONTRACTS_QE must explicitly test that USDC `receiveWithAuthorization` is called by the payee contract (see CONTRACTS_QE.md Next up, D-103).
 - L2 introducer rule approved (D-008): top-weight L1 referrer of the first purchase, frozen per (customer, venue).
+
+### QE results
+- CONTRACTS_QE on v1: **FAIL**, with blockers QE-C-01 (front-run forces the fallback, MSG-014) and QE-C-02 (payout = Vouch strands funds, MSG-015), plus 6 low/info findings. MSG-003 PASS.
+- The Orchestrator decided D-012 (bind the submitter). CONTRACTS fixed C-01..C-08 (D-512..D-517) and redeployed **v2 `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` @ 72584790** (Blockscout-verified; smoke on chain exact; the Orchestrator re-checked the token transfers).
+- CONTRACTS_QE re-verified v2: **PASS-with-findings**. All 8 findings closed; QE-C-09 residuals routed per D-013. The live bytecode is byte-identical to the reviewed source.
+- Final counts (re-run by the Orchestrator): `forge test` **176 passed / 0 failed / 2 skipped (fork, opt-in)**; fork suites 3/3 + 8/8 (QE run); JS tests shared 10, scripts 10, api 10; typecheck clean.
+- UI_DESIGN: Orchestrator sign-off; **human approval pending (MSG-007)**.
+
+### Gate outcome
+**PASS (contracts). Design approval pending from the human.** No open blockers (`msg.py list --open` shows only handoffs/fyi for Phase 2–3 consumers, plus MSG-007 to the human).

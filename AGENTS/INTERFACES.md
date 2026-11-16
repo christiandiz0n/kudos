@@ -107,7 +107,7 @@ Rules (contract-enforced):
 **PaymentAuth / pay (D-103, D-509)**
 - The customer signs USDC `ReceiveWithAuthorization{from: customer, to: Vouch, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(PaymentAuth)}`. TS helper: `receiveAuthForPayment(auth, VOUCH)`.
 - The call is `pay(order, venueSig, weights, attributorSig, auth, customerUsdcSig)`, with `auth.{venue, orderId, amount}` equal to the order's. `now < auth.deadline`.
-- **`auth.submitter` (D-012, QE-C-01):** if it is non-zero, only `msg.sender == submitter` may call `pay`; anyone else gets `UnauthorizedSubmitter()` (checked last in the order checks, no state change). The app always signs `submitter = RELAYER`. `submitter = 0` lets anyone submit (the kill-the-backend path; there, mempool front-running can force the fallback).
+- **`auth.submitter` (D-012, QE-C-01):** if it is non-zero, only `msg.sender == submitter` may call `pay`; anyone else gets `UnauthorizedSubmitter()` (checked last in the order checks, no state change). The app always signs `submitter = RELAYER`. `submitter = 0` lets anyone submit (the kill-the-backend path; there, mempool front-running can force the fallback). **Normative (D-013):** `submitter` MUST be the relayer EOA or an access-controlled contract, never a public forwarder/multicall/meta-tx relay (Vouch has no ERC-2771), and never `0` outside the kill-the-backend demo.
 - `weightsHash = 0` selects the fallback.
 - The pull is `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)` (bytes overload, ERC-1271-ready), followed by `transfer`s, all in one tx.
 

@@ -115,12 +115,12 @@ contract QeEventsTest is QeBase {
         }
     }
 
-    /// QE-C-03 (Low). EXPECTED (IVouch: "the DB is rebuildable from these alone"): an ambassador's customersCredited /
+    /// QE-C-03 (Low) — FIXED in v2 (D-514: zero-amount L1 emitted as RewardPaid amount 0). Original finding — EXPECTED (IVouch: "the DB is rebuildable from these alone"): an ambassador's customersCredited /
     /// venues can be derived from events. ACTUAL: a referrer whose L1 share floors to 0 (tiny amount or tiny weight ×
     /// rate) is counted in customersCredited/venues on-chain, but no event names them (no RewardPaid/RewardReturned for
     /// a 0 amount, CustomerVerified names only the top referrer, PaymentSettled has no per-referrer data).
     /// Fix: emit the per-referrer attribution (referrer, bps, termsVersion) in an event, or emit zero-amount L1 records.
-    function test_BUG_ambassadorCreditNotRecoverableFromEvents() public {
+    function test_FIXED_ambassadorCreditRecoverableFromEvents() public {
         address v2 = _registerAs(lena, keccak256("tiny"), RATE, 0); // minOrder 0
         _seed(v2, sam);
         _seed(v2, omar);
@@ -139,7 +139,9 @@ contract QeEventsTest is QeBase {
         }
         assertEq(vouch.getAmbassadorStats(omar).customersCredited, 1, "on-chain: Omar credited");
         assertEq(vouch.getAmbassadorStats(omar).venues, 1);
-        assertFalse(namedAnywhere, "(no event mentions Omar)");
+        // v1 asserted "no event mentions Omar" as a precondition describing the bug; it contradicts the fix (D-514
+        // emits RewardPaid(role 1, amount 0)), so it is inverted here.
+        assertTrue(namedAnywhere, "v2: a zero-amount L1 credit is named in an event");
         assertEq(creditedFromEvents, 1, "customersCredited cannot be rebuilt from events");
     }
 

@@ -402,3 +402,14 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
   - **Unchanged.** Event signatures and topic0s; only the address and start block change for Streams.
   - **Builds.** Production builds (`export-abi.sh`, `deploy-vouch.sh`) now pass `--skip test`, so a broken test file can't block deploy or export.
 - **Who:** CONTRACTS
+
+## D-702 — QE regression naming after fixes (supersedes the "fails by design" part of D-701 for fixed findings)
+- **Date:** 2026-11-16
+- **Decision:** after a fix is re-verified, its `test_BUG_*` test is renamed `test_FIXED_*` and must pass. The same applies to a `test_LIMIT_*` whose behaviour was fixed. On v2 (`0x9C50…b95f`) there are no `test_BUG_*` tests, so a red `forge test` now means a regression. Two `test_BUG_*` tests had test-side defects, both raised by CONTRACTS and confirmed by QE: memory aliasing in the swapped-weights repro, and an assertion that described the bug instead of the required property. Both were corrected without weakening the property they check.
+- **Who:** CONTRACTS_QE
+
+## D-013 — QE-C-09 residuals: submitter rule is normative; system-address payouts accepted as owner misconfiguration
+- **Date:** 2026-11-16
+- **Decision:** (1) `PaymentAuth.submitter` MUST be the relayer EOA (or an access-controlled contract). Never a public forwarder or multicall, and never `0` in the app flow. `0` is reserved for the documented kill-the-backend demo. (2) Payouts to `0x1800…`/`0xffff…fffe` are left allowed: the owner burns its own share, nothing stays in Vouch, invariant 1 holds, and a redeploy isn't worth it for this; revisit if a v3 deploy happens for other reasons. (3) The API signs owner actions only at the current `nonces(owner)`. (4) The UI/API prompts referrers to re-issue links after a terms change (72 h grace, D-516). (5) `MIN_TRANSFER_GAS` (100k) is documented against Arc USDC's measured ~74.6k tx gas.
+- **Reason:** CONTRACTS_QE v2 re-verification (MSG-038). No invariant broken; these are integration rules for BACKEND_RELAYER/FRONTEND_INTEGRATION.
+- **Who:** ORCHESTRATOR

@@ -170,7 +170,8 @@ contract QeEdgesTest is QeBase {
     /// QE-C-02 (invariant 1 "nothing stays stuck in the contract"). EXPECTED: registerVenue/setKeys refuse
     /// payout == address(vouch) (Vouch has no sweep and no admin, so anything it keeps is lost forever).
     /// ACTUAL: accepted; every payment then leaves the venue share inside Vouch permanently.
-    function test_BUG_payoutCanBeTheVouchContract_fundsStuckForever() public {
+    /// FIXED in v2 (D-513: InvalidPayout for Vouch and USDC).
+    function test_FIXED_payoutCanBeTheVouchContract_fundsStuckForever() public {
         vm.prank(lena);
         try vouch.setKeys(venue, address(vouch), venueSigner, attributor, 0, "") {
             _payFallback(venue, BEN_PK, 6e6);

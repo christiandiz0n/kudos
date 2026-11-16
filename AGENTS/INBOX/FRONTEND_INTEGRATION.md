@@ -69,3 +69,12 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 - (3) The previous warnings still apply (first purchase below minimum = no reward ever).
 
 ---
+
+### [MSG-041] 2026-11-16T13:30:56-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: open
+**Subject:** Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt
+
+(1) The customer signs the PaymentAuth/ReceiveWithAuthorization exactly as quoted by the API (submitter = relayer). Never construct submitter = 0 in the app; only the kill-the-backend demo script does that. (2) Show referrers a 'link expired, share a fresh one' prompt for intros on superseded terms (72h grace after a terms change, D-516). (3) Warn the customer that a first purchase below the venue minOrder uses up their one reward chance at that venue (D-509).
+
+**Paths:** `AGENTS/DECISIONS.md`
+
+---

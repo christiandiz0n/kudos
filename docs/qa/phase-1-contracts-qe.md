@@ -3,7 +3,17 @@
 _CONTRACTS_QE, independent reviewer (did not write the contract). Run 2026-11-16. Target: `contracts/src/Vouch.sol` + `libraries/` + `interfaces/` (deployed `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3`, Arc Testnet, block 72580272, runtime 23,570 B). Raw outputs: `docs/evidence/phase-1/contracts-qe/`._
 _Secrets: no command read or printed the root env file or any key. Signatures use test keys and one throwaway key derived from a public string. Testnet: read-only `eth_call`s only. No transactions were sent and nothing was spent._
 
-## Verdict
+## Final verdict (after re-verification on v2)
+
+**PASS-with-findings.**
+- v2 is `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f`, block 72584790. Its deployed runtime is byte-identical to the reviewed source.
+- QE-C-01..08 are fixed or accepted as documented, and their messages MSG-014..021 are closed. The two v1 blockers are fixed.
+- MSG-003 is re-proven on v2, including live on Arc.
+- The full suite is green: **176 passed, 0 failed, 2 skipped (fork suites)**.
+- One new low/info request is open: QE-C-09 (MSG-038). The submitter binding is only as strong as the chosen submitter: 0 or a public forwarder re-opens the front-run. It also bundles info notes on the payout guard, nonces, the grace window and the gas floor.
+- Details are in **Re-verification (v2)** at the end of this document.
+
+## v1 verdict (superseded)
 
 **FAIL (gate-blocking), with two small fixes outstanding.** Everything else passes.
 
@@ -150,3 +160,94 @@ bash docs/evidence/phase-1/contracts-qe/live-arc-eth-call.sh              # live
 2. Re-run the fork suite and the gas sweeps.
 3. Close the messages.
 4. If the contract is redeployed, re-run the live `eth_call` script against the new address.
+
+---
+
+## Re-verification (v2)
+
+_Run 2026-11-16 against v2 `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` (block 72584790). The changes are D-012 and D-512..D-517, with replies in MSG-024..031 and the re-verify request in MSG-033. src/ and the builder's tests were not touched._
+
+### What I changed in the QE harness (API change only; no assertion weakened)
+- **The 7-field `PaymentAuth`.** I updated the type string and encodes (`QeForkPayee`, `QePayeeAuth`, `QeInvariant`) and added a `submitter` value (the relayer, or the handler in the invariant). Every pay call I submit now uses `vm.prank(relayer)` (gas sweeps, malleability, ERC-1271 and re-entrancy tests).
+- **The (e) field-mutation proofs now cover 7 fields.** A changed submitter also submits the payment, so only USDC can object: mock, fuzz and fork.
+- **The invariant handler is strengthened.** Before every honest `pay`, a random actor front-runs with a garbage attributor signature. The front-run must revert with `UnauthorizedSubmitter`.
+- **New fork test: `test_fork_deployedV2RuntimeEqualsThisSource`.** It re-deploys this source at the v2 address with `deployCodeTo` (OZ EIP712 bakes `address(this)` into immutables). The live runtime bytes are identical, and the deployed `PAYMENT_AUTH_TYPEHASH` is `0xf9bd…cba4`.
+- **New file `QeV2Reattack.t.sol`** (14 tests) re-attacks every fix.
+
+### Builder disputes (adjudicated independently)
+| Test | Builder's claim | QE ruling |
+|---|---|---|
+| `test_BUG_frontRunWithSwappedWeightsForcesFallback` | It fails because of memory aliasing (`swapped = b.w`) in the test, not because of the contract. | **Agree.** Solidity memory-struct assignment copies the reference, so `swapped.bps = …` also rewrote `b.w`, and the honest resubmission carried the swapped bps. On v1 the test still failed for the right reason, because the front-run itself succeeded first; on v2 the front-run reverts, which exposed the aliasing. The test now builds an independent struct, asserts that the front-run reverts with `UnauthorizedSubmitter`, and is renamed **`test_FIXED_frontRunWithSwappedWeightsForcesFallback`** (pass). |
+| `test_BUG_ambassadorCreditNotRecoverableFromEvents` | `assertFalse(namedAnywhere)` contradicts the intended fix. | **Agree.** That line described the bug ("no event names Omar"), not the required property. It is inverted to `assertTrue(namedAnywhere)`, which is stronger and pins the fix, and the test is renamed **`test_FIXED_ambassadorCreditRecoverableFromEvents`** (pass). |
+
+### Per-finding status
+| ID | v2 change | Re-verified by | Status |
+|---|---|---|---|
+| QE-C-01 | `PaymentAuth.submitter` (in the nonce); `UnauthorizedSubmitter` checked last | `test_FIXED_frontRun…` ×2; `test_v2_submitterMismatch_noStateChange_honestStillSettles` (the referrer, the customer and a stranger are all refused; the order isn't settled; the USDC nonce isn't consumed; the honest submission then settles the attributor split); `test_v2_submitterSwapBreaksTheUsdcSignature`; `test_v2_accessControlledContractSubmitterHolds`; fork `test_fork_e` (7 fields); invariant front-run probe | **closed** (MSG-014). Residual → QE-C-09 |
+| QE-C-02 | `InvalidPayout` for Vouch and USDC | `test_FIXED_payoutCanBeTheVouchContract…`; `test_v2_payoutGuard_allEntryPoints` (registerVenue, direct setKeys, relayed setKeys; Vouch/USDC/0) | **closed** (MSG-015). Info → QE-C-09 |
+| QE-C-03 | zero-amount L1 emitted as `RewardPaid` amount 0 | `test_FIXED_ambassadorCreditRecoverableFromEvents`; `test_events_rebuildEveryStatFromLogsAlone`; `testFuzz_previewEqualsSettlement`; QeLedger invariants | **closed** (MSG-016). Residual accepted: per-referrer bps aren't emitted |
+| QE-C-04 | direct owner actions consume `nonces(owner)` | `test_FIXED_staleRelayedOwnerActionCannotOverrideNewerDirectAction`; `test_replay_ownerSigs_*` | **closed** (MSG-017). Residual (documented): `test_LIMIT_futureNonceSignatureBecomesValidAfterDirectActions` |
+| QE-C-05 | superseded version acceptable only ≤ 72h after the cut | `test_FIXED_backdatedIssuedAt…`; `test_v2_graceBoundary_inclusiveAt72h` (== cut+72h accepted); `test_v2_graceBoundary_rejectedAt72hPlus1`; `test_v2_graceMeasuredPerVersion` (the window runs from that version's own cut, not the latest one) | **closed** (MSG-018). Product note: `test_INFO_honestPreCutLinkDies72hAfterTermsChange` |
+| QE-C-06 | documented (D-517) | `test_LIMIT_personalIntroCanBeSniped`, `test_LIMIT_submitterChoosesWhichReferrerIsEvicted` (unchanged) | **closed** (accepted limit; MSG-019) |
+| QE-C-07 | 100k gas floor before each transfer + ordering-pin tests | `test_FIXED_guardNoFalseNegativeWithNestedToken`, all 8 `QeGasStarvation` sweeps, `test_v2_maxSplitGasFloor_near_1gas`/`_far`, fork `test_fork_gasStarvation_noRedirectAtAnyGasLimit`. Calibration and assumption below. | **closed** (MSG-020) |
+| QE-C-08 | documented (D-517) | LIMIT/INFO tests unchanged | **closed** (accepted limit; MSG-021) |
+| **QE-C-09** (new) | — | `test_LIMIT_zeroSubmitterReopensFrontRun`, `test_LIMIT_publicForwarderAsSubmitterIsNoBinding`, `test_INFO_systemAddressPayoutAcceptedButNothingStuckInVouch`, `test_LIMIT_futureNonce…`, `test_INFO_honestPreCutLink…`, `test_INFO_floorAssumesTransferCostBelowFloor` | **open**, Low/Info (MSG-038) |
+
+**QE-C-07 calibration.** The guard now fires explicitly: 1,500–1,917 `TransferOutOfGas` refusals per sweep, against 0 on v1.
+- **Mock thresholds.** The minimum successful gas rose from 412k to 481k, the cost of the floor.
+- **Maximal split** (5 referrers, each with an introducer: 13 balance moves). The minimum gas is 804,619, against Arc's live block gas limit of 30,000,000, so the floor does not brick large splits. At 1-gas steps there were 151 under-funded successes, all identical to the ample-gas outcome, and 0 successes in the far region.
+- **Real Arc cost.** `eth_estimateGas` of a USDC transfer to a fresh address measures 74,597 tx gas (about 52k execution). I calibrated the nested-token model to that cost (burn 120): 0 false negatives.
+- **The pinned assumption.** The floor holds only if one token transfer costs less than about 98k gas. A model token at about 95k per move brings the false negative back (`test_INFO_floorAssumesTransferCostBelowFloor`, 430 false negatives).
+
+### Re-attack answers (the coordinator's questions)
+- **Can submitter binding be bypassed?**
+  - Signature reuse across submitters: no. The submitter is inside the USDC nonce, so changing it, or downgrading it to 0, gives `invalid signature`.
+  - A contract submitter: holds when the contract is access-controlled. A *public* forwarder or meta-tx relay is no binding at all.
+  - submitter = 0: re-opens QE-C-01 for that payment.
+  - Both of the last two are QE-C-09, a requirement on the relayer flow rather than a contract bug.
+- **Is the payout guard complete?** It rejects Vouch, USDC and 0. Real USDC itself blocks transfers to `0x3600` ("Blocked address", live). It accepts `0x1800…` and `0xffff…fffe` (live `eth_call`: `true`). Those payouts burn the venue's own share to a keyless address, but nothing stays in Vouch, so invariant 1 holds. Info, in QE-C-09.
+- **Is the 72h window correct at its boundaries?** Yes: accepted at exactly cut+72h, rejected at +72h+1, and measured per version.
+- **Do owner nonces now block the stale-action undo?** Yes. The residual is a pre-signed future nonce, which is documented.
+- **Does the 100k reserve let a relayer redirect shares, or brick large splits?** Neither, by the sweeps above on the mock, an ERC-1271 attributor, nested tokens, a maximal split and real Arc USDC on the fork.
+
+### MSG-003 on v2
+- **Mock:** `QePayeeAuth` 13/13; (e) now covers 7 fields.
+- **Fork, real Arc USDC:** `QeForkPayee` 8/8; `VouchFork` 3/3.
+- **Live read-only `eth_call` against v2** (`docs/evidence/phase-1/contracts-qe/live-arc-eth-call-v2.{sh,txt}`):
+  - The deployed `paymentAuthNonce` equals my independent keccak: `0x5e3e…7531`, 7 fields including the submitter.
+  - The deployed typehash is `0xf9bd…cba4`, matching my keccak of the type string.
+  - A third party or the customer calling directly → `FiatTokenV2: caller must be the payee`.
+  - An attacker naming itself as payee → `FiatTokenV2: invalid signature`.
+  - The same call simulated from v2 passes the payee and signature checks: the 12e6 call fails only on balance, and the value-0 call succeeds.
+  - `authorizationState` is unchanged.
+
+### Test counts (v2)
+`cd contracts && forge test`: **176 passed, 0 failed, 2 skipped** (20 suites).
+
+| Builder | Count |
+|---|---|
+| Vouch | 64 |
+| VouchQeFixes | 11 |
+| VouchFuzz | 3 |
+| VouchInvariant | 1 |
+| VouchSplit | 4 |
+| VouchTypehash | 2 |
+| Hello | 11 |
+| **Builder total** | **96** |
+
+| QE suite | Count |
+|---|---|
+| QePayeeAuth | 13 |
+| QeWeights | 4 |
+| QeGasStarvation | 4 + 6 |
+| QeReplaySignatures | 13 |
+| QeIntrosTerms | 9 |
+| QeEdges | 12 + 1 |
+| QeEvents | 3 |
+| QeInvariant | 1 (4 invariants, 256×64, front-run probe on every pay) |
+| QeV2Reattack | 14 |
+| **QE total** | **80** |
+
+Fork (`VOUCH_FORK=true`, public RPC): VouchFork **3/3**, QeForkPayee **8/8**. The real-USDC gas threshold is 425,328; 1,551 gas limits were tried, with 201 successes, all exact.
+
+Evidence: `v2-forge-test-summary.txt`, `v2-fork-tests.txt`, `v2-gas-sweeps.txt`, `live-arc-eth-call-v2.{sh,txt}`. The v1 files are kept for history.

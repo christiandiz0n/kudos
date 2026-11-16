@@ -23,7 +23,7 @@ contract QeLedgerHandler is Test {
     bytes32 constant T_WEIGHTS =
         keccak256("Weights(address venue,address customer,bytes32 orderId,address[] referrers,uint16[] bps)");
     bytes32 constant T_AUTH = keccak256(
-        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline)"
+        "PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)"
     );
     bytes32 constant T_RWA = 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8;
     bytes32 constant SETTLED_SIG =
@@ -63,6 +63,7 @@ contract QeLedgerHandler is Test {
     uint256 public rewardedPays;
     uint256 public attributorPays;
     uint256 public quoteChecks;
+    uint256 public frontRunsRefused;
     string public violation;
 
     constructor() {
@@ -209,6 +210,14 @@ contract QeLedgerHandler is Test {
         uint256 payout0 = usdc.balanceOf(payouts[vi % 2]);
         usdc.mint(p.customer, p.amount);
         minted += p.amount;
+        // v2 (D-012): an actor front-runs with a garbage attributor sig; the submitter binding must refuse it, unchanged
+        vm.prank(actors[(p.c + 1 + modeSeed % 7) % 8]);
+        try vouch.pay(p.o, p.osig, p.w, hex"dead", p.a, p.usig) {
+            _fail("front-run by a non-submitter was accepted");
+        } catch (bytes memory err) {
+            if (bytes4(err) != IVouch.UnauthorizedSubmitter.selector) _fail("front-run refused for the wrong reason");
+            frontRunsRefused++;
+        }
         vm.recordLogs();
         vouch.pay(p.o, p.osig, p.w, p.wsig, p.a, p.usig);
         Vm.Log[] memory logs = vm.getRecordedLogs();
@@ -271,8 +280,10 @@ contract QeLedgerHandler is Test {
             if (p.mode == 2) p.wsig = hex"00"; // garbage attributor signature (front-runner)
             if (p.mode == 3) p.w.bps[0] = p.w.bps[0] == 1 ? 2 : 1; // swapped weights (hash mismatch)
         }
-        p.a = IVouch.PaymentAuth(p.customer, p.v, p.o.orderId, p.amount, wh, uint64(block.timestamp + 600));
-        bytes32 nonce = keccak256(abi.encode(T_AUTH, p.a.customer, p.a.venue, p.a.orderId, p.a.amount, p.a.weightsHash, p.a.deadline));
+        p.a = IVouch.PaymentAuth(p.customer, p.v, p.o.orderId, p.amount, wh, uint64(block.timestamp + 600), address(this));
+        bytes32 nonce = keccak256(
+            abi.encode(T_AUTH, p.a.customer, p.a.venue, p.a.orderId, p.a.amount, p.a.weightsHash, p.a.deadline, p.a.submitter)
+        );
         p.usig = _sign(
             pks[p.c],
             keccak256(
@@ -425,5 +436,6 @@ contract QeLedgerInvariantTest is Test {
     function afterInvariant() external view {
         console2.log("qe pays", h.pays(), "rewarded", h.rewardedPays());
         console2.log("qe attributorPays", h.attributorPays(), "quoteChecks", h.quoteChecks());
+        console2.log("qe frontRunsRefused", h.frontRunsRefused());
     }
 }
