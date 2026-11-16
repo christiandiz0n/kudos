@@ -1,7 +1,7 @@
 # AGENTS/ — rolling project memory
 _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 
-**Current phase:** Phase 1 — Contracts (+ design system in parallel); Phase 0 S3-live still open (QuickNode key)
+**Current phase:** Between Phase 1 (gate PASS; design approval pending) and Phase 2 (waiting for "go"). Phase 0 leftovers: S3 live via the dashboard, phone tests. **New orchestrator: start with `AGENTS/ORCHESTRATOR.md`.**
 **Display name:** **Vouch** (`APP_NAME` in `packages/shared/src/constants.ts`; package scope `@vouch/*`; D-007)
 **Deadline:** submit by Fri Nov 20, 2026 12:00 PM CST (target 9:00 AM CST)
 

@@ -68,3 +68,9 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 
 ### Gate outcome
 **PASS (contracts). Design approval pending from the human.** No open blockers (`msg.py list --open` shows only handoffs/fyi for Phase 2–3 consumers, plus MSG-007 to the human).
+
+## Session handoff — 2026-11-16 ~14:00 ET
+- Orchestrator context reset requested by the human. Full handoff in `AGENTS/ORCHESTRATOR.md`; original prompt + amendments A1–A4 in `AGENTS/ORCHESTRATOR_PROMPT.md`.
+- State: Phase 1 gate PASS (contracts), design approval pending; Phase 2 NOT started (waiting for "go").
+- Phase 0 leftovers: S3 live (dashboard stream by the human; previous webhook URL dead), S6/S6b phone tests, QE Part B.
+- Both quick tunnels were dead at handoff (network change). Local api :4000 and web :3100 were up but die with the session.
