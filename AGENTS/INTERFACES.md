@@ -223,7 +223,7 @@ Semantics:
 
 ## 6. Webhook (QuickNode Streams → api)
 _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only items still UNVERIFIED until the first real delivery._
-- **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route). Production: `https://<api>.up.railway.app/webhooks/streams` (D-016; URL recorded here once deployed). Quick tunnels: local fallback only.
+- **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route). Production: **`https://api-production-902bc54c.up.railway.app/webhooks/streams`** (Railway project `vouch`, service `api`, D-016). Quick tunnels: local fallback only.
 - **Auth (D-301):** headers `X-QN-Nonce`, `X-QN-Timestamp`, `X-QN-Signature` = `hex(HMAC-SHA256(key = utf8(STREAMS_WEBHOOK_SECRET), msg = nonce + timestamp + body))` over the exact decoded bytes (gunzip first if `Content-Encoding: gzip`). Constant-time compare.
 - **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400 body-decode-failed` bad gzip · `500 persist-failed` verified but not stored (QuickNode retries, D-305) · `200` accepted. Timestamp skew is logged, not rejected.
 - **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, batchSource: "metadata"|"logs", events: [ {address, topics, data, blockNumber, transactionHash, logIndex, event, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
