@@ -18,4 +18,4 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | STREAMS_INFRA (session 2) | `a7d6b022bcb70614d` | 1.5 | D-016 Railway prep: Dockerfile, PORT, raw delivery table, runbook | ✅ | D-305; resumed once after laptop sleep; the Orchestrator deploys after `railway login` |
 | CONTRACTS_QE (session 2) | `af2eb2c52e8488e91` | 1.5 | Independent v3 review + QE test re-pins (MSG-050) | ✅ | PASS-with-findings (QE-C-10/11 info, D-703); resumable |
 | BACKEND_RELAYER (session 2) | `a69d2dbd43cef70dd` | 2 | Schema, endpoints, relayer (QE-C-10 terminal, QE-C-11 balance+fee), SSE, story:api CLI | 🟢 | parallel with STREAMS_INFRA |
-| STREAMS_INFRA (session 2, Phase 2) | `adedd98f81bc90884` | 2 | Ingestion → derived tables, bus/query API, backfill/replay + hash check | 🟢 | filter frozen: docs/streams/filter-vouch.js |
+| STREAMS_INFRA (session 2, Phase 2) | `adedd98f81bc90884` | 2 | Ingestion → derived tables, bus/query API, backfill/replay + hash check | ✅ | D-306/D-307; chain==live==replay==rebuild hash 0b0c880d…; awaiting commit with BACKEND_RELAYER |

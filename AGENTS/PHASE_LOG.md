@@ -98,4 +98,6 @@ _pending_
 - Human in parallel: production Stream (HUMAN_INPUT #3).
 - Gate: QE_E2E + SECURITY_REVIEW in parallel, independent (CLI canonical story through the api with the DB updated via Streams; replay determinism; secrets/rate limits/CORS).
 ### Delegated
-- BACKEND_RELAYER (running), STREAMS_INFRA (running).
+- STREAMS_INFRA ✅ (D-306, D-307): `ev_*` derived tables in their own migrations folder; idempotent (tx, logIndex) ingest after the raw row; a failed ingest answers 200 and is retried from `stream_deliveries`; StreamsPort queries + bus (agreed with BACKEND_RELAYER, MSG-062/063); `streams:verify` on real v3 data: chain-backfill == live == replay == rebuild (hash `0b0c880d…5c1f34`, 48 events, 6 payments, 22 rewards). Orchestrator re-ran: typecheck clean, api 43/0 (incl. BACKEND_RELAYER WIP). Commit/deploy held until BACKEND_RELAYER returns (shared app.ts).
+- **S3 live (D-015) ✅ backfill:** production Stream `vouch-v3-production` delivered **18 HMAC-verified batches, all 200, 48 events** (blocks 72606007…72606174), exactly matching `cast logs` for v3; raw rows in Railway Postgres `stream_deliveries` (evidence `docs/evidence/phase-2/stream-backfill-railway-logs.txt`). Derived state from these rows comes after the Phase 2 deploy (`streams:replay` / `streams:verify --db`). Live (post-backfill) delivery is proven in the Phase 2 QE gate.
+- BACKEND_RELAYER (running).

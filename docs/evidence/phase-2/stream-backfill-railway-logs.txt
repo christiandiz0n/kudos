@@ -1,0 +1,23 @@
+backfill reached 72606174 after 31 polls: 18 verified deliveries
+verified=18
+  18 "status":200
+"batchStart":72606007,"batchEnd":72606007,"eventCount":2
+"batchStart":72606014,"batchEnd":72606014,"eventCount":1
+"batchStart":72606025,"batchEnd":72606025,"eventCount":1
+"batchStart":72606034,"batchEnd":72606034,"eventCount":5
+"batchStart":72606044,"batchEnd":72606044,"eventCount":1
+"batchStart":72606054,"batchEnd":72606054,"eventCount":5
+"batchStart":72606063,"batchEnd":72606063,"eventCount":1
+"batchStart":72606072,"batchEnd":72606072,"eventCount":1
+"batchStart":72606074,"batchEnd":72606074,"eventCount":7
+"batchStart":72606102,"batchEnd":72606102,"eventCount":2
+"batchStart":72606103,"batchEnd":72606103,"eventCount":1
+"batchStart":72606105,"batchEnd":72606105,"eventCount":1
+"batchStart":72606107,"batchEnd":72606107,"eventCount":5
+"batchStart":72606144,"batchEnd":72606144,"eventCount":1
+"batchStart":72606153,"batchEnd":72606153,"eventCount":5
+"batchStart":72606154,"batchEnd":72606154,"eventCount":1
+"batchStart":72606164,"batchEnd":72606164,"eventCount":1
+"batchStart":72606174,"batchEnd":72606174,"eventCount":7
+
+[exited with code 0]
