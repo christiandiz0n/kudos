@@ -1,0 +1,3 @@
+# 2026-11-16T15:15:40Z pnpm --silent --filter @vouch/scripts streams list (single allowed call)
+QuickNode API error: HTTP 403 Forbidden — AuthenticationError; Provided key is incorrect or malformed under x-api-key header, please update and try again.
+exit=1

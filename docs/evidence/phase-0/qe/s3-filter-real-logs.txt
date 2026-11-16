@@ -1,0 +1,45 @@
+render-filter stdout parses as JS as-is: NO (SyntaxError: Unexpected identifier 'Ping')
+
+[PASS] 3-deep nested {data,metadata}: ping block + empty block
+  expect ["Ping"] got ["Ping"]
+  envelope v=1 streamId=qe-local network=arc-testnet dataset=logs batch=72567878..72567882
+  Ping block=72567880 tx=0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0 logIndex=4 blockTimestamp=1794841034 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+
+[PASS] 3-deep nested {data,metadata}: split block
+  expect ["Split"] got ["Split"]
+  envelope v=1 streamId=qe-local network=arc-testnet dataset=logs batch=72567926..72567926
+  Split block=72567926 tx=0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214 logIndex=19 blockTimestamp=1794841065 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+
+[PASS] 3-deep nested: ping + split blocks together
+  expect ["Ping","Split"] got ["Ping","Split"]
+  envelope v=1 streamId=qe-local network=arc-testnet dataset=logs batch=72567878..72567882
+  Ping block=72567880 tx=0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0 logIndex=4 blockTimestamp=1794841034 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+  Split block=72567926 tx=0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214 logIndex=19 blockTimestamp=1794841065 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+
+[PASS] unwrapped [block][log]: ping block
+  expect ["Ping"] got ["Ping"]
+  envelope v=1 streamId=undefined network=undefined dataset=undefined batch=null..null
+  Ping block=72567880 tx=0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0 logIndex=4 blockTimestamp=1794841034 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+
+[PASS] unwrapped [block][receipt][log]: split block
+  expect ["Split"] got ["Split"]
+  envelope v=1 streamId=undefined network=undefined dataset=undefined batch=null..null
+  Split block=72567926 tx=0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214 logIndex=19 blockTimestamp=1794841065 addr=0x66cb4392322b2aede460a4314ce092e0cc1c2b32
+
+[PASS] unrelated: USDC Transfer logs only (10)
+  expect null got null
+
+[PASS] unrelated: system 0xffff…fffe logs only (9)
+  expect null got null
+
+[PASS] unrelated: block 72567881 (no Hello log)
+  expect null got null
+
+[PASS] unwrapped unrelated: system log only
+  expect null got null
+
+[PASS] Hello address but unknown topic0
+  expect null got null
+
+10/10 cases as expected
+exit=0

@@ -11,7 +11,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 - Drafts of `AGENTS/INTERFACES.md` (Orchestrator applies)
 
 ## Current status
-🟢 on track. Phase 0 scaffold is done and green locally. S2 (testnet deploy), S5 (testnet run), S3 (live stream) and S6 (phone run) need funded keys, a QuickNode account and the human.
+🟢 on track. S1, S2, S4 and S5 are done on Arc testnet. S3 live is blocked on a valid QuickNode key (HUMAN #3). S6 is waiting on the phone run.
 
 ## Mental model (read this first)
 - **pnpm monorepo** (root `wom`). Workspaces: `apps/web`, `apps/api`, `packages/shared`, `scripts`. `contracts/` is Foundry and *not* a JS workspace, but its Solidity deps (OZ 5.6.1, forge-std v1.17.0) come from the **root `node_modules`** via remappings (D-201). One `pnpm install` sets up everything.
@@ -49,7 +49,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 | `contracts/src/spikes/Hello.sol` | S2/S5 spike: `ping`, `pullAndSplit` (caller must be `from`), `relayedSplit` (EIP-712 SplitAuth with token bound, OZ Nonces) | NOT production |
 | `contracts/src/spikes/MockUSDC.sol` | 6-dec open-mint ERC20 for local tests and anvil | Test only |
 | `contracts/test/spikes/Hello.t.sol` | 11 tests incl. 7-way exact sum, replay, wrong signer, tamper, expiry, fuzz | |
-| `contracts/script/spikes/DeployHello.s.sol` | Deploys Hello (and optionally MockUSDC); reads `DEPLOYER_PRIVATE_KEY` | Testnet run pending funded key |
+| `contracts/script/spikes/DeployHello.s.sol` | Deploys Hello (and optionally MockUSDC); reads `DEPLOYER_PRIVATE_KEY` | Run it via `scripts/spikes/s2-deploy.sh` (that wrapper loads the root env; bare forge from `contracts/` does not, QE-03) |
 | `scripts/spikes/s5-relayer.ts` | viem: user signs SplitAuth, relayer submits 7-way split, prints gas and fee in USDC; clamps the Arc fee floor | Env-driven; works for anvil and Arc |
 | `scripts/spikes/s5-local.sh` | anvil → deploy → fund → run s5-relayer → kill anvil | Uses anvil's public dev mnemonic, port 8546 |
 | `scripts/setup/topup-demo.ts` | Deployer → demo wallets USDC top-up to `--target` (skips funded wallets); `--reserve`/`--max-total` abort before any send; `--dry-run`, `--only`, `--to`, `--include-relayer` | D-401. `pnpm --filter @vouch/scripts topup`. Exit 0 ok / 1 config / 2 safety abort / 3 send failure |
@@ -78,9 +78,9 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 ## Next up
 - [x] S1 Arc network facts: VERIFIED (D-101..D-103, INTERFACES §1, evidence `docs/evidence/phase-0/research-s1-s3-s4.md`). Orchestrator independently re-checked chainId/decimals/DOMAIN_SEPARATOR with `cast`.
 - [x] S4 Wallet approach: decided option B, a passkey-gated local EOA plus our relayer (D-104). PRF support on the demo phone is still to be confirmed in S6.
-- [ ] S2 Hello contract deployed to Arc testnet (event + USDC transferFrom), confirmed on explorer. Code is ready: `cd contracts && forge script script/spikes/DeployHello.s.sol --rpc-url arc_testnet --broadcast` (env `DEPLOYER_PRIVATE_KEY`, `USDC_ADDRESS`). Then run `ping`.
+- [x] S2: `bash scripts/spikes/s2-deploy.sh` (loads the root env itself, deploys, pings, prints the deploy block). Canonical Hello `0x66cb…2B32` @ 72567874 (INTERFACES §2). The QE gate reproduced it with a fresh deploy and Blockscout-verified it. Note: re-running overwrites `contracts/broadcast/.../run-latest.json` (QE-04), so INTERFACES §2 is the record of truth.
 - [ ] S3 QuickNode Stream → webhook → event received; backfill from past block works. Desk research done, feasible (D-105). Recipe in the research evidence §S3.3. Needs the human's QuickNode API key. Public URL: `cloudflared tunnel --url http://localhost:4000` (quick tunnel, no account).
-- [ ] S5 testnet run: fund the relayer and spike user from the faucet, then run `pnpm --filter @vouch/scripts s5:relayer` with `RPC_URL`/`USDC_ADDRESS`/`HELLO_ADDRESS`/`RELAYER_PRIVATE_KEY`/`SPIKE_USER_PRIVATE_KEY`, `SPLIT_TOTAL_USD=1.20`
+- [x] S5 testnet: `HELLO_ADDRESS=0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32 SPLIT_TOTAL_USD=1.20 pnpm --filter @vouch/scripts s5:relayer`. Tx `0x2de25bf8…8214`: 354,515 gas, $0.0070903 paid by the relayer, exact sum. Caveat QE-08: one of the 7 recipient amounts was 0 (rounding remainder in `s5-relayer.ts:79`), so this is effectively a 6-funded-recipient figure. Phase 1 measures the real contract.
 - [ ] S6 human runs `/spike/scan` on a phone (see "How to run")
 - [ ] Optional: an S5b spike exercising EIP-3009 `receiveWithAuthorization` on Arc USDC (D-103), since only the approve path is proven
 
@@ -103,6 +103,7 @@ pnpm -r --if-present run test        # shared (node:test) + api (fastify inject,
 pnpm test:contracts                  # cd contracts && forge test
 (cd contracts && forge test --gas-report)
 pnpm spike:s5:local                  # anvil e2e relayer spike (prints fee in USDC)
+bash scripts/spikes/s2-deploy.sh     # S2 on Arc testnet (DEPLOYER; spends ~$0.01)
 pnpm --filter web build
 pnpm dev:api                         # Fastify on :4000 (PGlite at data/local/pglite); curl localhost:4000/health
 pnpm dev:web                         # Next on :3000

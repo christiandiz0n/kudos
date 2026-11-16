@@ -1,0 +1,18 @@
+# 2026-11-16T15:16:21Z forge verify-contract (flags from INTERFACES §1 / foundry.toml comment) on the QE fresh Hello
+Response: `OK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 5 seconds before trying again (3 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pending in queue`
+Warning: Verification is still pending...; waiting 5 seconds before trying again (2 tries remaining)
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+exit=
+blockscout name Hello verified_at 2026-11-16T15:16:35.060060Z compiler v0.8.30+commit.73712a01 evm prague

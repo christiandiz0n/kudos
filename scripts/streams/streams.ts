@@ -94,10 +94,11 @@ function intOpt(v: string | undefined, what: string): number {
   return n;
 }
 
+/** Explicit only: no HELLO_ADDRESS fallback, so a stale/placeholder env value can never pick the watched contract (QE-02). */
 function contracts(): string[] {
-  const fromEnv = process.env.HELLO_ADDRESS;
-  const usable = fromEnv && !/^0x0{40}$/i.test(fromEnv) ? fromEnv : undefined;
-  return parseAddresses(need(opt.contract ?? usable, '--contract <address> (or HELLO_ADDRESS in env)'));
+  const list = parseAddresses(need(opt.contract, '--contract <address> (canonical S3 Hello: AGENTS/INTERFACES.md §2)'));
+  for (const a of list) if (/^0x0{40}$/.test(a)) throw new Error('--contract is the zero address');
+  return list;
 }
 
 function filterFromOpts() {
@@ -107,9 +108,9 @@ function filterFromOpts() {
   return { addresses, events, source };
 }
 
-function printEvents(addresses: string[], events: ReturnType<typeof parseEvents>) {
-  console.log(`contracts: ${addresses.join(', ')}`);
-  for (const e of events) console.log(`  ${e.topic0}  ${e.signature}`);
+function printEvents(addresses: string[], events: ReturnType<typeof parseEvents>, out: (s: string) => void = console.log) {
+  out(`contracts: ${addresses.join(', ')}`);
+  for (const e of events) out(`  ${e.topic0}  ${e.signature}`);
 }
 
 const rangeStr = (s: Stream) =>
@@ -196,9 +197,10 @@ async function main() {
     }
 
     case 'render-filter': {
+      // Preamble → stderr so stdout is exactly the runnable/pasteable filter JS (QE-05).
       const { addresses, events, source } = filterFromOpts();
-      printEvents(addresses, events);
-      console.log(source);
+      printEvents(addresses, events, console.error);
+      process.stdout.write(source);
       return;
     }
 

@@ -1,0 +1,17 @@
+# 2026-11-16T15:15:13Z api started: STREAMS_WEBHOOK_SECRET=qe-test-secret API_PORT=4020 API_HOST=127.0.0.1 DATABASE_URL=pglite://memory STREAMS_SPIKE_LOG=<scratch>/qe-streams.ndjson pnpm --filter @vouch/api start
+# runbook step 3 health:
+{"ok":true,"app":"Vouch","chainId":5042002,"db":{"kind":"pglite","ok":true},"time":"2026-11-16T15:15:13.735Z"}
+# runbook step 3 unsigned POST (expect 401 once secret set):
+401
+# signed E2E:
+body bytes=758 events=Ping@72567880:0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+(a) correctly signed                             HTTP 200  {"ok":true,"bytes":758,"logs":1}
+(b) tampered body, original signature            HTTP 401  {"ok":false,"error":"bad-signature"}
+(c) missing all X-QN headers                     HTTP 401  {"ok":false,"error":"missing-signature-headers"}
+(c2) missing only X-QN-Signature                 HTTP 401  {"ok":false,"error":"missing-signature-headers"}
+(d) signed with a different secret               HTTP 401  {"ok":false,"error":"bad-signature"}
+(e) uppercase hex signature                      HTTP 200  {"ok":true,"bytes":758,"logs":1}
+(f) gzip body, sig over decoded JSON             HTTP 200  {"ok":true,"bytes":432,"logs":1}
+(g) ms timestamp (13 digits), correctly signed   HTTP 200  {"ok":true,"bytes":758,"logs":1}
+all 8 responses as expected
+(h) content-encoding gzip with non-gzip body + all headers: {"ok":false,"error":"body-decode-failed"} HTTP 400

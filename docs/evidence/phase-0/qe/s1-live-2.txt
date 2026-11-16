@@ -1,0 +1,6 @@
+# rerun base fee / block time / research getLogs repro at 2026-11-16T15:10:58Z (curl; python urllib got HTTP 403 from the RPC, likely UA filter)
+block 72569059 baseFee 20000000000 gasLimit 30000000 extraData 0x00000004a817c800 ->uint 20000000000 mixHash 0x0000000000000000000000000000000000000000000000000000000000000000 ts 1794841857
+avg block time over 10000 blocks = 0.6975 s
+research repro 0x1..0x2712 (10002 blocks): {"jsonrpc":"2.0","id":1,"error":{"code":-32012,"message":"requested range too large"}}
+research repro 0x1..0x2710 (10000 blocks): {"jsonrpc":"2.0","id":1,"result":[{"address":"0x1800000000000000000000000000000000000000","topics":["0xb049859d09b3a7d0189a07db4d4becee1a2aa269023205478b1360ab6fc12114","0x0000000000000000000000002718
+python urllib UA probe: None -> HTTP Error 403: Forbidden; curl/8 -> 200; 

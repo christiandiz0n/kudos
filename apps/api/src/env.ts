@@ -26,7 +26,8 @@ export function loadEnv(overrides: Partial<ApiEnv> = {}): ApiEnv {
     host: e.API_HOST ?? '0.0.0.0',
     databaseUrl: e.DATABASE_URL || 'pglite://./data/local/pglite',
     corsOrigins: (e.CORS_ORIGINS ?? 'http://localhost:3000').split(',').map((s) => s.trim()).filter(Boolean),
-    streamsSpikeLog: e.STREAMS_SPIKE_LOG ?? path.join(REPO_ROOT, 'data/local/streams-spike.ndjson'),
+    // Relative paths resolve against the repo root (same rule as scripts/streams/show-deliveries.ts, QE-06).
+    streamsSpikeLog: path.resolve(REPO_ROOT, e.STREAMS_SPIKE_LOG || 'data/local/streams-spike.ndjson'),
     streamsWebhookSecret: realSecret(e.STREAMS_WEBHOOK_SECRET),
     ...overrides,
   };

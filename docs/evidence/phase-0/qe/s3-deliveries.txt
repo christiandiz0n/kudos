@@ -1,0 +1,59 @@
+# 2026-11-16T15:15:23Z STREAMS_SPIKE_LOG=<scratch>/qe-streams.ndjson pnpm --silent --filter @vouch/scripts streams:deliveries --last 20
+<scratch>/qe-streams.ndjson: 10 line(s), showing 10
+
+2026-11-16T15:15:13.742Z  REJECTED 401 missing-signature-headers  bytes=2
+  qn: stream=- batch=-..- ts=-
+  shape=object logs=0 blocks=- events=-
+
+2026-11-16T15:15:13.785Z  VERIFIED  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.789Z  REJECTED 401 bad-signature  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Pong
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.791Z  REJECTED 401 missing-signature-headers  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=-
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.792Z  REJECTED 401 missing-signature-headers  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.793Z  REJECTED 401 bad-signature  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.794Z  VERIFIED  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.797Z  VERIFIED  bytes=432 (gzip)
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113 (skew 1s, unit s)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:13.799Z  VERIFIED  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113798 (skew 0s, unit ms)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+
+2026-11-16T15:15:23.835Z  REJECTED 400 body-decode-failed  bytes=14
+  qn: stream=- batch=-..- ts=1 (skew 1794842123s, unit s)
+  (body not JSON or empty)
+
+# --file variant, --verified-only --body --last 1
+<scratch>/qe-streams.ndjson: 10 line(s), showing 1 verified
+
+2026-11-16T15:15:13.799Z  VERIFIED  bytes=758
+  qn: stream=qe-local-0000 batch=72567878..72567882 ts=1794842113798 (skew 0s, unit ms)
+  shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
+  tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
+  body: {"v":1,"streamId":"qe-local-0000","network":"arc-testnet","dataset":"logs","batchStart":72567878,"batchEnd":72567882,"events":[{"event":"Ping","address":"0x66cb4392322b2aede460a4314ce092e0cc1c2b32","topics":["0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55","0x0000000000000000000000005ed3054292e9fce089aa082997962b08fff81111"],"data":"0x73322d70696e6700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006afb19ca","blockNumber":72567880,"blockHash":"0x3ca09ecff7bebf721ea88baf7f28b136097d8fcbb29b10c8e3deaa55d429ec52","transactionHash":"0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0","transactionIndex":5,"logIndex":4,"removed":false,"blockTimestamp":1794841034}]}

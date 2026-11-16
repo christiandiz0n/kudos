@@ -14,7 +14,10 @@ import { helloAbi } from '@vouch/shared';
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const ROOT_ENV_FILE = path.join(REPO_ROOT, '.env');
 export const FILTER_TEMPLATE = path.join(REPO_ROOT, 'infra/streams/filter-logs.js');
-export const DEFAULT_NDJSON = path.join(REPO_ROOT, 'data/local/streams-spike.ndjson');
+/** NDJSON spike log path — same rule as apps/api/src/env.ts: STREAMS_SPIKE_LOG, relative to the repo root. */
+export function spikeLogPath(env: NodeJS.ProcessEnv = process.env): string {
+  return path.resolve(REPO_ROOT, env.STREAMS_SPIKE_LOG || 'data/local/streams-spike.ndjson');
+}
 export const WEBHOOK_PATH = '/webhooks/streams';
 
 // ---------- events / filter ----------

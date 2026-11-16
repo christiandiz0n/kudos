@@ -178,3 +178,15 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Decision:** `scripts/streams/streams.ts create` sends `network arc-testnet`, `dataset logs`, `filter_language javascript`, `region usa_east`, `start_range <deploy block>`, `end_range -1`, `dataset_batch_size 5`, `elastic_batch_enabled true`, `fix_block_reorgs 0`, `keep_distance_from_tip 0`, webhook `{compression none, headers {}, max_retry 20, retry_interval_sec 1, post_timeout_sec 15}`, `status active|paused`, and `external_id` = `Idempotency-Key` = `vouch-<name>` so retries are safe. `security_token` is **omitted** ("one is generated for you; the stream response includes it", docs). The CLI writes it to the root env file as `STREAMS_WEBHOOK_SECRET` (replace or append, mode preserved, atomic rename) and never prints it. `set-webhook` PATCHes the URL plus the other required webhook attrs and omits `security_token`, which keeps the token. GET/list responses carry the token in clear text, so all CLI output is redacted. The runbook creates the stream **paused**, restarts the api, then activates it.
 - **Reason:** Docs: create-stream, update-stream, rest-api ("Batch Size and Elastic Batch": tip streams on sub-second chains need ≥ 5, else 422). `max_retry 20` stops a short api restart from auto-pausing the stream (the default is 3).
 - **Who:** STREAMS_INFRA
+
+## D-304 — S3 tooling hardening after the Phase 0 QE gate (QE-01..QE-15)
+- **Date:** 2026-11-16
+- **Decision:**
+  - (a) The envelope event label field stays **`event`** (QE-01). INTERFACES §6 is being aligned by the Orchestrator. All consumers (api `summarize`, viewer, tests) read `event`.
+  - (b) Contract targets are **explicit**. `streams:ping --hello|--contract <addr>` takes precedence over `HELLO_ADDRESS` and refuses a zero address or an address with no code. `streams create/test-filter/render-filter` require `--contract` (the `HELLO_ADDRESS` fallback is removed). The canonical spike Hello and deploy block come from **INTERFACES §2**, never `contracts/broadcast/…/run-latest.json`, which re-deploys overwrite (QE-02, QE-04).
+  - (c) `STREAMS_SPIKE_LOG` resolves relative to the repo root in both the api (`env.ts`) and the viewer (`spikeLogPath`). The viewer loads the root env file like the api (QE-06).
+  - (d) The deliveries viewer shows event names, block ranges and tx hashes **only for verified deliveries**. Rejected or pre-HMAC lines are labelled "unverified body, labels untrusted" and their summary is withheld (QE-07).
+  - (e) The filter adds `batchSource: "metadata" | "logs"`. With unwrapped input it derives `batchStart/batchEnd` from min/max `blockNumber` over all input logs. That is a lower bound; the `batch-*` HTTP headers stay authoritative (QE-15).
+  - (f) `render-filter` writes its preamble to stderr, so stdout is valid JS (QE-05).
+- **Reason:** QE gate findings in `docs/qa/phase-0-qe-gate.md`. Each prevents a silent mismatch: the stream watching one contract while the ping hits another, the viewer reading a different file than the api, or forged labels being shown as evidence.
+- **Who:** STREAMS_INFRA

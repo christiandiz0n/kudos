@@ -1,0 +1,6 @@
+# 2026-11-16T15:11Z (QE) ARCHITECT.md:81 path, simulation only (no --broadcast):
+#   cd contracts && forge script script/spikes/DeployHello.s.sol --rpc-url arc_testnet
+Error: environment variable `ARC_RPC_URL` not found
+
+Context:
+- environment variable not found

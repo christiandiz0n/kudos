@@ -26,15 +26,18 @@ _Bootstrap, verification spikes, human setup — started 2026-11-15 ~21:30 ET, t
 | Spike | Outcome |
 |---|---|
 | S1 Arc facts | ✅ PASS, all verified live/docs. Surprises: canonical domains are now arc.io; block time ~0.70 s; base-fee floor 20 gwei. USDC `0x3600…` supports permit **and** EIP-3009 → D-103 |
-| S2 Hello contract | 🟡 code + 11 tests green locally; **testnet deploy waits on funded deployer** (HUMAN #1–2) |
-| S3 Streams | 🟡 desk research PASS (Arc Testnet supported, filter + webhook + HMAC + backfill on Free plan); **live test waits on QuickNode key** (HUMAN #3). Risk: credit budget (D-105) |
+| S2 Hello contract | ✅ PASS: deployed `0x66cb…2B32` @ block 72567874, ping confirmed on the explorer; QE reproduced it with a fresh deploy |
+| S3 Streams | 🟡 HMAC webhook + filter + CLI + runbook built; offline QE PASS (real Arc logs, real server). **Live Stream blocked: QuickNode rejects the API key (403)**, HUMAN #3 |
 | S4 Wallet | ✅ DECIDED: option B, passkey-gated local EOA + relayer (D-104). Circle Modular Wallets work on Arc but need ERC-1271/deployed accounts → deferred |
-| S5 Relayer | 🟡 PASS on anvil: 7-recipient relayed split 234,686 gas ≈ $0.0047 at the 20 gwei floor; **testnet run waits on funding** |
+| S5 Relayer | ✅ PASS on testnet: relayed split tx `0x2de25bf8…8214`, 354,515 gas = **$0.0071** paid by the relayer, exact sum (QE-08: one of the 7 amounts was 0, so effectively 6 funded recipients). Anvil: 234,686 gas |
 | S6 Camera + S6b passkey | 🟡 pages live over HTTPS tunnel; **phone run waits on the human** (HUMAN #4) |
 
 ### QE results
 - Orchestrator independent spot-check (not the builder): `forge test` 11/11, `pnpm -r typecheck` clean; `cast chain-id` = 5042002; USDC `decimals()` = 6; `DOMAIN_SEPARATOR` = `0x3611…c6b0` (matches the research).
-- **Formal QE gate (fresh QE subagent re-runs S1–S3 from the recorded instructions alone): deferred** until S2/S3 are live on testnet. It runs right after the human completes #1–#3.
+- **Formal QE gate, Part A (2026-11-16, fresh QE_E2E agent, written steps only):** S1 **PASS** (every live row reproduced). S2 **PASS-with-defects** (fresh deploy `0xc628…1906` reproduced + Blockscout-verified; S5 tx re-audited and matches the log). S3-offline **PASS-with-defects** (filter on real Arc logs 10/10; HMAC on a running server 200/401/401/400 as specified). Testnet spend $0.0176. Report: `docs/qa/phase-0-qe-gate.md`.
+  - Defects: 2 major (QE-01 `eventName`/`event` mismatch; QE-02 ping target only from the env file), 10 minor, 3 info, 0 blockers.
+  - Fixes: INTERFACES (QE-01/10/11) and ARCHITECT/PHASE_LOG (QE-03/08/09) by the ORCHESTRATOR; code/runbook (QE-02/04/05/06/07/12/15) routed to STREAMS_INFRA.
+- **QE gate Part B (S3 live from the runbook): pending** a valid QuickNode key (HUMAN #3).
 
 ### Gate outcome
 **PARTIAL.** Everything that doesn't need the human is done. S2/S3/S5 testnet runs + S6 phone + the QE gate are pending human input. Phase 1 must not start until the human says go.

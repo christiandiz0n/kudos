@@ -13,6 +13,9 @@
 //
 // Delivered body (envelope v1): { v, streamId, network, dataset, batchStart, batchEnd, events: [log + `event`] }.
 // Numbers that arrive as hex (blockNumber, transactionIndex, logIndex, blockTimestamp) are converted to numbers.
+// batchStart/batchEnd come from metadata.batch_{start,end}_range; when the input arrives unwrapped (no metadata),
+// they fall back to min/max blockNumber over ALL logs in the input (batchSource: 'logs') — a lower bound on the
+// real batch, since blocks without logs are invisible (QE-15). The `batch-*` HTTP headers remain authoritative.
 
 const ADDRESSES = /*__ADDRESSES__*/ [];
 const TOPICS = /*__TOPICS__*/ {};
@@ -69,13 +72,26 @@ function main(stream) {
   }
 
   if (events.length === 0) return null;
+  let batchStart = toNum(meta.batch_start_range);
+  let batchEnd = toNum(meta.batch_end_range);
+  let batchSource = 'metadata';
+  if (batchStart === null && batchEnd === null) {
+    batchSource = 'logs';
+    for (let i = 0; i < logs.length; i++) {
+      const b = toNum(logs[i].blockNumber);
+      if (b === null || b !== b) continue;
+      if (batchStart === null || b < batchStart) batchStart = b;
+      if (batchEnd === null || b > batchEnd) batchEnd = b;
+    }
+  }
   return {
     v: 1,
     streamId: meta.stream_id,
     network: meta.network,
     dataset: meta.dataset,
-    batchStart: toNum(meta.batch_start_range),
-    batchEnd: toNum(meta.batch_end_range),
+    batchStart: batchStart,
+    batchEnd: batchEnd,
+    batchSource: batchSource,
     events: events,
   };
 }

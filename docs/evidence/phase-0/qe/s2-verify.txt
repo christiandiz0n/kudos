@@ -1,0 +1,61 @@
+# run at 2026-11-16T15:12:31Z
+Ping topic0  0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55
+Split topic0 0x42fb8796ffe3237a1f58f3e03a85a890f71c1582e5ef97e78936c4f5b6968cd9
+
+=================== FRESH (QE) deployment: 0xc6282732b1852726F73D7Cea98cE6D03f9021906
+code size: 3670
+deploy receipt: status 0x1 block 72569134 contractAddress 0xc6282732b1852726f73d7cea98ce6d03f9021906 from 0x5ed3054292e9fce089aa082997962b08fff81111 gasUsed 858978 effGasPrice 20000000001 fee USDC 0.01717956000085898
+-- cast logs (Ping) for 0xc6282732b1852726F73D7Cea98cE6D03f9021906 from deploy block
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    tag=bytes.fromhex(l['data'][2:66]).rstrip(b'\0').decode(errors='replace')
+                      ~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+-- Blockscout /api/v2/addresses/0xc6282732b1852726F73D7Cea98cE6D03f9021906
+ is_contract True creator 0x5eD3054292e9fCE089aa082997962B08fFF81111 creation_tx 0xe96198efec32ddea27d087fe302fa87e5402920f931d7f9ba3a09b68d50ca4d2 verified False
+-- Blockscout /api/v2/addresses/0xc6282732b1852726F73D7Cea98cE6D03f9021906/logs
+ log block 72569138 tx 0xe68b5e3f953707316f1ee978251564780f1812aafc46715f2d7987e410a91ff1 topic0 0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55 decoded None
+-- Blockscout /api/v2/transactions/0xe96198efec32ddea27d087fe302fa87e5402920f931d7f9ba3a09b68d50ca4d2
+ status ok result success block 72569134 created_contract 0xc6282732b1852726F73D7Cea98cE6D03f9021906 fee 17179560000858978
+-- Blockscout /api/v2/transactions/0xe68b5e3f953707316f1ee978251564780f1812aafc46715f2d7987e410a91ff1 (fresh ping)
+ status ok result success block 72569138 to 0xc6282732b1852726F73D7Cea98cE6D03f9021906 method ping gas_used 23208
+-- Blockscout /api/v2/transactions/0xe68b5e3f953707316f1ee978251564780f1812aafc46715f2d7987e410a91ff1/logs (fresh ping)
+ log addr 0xc6282732b1852726F73D7Cea98cE6D03f9021906 topic0 0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55
+
+=================== ORIGINAL (INTERFACES §2) deployment: 0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32
+code size: 3670
+deploy receipt: status 0x1 block 72567874 contractAddress 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 from 0x5ed3054292e9fce089aa082997962b08fff81111 gasUsed 858978 effGasPrice 20000000001 fee USDC 0.01717956000085898
+-- cast logs (Ping) for 0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32 from deploy block
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    tag=bytes.fromhex(l['data'][2:66]).rstrip(b'\0').decode(errors='replace')
+                      ~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+-- Blockscout /api/v2/addresses/0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32
+ is_contract True creator 0x5eD3054292e9fCE089aa082997962B08fFF81111 creation_tx 0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93 verified False
+-- Blockscout /api/v2/addresses/0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32/logs
+ log block 72567926 tx 0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214 topic0 0x42fb8796ffe3237a1f58f3e03a85a890f71c1582e5ef97e78936c4f5b6968cd9 decoded Split(address indexed user, address indexed fromAccount, address indexed newAccount, uint256 collateralAmount, uint256 debtAmount)
+ log block 72567880 tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0 topic0 0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55 decoded None
+-- Blockscout /api/v2/transactions/0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93
+ status ok result success block 72567874 created_contract 0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32 fee 17179560000858978
+-- original ping tx from s2-deploy.log
+ status 0x1 block 72567880 gasUsed 23208 effGasPrice 24774046250 fee 0.00057495606537
+
+=================== S5 testnet split tx
+status 0x1 block 72567926 from(relayer) 0x3eafdce9b632c036146960a03db720dc84568dad to 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 gasUsed 354515 effGasPrice 20000000000 fee wei 7090300000000000 fee USDC 0.0070903
+tx type None maxFeePerGas None maxPriorityFeePerGas None
+Split event: emitter 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 token 0x3600000000000000000000000000000000000000 from 0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 relayer 0x3eafdce9b632c036146960a03db720dc84568dad recipientCount 7 total 1200000
+USDC 0x3600 Transfer logs: 7
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0x8d08ccddf0a02435b2ad118bf82e54c7dba46908 1020000
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0xfe4adc0c9b0f2f013dce5b6496fb2b1ddbcec401 45000
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0xb9390076e847979d32ed7d0f7b8aeda7c4954d05 69300
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0x258a5249f4a62ac7d4a6c713c898778e467e3a6a 29700
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0xa24ef02a12d916f7cd75b4bf1086be4101cfb31f 25200
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0x9473d4133921c31bdfd2e91a99e851dc88b84788 10800
+   0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 -> 0xb99ef8ff493947a7e90cc633941f60a1eb1b8a7a 0
+sum of USDC transfers 1200000 = 1.2 USDC
+system 0xffff..fffe Transfer logs: 6 sum(18dec) 1200000000000000000
+other logs []
+-- Blockscout /api/v2/transactions/0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214
+ status ok result success block 72567926 gas_used 354515 gas_price 20000000000 fee 7090300000000000 token_transfers 6
+ blockscout token-transfers 6 sum 1200000 ['0x3600000000000000000000000000000000000000']

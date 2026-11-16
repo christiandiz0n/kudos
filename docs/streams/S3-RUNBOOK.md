@@ -12,17 +12,24 @@ _Owner: STREAMS_INFRA. Written 2026-11-16. This file is enough to reproduce S3 f
 
 | Item | Value |
 |---|---|
-| Hello (S2 deploy) | `0x66cb4392322b2aede460a4314ce092e0cc1c2b32`, deploy tx `0x382fa022…0f93`, **deploy block `72567874`** (from `contracts/broadcast/DeployHello.s.sol/5042002/run-latest.json`) |
+| Hello (canonical S3 spike, **source of truth: `AGENTS/INTERFACES.md` §2**) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32`, deploy tx `0x382fa022…0f93`, **deploy block `72567874`**. Do **not** read it from `contracts/broadcast/…/run-latest.json`: every re-deploy overwrites that file (the QE gate's `0xc628…1906` @72569134 is *not* watched by the stream). |
 | Known Hello events | `Ping` in block **72567880** (tx `0x6a6ad1c2…a3d0`), `Split` in block **72567926** (tx `0x2de25bf8…8214`) |
 | topic0 | `Ping(address,bytes32,uint256)` = `0x20aede85…0ca55` · `Split(address,address,address,uint256,uint256)` = `0x42fb8796…68cd9` (`--events hello` computes both from `@vouch/shared` `helloAbi`) |
 | Webhook route | `POST /webhooks/streams` on the api (port 4000) |
-| Root env vars used | `QUICKNODE_STREAMS_API_KEY` (Console API key with Streams enabled, `QN_…`), `STREAMS_WEBHOOK_SECRET` (written by the CLI), `HELLO_ADDRESS`, `SPIKE_USER_PRIVATE_KEY` or `DEPLOYER_PRIVATE_KEY` (funded, for `streams:ping`) |
+| Root env vars used | `QUICKNODE_STREAMS_API_KEY` (Console API key with Streams enabled, `QN_…`), `STREAMS_WEBHOOK_SECRET` (written by the CLI), `SPIKE_USER_PRIVATE_KEY` or `DEPLOYER_PRIVATE_KEY` (funded, for `streams:ping`) |
 
 Rules: **never open, print or grep the root env file.** Every command below loads it through a pnpm script (`tsx --env-file-if-exists=…`, D-004). The CLI never prints the API key or the security token.
 
 Tools: `pnpm install` done, `cloudflared` on PATH (`brew install cloudflared`), Node ≥ 22. Run every command from the **repo root**.
 
-If you redeploy Hello, replace the address and deploy block everywhere below. `bash scripts/spikes/s2-deploy.sh` prints `HELLO_ADDRESS` and `DEPLOY_BLOCK`.
+Set these once in your shell. Every command below passes the address explicitly, so the root env's `HELLO_ADDRESS` (possibly a placeholder or stale) is never relied on:
+```bash
+HELLO=0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32   # AGENTS/INTERFACES.md §2
+DEPLOY_BLOCK=72567874                              # AGENTS/INTERFACES.md §2
+```
+Use a different Hello only if the Orchestrator updates INTERFACES §2 first. The stream's `--contract` and `streams:ping --hello` **must** be the same address.
+
+Port 4000 must be free (`lsof -i :4000`). Otherwise set `API_PORT=<port>` inline on step 3 and point the tunnel at that port.
 
 ---
 
@@ -39,8 +46,8 @@ Expected: `https://api.quicknode.com/streams/rest/v1 — 0 stream(s)` (or the ex
 ## 2. (Optional, recommended) Test the filter against a real block (creates nothing)
 
 ```bash
-pnpm --silent --filter @vouch/scripts streams test-filter --contract 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 --events hello --block 72567880
-pnpm --silent --filter @vouch/scripts streams test-filter --contract 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 --events hello --block 72567881
+pnpm --silent --filter @vouch/scripts streams test-filter --contract $HELLO --events hello --block 72567880
+pnpm --silent --filter @vouch/scripts streams test-filter --contract $HELLO --events hello --block 72567881
 ```
 Expected: block 72567880 gives `result: { v: 1, …, events: [ { event: "Ping", blockNumber: 72567880, transactionHash: "0x6a6ad1c2…", … } ] }`. Block 72567881 gives `result: null`.
 **Record the exact output.** It is the first live proof of the `logs` payload nesting on Arc.
@@ -76,9 +83,9 @@ Create it paused so that no delivery reaches the api before it has loaded the ne
 ```bash
 pnpm --silent --filter @vouch/scripts streams create \
   --name s3-hello-spike \
-  --contract 0x66cb4392322b2aede460a4314ce092e0cc1c2b32 \
+  --contract $HELLO \
   --events hello \
-  --start 72567874 \
+  --start $DEPLOY_BLOCK \
   --webhook $TUNNEL \
   --status paused
 ```
@@ -102,20 +109,21 @@ pnpm --silent --filter @vouch/scripts streams:deliveries --last 10
 Within seconds to a few minutes the backfill passes blocks 72567880 and 72567926. Expected deliveries:
 ```
 <time>  VERIFIED  bytes=…
-  qn: stream=<uuid> batch=72567878..72567882 ts=<10-digit?> (skew …s, unit s)
+  qn: stream=<uuid> batch=<start>..<end> ts=<10-digit?> (skew …s, unit s)
   shape=envelope:v1 logs=1 blocks=72567880..72567880 events=Ping
   tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0
 ```
-plus a `Split` delivery for tx `0x2de25bf8…`. Batches with no Hello event deliver nothing, because the filter returns `null`.
+plus a `Split` delivery for tx `0x2de25bf8…`. The `batch=` values are illustrative and **not** a pass criterion. With start 72567874 and batch size 5, aligned batches would be `72567879..72567883`, and elastic batching may re-cut them at the tip. Only the batch *containing* the event block matters. Batches with no Hello event deliver nothing, because the filter returns `null`.
 `streams get $ID` shows `sequence` (the last delivered block) catching up to the tip.
 
 ## 8. Trigger a fresh event and confirm a live delivery
 
 ```bash
-pnpm --silent --filter @vouch/scripts streams:ping
-# → PING_TX=0x…  PING_BLOCK=…  status=success pingLogs=1
+pnpm --silent --filter @vouch/scripts streams:ping --hello $HELLO
+# → target=0x66cb…2B32 (from --hello)  PING_TX=0x…  PING_BLOCK=…  status=success pingLogs=1
 pnpm --silent --filter @vouch/scripts streams:deliveries --last 3
 ```
+Check that `target=` equals `$HELLO` and the stream's `--contract`. The script refuses a zero address or an address with no code.
 **Pass criteria for S3:** a delivery line marked `VERIFIED` whose `tx` equals `PING_TX` and whose block range contains `PING_BLOCK`, `events=Ping`. Note the latency: delivery `receivedAt` minus the block time.
 
 ## 9. Pause (do not skip)
@@ -133,7 +141,8 @@ Then stop terminals A and B (Ctrl-C). Leave the stream paused, not deleted. Phas
 One JSON line per POST, accepted or rejected:
 `{receivedAt, verified, status, reason?, method, url, headers, bytes, gzip, timestamp:{unit,skewSec}, body, rawBodyBase64?, summary:{logCount, blockRange, txHashes, topic0s, eventNames, batch, shape}}`
 
-- `pnpm --silent --filter @vouch/scripts streams:deliveries [--last N] [--verified-only] [--body]` prints a readable digest.
+- `pnpm --silent --filter @vouch/scripts streams:deliveries [--last N] [--verified-only] [--body] [--file <path>]` prints a readable digest. It reads `STREAMS_SPIKE_LOG` from the root env file exactly like the api, with relative paths resolved against the repo root.
+- Only `VERIFIED` lines show event names, block ranges and tx hashes. Rejected or pre-HMAC lines are marked `REJECTED (…) — unverified body, labels untrusted` and their summary is withheld, because anyone can POST a body that claims `event: "Ping"`.
 - `reason` is one of `secret-unset` (503), `missing-signature-headers` (401), `bad-signature` (401), `body-decode-failed` (400).
 - Headers are stored lower-cased (Node). The QuickNode metadata headers (`stream-id`, `batch-start-range`, …) and `x-qn-nonce/x-qn-timestamp/x-qn-signature` are all there. None of them is secret.
 
@@ -158,4 +167,4 @@ One JSON line per POST, accepted or rejected:
 
 ## CLI reference
 
-`pnpm --silent --filter @vouch/scripts streams <cmd>`: `list` · `get <id> [--show-filter]` · `create … [--dry-run]` · `pause <id>` · `activate <id>` · `delete <id> --yes` · `set-webhook <id> <url> [--dry-run]` · `sync-secret <id>` · `test-filter --contract … --events … --block <n>` · `render-filter --contract … --events …` · `enabled-count` · `key-info`. Running it with no command prints the help.
+`pnpm --silent --filter @vouch/scripts streams <cmd>`: `list` · `get <id> [--show-filter]` · `create … [--dry-run]` · `pause <id>` · `activate <id>` · `delete <id> --yes` · `set-webhook <id> <url> [--dry-run]` · `sync-secret <id>` · `test-filter --contract … --events … --block <n>` · `render-filter --contract … --events … > filter.js` (stdout is pure JS; the address/topic preamble goes to stderr) · `enabled-count` · `key-info`. Running it with no command prints the help.

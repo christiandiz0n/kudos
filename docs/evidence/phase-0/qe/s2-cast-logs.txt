@@ -1,0 +1,8 @@
+# 2026-11-16T15:13:11Z
+== 0xc6282732b1852726F73D7Cea98cE6D03f9021906 blocks 72569134..72569253
+  Ping block 72569138 tx 0xe68b5e3f953707316f1ee978251564780f1812aafc46715f2d7987e410a91ff1 logIndex 5 hasBlockTimestamp True tag='s2-ping' at=1794841912
+== 0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32 blocks 72567874..72569253
+  Ping block 72567880 tx 0x6a6ad1c21d288b0eec21559da434b3a6a991406bc45ac69c024c4a2aa344a3d0 logIndex 4 hasBlockTimestamp True tag='s2-ping' at=1794841034
+  Split block 72567926 tx 0x2de25bf814b182b183ddc7657a0a20962b4c9688d5616f9c5e72f5b96f688214 logIndex 19 hasBlockTimestamp True 
+== S5 tx envelope (eth_getTransactionByHash): type 0x2 maxFeePerGas 24000000000 maxPriorityFeePerGas 0 from relayer 0x3eaf..8dad
+S5 approve tx status 0x1 gasUsed 55786 fee 0.00111572 from 0xaaf8214a1d900c446b6cb9994f4b76afd6864ec9 to 0x3600000000000000000000000000000000000000

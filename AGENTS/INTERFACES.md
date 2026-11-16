@@ -19,9 +19,9 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 | EIP-2612 permit | Supported (`permit` v,r,s + bytes/ERC-1271 variant) | ✅ live |
 | EIP-3009 | Supported: `transferWithAuthorization`, `receiveWithAuthorization` (payee-only), `cancelAuthorization`, v,r,s + bytes/ERC-1271 variants | ✅ live |
 | Block time / finality | ~0.70 s measured (docs ~0.5 s); deterministic finality, no reorgs | ✅ live / docs |
-| Gas pricing | EIP-1559+EWMA; min base fee 20 gwei (txs with maxFeePerGas < 20 gwei are dropped); gas limit 30M/block | ✅ live |
+| Gas pricing | EIP-1559+EWMA; min base fee 20 gwei (✅ live); txs with maxFeePerGas < 20 gwei are dropped (📄 docs only, not tested); gas limit 30M/block (✅ live) | ✅ live / 📄 docs |
 | EVM | Osaka baseline; PREVRANDAO = 0; Foundry `evm_version = "prague"` recommended | ✅ docs |
-| eth_getLogs range | ≤ 10,000 blocks per call (public RPC) | ✅ live |
+| eth_getLogs range | a range of 10,000 blocks inclusive works (`toBlock - fromBlock ≤ 9,999`); 10,001 fails with `-32012` (QE-11) | ✅ live (QE reproduced) |
 | EntryPoint v0.7 | `0x0000000071727De22E5E9d8BAf0edAc6f37da032` | ✅ live |
 | Multicall3 / Permit2 | `0xcA11bde05977b3631167028862bE2a173976CA11` / `0x000000000022D473030F116dDEE9F6B43aC78BA3` | ✅ live |
 | Streams network id | `arc-testnet` (all EVM datasets supported) | ✅ docs |
@@ -29,7 +29,8 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 ## 2. Deployed contracts
 | Contract | Address | Deploy block | Tx |
 |---|---|---|---|
-| `Hello` (**spike only**, S2/S3/S5, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
+| `Hello` (**spike only**, canonical for S3, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
+| `Hello` (QE gate re-deploy, Blockscout-verified; not watched by the Stream) | `0xc6282732b1852726F73D7Cea98cE6D03f9021906` | 72569134 | see `docs/evidence/phase-0/qe/` |
 | _Vouch main contract_ | _Phase 1_ | | |
 
 ## 3. EIP-712
@@ -137,8 +138,8 @@ Semantics:
 _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only items still UNVERIFIED until the first real delivery._
 - **Endpoint:** `POST /webhooks/streams` (Fastify, raw-body route).
 - **Auth (D-301):** headers `X-QN-Nonce`, `X-QN-Timestamp`, `X-QN-Signature` = `hex(HMAC-SHA256(key = utf8(STREAMS_WEBHOOK_SECRET), msg = nonce + timestamp + body))` over the exact decoded bytes (gunzip first if `Content-Encoding: gzip`). Constant-time compare.
-- **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400` bad gzip · `200` accepted. Timestamp skew is logged, not rejected.
-- **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, events: [ {address, topics, data, blockNumber, transactionHash, logIndex, eventName, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
+- **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400 body-decode-failed` bad gzip · `200` accepted. Timestamp skew is logged, not rejected.
+- **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, batchSource: "metadata"|"logs", events: [ {address, topics, data, blockNumber, transactionHash, logIndex, event, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
 - **Idempotency key for ingestion (Phase 2):** `(transactionHash, logIndex)`.
 - **Spike log:** each POST is appended to `data/local/streams-spike.ndjson` (`receivedAt, verified, status, reason, headers, body, summary`). View it with `pnpm --filter @vouch/scripts streams:deliveries`.
 - **UNVERIFIED (live):** the timestamp unit (seconds?), whether the raw dataset arrives 3-deep nested or unwrapped (the filter handles both), and whether `blockTimestamp` is present on logs.

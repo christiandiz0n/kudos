@@ -1,0 +1,44 @@
+# 2026-11-16T15:13:39Z pnpm --filter @vouch/api test
+$ tsx --test src/*.test.ts
+✔ GET /health (in-memory PGlite) (1461.277958ms)
+▶ POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set
+  ✔ valid signature → 200, NDJSON line verified with parsed summary (15.565ms)
+  ✔ tampered body → 401 (1.149125ms)
+  ✔ signature made with another token → 401 (1.177583ms)
+  ✔ missing signature headers → 401 (2.044792ms)
+  ✔ gzip body: HMAC over the decoded JSON → 200 (1.093041ms)
+✔ POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set (1467.550333ms)
+✔ STREAMS_WEBHOOK_SECRET unset → 503 (fail closed), even with a "valid-looking" signature (551.112375ms)
+✔ env placeholders count as unset (0.150666ms)
+✔ summarize: raw logs dataset nesting [block][receipt][log] and [block][log] (0.158125ms)
+✔ timestampSkew: seconds vs milliseconds (0.082416ms)
+ℹ tests 10
+ℹ suites 1
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3329.72675
+exit=0
+
+# pnpm --filter @vouch/scripts test
+$ tsx --test streams/*.test.ts
+✔ parseEvents: "hello" preset and explicit signatures give the INTERFACES §4 topic0s (0.770667ms)
+✔ renderFilter fills both placeholders; the template alone keeps nothing (0.5945ms)
+✔ documented nesting data[block][receipt][log]: keeps only our address + topics (0.184375ms)
+✔ prose nesting data[block][log], checksummed address, blockTimestamp passthrough (0.107375ms)
+✔ unwrapped payload (no {data, metadata}) and receipt-like objects with .logs (0.079334ms)
+✔ no match → null (skip delivery) (0.072625ms)
+✔ writeEnvVar: replaces in place, keeps other lines + mode; appends when absent (4.529917ms)
+✔ redaction: urls, tokens, headers, filter (0.197209ms)
+✔ normalizeWebhookUrl appends the route to a bare tunnel origin (0.142083ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 380.948084
+exit=0

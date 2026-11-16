@@ -9,7 +9,7 @@
     "topup": "tsx --env-file-if-exists=../.env setup/topup-demo.ts",
     "test": "tsx --test streams/*.test.ts",
     "streams": "tsx --env-file-if-exists=../.env streams/streams.ts",
-    "streams:deliveries": "tsx streams/show-deliveries.ts",
+    "streams:deliveries": "tsx --env-file-if-exists=../.env streams/show-deliveries.ts",
     "streams:ping": "tsx --env-file-if-exists=../.env streams/ping.ts"
   },
   "dependencies": {

@@ -1,0 +1,75 @@
+===== node docs/evidence/phase-0/research-s1/s1.mjs
+# keccak self-test
+keccak("") = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470 OK
+Transfer topic = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+
+# Expected DOMAIN_SEPARATOR for {name:"USDC",version:"2",chainId:5042002,verifyingContract:USDC}
+computed = 0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0
+live     = 0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0 MATCH
+
+# Selector derivations
+permit                                   0xd505accf permit(address,address,uint256,uint256,uint8,bytes32,bytes32)
+transferWithAuthorization                0xe3ee160e transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)
+receiveWithAuthorization                 0xef55bec6 receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)
+transferWithAuthorization(bytes sig)     0xcf092995 transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)
+receiveWithAuthorization(bytes sig)      0x88b7ab63 receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)
+permit(bytes sig)                        0x9fd5a6cf permit(address,address,uint256,uint256,bytes)
+cancelAuthorization                      0x5a049a70 cancelAuthorization(address,bytes32,uint8,bytes32,bytes32)
+authorizationState                       0xe94a0102 authorizationState(address,bytes32)
+nonces                                   0x7ecebe00 nonces(address)
+DOMAIN_SEPARATOR                         0x3644e515 DOMAIN_SEPARATOR()
+eip712Domain                             0x84b0196e eip712Domain()
+version                                  0x54fd4d50 version()
+transferFrom                             0x23b872dd transferFrom(address,address,uint256)
+approve                                  0x095ea7b3 approve(address,uint256)
+isBlacklisted                            0xfe575a87 isBlacklisted(address)
+
+# implementation slot keccak("org.zeppelinos.proxy.implementation") = 0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3
+implementation = 0xc6ad664ac6679f4ce74e10e91449c93ec1ae3ca6
+proxy code bytes = 1798  impl code bytes = 23659
+
+# Selector presence in implementation bytecode (PUSH4 operands)
+permit                                   0xd505accf PRESENT
+transferWithAuthorization                0xe3ee160e PRESENT
+receiveWithAuthorization                 0xef55bec6 PRESENT
+transferWithAuthorization(bytes sig)     0xcf092995 PRESENT
+receiveWithAuthorization(bytes sig)      0x88b7ab63 PRESENT
+permit(bytes sig)                        0x9fd5a6cf PRESENT
+cancelAuthorization                      0x5a049a70 PRESENT
+authorizationState                       0xe94a0102 PRESENT
+nonces                                   0x7ecebe00 PRESENT
+DOMAIN_SEPARATOR                         0x3644e515 PRESENT
+eip712Domain                             0x84b0196e absent
+version                                  0x54fd4d50 PRESENT
+transferFrom                             0x23b872dd PRESENT
+approve                                  0x095ea7b3 PRESENT
+isBlacklisted                            0xfe575a87 PRESENT
+
+# authorizationState(0x..01, 0x00..00) live call
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000000"}
+exit=0
+===== node docs/evidence/phase-0/research-s1/s1b.mjs
+eth_blockNumber = 72569084
+block 72569082 timestamp 1794841872 2026-11-16T15:11:12.000Z baseFeePerGas 20000000000 wei ( 20 gwei ) gasLimit 30000000 extraData 0x00000004a817c800 mixHash(prevrandao) 0x0000000000000000000000000000000000000000000000000000000000000000 txs 5
+block 72559082 timestamp 1794834897 2026-11-16T13:14:57.000Z
+avg block time over 10000 blocks = 0.6975 s
+extraData as uint64 (next base fee, wei) = 20000000000
+eth_gasPrice = 20000000000 wei = 20 gwei
+eth_feeHistory baseFeePerGas = 20gwei,20gwei,20gwei,20gwei,20gwei,20gwei gasUsedRatio = 0.010571066666666667,0.017101333333333333,0.008331,0.007660633333333333,0.0111853
+sample tx 0x11c33ea0ed6b085909d009753d9d03894a9bb2fb679190fcc1864e5d814c01f3 in block 72569082 from 0x6aa6ed787669fb6bb34aca69367db7ec53991eee type 0x0
+eth_getBalance( 0x6aa6ed787669fb6bb34aca69367db7ec53991eee ) = 247742662928911196093 (18-dec) = 247.74266292891122 USDC
+USDC.balanceOf( 0x6aa6ed787669fb6bb34aca69367db7ec53991eee ) = 247742662 (6-dec) = 247.742662 USDC
+native / 1e12 = 247742662  equals balanceOf? true  remainder (sub-6dp dust, wei) = 928911196093
+exit=0
+===== node docs/evidence/phase-0/research-s1/s1c.mjs
+RECEIVE_WITH_AUTHORIZATION_TYPEHASH selector 0x7f2eecc3 
+  live     0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8 
+  expected 0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8 MATCH
+TRANSFER_WITH_AUTHORIZATION_TYPEHASH selector 0xa0cc6a68 
+  live     0x7c7c6cdb67a18743f49ec6fa9b35f50d52ed05cbed4cc592e13b44501c1a2267 
+  expected 0x7c7c6cdb67a18743f49ec6fa9b35f50d52ed05cbed4cc592e13b44501c1a2267 MATCH
+PERMIT_TYPEHASH selector 0x30adf81f 
+  live     0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9 
+  expected 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9 MATCH
+exit=0
+keccak exit=0

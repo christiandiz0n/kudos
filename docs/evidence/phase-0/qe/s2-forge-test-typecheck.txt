@@ -1,0 +1,34 @@
+# 2026-11-16T15:16:07Z pnpm test:contracts
+$ cd contracts && forge test
+Compiling 6 files with Solc 0.8.30
+Solc 0.8.30 finished in 1.13s
+Compiler run successful!
+
+Ran 11 tests for test/spikes/Hello.t.sol:HelloTest
+[PASS] testFuzz_pullAndSplit_conservesValue(uint64[7]) (runs: 1000, μ: 255628, ~: 259739)
+[PASS] test_ecdsa_recoverMatchesVmAddr() (gas: 11257)
+[PASS] test_ping_emitsEvent() (gas: 36311)
+[PASS] test_pullAndSplit_revertsIfCallerNotFrom() (gas: 62690)
+[PASS] test_pullAndSplit_sevenRecipients_sumsExactly() (gas: 382721)
+[PASS] test_relayedSplit_expired_reverts() (gas: 90022)
+[PASS] test_relayedSplit_lengthMismatch_reverts() (gas: 108950)
+[PASS] test_relayedSplit_replay_reverts() (gas: 349942)
+[PASS] test_relayedSplit_tamperedAmounts_reverts() (gas: 109527)
+[PASS] test_relayedSplit_validSig_succeeds() (gas: 339629)
+[PASS] test_relayedSplit_wrongSigner_reverts() (gas: 108219)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 38.33ms (57.53ms CPU time)
+
+Ran 1 test suite in 41.48ms (38.33ms CPU time): 11 tests passed, 0 failed, 0 skipped (11 total tests)
+# pnpm -r typecheck
+Scope: 4 of 5 workspace projects
+packages/shared typecheck$ tsc -p tsconfig.json
+packages/shared typecheck: Done
+scripts typecheck$ tsc -p tsconfig.json
+apps/api typecheck$ tsc -p tsconfig.json
+apps/web typecheck$ next typegen && tsc --noEmit
+apps/web typecheck: Generating route types...
+apps/web typecheck: ✓ Types generated successfully
+scripts typecheck: Done
+apps/web typecheck: Done
+apps/api typecheck: Done
+exit=0

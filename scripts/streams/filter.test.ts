@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import { FILTER_TEMPLATE, normalizeWebhookUrl, parseEvents, redactStream, redactUrl, renderFilter, writeEnvVar } from './lib';
+import { FILTER_TEMPLATE, REPO_ROOT, normalizeWebhookUrl, parseEvents, redactStream, redactUrl, renderFilter, spikeLogPath, writeEnvVar } from './lib';
 
 const HELLO = '0x66cb4392322b2aede460a4314ce092e0cc1c2b32';
 const PING_T0 = '0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55'; // INTERFACES §4
@@ -62,6 +62,7 @@ test('documented nesting data[block][receipt][log]: keeps only our address + top
   assert.equal(out.streamId, 's-1');
   assert.equal(out.batchStart, 72567878);
   assert.equal(out.batchEnd, 72567882);
+  assert.equal(out.batchSource, 'metadata');
   assert.equal(out.events.length, 1);
   assert.deepEqual(
     { ...out.events[0], topics: undefined, data: undefined },
@@ -90,9 +91,15 @@ test('prose nesting data[block][log], checksummed address, blockTimestamp passth
 });
 
 test('unwrapped payload (no {data, metadata}) and receipt-like objects with .logs', () => {
-  const out = main([[{ transactionHash: '0xff', logs: [log(HELLO, PING_T0, 5, '0xff', 0)] }]]) as any;
+  const out = main([
+    [{ transactionHash: '0xff', logs: [log(HELLO, PING_T0, 5, '0xff', 0)] }],
+    [[log(SYSTEM, TRANSFER_T0, 9, '0xf9', 0)]],
+  ]) as any;
   assert.equal(out.events.length, 1);
-  assert.equal(out.batchStart, null);
+  // QE-15: no metadata → batch range derived from min/max blockNumber over ALL input logs.
+  assert.equal(out.batchSource, 'logs');
+  assert.equal(out.batchStart, 5);
+  assert.equal(out.batchEnd, 9);
 });
 
 test('no match → null (skip delivery)', () => {
@@ -137,4 +144,10 @@ test('normalizeWebhookUrl appends the route to a bare tunnel origin', () => {
   assert.deepEqual(normalizeWebhookUrl('https://abc.trycloudflare.com'), { url: 'https://abc.trycloudflare.com/webhooks/streams', appended: true });
   assert.equal(normalizeWebhookUrl('https://abc.trycloudflare.com/webhooks/streams').appended, false);
   assert.throws(() => normalizeWebhookUrl('http://abc.example.com/x'));
+});
+
+test('spikeLogPath: same rule as apps/api env.ts (relative to repo root)', () => {
+  assert.equal(spikeLogPath({}), path.join(REPO_ROOT, 'data/local/streams-spike.ndjson'));
+  assert.equal(spikeLogPath({ STREAMS_SPIKE_LOG: 'tmp/x.ndjson' }), path.join(REPO_ROOT, 'tmp/x.ndjson'));
+  assert.equal(spikeLogPath({ STREAMS_SPIKE_LOG: '/abs/y.ndjson' }), '/abs/y.ndjson');
 });

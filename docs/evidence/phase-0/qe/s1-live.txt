@@ -1,0 +1,107 @@
+# run at 2026-11-16T15:10:34Z
+== chain id (canonical / legacy / quicknode public)
+5042002
+5042002
+5042002
+{"jsonrpc":"2.0","id":1,"result":"0x4cef52"}
+{"jsonrpc":"2.0","id":1,"result":"5042002"}
+== CORS preflight on canonical RPC
+access-control-allow-headers: content-type, authorization
+access-control-allow-methods: GET, POST, OPTIONS
+access-control-allow-origin: https://example.com
+access-control-expose-headers: 
+access-control-max-age: 3600
+== WS canonical (eth_chainId over websocket via cast)
+5042002
+== block number on both
+72569029
+72569029
+== explorer
+explorer.testnet.arc.io: 200
+HTTP/2 301 
+location: https://explorer.testnet.arc.io/
+HTTP/2 301 
+location: https://explorer.testnet.arc.io/api?module=block&action=eth_block_number
+{"jsonrpc":"2.0","result": "0x45350c8","id": 1}
+
+== USDC metadata
+name()(string)                 "USDC"
+symbol()(string)               "USDC"
+decimals()(uint8)              6
+version()(string)              "2"
+DOMAIN_SEPARATOR()(bytes32)    0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0
+totalSupply()(uint256)         300582919600200189 [3.005e17]
+eip712Domain()                 Error: server returned an error response: error code 3: execution reverted
+== computed DOMAIN_SEPARATOR {USDC,2,5042002,0x3600..}
+0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0
+== proxy / implementation
+proxy code bytes: 1798
+zos impl slot 0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3 -> 0x000000000000000000000000c6ad664ac6679f4ce74e10e91449c93ec1ae3ca6
+implementation() via call: 0xC6AD664ac6679F4Ce74e10E91449C93Ec1ae3cA6
+impl code bytes: 23659
+blockscout impl name: NativeFiatTokenV2_2 | compiler: v0.6.12+commit.27d51765 | verified_at: 2026-08-18T07:05:27.153434Z
+== selectors in impl bytecode (PUSH4 scan)
+permit(address,address,uint256,uint256,uint8,bytes32,bytes32)                                        0xd505accf PRESENT
+permit(address,address,uint256,uint256,bytes)                                                        0x9fd5a6cf PRESENT
+transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)     0xe3ee160e PRESENT
+transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)                     0xcf092995 PRESENT
+receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)      0xef55bec6 PRESENT
+receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)                      0x88b7ab63 PRESENT
+cancelAuthorization(address,bytes32,uint8,bytes32,bytes32)                                           0x5a049a70 PRESENT
+cancelAuthorization(address,bytes32,bytes)                                                           0xb7b72899 PRESENT
+authorizationState(address,bytes32)                                                                  0xe94a0102 PRESENT
+nonces(address)                                                                                      0x7ecebe00 PRESENT
+DOMAIN_SEPARATOR()                                                                                   0x3644e515 PRESENT
+eip712Domain()                                                                                       0x84b0196e absent
+== typehashes live vs computed
+RECEIVE_WITH_AUTHORIZATION_TYPEHASH()(bytes32) live=0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8 computed=0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8 MATCH
+TRANSFER_WITH_AUTHORIZATION_TYPEHASH()(bytes32) live=0x7c7c6cdb67a18743f49ec6fa9b35f50d52ed05cbed4cc592e13b44501c1a2267 computed=0x7c7c6cdb67a18743f49ec6fa9b35f50d52ed05cbed4cc592e13b44501c1a2267 MATCH
+PERMIT_TYPEHASH()(bytes32) live=0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9 computed=0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9 MATCH
+== native vs ERC-20 (1e12) for every address in wallets.public.json
+0x5eD3054292e9fCE089aa082997962B08fFF81111 @72569033 native=18981266483933771022 erc20=18981266 native//1e12=18981266 equal=True dust=483933771022
+0x3eAFdcE9B632C036146960A03Db720dc84568daD @72569033 native=19992909700000000000 erc20=19992909 native//1e12=19992909 equal=True dust=700000000000
+0xD15498972db6DaC24b77521Fe707916CdFe5A1fD @72569035 native=20000000000000000000 erc20=20000000 native//1e12=20000000 equal=True dust=0
+0xE17fB91e05e2c626994F4f0BB96EBeacDCfD9135 @72569035 native=20000000000000000000 erc20=20000000 native//1e12=20000000 equal=True dust=0
+0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9 @72569037 native=18798884280000000000 erc20=18798884 native//1e12=18798884 equal=True dust=280000000000
+0x48d3b5E73735d775469A31a43d1b04778231de77 @72569037 native=21000000000000000000 erc20=21000000 native//1e12=21000000 equal=True dust=0
+0xc0496441056d13D2B26edF3E2e792Ce253177896 @72569037 native=20000000000000000000 erc20=20000000 native//1e12=20000000 equal=True dust=0
+0xb3331Baa327cc4cf7B3C67C5C66cE94011902344 @72569039 native=20000000000000000000 erc20=20000000 native//1e12=20000000 equal=True dust=0
+0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 @72569039 native=20000000000000000000 erc20=20000000 native//1e12=20000000 equal=True dust=0
+== base fee floor
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json,sys;b=json.load(sys.stdin);print('block',int(b['number'],16),'baseFee',int(b['baseFeePerGas'],16),'gasLimit',int(b['gasLimit'],16),'extraData',b['extraData'],'->uint64',int(b['extraData'],16) if len(b['extraData'])<=18 else 'n/a','mixHash',b['mixHash'])
+                                                             ~^^^^^^^^^^
+KeyError: 'number'
+eth_gasPrice: 20000000000
+feeHistory baseFees (gwei): [20.0]
+== block time over 10000 blocks
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+  File "<stdin>", line 5, in ts
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 189, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 495, in open
+    response = meth(req, response)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 604, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 533, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 466, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/urllib/request.py", line 613, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+== getLogs range cap (from=B-10000 to=B  => 10001 blocks; and 10000; and 9999)
+span 10000 (inclusive 10001 blocks): {"jsonrpc":"2.0","id":1,"error":{"code":-32012,"message":"requested range too large"}}
+span 9999 (inclusive 10000 blocks): {"jsonrpc":"2.0","id":1,"result":[{"address":"0x66cb4392322b2aede460a4314ce092e0cc1c2b32","topics":["0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55","0x0000000000000000000000005ed3
+span 9998 (inclusive 9999 blocks): {"jsonrpc":"2.0","id":1,"result":[{"address":"0x66cb4392322b2aede460a4314ce092e0cc1c2b32","topics":["0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55","0x0000000000000000000000005ed3
+research repro 0x1..0x2712: {"jsonrpc":"2.0","id":1,"error":{"code":-32005,"message":"rate limit exceeded"}}
+research repro 0x1..0x2711: {"jsonrpc":"2.0","id":1,"error":{"code":-32005,"message":"rate limit exceeded"}}
+== predeploys code size
+0x0000000071727De22E5E9d8BAf0edAc6f37da032 16035
+0xcA11bde05977b3631167028862bE2a173976CA11 3808
+0x000000000022D473030F116dDEE9F6B43aC78BA3 9152
