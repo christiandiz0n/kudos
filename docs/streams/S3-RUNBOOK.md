@@ -4,19 +4,49 @@ _Owner: STREAMS_INFRA. Rewritten 2026-11-16 for dashboard creation (D-011). Upda
 
 > **What changed (D-015, D-016):** there is **one** Stream, the **production Vouch Stream**, and it is the S3 live proof. Its webhook is the **stable Railway URL** `https://<api>.up.railway.app/webhooks/streams` (deploy: `docs/deploy/RAILWAY.md`), **not** a quick tunnel. Quick tunnels are for phone tests only (D-005). On Railway, verified deliveries are stored in Postgres `stream_deliveries`, so read them with `streams:deliveries --db` (§P). The Hello sections below (§0–H5b) are kept as the offline/QE reference: the Hello filter tests remain the proof of the payload shape. Their stream is **not created**. Where they say `$API`, use the same Railway URL.
 
-## P. Production Stream (Vouch): values
+## P. Production Stream (Vouch v3): values
+
+_Updated 2026-11-16 (Phase 2) by STREAMS_INFRA. Final target per D-014/D-015/D-520 (MSG-058)._
 
 | Item | Value |
 |---|---|
-| Contract | **Final Vouch address: TBD after the v3 redeploy (D-014).** Take it from `VOUCH_ARC_TESTNET.address` in `@vouch/shared` / `AGENTS/INTERFACES.md` §2. v1 `0xfEe6…b2d3` and v2 `0x9C50…b95f` are retired for the Stream unless the Orchestrator says v2 is final. |
-| Start block | **TBD = the final deploy block** (`VOUCH_ARC_TESTNET` / INTERFACES §2) |
-| Events | the 10 production events (MSG-010 / `VOUCH_EVENT_TOPICS`), preset `--events vouch` (excludes the never-emitted `EIP712DomainChanged`) |
-| Filter | `pnpm --silent --filter @vouch/scripts streams render-filter --contract $VOUCH --events vouch > docs/streams/filter-vouch.js` (stdout = pure JS; topic list on stderr) |
-| Webhook | `$API/webhooks/streams` with `API=https://<api>.up.railway.app` (RAILWAY.md §3) |
-| Secret | HUMAN pastes the Stream's security token into **Railway → api → Variables → `STREAMS_WEBHOOK_SECRET`** and deploys the staged change (RAILWAY.md §4). Mirror it in the local root env file only if the local api must also verify. |
-| Read deliveries | `railway logs --service api --filter "streams delivery"` and `railway run --service Postgres -- pnpm --silent --filter @vouch/scripts streams:deliveries --db --last 10` (RAILWAY.md §6–7) |
+| Network / dataset | **Arc Testnet** (`arc-testnet`) · **Logs** |
+| Contract | **Vouch v3 `0xF4B641dc628de05336aa983B07D5d181254ff08e`** (`VOUCH_ARC_TESTNET.address`, INTERFACES §2). v1 `0xfEe6…b2d3` and v2 `0x9C50…b95f` are retired: never watch them. |
+| Start block | **72605845** (v3 deploy block, `VOUCH_ARC_TESTNET.deployBlock`) · end: none (continuous) · latest-block delay 0 · reorg handling off (Arc has deterministic finality) |
+| Events | the 10 production events, preset `--events vouch` (= `VOUCH_EVENT_TOPICS` minus the never-emitted `EIP712DomainChanged`) |
+| Filter | **`docs/streams/filter-vouch.js`** (committed, FROZEN: this exact file is pasted into the dashboard). Rendered with `pnpm --silent --filter @vouch/scripts streams render-filter --contract 0xF4B641dc628de05336aa983B07D5d181254ff08e --events vouch > docs/streams/filter-vouch.js`. Do not re-render or change the envelope without telling the Orchestrator. |
+| Webhook | **`https://api-production-902bc54c.up.railway.app/webhooks/streams`** · compression none |
+| Secret | HUMAN pastes the Stream's security token into **Railway → api → Variables → `STREAMS_WEBHOOK_SECRET`** and deploys the staged change (RAILWAY.md §4). |
+| Read deliveries | `railway logs --service api --filter "streams delivery"` (each line now carries `ingest: {ok, newEvents, duplicates, ignored, rebuilt, cursorBlock, events}`) and `railway run --service Postgres -- pnpm --silent --filter @vouch/scripts streams:deliveries --db --last 10` |
+| Verify derived state | `railway run --service Postgres -- pnpm --silent --filter @vouch/scripts streams:verify --db` → `live (db) == replay (db raw) == chain-backfill` over the delivered range (§P.3) |
 
-Order: RAILWAY.md §1–3 (api live, `/health` → `db.kind: postgres`, unsigned POST → 503) → render the filter → wizard H1–H3 with the values above (start = final deploy block; filter tests on blocks containing known Vouch txs, e.g. the canonical pay tx's block) → H4, but the token goes to Railway Variables (RAILWAY.md §4) → RAILWAY.md §5 (unsigned → 401) → H5a activate → watch the backfill with `--db` (§A6 expectations, Vouch events instead of Ping/Split) → a fresh pay tx → pause when idle (H5b).
+### P.1 Dashboard "Test filter" expectations (exact; checked against the frozen filter on real v3 blocks)
+
+Test each block on its own (start = end = the block). The filter output is an envelope v1 `{v:1, streamId, network, dataset, batchStart, batchEnd, batchSource, events:[…]}`; check `events[].event`, `transactionHash`, `logIndex`:
+
+| Block | Expected filter output | Tx hash |
+|---|---|---|
+| **72606007** | 2 events: `VenueRegistered` (logIndex **4**), `TermsUpdated` (**5**) | `0x7ecc2161882fdabb2ed8fa39d395c2753224ad0e71a9305afe01988a97d45ee7` |
+| **72606074** (relayed canonical pay) | 7 events: `CustomerVerified` (**74**), `PaymentSettled` (**90**), `RewardPaid` (**91, 92, 93, 94, 95**). The block has 98 logs: 33 from the EIP-7708 system emitter `0xffff…fffe`, 23 USDC `0x3600…` and others, all dropped. | `0x95cbda97e7a015b6c105f07cf364b3cc258cc6769cd13a10ce8ae0697280673e` |
+| **72606174** (self-submit canonical pay) | 7 events: `CustomerVerified` (**53**), `PaymentSettled` (**69**), `RewardPaid` (**70, 71, 72, 73, 74**). 103 logs in the block (35 system, 23 USDC). | `0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be` |
+| **72606075** (no Vouch logs: 1 system + 1 USDC log) | **`null`** (nothing delivered) | — |
+
+Both pay txs settle the canonical split exactly: amount 12.00 → venue **10.20**, cashback **0.45**, L1 **0.693 / 0.297**, L2 **0.252 / 0.108** (base units 10200000 / 450000 / 693000 / 297000 / 252000 / 108000). These rows are asserted in `apps/api/src/streams/ingest.test.ts`.
+
+### P.2 What the api does with a delivery (Phase 2, D-306)
+1. HMAC check (D-301) → raw row in `stream_deliveries` (D-305) → **then** ingest: decode with `vouchAbi`, keep only the Vouch v3 address + the 10 topics, insert into `ev_events` keyed by `(transactionHash, logIndex)` (`ON CONFLICT DO NOTHING`), apply in `(blockNumber, logIndex)` order, update the `ev_*` derived tables + the cursor in the same transaction, then publish new events on the in-process bus (SSE).
+2. Re-deliveries, QuickNode retries and overlapping batches are no-ops (`duplicates` in the log line). A batch older than the cursor triggers a deterministic rebuild from `ev_events` (`rebuilt: true`).
+3. If ingest fails the api **still answers 200** (the raw row is durable), records the failure in `ev_ingest_log` and retries it from `stream_deliveries` after the next delivery and on boot. A raw-insert failure still answers 500 so QuickNode retries (D-305).
+
+### P.3 Determinism check (bounty: "built from Streams events")
+```bash
+pnpm --silent --filter @vouch/scripts streams:verify                 # real chain, no Stream needed: backfill == live(webhook sim) == replay == rebuild
+railway run --service Postgres -- pnpm --silent --filter @vouch/scripts streams:verify --db   # hosted: live(db) == replay(raw rows) == chain backfill
+railway run --service Postgres -- pnpm --silent --filter @vouch/scripts streams:replay --db --in-place   # demo: wipe derived → rebuild from raw deliveries → same hash
+```
+Reference on 2026-11-16 (blocks 72605845..72612484, 48 Vouch logs): every path hashes to `0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34` (events 48, venues 2, intros 8, verified 6, payments 6, reward lines 22). The hash changes as new Vouch txs land; what matters is that the paths agree.
+
+Order: RAILWAY.md §1–3 (done: api live, `/health` → `db.kind: postgres`) → wizard H1–H3 with the values above, running the P.1 filter tests → H4, with the token in Railway Variables (RAILWAY.md §4) → RAILWAY.md §5 (unsigned → 401) → H5a activate → watch the backfill (48+ Vouch events from 72605845; log lines with `ingest.newEvents`) → `streams:verify --db` → a fresh pay tx → pause when idle (H5b).
 
 ---
 

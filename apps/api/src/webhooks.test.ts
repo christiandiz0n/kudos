@@ -82,7 +82,7 @@ describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
   test('valid signature → 200, NDJSON line verified with parsed summary', async () => {
     const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
     assert.equal(res.statusCode, 200);
-    assert.deepEqual(res.json(), { ok: true, bytes: Buffer.byteLength(PAYLOAD), logs: 1 });
+    assert.deepEqual(res.json(), { ok: true, bytes: Buffer.byteLength(PAYLOAD), logs: 1, ingested: true }); // D-306: ingested (0 Vouch events: Hello Ping is not a watched address)
     const rec = await lastRecord(logFile);
     assert.equal(rec.verified, true);
     assert.equal(rec.body, PAYLOAD);

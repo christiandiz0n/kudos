@@ -503,3 +503,110 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
   - **Integration rules (QE-C-10 / QE-C-11).** D-519 binds per auth, not per order. A customer may settle a second self-submit auth for the same order first. The relayer treats `OrderAlreadySettled` as terminal and reads the split from events. Self-submit needs the balance pre-flight.
   - **Funding.** Ben's smoke funding came from Lena, the venue payout wallet (new `--fund-from-payout`), not from DEPLOYER, so the deployer keeps its reserve for deploys.
 - **Who:** CONTRACTS (Orchestrator-authorized after the CONTRACTS_QE v3 PASS-with-findings)
+
+## D-306 — Phase 2 Streams ingestion: idempotent ev_* derived state, ingest-after-durable, 200 on ingest failure, determinism hash
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Where.** `apps/api/src/streams/` (`decode`, `ingest`, `queries`, `bus`, `hash`, `backfill`, `verify`, `index` = `createStreams(db)`). Derived tables live in `apps/api/src/streams/schema.ts`, all prefixed `ev_`: `ev_events, ev_cursor, ev_ingest_log, ev_venues, ev_terms, ev_seeds, ev_intros, ev_verified, ev_payments, ev_rewards, ev_venue_stats, ev_ambassadors`. They have their own migrations folder `apps/api/drizzle-streams/` (`drizzle-streams.config.ts`) and their own migrations table `drizzle.__drizzle_migrations_streams`. `db.migrate()` applies `apps/api/drizzle` and then `apps/api/drizzle-streams`.
+  - **Decode.** Logs are found in any body shape (envelope v1 or raw nesting). A log is kept only when all of these hold: address = Vouch v3 (so USDC `0x3600…` and the EIP-7708 system emitter `0xffff…fffe` are dropped), topic0 ∈ the 10 production topics, `removed` is false, and it decodes strictly with `vouchAbi`. Everything else is counted as ignored. Args are stored JSON-safe: uint as decimal strings, addresses checksummed.
+  - **Idempotent and ordered.** Each batch runs in one transaction, serialized in-process and guarded by `pg_advisory_xact_lock`. The insert is `INSERT … ON CONFLICT (tx_hash, log_index) DO NOTHING`, and only new events are applied, in `(blockNumber, logIndex)` order. If a new event sorts before the cursor, the derived tables are wiped and rebuilt from `ev_events` in order. The derived state is therefore a pure function of the set of events: re-deliveries, retries, overlaps and reverse-order batches all converge. Venue stats and ambassador rows are recomputed by SQL aggregate for every touched key in the same transaction.
+  - **Webhook.** The raw `stream_deliveries` insert commits first (D-305 unchanged). Ingest then runs in its own transaction. **If ingest fails, the response is still 200**: the failure is recorded in `ev_ingest_log` and retried from the raw table after the next delivery (`retryFailed`) and on boot (`ingestPending`), or by `streams:replay`. A raw-insert failure still returns 500. Each `streams delivery` log line carries `ingest:{ok,newEvents,duplicates,ignored,rebuilt,cursorBlock,events}`.
+  - **Bus.** In-process. It publishes after commit, only for events new to `ev_events`, with one `payment.settled` per PaymentSettled that is aggregated with its reward lines. Duplicates, replay, backfill and rebuild publish nothing. Listener exceptions are caught.
+  - **Port.** The queries and bus implement BACKEND_RELAYER's StreamsPort (MSG-062, accepted in MSG-063).
+  - **Determinism.** `hashDerived` = sha256 over every hashed `ev_*` table, rows sorted by PK and serialized as canonical JSON. It excludes provenance (`source`, `delivery_id`, `ingested_at`), `block_timestamp` (whether Streams logs carry it is UNVERIFIED), `ev_ingest_log`, and the cursor's batch and rebuild counters. The chain backfill uses eth_getLogs in ≤ 10k-block chunks and runs the frozen `docs/streams/filter-vouch.js` in a bare `vm`, so it produces envelope v1 bodies byte-compatible with a live delivery. `streams:verify` asserts chain-backfill == live (signed webhook, 5-block batches, every batch twice, plus an overlap) == replay (copy) == replay (wipe in place) == rebuild.
+- **Reason:** the bounty requires that all derived views come from Streams events. Arc has no reorgs. QuickNode only retries on non-2xx, and its retries cannot fix a deterministic ingest bug: they would retry until the Stream auto-pauses (`max_retry`). The raw table already makes every acked delivery durable and replayable. Making state order-independent (rebuild on a late batch) is simpler and stronger than trying to guarantee in-order arrival across retries, replays and backfills, and the event volume (tens to hundreds of logs) makes a full rebuild cheap.
+- **Alternatives:** answer 500 on ingest failure (rejected: a poison delivery would pause the Stream, and the raw row already exists, so QuickNode's retry would only duplicate it); ingest inside the raw-insert transaction (rejected: an ingest bug would then block persistence); incremental-only apply that rejects late events (rejected: replaying an earlier failed delivery is a legitimate late batch).
+- **Verified:** on real v3 chain data 72605845..72612484 (48 logs), all five paths hash to `0b0c880d…5c1f34`. Both canonical pays give exactly 10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108.
+- **Who:** STREAMS_INFRA
+
+## D-307 — Production Stream config (v3, dashboard) and its test-filter expectations
+- **Date:** 2026-11-16
+- **Decision:** ONE Stream (D-015), with these settings:
+  - Network: Arc Testnet (`arc-testnet`). Dataset: `logs`.
+  - Range: start 72605845, no end, latest-block delay 0, reorg handling off.
+  - Filter: `docs/streams/filter-vouch.js`, rendered and committed by the Orchestrator with `--contract 0xF4B641dc628de05336aa983B07D5d181254ff08e --events vouch`. It is frozen.
+  - Destination: webhook `https://api-production-902bc54c.up.railway.app/webhooks/streams`, compression none.
+  - Token: goes in Railway → api → Variables → `STREAMS_WEBHOOK_SECRET`.
+  - The config is mirrored in `infra/streams/stream-vouch-prod.json`.
+  - **Test-filter expectations** (runbook §P.1, re-derived from the frozen file on the real blocks):
+    - 72606007: `VenueRegistered`@4 and `TermsUpdated`@5 (tx `0x7ecc2161…5ee7`).
+    - 72606074: `CustomerVerified`@74, `PaymentSettled`@90, `RewardPaid`@91–95 (tx `0x95cbda97…673e`).
+    - 72606174: `CustomerVerified`@53, `PaymentSettled`@69, `RewardPaid`@70–74 (tx `0xfca0e1ae…c7be`).
+    - 72606075: `null`.
+- **Who:** STREAMS_INFRA (values from ORCHESTRATOR + D-520)
+
+## D-801 — Relayer: one EOA, strictly serialized jobs, chain-reconciled nonces, replace-with-bump, guards before send
+- **Date:** 2026-11-16
+- **Decision:**
+  - **One RELAYER EOA** (`RELAYER_PRIVATE_KEY`) submits every user-signed call. Jobs are **strictly serialized**: one job holds the lock from `eth_call` simulation until its receipt. On Arc (≈0.7 s blocks) that is about 1 tx/s, which is enough for the demo. Each simulation runs on top of the previous tx's state, and at most one nonce is ever in flight.
+  - **Nonce manager:** before each job, the local nonce is compared with the chain's `pending` count. If the chain is ahead (the key was used elsewhere), its value is adopted. If the chain is behind (a dropped tx left a gap), the lower nonce is reused. A "nonce too low" error on send triggers a resync and a resend.
+  - **Retries:** if no receipt arrives within `RELAYER_RECEIPT_TIMEOUT_MS` (30 s), the job is re-sent at the **same nonce** with maxFee and priority fee × 1.25. This repeats up to `RELAYER_MAX_SEND_ATTEMPTS` (4) times and never goes above `RELAYER_MAX_FEE_GWEI` (200). Transport errors back off and retry; a persistent outage returns `RELAYER_DOWN`.
+  - **Checks before anything is sent:**
+    - simulation: any revert is TERMINAL and is never retried;
+    - a per-job pre-flight, e.g. the customer balance check (QE-C-11);
+    - **max-gas guard:** estimate × 1.2 must be ≤ the per-kind cap. Caps: registerVenue 400k, owner actions 200k, acceptIntro 350k, pay 1.2M (worst case ≥ 805k, MSG-040);
+    - fees: clamped to ≥ 20 gwei, and refused if above the fee cap;
+    - the relayer's own balance must cover gasLimit × maxFee.
+  - **Limits:** in-memory per-user (12/min) and global (120/min) relay rate limits, plus a max queue depth (50). The api is a single process (D-202).
+  - **Records:** each job is a `relay_txs` row (every replacement hash is kept).
+  - **API status:** `submit()` resolves at broadcast. The API then answers `202 {status: "pending", txHash}`; "settled" is never decided by the relayer (D-803).
+- **Reason:** Arc has no reorgs and blocks are fast, so serializing removes whole classes of nonce races for little throughput cost. Simulating inside the lock means a dependent job, such as acceptIntro right after registerVenue, never fails against stale state.
+- **Alternatives:** pipelined nonces with several txs in flight (more throughput, much harder gap recovery); a nonce pool across multiple relayer keys (deferred until load needs it).
+- **Who:** BACKEND_RELAYER
+
+## D-802 — Sign-in: EIP-191 challenge from the browser wallet key → HMAC session token
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Challenge:** `POST /auth/challenge {address}` returns a one-time SIWE-style message (5-minute TTL, stored in `auth_challenges`, rate-limited per IP).
+  - **Verify:** `POST /auth/verify {address, challengeId, signature, displayName?, passkeyCredentialId?}` checks the signature with viem `verifyMessage`. The challenge is consumed atomically (`UPDATE … WHERE used_at IS NULL`). The user is upserted.
+  - **Token:** `v1.<b64url{sid,sub,exp}>.<b64url HMAC-SHA256(SESSION_SECRET)>`, with a revocable `sessions` row (7-day TTL by default).
+  - **Transport:** `Authorization: Bearer`, the `vouch_session` cookie, or `?token=` (SSE only).
+  - **Fail closed:** with no `SESSION_SECRET`, sign-in answers 503.
+- **Reason:** D-104 puts a passkey-gated local EOA in the browser, so an EIP-191 signature is the natural proof of control and needs no extra WebAuthn server verification for Tier 1. The HMAC token is stateless to check; the DB row exists only for logout.
+- **Who:** BACKEND_RELAYER
+
+## D-803 — "Settled" comes only from StreamsPort; QE-C-10 and QE-C-11 handling
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Status vocabulary:** the API's own tables hold relay state only. Orders are `pending → relayed | failed`; payment intents are `quoted → relaying → relayed | failed | already_settled`. "paid" / "settled" fields come only from `StreamsPort.getPayment` (STREAMS_INFRA's `ev_*` tables), so the quote is never shown as the split.
+  - **QE-C-10:** an `OrderAlreadySettled` revert (pre-simulation, in-lock simulation, or a reverted receipt with `isOrderSettled == true`) is TERMINAL. The API answers `409 ORDER_ALREADY_PAID`, with `details.settled` taken from Streams, or `waitingOnStreams: true` until it is ingested.
+  - **QE-C-11, relayed:** the customer's USDC balance must be ≥ amount. This is checked before relaying and again inside the relayer lock (`402 INSUFFICIENT_BALANCE`, nothing sent).
+  - **QE-C-11, self-submit:** a quote with `mode: "self-submit"` (kill-the-backend helper only) needs `balance ≥ amount + 900k × maxFeePerGas` (the fee rounded up to 6 decimals). It returns `submitter = customer`, and the API never relays it.
+  - **Submitter:** the API never produces `submitter = 0` (the code asserts it). App quotes always name the RELAYER (D-014/D-519).
+- **Who:** BACKEND_RELAYER
+
+## D-804 — Owner actions are two-step at the current `nonces(owner)`; one in flight per owner
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Prepare:** `prepare` reads `nonces(owner)` and chain time and returns the EIP-712 message to sign. The deadline is now + 10 min, so signatures stay short-lived (D-515).
+  - **Submit:** `submit` verifies the signature off-chain and re-reads the nonce. If the nonce moved, it answers `409 OWNER_NONCE_STALE` and nothing is relayed. A future nonce is never queued (D-013(3)).
+  - **One at a time:** an owner may have only one relayed action in flight (`OWNER_ACTION_PENDING`). A new prepare supersedes older prepared actions.
+  - **Registration keys:** registration always uses our VENUE_SIGNER and ATTRIBUTOR addresses as the venue's `signer` / `attributor`. Orders are signed only for venues whose on-chain signer is our key (`VENUE_NOT_MANAGED` otherwise). Weights are signed only when the venue's attributor is our key; otherwise `weightsHash = 0` and the on-chain fallback applies.
+- **Who:** BACKEND_RELAYER
+
+## D-805 — Baseline attribution v1 (Phase 2; ATTRIBUTION_AI owns it from Phase 4)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Score:** `score = linkTypeWeight (personal 2 / broadcast 1) × (1 + 0.25 × opens) × 2^(−(now − acceptedAt)/3 days)`.
+    - `now` and `acceptedAt` are chain time, read from `getLiveIntros` (the same clock as the on-chain fallback, D-502).
+    - `opens` = opens of the link carrying that introHash by this customer or anonymous visitors. The referrer's own opens are excluded, and opens are capped at 8.
+  - **"Who sent you here?":** an answer naming an eligible referrer adds 50% of the total score to that referrer.
+  - **Candidates:** only eligible intros: unexpired, and amount ≥ the frozen minOrder.
+  - **Bounds:** at most the top 5 scores (kept in slot order); the 8,000 cap is water-filled; largest-remainder rounding (ties go to the lower index); each weight ≥ 1; Σ = 10,000.
+  - **Interface:** `Attributor.attribute(AttributionInput) → AttributionResult` in `apps/api/src/attribution/baseline.ts`.
+  - **Canonical case:** 3 opens on Ana's personal link and 2 on Priya's broadcast link give 3.5 : 1.5 = **exactly 7,000 / 3,000**. This is what story:api uses.
+- **Who:** BACKEND_RELAYER
+
+## D-806 — API errors: stable codes + end-user copy
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Shape:** every error is `{error: {code, message, retryable, details?}}`. `message` is primary-screen copy with no gas/USDC/nonce/hash words (D-605). The frontend switches on `code`.
+  - **Mapping:** reverts and USDC revert strings map to codes in `apps/api/src/chain/errors.ts`, for example:
+    - OrderExpired → `ORDER_EXPIRED` 410
+    - OrderAlreadySettled → `ORDER_ALREADY_PAID` 409
+    - "exceeds balance" → `INSUFFICIENT_BALANCE` 402
+    - CustomerAlreadyVerified → `ALREADY_REWARDED` 409
+    - TermsNotInForce → `LINK_NEEDS_REISSUE` 409
+    - relayer unreachable or unconfigured → `RELAYER_DOWN` 503 (retryable)
+  - **Amounts:** amounts in requests and responses are decimal strings of base units, or `{baseUnits, display}`.
+- **Who:** BACKEND_RELAYER

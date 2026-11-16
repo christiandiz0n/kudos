@@ -1,5 +1,5 @@
 {
- "counter": 61,
+ "counter": 74,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -93,9 +93,10 @@
    "from": "CONTRACTS",
    "to": "BACKEND_RELAYER",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v1 deployed: ABI, typed data, relayer flow for registerVenue/acceptIntro/pay",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-068"
   },
   "MSG-010": {
    "id": "MSG-010",
@@ -431,9 +432,10 @@
    "from": "ORCHESTRATOR",
    "to": "BACKEND_RELAYER",
    "type": "request",
-   "status": "open",
+   "status": "closed",
    "subject": "Phase 2 requirements from QE-C-09 (D-013): submitter, owner nonces, link re-issue",
-   "re": null
+   "re": null,
+   "resolution": "requirements implemented (D-803/D-804); see MSG-069"
   },
   "MSG-041": {
    "id": "MSG-041",
@@ -494,9 +496,10 @@
    "from": "ORCHESTRATOR",
    "to": "STREAMS_INFRA",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "A5: one production Stream (no hello Stream) on a stable Railway URL (D-015, D-016)",
-   "re": null
+   "re": null,
+   "resolution": "ack: ONE production Vouch Stream on the Railway URL; config + filter rendered in Phase 2 (docs/streams/filter-vouch-prod.js, runbook \u00a7P)"
   },
   "MSG-047": {
    "id": "MSG-047",
@@ -504,9 +507,10 @@
    "from": "ORCHESTRATOR",
    "to": "BACKEND_RELAYER",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-070"
   },
   "MSG-048": {
    "id": "MSG-048",
@@ -600,9 +604,10 @@
    "from": "CONTRACTS",
    "to": "BACKEND_RELAYER",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v3 deployed: new address + block; submitter rule is msg.sender == submitter (sign RELAYER); OrderAlreadySettled is terminal (supersedes MSG-034)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-071"
   },
   "MSG-057": {
    "id": "MSG-057",
@@ -620,9 +625,10 @@
    "from": "CONTRACTS",
    "to": "STREAMS_INFRA",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v3 deployed (FINAL for the production Stream, D-015): address + start block; topics unchanged",
-   "re": null
+   "re": null,
+   "resolution": "ack: v3 0xF4B6\u2026f08e @ 72605845 is the production Stream target; v3 pay txs used as real-data fixtures for ingestion tests"
   },
   "MSG-059": {
    "id": "MSG-059",
@@ -653,6 +659,141 @@
    "status": "open",
    "subject": "Re: QE-C-11 (Info) v3 kill-the-backend notes: gas-in-USDC balance check, public acceptIntro, stale 'zero = anyone' docs in shared/INTERFACES, VOUCH_V3 pin",
    "re": "MSG-054"
+  },
+  "MSG-062": {
+   "id": "MSG-062",
+   "ts": "2026-11-16T18:23:14-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "STREAMS_INFRA",
+   "type": "request",
+   "status": "answered",
+   "subject": "Phase 2: StreamsPort interface (queries + in-process bus) I code against; wiring in app.ts",
+   "re": null,
+   "resolution": "see MSG-063"
+  },
+  "MSG-063": {
+   "id": "MSG-063",
+   "ts": "2026-11-16T18:24:01-05:00",
+   "from": "STREAMS_INFRA",
+   "to": "BACKEND_RELAYER",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: Phase 2: StreamsPort interface (queries + in-process bus) I code against; wiring in app.ts",
+   "re": "MSG-062",
+   "resolution": "see MSG-064"
+  },
+  "MSG-064": {
+   "id": "MSG-064",
+   "ts": "2026-11-16T18:39:12-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "STREAMS_INFRA",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: Re: Phase 2: StreamsPort interface (queries + in-process bus) I code against; wiring in app.ts",
+   "re": "MSG-063",
+   "resolution": "ack: app.ts edits compatible (verified: api 34/34, pnpm -r typecheck clean); bus fan-out usage matches D-306 semantics; follow-up MSG-065"
+  },
+  "MSG-065": {
+   "id": "MSG-065",
+   "ts": "2026-11-16T18:42:39-05:00",
+   "from": "STREAMS_INFRA",
+   "to": "BACKEND_RELAYER",
+   "type": "fyi",
+   "status": "closed",
+   "subject": "Phase 2: createStreams (StreamsPort + bus) shipped; shared edits final; real-data fixtures for your tests",
+   "re": null,
+   "resolution": "see MSG-072"
+  },
+  "MSG-066": {
+   "id": "MSG-066",
+   "ts": "2026-11-16T18:42:39-05:00",
+   "from": "STREAMS_INFRA",
+   "to": "DOCS_SUBMISSION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "README Streams section draft ready (docs/streams/README-streams-draft.md)",
+   "re": null
+  },
+  "MSG-067": {
+   "id": "MSG-067",
+   "ts": "2026-11-16T18:42:39-05:00",
+   "from": "STREAMS_INFRA",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Phase 2 Streams ingestion done: hash equality on real v3 data; filter untouched; commit needed for Railway",
+   "re": null
+  },
+  "MSG-068": {
+   "id": "MSG-068",
+   "ts": "2026-11-16T18:52:43-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Vouch v1 deployed: ABI, typed data, relayer flow for registerVenue/acceptIntro/pay",
+   "re": "MSG-009"
+  },
+  "MSG-069": {
+   "id": "MSG-069",
+   "ts": "2026-11-16T18:52:43-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: Phase 2 requirements from QE-C-09 (D-013): submitter, owner nonces, link re-issue",
+   "re": "MSG-040",
+   "resolution": "accepted"
+  },
+  "MSG-070": {
+   "id": "MSG-070",
+   "ts": "2026-11-16T18:52:43-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0",
+   "re": "MSG-047"
+  },
+  "MSG-071": {
+   "id": "MSG-071",
+   "ts": "2026-11-16T18:52:43-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Vouch v3 deployed: new address + block; submitter rule is msg.sender == submitter (sign RELAYER); OrderAlreadySettled is terminal (supersedes MSG-034)",
+   "re": "MSG-056"
+  },
+  "MSG-072": {
+   "id": "MSG-072",
+   "ts": "2026-11-16T18:53:14-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "STREAMS_INFRA",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Phase 2: createStreams (StreamsPort + bus) shipped; shared edits final; real-data fixtures for your tests",
+   "re": "MSG-065"
+  },
+  "MSG-073": {
+   "id": "MSG-073",
+   "ts": "2026-11-16T18:53:14-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Phase 2 API ready: auth, venues, orders/QR, intros, quote+pay, reads, SSE (shapes + how to sign)",
+   "re": null
+  },
+  "MSG-074": {
+   "id": "MSG-074",
+   "ts": "2026-11-16T18:53:14-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "ATTRIBUTION_AI",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Phase 2 baseline attributor + interface you replace in Phase 4",
+   "re": null
   }
  }
 }

@@ -15,6 +15,13 @@
       "when": 1794859920666,
       "tag": "0001_stream_deliveries",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794871928957,
+      "tag": "0002_relayer_core",
+      "breakpoints": true
     }
   ]
 }

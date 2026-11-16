@@ -11,6 +11,8 @@ import { REPO_ROOT } from '../env';
 import * as schema from './schema';
 
 export const MIGRATIONS_FOLDER = path.join(REPO_ROOT, 'apps/api/drizzle');
+/** STREAMS_INFRA derived tables (ev_*): own folder + own migrations table, applied after MIGRATIONS_FOLDER (Phase 2). */
+export const STREAMS_MIGRATIONS = { migrationsFolder: path.join(REPO_ROOT, 'apps/api/drizzle-streams'), migrationsTable: '__drizzle_migrations_streams' };
 
 /**
  * DATABASE_URL switch (D-203):
@@ -36,7 +38,10 @@ export function createDb(databaseUrl: string): DbHandle {
     return {
       kind: 'postgres',
       db,
-      migrate: () => migratePostgres(db, { migrationsFolder: MIGRATIONS_FOLDER }),
+      migrate: async () => {
+        await migratePostgres(db, { migrationsFolder: MIGRATIONS_FOLDER });
+        await migratePostgres(db, STREAMS_MIGRATIONS);
+      },
       ping: async () => (await db.execute(sql`select 1 as ok`)).length === 1,
       close: () => client.end(),
     };
@@ -55,7 +60,10 @@ export function createDb(databaseUrl: string): DbHandle {
   return {
     kind: 'pglite',
     db,
-    migrate: () => migratePglite(db, { migrationsFolder: MIGRATIONS_FOLDER }),
+    migrate: async () => {
+      await migratePglite(db, { migrationsFolder: MIGRATIONS_FOLDER });
+      await migratePglite(db, STREAMS_MIGRATIONS);
+    },
     ping: async () => (await db.execute(sql`select 1 as ok`)).rows.length === 1,
     close: () => client.close(),
   };

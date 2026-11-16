@@ -11,7 +11,12 @@
     "streams": "tsx --env-file-if-exists=../.env streams/streams.ts",
     "streams:deliveries": "tsx --env-file-if-exists=../.env streams/show-deliveries.ts",
     "streams:ping": "tsx --env-file-if-exists=../.env streams/ping.ts",
-    "smoke:canonical": "tsx --env-file-if-exists=../.env deploy/smoke-canonical.ts"
+    "smoke:canonical": "tsx --env-file-if-exists=../.env deploy/smoke-canonical.ts",
+    "streams:verify": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts verify",
+    "streams:backfill": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts backfill",
+    "streams:replay": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts replay",
+    "streams:hash": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts hash",
+    "story:api": "tsx --env-file-if-exists=../.env story/story-api.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.16",

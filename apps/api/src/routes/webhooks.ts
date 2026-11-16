@@ -33,10 +33,24 @@ export interface WebhookRouteOpts {
   logFile: string | null;
   /** Persists a VERIFIED delivery; resolves with the row id. Omitted → nothing is stored (tests of pure HMAC logic). */
   store?: (row: NewDelivery) => Promise<{ id: number }>;
+  /**
+   * Phase 2 (D-306): decode + ingest a delivery AFTER its raw row committed. A failure here is logged and recorded by
+   * the ingester (ev_ingest_log) and retried from the raw table; the response stays 200 because the delivery is durable.
+   */
+  ingest?: (rowId: number, body: unknown) => Promise<IngestSummary>;
   /** QuickNode stream security token. Undefined → every delivery is answered 503. */
   secret: string | undefined;
   /** Log a warning when |now - X-QN-Timestamp| exceeds this (seconds). Never rejects. Default 300. */
   maxSkewSec?: number;
+}
+
+/** What the ingest hook reports for the `streams delivery` log line. */
+export interface IngestSummary {
+  newEvents: number;
+  duplicates: number;
+  ignored: number;
+  rebuilt: boolean;
+  cursor: { lastBlock: number | null; lastLogIndex: number | null; events: number };
 }
 
 const SIG_HEX = /^[0-9a-f]{64}$/i;
@@ -245,6 +259,18 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
       }
     }
 
+    // Phase 2 (D-306): ingest only a durable row. Ingest errors never change the status (the raw row is the source of truth).
+    let ingest: Record<string, unknown> | undefined;
+    if (status === 200 && rowId !== undefined && opts.ingest) {
+      try {
+        const r = await opts.ingest(rowId, json ?? null);
+        ingest = { ok: true, newEvents: r.newEvents, duplicates: r.duplicates, ignored: r.ignored, rebuilt: r.rebuilt, cursorBlock: r.cursor.lastBlock, events: r.cursor.events };
+      } catch (err) {
+        ingest = { ok: false, error: (err as Error).message };
+        req.log.error({ rowId, err: (err as Error).message }, 'streams ingest failed; raw row kept, will retry from stream_deliveries');
+      }
+    }
+
     await writeRecord({
       receivedAt: new Date().toISOString(),
       verified,
@@ -282,6 +308,7 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
                 eventNames: summary?.eventNames ?? [],
                 blocks: summary?.blockRange ?? null,
                 shape: summary?.shape ?? null,
+                ...(ingest ? { ingest } : {}),
               }
             : {}),
         },
@@ -289,6 +316,6 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
       'streams delivery',
     );
     if (status !== 200) return reply.code(status).send({ ok: false, error: reason });
-    return reply.code(200).send({ ok: true, bytes: raw.length, logs: summary?.logCount ?? 0 });
+    return reply.code(200).send({ ok: true, bytes: raw.length, logs: summary?.logCount ?? 0, ...(ingest ? { ingested: ingest.ok === true } : {}) });
   });
 }

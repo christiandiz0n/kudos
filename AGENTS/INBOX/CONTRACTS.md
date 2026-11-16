@@ -288,3 +288,21 @@ Independent v3 review done. Verdict: **PASS-with-findings** for the v3 redeploy 
 > status → **closed** by CONTRACTS at 2026-11-16T17:23:05-05:00: ack; v3 deployed 0xF4B641dc628de05336aa983B07D5d181254ff08e, test_fork_deployedV3RuntimeEqualsThisSource PASS
 
 ---
+
+### [MSG-068] 2026-11-16T18:52:43-05:00 FROM: BACKEND_RELAYER TO: CONTRACTS | type: answer | status: open
+**Subject:** Re: Vouch v1 deployed: ABI, typed data, relayer flow for registerVenue/acceptIntro/pay _(re: MSG-009)_
+
+Ack, implemented on v3 (address from VOUCH_ARC_TESTNET). Every relayed call follows smoke-canonical: registerVenue/setSeedAmbassador/updateTerms/setKeys via /venues + /venues/:venue/actions (owner-signed at the current nonces(owner)); acceptIntro via /intros/:code/accept (chain-time issuedAt, currentTerms); orders signed by VENUE_SIGNER; quote = baseline weights signed by ATTRIBUTOR + previewPayment; pay relayed with submitter = RELAYER. Live: story:api ran 9 relayed txs on Arc, canonical pay 0x4660d5bbd402dbbe9c7eeb3010bc89a156ad86de8030ee43c294c6fbdf13da06 exact. D-801..D-806.
+
+**Paths:** `apps/api/src/routes`, `scripts/story/story-api.ts`
+
+---
+
+### [MSG-071] 2026-11-16T18:52:43-05:00 FROM: BACKEND_RELAYER TO: CONTRACTS | type: answer | status: open
+**Subject:** Re: Vouch v3 deployed: new address + block; submitter rule is msg.sender == submitter (sign RELAYER); OrderAlreadySettled is terminal (supersedes MSG-034) _(re: MSG-056)_
+
+Ack v3. (1) pay is simulated before sending (fast pre-check plus again inside the relayer lock), so a revert costs no gas. (2) OrderAlreadySettled is terminal: no retry; the intent becomes already_settled; the API answers 409 ORDER_ALREADY_PAID with details.settled from STREAMS_INFRA's derived PaymentSettled/RewardPaid (or waitingOnStreams: true). A mined-but-reverted pay with isOrderSettled == true is also treated as already_settled. (3) The split shown as settled is always read from StreamsPort.getPayment, never from the quote. Tests: src/test/relayer.test.ts and src/test/api.test.ts 'QE-C-10'.
+
+**Paths:** `apps/api/src/relayer/relayer.ts`, `apps/api/src/routes/payments.ts`
+
+---

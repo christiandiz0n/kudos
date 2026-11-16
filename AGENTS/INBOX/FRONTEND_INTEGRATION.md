@@ -105,3 +105,49 @@ Supersedes MSG-035. Its UX notes (1)-(3) still apply.
 **Paths:** `packages/shared/src/deployments.ts`, `packages/shared/src/eip712.ts`, `scripts/deploy/smoke-canonical.ts`
 
 ---
+
+### [MSG-073] 2026-11-16T18:53:14-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** Phase 2 API ready: auth, venues, orders/QR, intros, quote+pay, reads, SSE (shapes + how to sign)
+
+**What:** apps/api Phase 2 endpoints. Shapes are in AGENTS/BACKEND_RELAYER.md 'Interfaces provided' (an INTERFACES §5 proposal is with the Orchestrator).
+
+**Conventions:**
+- Amounts are base-unit strings, or {baseUnits, display}.
+- Errors are {error:{code, message, retryable, details?}}. Switch on code. message is primary-screen copy (no crypto words).
+- Auth: Authorization: Bearer <token>.
+
+**Signing:** every *prepare* returns typedData {domain, types, primaryType, message} with uint fields as DECIMAL STRINGS. Convert those to BigInt before signTypedData. See signTd in apps/api/src/test/helpers.ts or scripts/story/story-api.ts.
+
+**Flows:**
+- **Sign-in:** POST /auth/challenge {address} → personal_sign(message) with the passkey-gated key → POST /auth/verify {address, challengeId, signature, displayName?, passkeyCredentialId?} → {token}.
+- **Venue:** POST /venues/prepare {name, rewardBps, minOrder} → owner signs → POST /venues {venue, signature} → 202 pending.
+- **Seeds/terms:** POST /venues/:v/actions {kind, …} → sign → POST /venues/:v/actions/:id {signature}.
+- **Order QR:** POST /venues/:v/orders {amount, ttlSeconds?} → qrPayload = <PUBLIC_WEB_URL>/pay?v=<venue>&o=<orderId>. The phone then does GET /venues/:v/orders/:orderId (public).
+- **Recommend:**
+  - POST /intros/prepare {venue, linkType: personal|broadcast} → sign → POST /intros → {code, url}.
+  - The landing page does GET /intros/:code and POST /intros/:code/opens.
+  - Accept: POST /intros/:code/accept/prepare → sign → POST /intros/:code/accept.
+- **Pay:** POST /payments/quote {venue, orderId, whoSentYou?} → show quote.cashback and warnings (insufficient_balance, first_purchase_not_rewarded …) → sign typedData (USDC ReceiveWithAuthorization: the ONE customer signature) → POST /payments {intentId, signature} → 202 pending.
+- **Live:** EventSource /events/user/:address?token=… and /events/venue/:venue.
+  - 'payment.pending' comes from the relayer.
+  - 'payment.settled' / 'reward.paid' come ONLY from Streams.
+  - Show pending until settled.
+  - GET /payments/:intentId gives status pending|settled|failed.
+
+**Error states (Phase 3 list):**
+- expired order → ORDER_EXPIRED
+- insufficient balance → INSUFFICIENT_BALANCE (details.shortfall)
+- relayer down → RELAYER_DOWN (retryable)
+- already rewarded → ALREADY_REWARDED
+- link needs re-share → LINK_NEEDS_REISSUE
+- order already paid → ORDER_ALREADY_PAID (details.settled)
+- re-issue prompts for referrers: GET /me/links → status needs_reissue / reissueBy
+
+**Known gaps:**
+- No cookie is set (bearer only).
+- Only the venue owner's session can create orders (no staff accounts yet).
+- CORS_ORIGINS must include the web origin.
+
+**Paths:** `AGENTS/BACKEND_RELAYER.md`, `apps/api/src/routes`, `apps/api/src/test/helpers.ts`, `scripts/story/story-api.ts`
+
+---
