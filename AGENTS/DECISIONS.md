@@ -1,0 +1,124 @@
+# DECISIONS — append-only log
+_Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives · Who. Never edit past entries; supersede with a new entry._
+
+## D-001 — Monorepo with pnpm workspaces
+- **Date:** 2026-11-15
+- **Decision:** pnpm workspaces: `contracts/` (Foundry, not a JS workspace), `apps/web`, `apps/api`, `packages/shared`, `scripts`.
+- **Reason:** single source of truth for ABIs/EIP-712 types shared by web and api.
+- **Alternatives:** separate repos (rejected: drift); Turborepo (unnecessary overhead for solo build).
+- **Who:** ORCHESTRATOR (from brief)
+
+## D-002 — Placeholder name `wom`
+- **Date:** 2026-11-15
+- **Decision:** use `wom` for package/folder names; display name is one constant `APP_NAME` in `packages/shared/src/constants.ts`.
+- **Reason:** human has not confirmed a name yet (HUMAN_INPUT #1).
+- **Who:** ORCHESTRATOR
+
+## D-003 — Secrets policy
+- **Date:** 2026-11-15
+- **Decision:** `.gitignore` excludes `.env*` (except `.env.example`) from the first commit. Keys live only in root `.env` / `apps/*/.env.local`. Spec env var names in INTERFACES.md §Env.
+- **Who:** ORCHESTRATOR
+
+## D-101 — Arc Testnet network facts (verified)
+- **Date:** 2026-11-15
+- **Decision:** Use chain ID `5042002`, RPC `https://rpc.testnet.arc.io` (WS `wss://rpc.testnet.arc.io`), explorer `https://explorer.testnet.arc.io` (Blockscout; verify with `--verifier blockscout --verifier-url https://explorer.testnet.arc.io/api/`), faucet `https://faucet.circle.com` (20 USDC / 2 h / address), USDC ERC-20 `0x3600000000000000000000000000000000000000` (6 dec; EIP-712 domain name "USDC", version "2"). Relayer sets `maxFeePerGas >= 20 gwei`. Foundry `evm_version = "prague"`. Finality = 1 block (no reorgs). `eth_getLogs` pages are ≤ 9,999 blocks.
+- **Reason:** Live RPC reads + official docs (docs.arc.network now 301-redirects to docs.arc.io). The legacy `rpc.testnet.arc.network` and `testnet.arcscan.app` still work (the explorer redirects), but arc.io hostnames are canonical. Evidence: `docs/evidence/phase-0/research-s1-s3-s4.md` §S1.
+- **Alternatives:** keep the legacy arc.network/arcscan.app URLs (viem's built-in `arcTestnet` defaults). Rejected: the arcscan.app API 301s, which can break verifier POSTs.
+- **Who:** ARCHITECT-research
+
+## D-102 — USDC decimals rule (18 native vs 6 ERC-20)
+- **Date:** 2026-11-15
+- **Decision:** All contract/app amounts are 6-decimal ERC-20 base units through `0x3600…`. The payment contract is **non-payable**: no `msg.value`, no `address(this).balance`, no native sends. Native 18-dec values appear only in relayer gas accounting (`eth_getBalance`, `gasUsed*effectiveGasPrice`), converted with `/1e12` (to 6-dec) or `/1e18` (to USDC). The UI shows a single USDC balance. Indexers match only our contract address (or emitter `0x3600…` for USDC), never the system emitter `0xffff…fffe`.
+- **Reason:** Verified live: native and ERC-20 are one balance (`balanceOf == floor(getBalance/1e12)`, with sub-micro dust truncated). Every ERC-20 transfer also emits an 18-dec EIP-7708 system Transfer log.
+- **Alternatives:** native `msg.value` payments (rejected: 18-dec, requires the user to send a tx with gas, and mixes units).
+- **Who:** ARCHITECT-research
+
+## D-103 — Payment authorization via EIP-3009 receiveWithAuthorization
+- **Date:** 2026-11-15
+- **Decision:** The customer signs USDC's `ReceiveWithAuthorization(from=customer, to=paymentContract, value, validAfter, validBefore, nonce)`, where `nonce = EIP-712 struct hash of our payment params` (order, venue, amount, intro/weights commitment). The relayer calls our contract, which recomputes the nonce and calls `USDC.receiveWithAuthorization`, then splits with `USDC.transfer` atomically. Contract signature checks (intros, etc.) use OZ `SignatureChecker` (ECDSA + ERC-1271).
+- **Reason:** Verified live on Arc USDC (`NativeFiatTokenV2_2`): permit, transfer/receive/cancelAuthorization (v,r,s and bytes/ERC-1271 variants) are present, typehashes match, and `receiveWithAuthorization` is payee-only (not front-runnable). It needs one customer signature, uses random nonces (no sequential-nonce blocking), leaves no allowance, needs no customer gas, and is documented by Arc for relayers.
+- **Alternatives:** EIP-2612 permit + transferFrom (fallback; sequential nonces, and a separate order signature is still needed); approve + transferFrom (rejected: approve needs a gas-paying user tx).
+- **Who:** ARCHITECT-research
+
+## D-104 — Wallet: passkey-gated local EOA + our relayer (not Circle Modular Wallets for Tier 1)
+- **Date:** 2026-11-15
+- **Decision:** Option B. A browser-generated secp256k1 key is encrypted at rest (AES-GCM, key derived via WebAuthn PRF where available; fallback is a non-extractable WebCrypto key gated by a passkey assertion, labelled as UX gating). The relayer pays all gas. Contracts stay ERC-1271-ready (D-103) so Circle Modular Wallets can be added later (Tier 3, e.g. the venue account).
+- **Reason:** Circle Modular Wallets DO support Arc Testnet (MSCA, bundler at `modular-sdk.circle.com/.../arcTestnet`, testnet gas auto-sponsored; SDK `@circle-fin/modular-wallets-core` 1.0.16 pins viem 2.55.11). But MSCA signatures need ERC-1271 and a **deployed** account (no ERC-6492 in USDC), and they add a Console client key + passkey-domain setup and a second (UserOp) submission path. That is too much integration risk for a ~45 h solo budget compared with ECDSA + EIP-3009 from an EOA.
+- **Alternatives:** (A) Circle Modular Wallets (deferred); Circle user-controlled wallets (PIN/social, no passkey: rejected); dev-controlled custodial wallets (rejected: custodial).
+- **Who:** ARCHITECT-research
+
+## D-105 — QuickNode Streams on Arc Testnet: feasible; dataset `logs`, created late
+- **Date:** 2026-11-15
+- **Decision:** One Stream: network `arc-testnet`, dataset `logs`, JS filter `main(stream)` that keeps logs where `address == ourContract` and `topic0 ∈ {6 event topics}` and returns `null` otherwise. Webhook destination, compression `none`, `dataset_batch_size: 5` + `elastic_batch_enabled: true`, `fix_block_reorgs: 0`, `start_range` = deploy block. HMAC verification on `X-QN-Signature` = hex HMAC-SHA256(token, nonce+timestamp+body). Dedupe on `(txHash, logIndex)`. Create the stream only after the contract is final, and pause it when idle.
+- **Reason:** QuickNode docs list Arc Testnet for all EVM datasets. Filter, webhook, HMAC, start-block backfill, and REST API are all on the Free plan. Arc has no reorgs. Billing is per block processed (~124k Arc blocks/day at a measured 0.70 s), and the Arc multiplier is UNVERIFIED. At 20 credits/block, 5 days of continuous streaming (~12.4M credits) exceeds the Free 10M, so the stream starts late and pauses when idle. If the multiplier is ≥ ~16 or we need ≥ 2 streams, upgrade to Build ($49).
+- **Alternatives:** `block_with_receipts` (more data, ~2× cost); QuickNode Webhooks product (pay per match, but the bounty requires Streams).
+- **Who:** ARCHITECT-research
+
+## D-201 — Foundry toolchain + Solidity deps via pnpm (no git submodules)
+- **Date:** 2026-11-15
+- **Decision:** Foundry 1.9.0 (foundryup). `contracts/` created with `forge init --no-git --empty`. OpenZeppelin Contracts **5.6.1** (npm) and forge-std **v1.17.0** (`github:foundry-rs/forge-std#v1.17.0` tarball) are root devDependencies; `foundry.toml` sets `libs = ["../node_modules"]` with remappings `@openzeppelin/contracts/` and `forge-std/`. solc 0.8.30, optimizer 200 runs, `evm_version = "cancun"` (VERIFY S1), fuzz runs 1000, invariant runs 256 / depth 64.
+- **Reason:** one `pnpm install` gets every dependency. No submodules in the monorepo and no vendored `lib/`. Versions are pinned in one lockfile.
+- **Alternatives:** `forge install` (needs git submodules or a vendored lib/, so more churn); npm `forge-std` package (stale, 1.1.2).
+- **Who:** ARCHITECT-scaffold
+
+## D-202 — API framework: Fastify 5 + TypeScript, run with tsx
+- **Date:** 2026-11-15
+- **Decision:** `apps/api` is a separate long-lived Fastify 5 service, run with `tsx` (no build step). Next route handlers are not used for backend logic.
+- **Reason:** SSE connections, relayer nonce management (a single in-process queue) and the Streams webhook all need a persistent process. Serverless route handlers would fight all three.
+- **Alternatives:** Next.js route handlers (cold starts, no long-lived SSE, no shared nonce state); Express (slower, weaker typing).
+- **Who:** ARCHITECT-scaffold
+
+## D-203 — DB: Drizzle ORM; Postgres in deploy, PGlite locally/tests via DATABASE_URL
+- **Date:** 2026-11-15
+- **Decision:** Drizzle ORM (pg-core). `DATABASE_URL` picks the driver: `postgres://…` uses postgres-js (hosted Postgres), `pglite://<path>` uses on-disk PGlite (default `./data/local/pglite`, gitignored), and `pglite://memory` is used for tests. drizzle-kit migrations are committed under `apps/api/drizzle/` and applied at boot and by `pnpm --filter @wom/api db:migrate`. Phase 0 only has a trivial `app_meta` table.
+- **Reason:** no docker or postgres on this machine. PGlite is real Postgres (WASM), so the same SQL and migrations run locally and in deploy.
+- **Alternatives:** SQLite (dialect drift from prod); docker Postgres (not installed); hosted DB for local dev (network dependency).
+- **Who:** ARCHITECT-scaffold
+
+## D-204 — @wom/shared consumed as TypeScript source (no build step)
+- **Date:** 2026-11-15
+- **Decision:** `packages/shared` exports `./src/index.ts` (and `./*` → `./src/*.ts`). Next.js compiles it via `transpilePackages: ["@wom/shared"]`. Node consumers (api, scripts) run through `tsx`. Extensionless relative imports.
+- **Reason:** zero build or watch step, instant edits across web/api/scripts, and one source of truth for ABIs and typed data.
+- **Alternatives:** tsc build to dist with project references (needs a watch process and can serve stale dist). If the api ever needs plain `node`, bundle it with tsup/esbuild at deploy time.
+- **Who:** ARCHITECT-scaffold
+
+## D-205 — QR libraries: jsqr (scan) + qrcode (render)
+- **Date:** 2026-11-15
+- **Decision:** scanning uses `jsqr@1.4.0` on downscaled `getUserMedia` frames (rear camera, `facingMode: environment`). Rendering uses `qrcode@1.5.4` (`toDataURL`).
+- **Reason:** jsqr is pure JS with no wasm or CDN fetch and works on iOS Safari and Android Chrome. It was updated in 2025. `qr-scanner` has been unmaintained since 2022. `barcode-detector` (zxing-wasm) fetches wasm from a CDN by default, which is risky on venue Wi-Fi.
+- **Alternatives:** `@zxing/browser` (5.8 MB, heavier); native `BarcodeDetector` (not on iOS Safari).
+- **Who:** ARCHITECT-scaffold
+
+## D-206 — Toolchain pins: TypeScript 5.9, viem 2.57.18, Next 16.4.6
+- **Date:** 2026-11-15
+- **Decision:** TypeScript `^5.9.3` everywhere, not 7.0. viem pinned to `2.57.18`. Next.js 16.4.6 (App Router, Turbopack, `cacheComponents`) with React 19.3 and Tailwind 4.3.
+- **Reason:** TS 7 (native) is brand new and Next/eslint tooling targets the TS 5 JS API. viem 2.57.20 was published today and tripped pnpm 11's `minimumReleaseAge` guard; we pin an older release rather than bypass that supply-chain guard.
+- **Who:** ARCHITECT-scaffold
+
+## D-207 — Hello spike hardening (S2/S5)
+- **Date:** 2026-11-15
+- **Decision:** `SplitAuth` includes `address token` (in addition to from/recipientsHash/amountsHash/nonce/deadline), so a relayer can't swap tokens. `pullAndSplit` requires `msg.sender == from`, so nobody can spend another holder's allowance. Nonces come from OZ `Nonces` (sequential).
+- **Reason:** the spike's approval to Hello would otherwise be drainable by anyone. The same lesson applies to the main contract: every pull must be bound to a holder signature.
+- **Who:** ARCHITECT-scaffold
+
+## D-208 — EIP-712 v0 design: two-step intros, frozen domain name
+- **Date:** 2026-11-15
+- **Decision:**
+  - The referrer signs `Intro`. The customer countersigns `IntroAcceptance{introHash, customer, deadline}`, where `introHash` is the full EIP-712 digest, so it is domain-bound.
+  - Personal intros are single-use. Broadcast intros are unique per (introHash, customer).
+  - `PaymentAuth` adds an explicit `customer` field.
+  - The domain name is the literal `"wom"` (`EIP712_DOMAIN_NAME`), separate from `APP_NAME` and frozen at deploy.
+  - Proposed L2 rule: the introducer is the top-weight L1 referrer at the customer's first purchase, emitted in `CustomerVerified`.
+- **Reason:** an intro can't be replayed onto another venue or customer, and a rename of the display name won't break signatures.
+- **Alternatives:** the referrer names the customer in the Intro (impossible for links shared before the customer has an address).
+- **Who:** ARCHITECT-scaffold (draft; CONTRACTS finalizes)
+
+## D-209 — Scaffold aligned to verified S1 (supersedes D-201 evm_version, refines D-208 PaymentAuth)
+- **Date:** 2026-11-15
+- **Decision:**
+  - `foundry.toml` sets `evm_version = "prague"` (was `cancun`) and adds an `[etherscan] arc_testnet` entry pointing at Blockscout (`https://explorer.testnet.arc.io/api/`; use `--verifier blockscout`).
+  - `packages/shared/src/chains.ts` holds the D-101 values with VERIFY flags removed: canonical RPC/WS, explorer, USDC `0x3600…` (6 dec), the USDC EIP-712 domain `{USDC, 2}` plus its live DOMAIN_SEPARATOR (unit-tested), `ARC_MIN_MAX_FEE_PER_GAS = 20 gwei`, the EIP-7708 system emitter `0xffff…fffe` (ignore it), and the getLogs range of 9,999.
+  - Per D-103, `PaymentAuth` becomes `{customer, venue, orderId, amount, weightsHash, deadline}` with no sequential nonce. Its `hashStruct` is the nonce of USDC `ReceiveWithAuthorization` (to = main contract, validAfter = 0, validBefore = deadline). Helpers: `paymentAuthNonce`, `receiveAuthForPayment`, `weightsStructHash`.
+  - The S5 relayer clamps `maxFeePerGas` up to 20 gwei on Arc.
+- **Reason:** S1 verified (D-101..D-105). One customer signature binds the whole payment, including the quoted weights.
+- **Who:** ARCHITECT-scaffold

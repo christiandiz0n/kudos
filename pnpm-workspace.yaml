@@ -1,0 +1,10 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "scripts"
+
+# Native build scripts: only allow what we actually need.
+allowBuilds:
+  esbuild: true
+  sharp: false
+  unrs-resolver: false

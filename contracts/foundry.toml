@@ -1,0 +1,51 @@
+[profile.default]
+src = "src"
+out = "out"
+test = "test"
+script = "script"
+libs = ["../node_modules"]
+# Dependencies come from the pnpm root install (D-201): OpenZeppelin Contracts v5 + forge-std, both pinned in /package.json.
+remappings = [
+  "@openzeppelin/contracts/=../node_modules/@openzeppelin/contracts/",
+  "forge-std/=../node_modules/forge-std/src/",
+]
+solc_version = "0.8.30"
+# Arc Testnet supports Prague (D-101).
+evm_version = "prague"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+bytecode_hash = "none"
+gas_reports = ["*"]
+fs_permissions = [{ access = "read", path = "./" }]
+
+[fuzz]
+runs = 1000
+seed = "0x2026"
+
+[invariant]
+runs = 256
+depth = 64
+fail_on_revert = false
+
+[profile.ci.fuzz]
+runs = 10000
+
+[rpc_endpoints]
+arc_testnet = "${ARC_RPC_URL}"
+local = "http://127.0.0.1:8545"
+
+# Contract verification on Arc's Blockscout explorer (D-101). Blockscout needs no API key; forge still
+# requires the verifier type on the CLI:
+#   forge verify-contract <addr> <path:Name> --chain-id 5042002 \
+#     --verifier blockscout --verifier-url https://explorer.testnet.arc.io/api/
+#   (or `forge script ... --verify --verifier blockscout --verifier-url https://explorer.testnet.arc.io/api/`)
+[etherscan]
+arc_testnet = { key = "blockscout", chain = 5042002, url = "https://explorer.testnet.arc.io/api/" }
+
+[fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+quote_style = "double"

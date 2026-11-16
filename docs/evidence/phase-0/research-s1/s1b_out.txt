@@ -1,0 +1,11 @@
+eth_blockNumber = 72507913
+block 72507911 timestamp 1794798918 2026-11-16T03:15:18.000Z baseFeePerGas 20000000000 wei ( 20 gwei ) gasLimit 30000000 extraData 0x00000004a817c800 mixHash(prevrandao) 0x0000000000000000000000000000000000000000000000000000000000000000 txs 5
+block 72497911 timestamp 1794791949 2026-11-16T01:19:09.000Z
+avg block time over 10000 blocks = 0.6969 s
+extraData as uint64 (next base fee, wei) = 20000000000
+eth_gasPrice = 25000000000 wei = 25 gwei
+eth_feeHistory baseFeePerGas = 20gwei,20gwei,20gwei,20gwei,20gwei,20gwei gasUsedRatio = 0.007302233333333333,0.0160884,0.0093932,0.002994,0.0016312666666666667
+sample tx 0x4b1c153ddf2feec0a1ed19c8a5808101d418c45439536167f52c45c68ef6ba40 in block 72507911 from 0x51f11819d19a688c67b42a62ddcc5bbd4f8e591f type 0x0
+eth_getBalance( 0x51f11819d19a688c67b42a62ddcc5bbd4f8e591f ) = 11553028895604309201 (18-dec) = 11.55302889560431 USDC
+USDC.balanceOf( 0x51f11819d19a688c67b42a62ddcc5bbd4f8e591f ) = 11553028 (6-dec) = 11.553028 USDC
+native / 1e12 = 11553028  equals balanceOf? true  remainder (sub-6dp dust, wei) = 895604309201

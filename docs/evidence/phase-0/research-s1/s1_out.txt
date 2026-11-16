@@ -1,0 +1,48 @@
+# keccak self-test
+keccak("") = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470 OK
+Transfer topic = 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+
+# Expected DOMAIN_SEPARATOR for {name:"USDC",version:"2",chainId:5042002,verifyingContract:USDC}
+computed = 0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0
+live     = 0x361191522483d32a83e70ae7183b4b9629442c13a78bc9921d6f707911c8c6b0 MATCH
+
+# Selector derivations
+permit                                   0xd505accf permit(address,address,uint256,uint256,uint8,bytes32,bytes32)
+transferWithAuthorization                0xe3ee160e transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)
+receiveWithAuthorization                 0xef55bec6 receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,uint8,bytes32,bytes32)
+transferWithAuthorization(bytes sig)     0xcf092995 transferWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)
+receiveWithAuthorization(bytes sig)      0x88b7ab63 receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)
+permit(bytes sig)                        0x9fd5a6cf permit(address,address,uint256,uint256,bytes)
+cancelAuthorization                      0x5a049a70 cancelAuthorization(address,bytes32,uint8,bytes32,bytes32)
+authorizationState                       0xe94a0102 authorizationState(address,bytes32)
+nonces                                   0x7ecebe00 nonces(address)
+DOMAIN_SEPARATOR                         0x3644e515 DOMAIN_SEPARATOR()
+eip712Domain                             0x84b0196e eip712Domain()
+version                                  0x54fd4d50 version()
+transferFrom                             0x23b872dd transferFrom(address,address,uint256)
+approve                                  0x095ea7b3 approve(address,uint256)
+isBlacklisted                            0xfe575a87 isBlacklisted(address)
+
+# implementation slot keccak("org.zeppelinos.proxy.implementation") = 0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3
+implementation = 0xc6ad664ac6679f4ce74e10e91449c93ec1ae3ca6
+proxy code bytes = 1798  impl code bytes = 23659
+
+# Selector presence in implementation bytecode (PUSH4 operands)
+permit                                   0xd505accf PRESENT
+transferWithAuthorization                0xe3ee160e PRESENT
+receiveWithAuthorization                 0xef55bec6 PRESENT
+transferWithAuthorization(bytes sig)     0xcf092995 PRESENT
+receiveWithAuthorization(bytes sig)      0x88b7ab63 PRESENT
+permit(bytes sig)                        0x9fd5a6cf PRESENT
+cancelAuthorization                      0x5a049a70 PRESENT
+authorizationState                       0xe94a0102 PRESENT
+nonces                                   0x7ecebe00 PRESENT
+DOMAIN_SEPARATOR                         0x3644e515 PRESENT
+eip712Domain                             0x84b0196e absent
+version                                  0x54fd4d50 PRESENT
+transferFrom                             0x23b872dd PRESENT
+approve                                  0x095ea7b3 PRESENT
+isBlacklisted                            0xfe575a87 PRESENT
+
+# authorizationState(0x..01, 0x00..00) live call
+{"jsonrpc":"2.0","id":1,"result":"0x0000000000000000000000000000000000000000000000000000000000000000"}
