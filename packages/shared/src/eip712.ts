@@ -18,10 +18,10 @@ import {
  */
 
 /**
- * EIP-712 domain name of the main contract. Derived from APP_NAME ('wom') at Phase 0 but deliberately a
+ * EIP-712 domain name of the main contract. Derived from APP_NAME ('Vouch', D-007) but deliberately a
  * separate literal: it is FROZEN once the main contract is deployed (changing it invalidates every signature).
  */
-export const EIP712_DOMAIN_NAME = 'wom' as const;
+export const EIP712_DOMAIN_NAME = 'Vouch' as const;
 export const EIP712_DOMAIN_VERSION = '1' as const;
 
 export function womDomain(chainId: number, verifyingContract: Address): TypedDataDomain {

@@ -1,5 +1,5 @@
 {
-  "name": "wom",
+  "name": "vouch",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,7 @@
     "test:contracts": "cd contracts && forge test",
     "build:contracts": "cd contracts && forge build",
     "dev:web": "pnpm --filter web dev",
-    "dev:api": "pnpm --filter @wom/api dev",
+    "dev:api": "pnpm --filter @vouch/api dev",
     "lint": "pnpm -r --if-present run lint",
     "typecheck": "pnpm -r --if-present run typecheck",
     "spike:s5:local": "bash scripts/spikes/s5-local.sh"

@@ -34,7 +34,7 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 ## 3. EIP-712
 > **v0 DRAFT (ARCHITECT, 2026-11-15) — CONTRACTS/BACKEND finalize.** Code mirror: `packages/shared/src/eip712.ts` (field order = type string = typehash; keep them identical to the Solidity `*_TYPEHASH` constants).
 
-**Domain** (main contract): `{ name: "wom", version: "1", chainId, verifyingContract: <main contract> }`.
+**Domain** (main contract): `{ name: "Vouch", version: "1", chainId, verifyingContract: <main contract> }`.
 `name` comes from `APP_NAME` at Phase 0 but is the separate literal `EIP712_DOMAIN_NAME`, **frozen at deploy**; a display-name change must not change it.
 
 | Type | Signed by | Fields (in order) | typehash = keccak256(type string) |

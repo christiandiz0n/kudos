@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { APP_NAME, SPLIT_BPS, formatUsd, parseUsdc } from "@wom/shared";
+import { APP_NAME, SPLIT_BPS, formatUsd, parseUsdc } from "@vouch/shared";
 
-// Phase 0 placeholder home. Proves the @wom/shared workspace link (APP_NAME + bigint money helpers).
+// Phase 0 placeholder home. Proves the @vouch/shared workspace link (APP_NAME + bigint money helpers).
 export default function Home() {
   const sample = parseUsdc("12.00");
   return (

@@ -22,7 +22,7 @@
  *   SPLIT_TOTAL_USD               optional, default "1.20" (scaled from the $12.00 product story)
  *   RECIPIENTS                    optional, comma-separated 7 addresses (default: deterministic fresh addresses)
  *
- * Run: pnpm --filter @wom/scripts s5:relayer   (loads ../.env if present)
+ * Run: pnpm --filter @vouch/scripts s5:relayer   (loads ../.env if present)
  */
 import {
   createPublicClient,
@@ -51,7 +51,7 @@ import {
   helloDomain,
   nativeToUsdcBaseUnits,
   parseUsdc,
-} from '@wom/shared';
+} from '@vouch/shared';
 
 function need(name: string, fallback?: string): string {
   const v = process.env[name] ?? fallback;

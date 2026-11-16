@@ -1,5 +1,5 @@
 {
-  "name": "@wom/api",
+  "name": "@vouch/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@electric-sql/pglite": "0.5.16",
     "@fastify/cors": "11.4.3",
-    "@wom/shared": "workspace:*",
+    "@vouch/shared": "workspace:*",
     "drizzle-orm": "0.45.4",
     "fastify": "5.12.8",
     "postgres": "3.4.9",

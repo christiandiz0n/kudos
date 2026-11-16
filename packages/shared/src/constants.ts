@@ -3,7 +3,7 @@
  * Do NOT derive on-chain identifiers (EIP-712 domain name, contract names) from this at runtime —
  * see EIP712_DOMAIN_NAME in eip712.ts, which is frozen once the main contract is deployed.
  */
-export const APP_NAME = 'wom' as const;
+export const APP_NAME = 'Vouch' as const;
 
 /** Basis-point denominator. 10_000 bps = 100%. */
 export const BPS_DENOMINATOR = 10_000 as const;

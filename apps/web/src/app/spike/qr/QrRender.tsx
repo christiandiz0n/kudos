@@ -9,7 +9,7 @@ export default function QrRender() {
   const params = useSearchParams();
   const text =
     params.get("text") ??
-    "wom:order?venue=0x0000000000000000000000000000000000000001&orderId=0x01&amount=12000000&exp=1800000000&sig=0x" +
+    "vouch:order?venue=0x0000000000000000000000000000000000000001&orderId=0x01&amount=12000000&exp=1800000000&sig=0x" +
       "ab".repeat(65);
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

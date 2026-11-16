@@ -139,3 +139,16 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Date:** 2026-11-15
 - **Decision:** local web previews/tunnels use port 3100. Port 3000 on the dev machine is occupied by an unrelated long-running next-server, which we leave alone. (`pnpm dev:web` default 3000 will fail/shift — use `-p 3100`.)
 - **Who:** ORCHESTRATOR
+
+## D-007 — Product name: Vouch
+- **Date:** 2026-11-16
+- **Decision:** Display name `APP_NAME = 'Vouch'`; package scope `@vouch/*`; root package `vouch`; main-contract EIP-712 domain name `"Vouch"` (changed before any production deploy, so nothing is invalidated). The Hello spike keeps its own domain `"WomHello"`. GitHub repo `vouch` (private until submission).
+- **Reason:** Human chose "Vouch" from the Phase 0 shortlist.
+- **Who:** HUMAN (applied by ORCHESTRATOR)
+
+## D-008 — Level-2 introducer rule (approved)
+- **Date:** 2026-11-16
+- **Decision:** A customer's **introducer** for a venue = the **top-weight L1 referrer** of that customer's **first (rewarded) purchase** at that venue. It is recorded on-chain and emitted as `CustomerVerified.introducer`, and it is **frozen forever** (later purchases or new intros never change it). Ties go deterministically to the lower array index in the submitted weights (CONTRACTS documents the exact rule). If the first purchase had no valid referrer (e.g. a seed ambassador or the venue itself), the introducer is `address(0)`, and any L2 share owed through that customer returns to the venue.
+- **Reason:** Approved by the human as proposed by ARCHITECT-scaffold. It is deterministic, cheap (one SSTORE at verification), and needs no off-chain input.
+- **Interpretation note:** scoped per (customer, venue), since verification is per venue and only verified customers of a venue can recommend it. Flagged in the Phase 0 report.
+- **Who:** HUMAN (applied by ORCHESTRATOR)

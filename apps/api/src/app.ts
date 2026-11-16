@@ -1,6 +1,6 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { APP_NAME, ARC_TESTNET_CHAIN_ID } from '@wom/shared';
+import { APP_NAME, ARC_TESTNET_CHAIN_ID } from '@vouch/shared';
 import { loadEnv, type ApiEnv } from './env';
 import { createDb, type DbHandle } from './db/index';
 import { webhookRoutes } from './routes/webhooks';

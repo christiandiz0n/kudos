@@ -15,7 +15,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 
 ## Mental model (read this first)
 - **pnpm monorepo** (root `wom`). Workspaces: `apps/web`, `apps/api`, `packages/shared`, `scripts`. `contracts/` is Foundry and *not* a JS workspace, but its Solidity deps (OZ 5.6.1, forge-std v1.17.0) come from the **root `node_modules`** via remappings (D-201). One `pnpm install` sets up everything.
-- **`@wom/shared` is consumed as TS source, with no build step (D-204).**
+- **`@vouch/shared` is consumed as TS source, with no build step (D-204).**
   - Next.js compiles it via `transpilePackages`. api and scripts run through `tsx`.
   - It holds every cross-cutting fact: `constants.ts` (APP_NAME, split bps, caps), `chains.ts` (verified Arc facts, D-101), `eip712.ts` (typed-data defs + helpers), `money.ts` (bigint USDC helpers), `abi.ts` (spike ABI; CONTRACTS adds production ABIs).
   - If a value appears in two places, it belongs here.
@@ -44,7 +44,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 | `packages/shared/src/chains.ts` | Arc chain (viem `defineChain`), USDC address/decimals/EIP-712 domain, fee floor, system emitter | Verified S1 (D-101). Edit facts only here |
 | `packages/shared/src/eip712.ts` | Domain + Intro/IntroAcceptance/Order/Weights/PaymentAuth/ReceiveWithAuthorization types; `paymentAuthNonce`, `receiveAuthForPayment`, `introDigest`; Hello `SplitAuth` | v0 DRAFT; CONTRACTS must match the typehash strings |
 | `packages/shared/src/money.ts` | `parseUsdc`/`formatUsdc`/`formatUsd`/`mulBps`/native→USDC | Rejects floats and excess precision |
-| `packages/shared/src/*.test.ts` | node:test via tsx. Includes a check that the USDC domain reproduces the live DOMAIN_SEPARATOR | `pnpm --filter @wom/shared test` |
+| `packages/shared/src/*.test.ts` | node:test via tsx. Includes a check that the USDC domain reproduces the live DOMAIN_SEPARATOR | `pnpm --filter @vouch/shared test` |
 | `contracts/foundry.toml` | solc 0.8.30, prague, optimizer 200, fuzz 1000, invariant 256×64, `arc_testnet` rpc + Blockscout verifier entry | Remaps to `../node_modules` |
 | `contracts/src/spikes/Hello.sol` | S2/S5 spike: `ping`, `pullAndSplit` (caller must be `from`), `relayedSplit` (EIP-712 SplitAuth with token bound, OZ Nonces) | NOT production |
 | `contracts/src/spikes/MockUSDC.sol` | 6-dec open-mint ERC20 for local tests and anvil | Test only |
@@ -69,7 +69,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 - 2026-11-15: S6 pages `/spike/scan` + `/spike/qr` built (`next build` green). The phone test is pending the human.
 - 2026-11-15: S5 proven locally on anvil. A 7-recipient relayed split costs 234,686 gasUsed (≈ 0.0047 USDC at Arc's 20 gwei floor) and sums exactly.
 - 2026-11-15: S2 Hello spike plus 11 Foundry tests green. Gas-report max for 7-way `relayedSplit` is 254,586.
-- 2026-11-15: Monorepo scaffold done: pnpm workspace, `@wom/shared`, Foundry (1.9.0) + OZ via npm, Fastify api + Drizzle/PGlite, Next 16 web (D-201..D-208).
+- 2026-11-15: Monorepo scaffold done: pnpm workspace, `@vouch/shared`, Foundry (1.9.0) + OZ via npm, Fastify api + Drizzle/PGlite, Next 16 web (D-201..D-208).
 - 2026-11-15: File initialized by ORCHESTRATOR.
 
 ## Next up
@@ -77,7 +77,7 @@ Owns the repo layout, toolchain, pnpm workspace, the `packages/shared` package (
 - [x] S4 Wallet approach: decided option B, a passkey-gated local EOA plus our relayer (D-104). PRF support on the demo phone is still to be confirmed in S6.
 - [ ] S2 Hello contract deployed to Arc testnet (event + USDC transferFrom), confirmed on explorer. Code is ready: `cd contracts && forge script script/spikes/DeployHello.s.sol --rpc-url arc_testnet --broadcast` (env `DEPLOYER_PRIVATE_KEY`, `USDC_ADDRESS`). Then run `ping`.
 - [ ] S3 QuickNode Stream → webhook → event received; backfill from past block works. Desk research done, feasible (D-105). Recipe in the research evidence §S3.3. Needs the human's QuickNode API key. Public URL: `cloudflared tunnel --url http://localhost:4000` (quick tunnel, no account).
-- [ ] S5 testnet run: fund the relayer and spike user from the faucet, then run `pnpm --filter @wom/scripts s5:relayer` with `RPC_URL`/`USDC_ADDRESS`/`HELLO_ADDRESS`/`RELAYER_PRIVATE_KEY`/`SPIKE_USER_PRIVATE_KEY`, `SPLIT_TOTAL_USD=1.20`
+- [ ] S5 testnet run: fund the relayer and spike user from the faucet, then run `pnpm --filter @vouch/scripts s5:relayer` with `RPC_URL`/`USDC_ADDRESS`/`HELLO_ADDRESS`/`RELAYER_PRIVATE_KEY`/`SPIKE_USER_PRIVATE_KEY`, `SPLIT_TOTAL_USD=1.20`
 - [ ] S6 human runs `/spike/scan` on a phone (see "How to run")
 - [ ] Optional: an S5b spike exercising EIP-3009 `receiveWithAuthorization` on Arc USDC (D-103), since only the approve path is proven
 
@@ -110,7 +110,7 @@ pnpm --filter web dev:https          # LAN alternative (self-signed cert; iOS of
 python3 scripts/setup/gen-env.py     # HUMAN runs once: creates .env with fresh keys, prints addresses only
 # NOTE: a PreToolUse hook blocks agents from any Bash that references .env. Agents never read .env;
 #   tools load it themselves (forge auto-loads .env; node scripts use dotenv). Public addresses: packages/shared/src/wallets.public.json
-pnpm --filter @wom/api db:generate   # after editing apps/api/src/db/schema.ts
+pnpm --filter @vouch/api db:generate   # after editing apps/api/src/db/schema.ts
 ```
 
 ## Handoff notes

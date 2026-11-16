@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { APP_NAME } from "@wom/shared";
+import { APP_NAME } from "@vouch/shared";
 import "./globals.css";
 
 export const metadata: Metadata = {

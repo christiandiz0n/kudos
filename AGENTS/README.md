@@ -2,7 +2,7 @@
 _Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — Phase 0_
 
 **Current phase:** Phase 0 — Bootstrap, verification spikes, human setup
-**Display name:** `wom` (placeholder; single constant `APP_NAME` in `packages/shared/src/constants.ts`) — name pending human confirmation (HUMAN_INPUT #1)
+**Display name:** **Vouch** (`APP_NAME` in `packages/shared/src/constants.ts`; package scope `@vouch/*`; D-007)
 **Deadline:** submit by Fri Nov 20, 2026 12:00 PM CST (target 9:00 AM CST)
 
 ## How to use this folder
