@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
+import { readDbDeliveries, redactDbUrl, rowToRec } from './deliveries-db';
+import { VOUCH_EVENT_TOPICS } from '@vouch/shared';
 import { FILTER_TEMPLATE, REPO_ROOT, normalizeWebhookUrl, parseEvents, redactStream, redactUrl, renderFilter, spikeLogPath, writeEnvVar } from './lib';
 
 const HELLO = '0x66cb4392322b2aede460a4314ce092e0cc1c2b32';
@@ -150,4 +152,50 @@ test('spikeLogPath: same rule as apps/api env.ts (relative to repo root)', () =>
   assert.equal(spikeLogPath({}), path.join(REPO_ROOT, 'data/local/streams-spike.ndjson'));
   assert.equal(spikeLogPath({ STREAMS_SPIKE_LOG: 'tmp/x.ndjson' }), path.join(REPO_ROOT, 'tmp/x.ndjson'));
   assert.equal(spikeLogPath({ STREAMS_SPIKE_LOG: '/abs/y.ndjson' }), '/abs/y.ndjson');
+});
+
+// ---------- streams:deliveries --db (D-305) ----------
+
+test('deliveries --db: rowToRec maps a stream_deliveries row to the viewer record', () => {
+  const body = { v: 1, streamId: 's', events: [{ event: 'Ping' }] };
+  const rec = rowToRec({
+    id: '7',
+    received_at: new Date('2026-11-16T12:00:00Z'),
+    verified: true,
+    stream_id: 'qn-1',
+    batch_start: '100',
+    batch_end: 104,
+    event_count: 1,
+    bytes: 42,
+    gzip: false,
+    headers: JSON.stringify({ 'x-qn-timestamp': '1799999990' }),
+    summary: { logCount: 1, blockRange: null, txHashes: [], topic0s: [], eventNames: ['Ping'], batch: null, shape: 'envelope:v1' },
+    body,
+    body_text: null,
+  });
+  assert.equal(rec.rowId, 7);
+  assert.equal(rec.receivedAt, '2026-11-16T12:00:00.000Z');
+  assert.equal(rec.status, 200);
+  assert.deepEqual(rec.headers, { 'x-qn-timestamp': '1799999990', 'stream-id': 'qn-1', 'batch-start-range': '100', 'batch-end-range': '104' });
+  assert.equal(rec.body, JSON.stringify(body));
+  assert.deepEqual(rec.summary?.eventNames, ['Ping']);
+  const textRow = rowToRec({ id: 1, received_at: '2026-11-16T12:00:00Z', verified: true, stream_id: null, batch_start: null, batch_end: null, event_count: 0, bytes: 3, gzip: false, headers: {}, summary: null, body: null, body_text: 'abc' });
+  assert.equal(textRow.body, 'abc');
+});
+
+test('deliveries --db: connection strings are redacted, unsupported schemes refused', async () => {
+  assert.equal(redactDbUrl('postgresql://postgres:hunter2@roundhouse.proxy.rlwy.net:12345/railway'), 'postgresql://roundhouse.proxy.rlwy.net:12345/railway');
+  assert.equal(redactDbUrl('pglite://./data/local/pglite'), 'pglite://./data/local/pglite');
+  await assert.rejects(readDbDeliveries('mysql://u:p@h/db', { last: 1, verifiedOnly: false }), (e: Error) => !e.message.includes(':p@'));
+  await assert.rejects(readDbDeliveries('pglite://memory', { last: 1, verifiedOnly: false }), /on-disk/);
+});
+
+test('parseEvents "vouch" preset = the 10 production events from @vouch/shared (no EIP712DomainChanged)', () => {
+  const ev = parseEvents('vouch');
+  assert.equal(ev.length, 10);
+  assert.ok(!ev.some((e) => e.name === 'EIP712DomainChanged'));
+  for (const e of ev) assert.equal(e.topic0, (VOUCH_EVENT_TOPICS as Record<string, string>)[e.name], e.name);
+  // MSG-010 spot checks
+  assert.equal(ev.find((e) => e.name === 'PaymentSettled')!.topic0, '0x35f580066b94268579e33474e66ad0347864c26fe8683e577efb5072c80e7432');
+  assert.equal(ev.find((e) => e.name === 'RewardReturned')!.topic0, '0x1cba477ed7240b8110e7fecc9c7f6fd041255365455d9c76f2b2febb4cfb7a15');
 });

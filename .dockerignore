@@ -1,0 +1,44 @@
+# Docker build context for the api image (see Dockerfile). Keep secrets and heavy dirs out.
+
+# --- secrets: never in the image ---
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+keystore/
+secrets/
+
+# --- vcs / deps / build output ---
+.git
+**/node_modules
+.pnpm-store
+**/.next
+**/dist
+**/build
+**/.turbo
+**/.vercel
+**/*.tsbuildinfo
+coverage
+
+# --- foundry ---
+contracts/out
+contracts/cache
+contracts/broadcast
+broadcast
+**/broadcast
+cache
+out
+
+# --- local data (PGlite, NDJSON spike log) ---
+data/
+**/data/local
+
+# --- not needed by the api image ---
+playwright-report
+test-results
+.DS_Store
+*.log

@@ -4,6 +4,7 @@ import { APP_NAME, ARC_TESTNET_CHAIN_ID } from '@vouch/shared';
 import { loadEnv, type ApiEnv } from './env';
 import { createDb, type DbHandle } from './db/index';
 import { webhookRoutes } from './routes/webhooks';
+import { insertDelivery } from './streams/deliveries';
 
 export interface BuiltApp {
   app: FastifyInstance;
@@ -27,7 +28,11 @@ export async function buildApp(overrides: Partial<ApiEnv> = {}, opts: { logger?:
     time: new Date().toISOString(),
   }));
 
-  await app.register(webhookRoutes, { logFile: env.streamsSpikeLog, secret: env.streamsWebhookSecret });
+  await app.register(webhookRoutes, {
+    logFile: env.streamsSpikeLog,
+    secret: env.streamsWebhookSecret,
+    store: (row) => insertDelivery(db, row),
+  });
 
   app.addHook('onClose', async () => {
     await db.close();

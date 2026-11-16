@@ -3,6 +3,7 @@ import { appendFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { gunzipSync } from 'node:zlib';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
+import { buildDeliveryRow, type NewDelivery } from '../streams/deliveries';
 
 /**
  * POST /webhooks/streams — QuickNode Streams webhook (Phase 0 / S3 spike).
@@ -19,12 +20,19 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
  *   - missing/malformed headers or bad signature → 401.
  *   - verified → 200 quickly (deliveries are sequential; QuickNode waits for our 2xx).
  *   - X-QN-Timestamp skew is only logged (unit is UNVERIFIED: the guide's sample shows 10-digit seconds).
- * Every delivery (accepted or not) is appended to the NDJSON spike log for S3 evidence. Nothing secret
- * is logged: the request headers carry no secret (the signature is a MAC, not the token).
+ *   - verified → one row in `stream_deliveries` (D-305) BEFORE the 200; if that insert fails → 500 so QuickNode
+ *     retries (no ack without persistence). Rejected requests (401/503/400) never get a row.
+ * Every request also emits one structured log line (`streams delivery`: verified, status, streamId, batch range,
+ * event count/names, row id; never the token, signature or body), visible in `railway logs`.
+ * Local dev: every request (accepted or not) is also appended to the NDJSON spike log, unless disabled (null).
+ * Nothing secret is written: the request headers carry no secret (the signature is a MAC, not the token).
  */
 
 export interface WebhookRouteOpts {
-  logFile: string;
+  /** NDJSON spike log; null disables it (default on hosts, see env.resolveSpikeLog). */
+  logFile: string | null;
+  /** Persists a VERIFIED delivery; resolves with the row id. Omitted → nothing is stored (tests of pure HMAC logic). */
+  store?: (row: NewDelivery) => Promise<{ id: number }>;
   /** QuickNode stream security token. Undefined → every delivery is answered 503. */
   secret: string | undefined;
   /** Log a warning when |now - X-QN-Timestamp| exceeds this (seconds). Never rejects. Default 300. */
@@ -160,9 +168,11 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
     done(null, body);
   });
 
+  const logFile = opts.logFile;
   const writeRecord = async (record: Record<string, unknown>) => {
-    await mkdir(path.dirname(opts.logFile), { recursive: true });
-    await appendFile(opts.logFile, `${JSON.stringify(record)}\n`);
+    if (!logFile) return;
+    await mkdir(path.dirname(logFile), { recursive: true });
+    await appendFile(logFile, `${JSON.stringify(record)}\n`);
   };
 
   app.post('/webhooks/streams', async (req, reply) => {
@@ -180,7 +190,7 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
       decodeError = (err as Error).message;
     }
 
-    let status: 200 | 400 | 401 | 503;
+    let status: 200 | 400 | 401 | 500 | 503;
     let reason: string | undefined;
     if (!opts.secret) {
       status = 503;
@@ -205,12 +215,33 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
     }
 
     let summary: DeliverySummary | null = null;
+    let json: unknown;
     let jsonError: string | undefined;
     if (decoded && decoded.length > 0) {
       try {
-        summary = summarize(JSON.parse(decoded.toString('utf8')));
+        json = JSON.parse(decoded.toString('utf8'));
+        summary = summarize(json);
       } catch (err) {
         jsonError = (err as Error).message;
+      }
+    }
+
+    // Persist only after the HMAC verdict, and only verified deliveries (D-305).
+    let rowId: number | undefined;
+    let streamId: string | null = null;
+    let batch: { start: number | null; end: number | null } = { start: null, end: null };
+    if (verified) {
+      const row = buildDeliveryRow({ headers: req.headers, bytes: raw.length, gzip, bodyText: decoded!.toString('utf8'), json, summary });
+      streamId = row.streamId ?? null;
+      batch = { start: row.batchStart ?? null, end: row.batchEnd ?? null };
+      if (opts.store) {
+        try {
+          rowId = (await opts.store(row)).id;
+        } catch (err) {
+          status = 500;
+          reason = 'persist-failed';
+          req.log.error({ err: (err as Error).message }, 'streams delivery not persisted; answering 500 so QuickNode retries');
+        }
       }
     }
 
@@ -229,14 +260,35 @@ export async function webhookRoutes(app: FastifyInstance, opts: WebhookRouteOpts
       ...(gzip || !decoded ? { rawBodyBase64: raw.toString('base64') } : {}),
       ...(decodeError ? { decodeError } : {}),
       ...(jsonError ? { jsonError } : {}),
+      ...(rowId !== undefined ? { rowId } : {}),
       summary,
     });
 
+    // One structured line per request. Event labels/ranges only for verified bodies (unverified bodies are sender-controlled, QE-07).
     req.log.info(
-      { status, reason, bytes: raw.length, logs: summary?.logCount, blocks: summary?.blockRange },
-      'streams webhook',
+      {
+        delivery: {
+          verified,
+          status,
+          ...(reason ? { reason } : {}),
+          bytes: raw.length,
+          ...(verified
+            ? {
+                rowId: rowId ?? null,
+                streamId,
+                batchStart: batch.start,
+                batchEnd: batch.end,
+                eventCount: summary?.logCount ?? 0,
+                eventNames: summary?.eventNames ?? [],
+                blocks: summary?.blockRange ?? null,
+                shape: summary?.shape ?? null,
+              }
+            : {}),
+        },
+      },
+      'streams delivery',
     );
-    if (!verified) return reply.code(status).send({ ok: false, error: reason });
+    if (status !== 200) return reply.code(status).send({ ok: false, error: reason });
     return reply.code(200).send({ ok: true, bytes: raw.length, logs: summary?.logCount ?? 0 });
   });
 }

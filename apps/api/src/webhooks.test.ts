@@ -7,8 +7,10 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 import type { FastifyInstance } from 'fastify';
 import { buildApp } from './app';
+import type { DbHandle } from './db/index';
 import { realSecret } from './env';
 import { summarize, timestampSkew } from './routes/webhooks';
+import { listDeliveries, pickHeaders } from './streams/deliveries';
 
 // Test-only token (not a real stream token).
 const SECRET = 'test-security-token-0123456789abcdef0123456789';
@@ -59,13 +61,18 @@ async function lastRecord(logFile: string) {
   return JSON.parse(lines.at(-1)!);
 }
 
+async function rowCount(db: DbHandle) {
+  return (await listDeliveries(db, 1000)).length;
+}
+
 describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
   let app: FastifyInstance;
+  let db: DbHandle;
   let logFile: string;
   before(async () => {
     const dir = await mkdtemp(path.join(tmpdir(), 'vouch-wh-'));
     logFile = path.join(dir, 'streams.ndjson');
-    ({ app } = await buildApp(
+    ({ app, db } = await buildApp(
       { databaseUrl: 'pglite://memory', streamsSpikeLog: logFile, streamsWebhookSecret: SECRET },
       { logger: false },
     ));
@@ -86,6 +93,65 @@ describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
     assert.deepEqual(rec.summary.batch, { start: 72567878, end: 72567882 });
     assert.deepEqual(rec.summary.topic0s, ['0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55']);
     assert.equal(rec.timestamp.unit, 's');
+    assert.equal(typeof rec.rowId, 'number');
+  });
+
+  test('verified delivery → one stream_deliveries row (headers allow-listed, signature not stored)', async () => {
+    const before = await rowCount(db);
+    const headers = { ...signedHeaders(PAYLOAD), 'stream-id': 'qn-stream-123', 'batch-start-range': '72567879', 'batch-end-range': '72567883' };
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers, payload: PAYLOAD });
+    assert.equal(res.statusCode, 200);
+    const rows = await listDeliveries(db, 1000);
+    assert.equal(rows.length, before + 1);
+    const row = rows[0]!;
+    assert.equal(row.verified, true);
+    assert.equal(row.streamId, 'qn-stream-123', 'stream-id header wins over the body streamId');
+    assert.equal(row.batchStart, 72567879, 'batch-* headers are authoritative (QE-15)');
+    assert.equal(row.batchEnd, 72567883);
+    assert.equal(row.eventCount, 1);
+    assert.equal(row.bytes, Buffer.byteLength(PAYLOAD));
+    assert.equal(row.gzip, false);
+    assert.deepEqual(row.body, JSON.parse(PAYLOAD));
+    assert.equal(row.bodyText, null);
+    assert.equal(row.headers['x-qn-nonce'], headers['x-qn-nonce']);
+    assert.equal(row.headers['stream-id'], 'qn-stream-123');
+    assert.equal(row.headers['x-qn-signature'], undefined, 'the signature is never stored');
+    assert.deepEqual((row.summary as { eventNames: string[] }).eventNames, ['Ping']);
+    assert.ok(row.receivedAt instanceof Date);
+  });
+
+  test('verified delivery without batch headers → body envelope streamId/batch used', async () => {
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+    assert.equal(res.statusCode, 200);
+    const [row] = await listDeliveries(db, 1);
+    assert.equal(row!.streamId, 'stream-test');
+    assert.equal(row!.batchStart, 72567878);
+    assert.equal(row!.batchEnd, 72567882);
+  });
+
+  test('verified non-JSON body → row with body_text, body null', async () => {
+    const text = 'not json';
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders(text), 'content-type': 'text/plain' }, payload: text });
+    assert.equal(res.statusCode, 200);
+    const [row] = await listDeliveries(db, 1);
+    assert.equal(row!.body, null);
+    assert.equal(row!.bodyText, text);
+    assert.equal(row!.eventCount, 0);
+  });
+
+  test('rejected requests (401 bad/missing signature) store no row', async () => {
+    const before = await rowCount(db);
+    const tampered = PAYLOAD.replace('"logIndex":0', '"logIndex":1');
+    const bad = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: tampered });
+    const unsigned = await app.inject({ method: 'POST', url: WH_URL, headers: { 'content-type': 'application/json' }, payload: '{}' });
+    const forged = await app.inject({
+      method: 'POST',
+      url: WH_URL,
+      headers: { 'content-type': 'application/json', 'x-qn-nonce': 'n', 'x-qn-timestamp': '1', 'x-qn-signature': '0'.repeat(64) },
+      payload: PAYLOAD,
+    });
+    assert.deepEqual([bad.statusCode, unsigned.statusCode, forged.statusCode], [401, 401, 401]);
+    assert.equal(await rowCount(db), before);
   });
 
   test('tampered body → 401', async () => {
@@ -123,23 +189,28 @@ describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
   });
 
   test('gzip body: HMAC over the decoded JSON → 200', async () => {
+    const gz = gzipSync(Buffer.from(PAYLOAD));
     const res = await app.inject({
       method: 'POST',
       url: WH_URL,
       headers: { ...signedHeaders(PAYLOAD), 'content-encoding': 'gzip' },
-      payload: gzipSync(Buffer.from(PAYLOAD)),
+      payload: gz,
     });
     assert.equal(res.statusCode, 200);
     const rec = await lastRecord(logFile);
     assert.equal(rec.gzip, true);
     assert.equal(rec.body, PAYLOAD);
+    const [row] = await listDeliveries(db, 1);
+    assert.equal(row!.gzip, true);
+    assert.equal(row!.bytes, gz.length, 'bytes = as received (compressed)');
+    assert.deepEqual(row!.body, JSON.parse(PAYLOAD));
   });
 });
 
 test('STREAMS_WEBHOOK_SECRET unset → 503 (fail closed), even with a "valid-looking" signature', async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'vouch-wh-'));
   const logFile = path.join(dir, 'streams.ndjson');
-  const { app } = await buildApp(
+  const { app, db } = await buildApp(
     { databaseUrl: 'pglite://memory', streamsSpikeLog: logFile, streamsWebhookSecret: undefined },
     { logger: false },
   );
@@ -147,9 +218,48 @@ test('STREAMS_WEBHOOK_SECRET unset → 503 (fail closed), even with a "valid-loo
     const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
     assert.equal(res.statusCode, 503);
     assert.equal((await lastRecord(logFile)).reason, 'secret-unset');
+    assert.equal(await rowCount(db), 0, '503 stores no row');
   } finally {
     await app.close();
   }
+});
+
+test('verified delivery whose insert fails → 500 (QuickNode retries), not a silent 200', async () => {
+  const fresh = await buildApp({ databaseUrl: 'pglite://memory', streamsSpikeLog: null, streamsWebhookSecret: SECRET }, { logger: false });
+  try {
+    await fresh.db.close(); // make the insert fail
+    const res = await fresh.app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+    assert.equal(res.statusCode, 500);
+    assert.deepEqual(res.json(), { ok: false, error: 'persist-failed' });
+  } finally {
+    await fresh.app.close().catch(() => {});
+  }
+});
+
+test('NDJSON spike log disabled (null) → webhook still verifies and answers', async () => {
+  const { app, db } = await buildApp({ databaseUrl: 'pglite://memory', streamsSpikeLog: null, streamsWebhookSecret: SECRET }, { logger: false });
+  try {
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+    assert.equal(res.statusCode, 200);
+    assert.equal(await rowCount(db), 1);
+  } finally {
+    await app.close();
+  }
+});
+
+test('pickHeaders keeps QuickNode metadata, drops signature/auth/cookies', () => {
+  const h = pickHeaders({
+    'content-type': 'application/json',
+    'x-qn-nonce': 'n',
+    'x-qn-timestamp': '1',
+    'x-qn-signature': 'f'.repeat(64),
+    'stream-id': 's',
+    'batch-start-range': '1',
+    authorization: 'Bearer x',
+    cookie: 'a=b',
+    'x-forwarded-for': '1.2.3.4',
+  });
+  assert.deepEqual(h, { 'content-type': 'application/json', 'x-qn-nonce': 'n', 'x-qn-timestamp': '1', 'stream-id': 's', 'batch-start-range': '1' });
 });
 
 test('env placeholders count as unset', () => {

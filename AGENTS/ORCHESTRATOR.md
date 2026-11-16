@@ -85,7 +85,7 @@ Wallet public addresses: `packages/shared/src/wallets.public.json`. In code: `VO
 |---|---|---|---|
 | API (Fastify, HMAC webhook) | 4000 | running, /health 200; unsigned POST → 503 secret-unset | `pnpm --filter @vouch/api start` (background task) |
 | Web prod server (spikes + `/design`) | 3100 | running, 200 | `cd apps/web && node ./node_modules/next/dist/bin/next start -p 3100`. **Do not touch port 3000.** |
-| Web quick tunnel (phone tests only) | — | `https://accomplish-transmission-thumbnail-cal.trycloudflare.com` (verified 200 via 1.1.1.1) | `cloudflared tunnel --no-autoupdate --url http://localhost:3100` |
+| Web quick tunnel (phone tests only) | — | `https://sophisticated-peaceful-further-spray.trycloudflare.com` (verified 200 via 1.1.1.1) | `cloudflared tunnel --no-autoupdate --protocol http2 --url http://localhost:3100` (QUIC timed out after the laptop slept; http2 is steadier) |
 | API quick tunnel | — | **retired** (D-016: the production Stream uses the Railway URL) | — |
 - **Verifying a new tunnel:** wait for "Registered tunnel connection". Local DNS may cache NXDOMAIN, so use `dig +short <host> @1.1.1.1` and `curl --resolve <host>:443:<ip> …`.
 

@@ -19,7 +19,7 @@ Streams is Vouch's **core data source**. Every derived view (wallet activity, ve
 
 **How the Stream is created:** in the **QuickNode dashboard** (Streams → Create Stream wizard), because the Streams REST API isn't available on QuickNode trial plans (D-011). Step-by-step values: [`docs/streams/S3-RUNBOOK.md`](docs/streams/S3-RUNBOOK.md).
 - The stream is **paused and resumed manually in the dashboard** to save credits when idle.
-- During development the webhook URL is a Cloudflare quick tunnel. If the tunnel restarts, its URL changes and must be updated in the dashboard's destination settings. It becomes stable once the API is deployed (Phase 5).
+- The webhook URL is the API's **stable Railway domain** (`https://<api>.up.railway.app/webhooks/streams`, D-016). The api stores every verified delivery in Postgres (`stream_deliveries`). Deploy steps: [`docs/deploy/RAILWAY.md`](docs/deploy/RAILWAY.md). Cloudflare quick tunnels are used only for phone tests, never for the Stream.
 - A CLI for paid plans with REST access (`scripts/streams/streams.ts`: create/pause/activate/set-webhook) is kept in the repo.
 
 _Phase 0 spike target:_ the `Hello` spike contract `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` (deploy block 72567874). The production Stream targets the Vouch contract once it is deployed.

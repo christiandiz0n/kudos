@@ -14,7 +14,9 @@
     "smoke:canonical": "tsx --env-file-if-exists=../.env deploy/smoke-canonical.ts"
   },
   "dependencies": {
+    "@electric-sql/pglite": "0.5.16",
     "@vouch/shared": "workspace:*",
+    "postgres": "3.4.9",
     "viem": "2.57.18"
   },
   "devDependencies": {

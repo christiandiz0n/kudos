@@ -440,3 +440,35 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Decision:** The human approved UI_DESIGN's six questions: (a) ink-black primary buttons, green reserved for money going to a person (D-601); (b) Instrument Sans (D-602); (c) split-receipt magnifier/loupe motif, kept **lightweight and projector-readable** (D-603); (d) copy "Confirm with Face ID or fingerprint", never "passkey" on primary screens (D-605); (e) placeholder L2 names Marco and Sofia (D-606); (f) hide Next's dev badge (`devIndicators: false`). Also required: fix the cashback self-loop under Ben in the money graph (MSG-008).
 - **Reason:** Human Amendment A5 #4. Unblocks Phase 3 hi-fi screens.
 - **Who:** HUMAN (A5), recorded by ORCHESTRATOR
+
+## D-519 — v3 submitter rule: `msg.sender == auth.submitter`, nothing else (implements D-014; option (a))
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Check.** `_checkOrder` ends with `if (msg.sender != auth.submitter) revert UnauthorizedSubmitter();`. The v2 zero branch is deleted, so `submitter = 0` can never be paid by anyone (`msg.sender` is never 0). The customer chooses the submitter when signing: the app signs `RELAYER`, and the kill-the-backend demo signs the customer's own address and sends `pay()` from that EOA (gas paid in USDC from the same balance, so the balance must cover `amount` plus the fee).
+  - **Unchanged.** The `PaymentAuth` type string and typehash (`0xf9bd6d8f…7abcba4`), the EIP-3009 nonce (= hashStruct(PaymentAuth), D-103), `_pullPayment` (`receiveWithAuthorization(customer, address(this), …)`, so USDC's payee check still sees `msg.sender == Vouch`), the ABI, events and topic0s (`export-abi.sh` output byte-identical). Only the address and deploy block change at redeploy.
+  - **Size.** Runtime 24,036 → **23,998 B** (−38). Margin under EIP-170 (24,576): **578 B**.
+- **Why (a), not (b) (`msg.sender != submitter && msg.sender != customer`):**
+  - (a) is smaller (23,998 B vs 24,042 B for (b)) and simpler: exactly one address can submit, and the signer names it.
+  - (b) adds nothing the customer needs. A customer who wants to self-submit already can under (a) by signing `submitter = self`.
+  - (b) lets the customer race the relayer on an auth that names the relayer, e.g. with a garbage attributor signature to force the fallback. That gives the customer no new power over attribution, since they could equally sign `weightsHash = 0` or `submitter = self`, and the fallback is deterministic (D-502). But it makes the relayer's tx revert after the backend has already quoted the attributor split, so the backend's view of "what was signed for us" would no longer be authoritative. (a) keeps that contract: an auth naming the relayer can only be settled by the relayer.
+  - Neither option opens a third-party path.
+- **Tests.**
+  - `VouchQeFixes`: the permissive `test_C01_zeroSubmitterAllowsAnyone` is replaced by `test_D519_*`:
+    - a zero submitter is refused for an attacker, the relayer and the customer, with no state change;
+    - a customer self-submit settles the canonical split exactly (10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108);
+    - a third party, the relayer or another referrer cannot submit a self-submit auth;
+    - the customer cannot submit a relayer-bound auth (option (a) pin);
+    - a signed submitter cannot be downgraded to 0;
+    - a fuzz test: any caller other than the named submitter is refused.
+  - The invariant handler routes pays across relayer-bound, self-submit and zero-submitter auths and probes a non-submitter on every pay.
+  - The fork tests add self-submit and zero-submitter on real Arc USDC.
+- **Supersedes:** the `submitter = 0` clause of D-012 / D-512 and D-013(1) (as D-014 directs).
+- **Who:** CONTRACTS
+
+## D-305 — Railway deploy config, raw delivery table, PORT (implements D-016)
+- **Date:** 2026-11-16
+- **Decision:** (a) **PORT:** the api listens on `PORT` (host-injected), then `API_PORT`, then 4000. Empty counts as unset and an invalid port throws. (b) **Raw ingest:** every HMAC-**verified** delivery is inserted into Postgres/PGlite `stream_deliveries` (migration `0001_stream_deliveries`; columns `id, received_at, verified, stream_id, batch_start, batch_end, event_count, bytes, gzip, headers jsonb, summary jsonb, body jsonb, body_text`) **before** the 200. If the insert fails the api answers **500 `persist-failed`** so QuickNode retries: no ack without persistence. Rejected requests (503/401/400) never get a row. D-301 semantics are otherwise unchanged. Stored headers are allow-listed (`content-*`, `user-agent`, `x-qn-nonce`, `x-qn-timestamp`, `stream-*`, `batch-*`), and `x-qn-signature` is not stored. `stream_id`/`batch_*` prefer the headers (QE-15) and fall back to the body envelope. No dedupe (Phase 2 dedupes on `(txHash, logIndex)`). (c) **Logs:** one pino line per request, `msg:"streams delivery"`, with `{verified, status, reason?, bytes}` plus `{rowId, streamId, batchStart, batchEnd, eventCount, eventNames, blocks, shape}` for verified requests only. It never contains the token, signature or body. (d) **NDJSON spike log** stays on locally and is off when `NODE_ENV=production`, unless `STREAMS_SPIKE_LOG` names a path; `STREAMS_SPIKE_LOG=off` disables it anywhere. (e) **Image:** root `Dockerfile` (node:24-slim, corepack pnpm@11.28.6, `pnpm install --frozen-lockfile --prod --filter "@vouch/api..."`, `node --import tsx src/server.ts` as user `node`). `tsx` moved to `@vouch/api` **dependencies** because it is the runtime. `--prod` is required: a filtered install still installs the root importer, whose devDependencies include `forge-std` from codeload.github.com. `.dockerignore` excludes `.env*` (keeps `.env.example`). `railway.json`: DOCKERFILE builder, healthcheck `/health` (120 s), restart `ON_FAILURE` (10). (f) `streams:deliveries --db [--db-url]` reads the table (`DATABASE_PUBLIC_URL` → `DATABASE_URL`, postgres:// or on-disk pglite://), refuses `*.railway.internal` hosts and never prints credentials. (g) `streams render-filter --events vouch` preset = the 10 production events from `@vouch/shared` (no `EIP712DomainChanged`).
+- **Reason:** D-016 (stable webhook URL). The container disk is ephemeral, so the hosted record must live in Postgres. Railway injects `PORT`. Acking an unpersisted delivery would lose it silently, because QuickNode only retries on non-2xx.
+- **Alternatives:** keep NDJSON on a Railway volume (not queryable, one more resource); a store-everything table including rejects (unauthenticated public writes to the DB, rejected); `pnpm deploy` (needs `injectWorkspacePackages` or `--legacy`; more moving parts than `--prod`); a tsup/esbuild bundle (D-204 says only if plain node is required).
+- **Caveat:** Railway marks `railway.json` (Config as Code) deprecated in favour of IaC (`.railway/railway.ts`), with legacy support stated until 2026-12-01. RAILWAY.md says to confirm the healthcheck and restart policy in the service settings. Moving to IaC is a follow-up.
+- **Who:** STREAMS_INFRA

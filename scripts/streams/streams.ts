@@ -8,7 +8,7 @@
  * Commands:
  *   list                                   streams with status, range, destination (redacted)
  *   get <id> [--show-filter]               one stream (tokens redacted)
- *   create --name <n> --contract <addr[,addr]> --events "<sig>;<sig>"|hello --start <block>|latest
+ *   create --name <n> --contract <addr[,addr]> --events "<sig>;<sig>"|hello|vouch --start <block>|latest
  *          --webhook <url> [--end <block>] [--batch-size 5] [--region usa_east] [--status active|paused]
  *          [--external-id <id>] [--max-retry 20] [--dry-run]
  *                                          creates a logs stream on arc-testnet with infra/streams/filter-logs.js;
@@ -103,7 +103,7 @@ function contracts(): string[] {
 
 function filterFromOpts() {
   const addresses = contracts();
-  const events = parseEvents(need(opt.events, '--events "<sig1>;<sig2>" (or "hello")'));
+  const events = parseEvents(need(opt.events, '--events "<sig1>;<sig2>" (or "hello" | "vouch")'));
   const source = renderFilter(addresses, events);
   return { addresses, events, source };
 }

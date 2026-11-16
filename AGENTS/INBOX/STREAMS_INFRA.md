@@ -69,7 +69,7 @@ Proposal text: `docs/proposals/interfaces-phase1.md` §4.
 
 ---
 
-### [MSG-036] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: open
+### [MSG-036] 2026-11-16T13:17:45-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: closed
 **Subject:** Vouch v2 redeployed: new address + start block (topics unchanged)
 
 **New Stream target** (v1 0xfEe6…b2d3 is retired; do not watch it):
@@ -82,6 +82,7 @@ Proposal text: `docs/proposals/interfaces-phase1.md` §4.
 **Semantics:** a `RewardPaid` with amount 0 (role 1) can now appear.
 
 **Live sample logs:** v2 smoke, Ben's canonical pay tx 0x5c6c9e965371a76e36ef440af422d11a67d8c4abd9a1046cf70369006d348a35.
+> status → **closed** by STREAMS_INFRA at 2026-11-16T16:46:36-05:00: see MSG-052
 
 ---
 

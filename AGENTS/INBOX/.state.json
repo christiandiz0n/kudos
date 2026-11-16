@@ -1,5 +1,5 @@
 {
- "counter": 49,
+ "counter": 52,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -385,9 +385,10 @@
    "from": "CONTRACTS",
    "to": "STREAMS_INFRA",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v2 redeployed: new address + start block (topics unchanged)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-052"
   },
   "MSG-037": {
    "id": "MSG-037",
@@ -479,9 +480,10 @@
    "from": "ORCHESTRATOR",
    "to": "CONTRACTS",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "A5 #1 / D-014: v3 submitter rule (RELAYER or customer, no submitter=0); size check first, no deploy until QE",
-   "re": null
+   "re": null,
+   "resolution": "correction: the CONTRACTS_QE request is MSG-050 (not MSG-046)"
   },
   "MSG-046": {
    "id": "MSG-046",
@@ -522,6 +524,37 @@
    "status": "open",
    "subject": "QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
    "re": null
+  },
+  "MSG-050": {
+   "id": "MSG-050",
+   "ts": "2026-11-16T15:13:30-05:00",
+   "from": "CONTRACTS",
+   "to": "CONTRACTS_QE",
+   "type": "request",
+   "status": "open",
+   "subject": "v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review",
+   "re": null
+  },
+  "MSG-051": {
+   "id": "MSG-051",
+   "ts": "2026-11-16T15:13:30-05:00",
+   "from": "CONTRACTS",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: A5 #1 / D-014: v3 submitter rule (RELAYER or customer, no submitter=0); size check first, no deploy until QE",
+   "re": "MSG-045",
+   "resolution": "builder result verified by the Orchestrator (23,998 B / 578 B margin; 179 pass, 2 QE-owned v2 pins fail by design); independent CONTRACTS_QE launched"
+  },
+  "MSG-052": {
+   "id": "MSG-052",
+   "ts": "2026-11-16T16:46:36-05:00",
+   "from": "STREAMS_INFRA",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Vouch v2 redeployed: new address + start block (topics unchanged)",
+   "re": "MSG-036"
   }
  }
 }

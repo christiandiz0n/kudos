@@ -9,7 +9,7 @@ import { chmod, readFile, rename, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { toEventSelector, type AbiEvent } from 'viem';
-import { helloAbi } from '@vouch/shared';
+import { VOUCH_EVENT_SIGNATURES, helloAbi } from '@vouch/shared';
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const ROOT_ENV_FILE = path.join(REPO_ROOT, '.env');
@@ -28,8 +28,14 @@ export interface EventSpec {
   topic0: `0x${string}`;
 }
 
-/** `--events "Ping(address,bytes32,uint256);Split(...)"` or the preset `hello` (Hello.sol ABI). */
+/** Events the production Stream watches: every Vouch event except the inherited, never-emitted EIP712DomainChanged (MSG-010). */
+export const VOUCH_STREAM_EVENTS = Object.entries(VOUCH_EVENT_SIGNATURES)
+  .filter(([name]) => name !== 'EIP712DomainChanged')
+  .map(([, sig]) => sig);
+
+/** `--events "Ping(address,bytes32,uint256);Split(...)"`, or the presets `hello` (Hello.sol ABI) / `vouch` (production, from @vouch/shared). */
 export function parseEvents(spec: string): EventSpec[] {
+  if (spec.trim().toLowerCase() === 'vouch') return parseEvents(VOUCH_STREAM_EVENTS.join(';'));
   if (spec.trim().toLowerCase() === 'hello') {
     return (helloAbi.filter((x) => x.type === 'event') as readonly AbiEvent[]).map((ev) => ({
       name: ev.name,

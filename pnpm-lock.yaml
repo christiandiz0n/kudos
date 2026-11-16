@@ -38,6 +38,9 @@ importers:
       postgres:
         specifier: 3.4.9
         version: 3.4.9
+      tsx:
+        specifier: 4.23.15
+        version: 4.23.15
       viem:
         specifier: 2.57.18
         version: 2.57.18(typescript@5.9.3)(zod@4.6.7)
@@ -48,9 +51,6 @@ importers:
       drizzle-kit:
         specifier: 0.31.11
         version: 0.31.11
-      tsx:
-        specifier: 4.23.15
-        version: 4.23.15
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -125,9 +125,15 @@ importers:
 
   scripts:
     dependencies:
+      '@electric-sql/pglite':
+        specifier: 0.5.16
+        version: 0.5.16
       '@vouch/shared':
         specifier: workspace:*
         version: link:../packages/shared
+      postgres:
+        specifier: 3.4.9
+        version: 3.4.9
       viem:
         specifier: 2.57.18
         version: 2.57.18(typescript@5.9.3)(zod@4.6.7)
