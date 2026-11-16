@@ -99,3 +99,12 @@ Requirements for the relayer/API (from CONTRACTS_QE MSG-038, decision D-013): (1
 **Paths:** `AGENTS/DECISIONS.md`, `AGENTS/INTERFACES.md`, `docs/qa/phase-1-contracts-qe.md`
 
 ---
+
+### [MSG-047] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: BACKEND_RELAYER | type: fyi | status: open
+**Subject:** D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0
+
+Human A5 #1. The app keeps signing submitter = RELAYER. The kill-the-backend demo no longer uses submitter = 0: the customer signs submitter = their own address and calls pay() directly, paying gas in USDC. If v3 lands, submitter = 0 is unpayable by anyone; if it doesn't, the API must still never produce submitter = 0. A v3 address/start block will arrive as a CONTRACTS handoff (EIP-712 types expected unchanged). Also: apps/api now deploys to Railway (D-016); PORT is honored and raw Stream deliveries are persisted (STREAMS_INFRA).
+
+**Paths:** `AGENTS/DECISIONS.md`
+
+---

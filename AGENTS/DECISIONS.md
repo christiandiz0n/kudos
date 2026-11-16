@@ -413,3 +413,30 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Decision:** (1) `PaymentAuth.submitter` MUST be the relayer EOA (or an access-controlled contract). Never a public forwarder or multicall, and never `0` in the app flow. `0` is reserved for the documented kill-the-backend demo. (2) Payouts to `0x1800…`/`0xffff…fffe` are left allowed: the owner burns its own share, nothing stays in Vouch, invariant 1 holds, and a redeploy isn't worth it for this; revisit if a v3 deploy happens for other reasons. (3) The API signs owner actions only at the current `nonces(owner)`. (4) The UI/API prompts referrers to re-issue links after a terms change (72 h grace, D-516). (5) `MIN_TRANSFER_GAS` (100k) is documented against Arc USDC's measured ~74.6k tx gas.
 - **Reason:** CONTRACTS_QE v2 re-verification (MSG-038). No invariant broken; these are integration rules for BACKEND_RELAYER/FRONTEND_INTEGRATION.
 - **Who:** ORCHESTRATOR
+
+## D-014 — A5: submitter may be the RELAYER or the customer; no `submitter = 0` path (v3, conditional)
+- **Date:** 2026-11-16
+- **Decision:** The human approved D-012 in principle with a change: a customer's `PaymentAuth` names either the RELAYER (app flow) or the customer themself (kill-the-backend demo: the customer self-submits and pays gas in USDC). The `submitter = 0` "anyone" path is removed, which closes the QE-C-09 front-run gap. Implemented as Vouch **v3**, conditional on fitting under EIP-170 with every invariant green; pipeline CONTRACTS → independent CONTRACTS_QE → redeploy → `@vouch/shared` + INTERFACES update. If it does not fit, D-012 stays as is and the human is told. The production Stream's start block = the final deploy block, so this settles before the Stream is created.
+- **Reason:** Human Amendment A5 #1. Note: v2 already accepts `submitter = customer` (the check is `submitter != 0 && msg.sender != submitter`), so v3 only deletes the zero branch and shrinks the bytecode.
+- **Supersedes:** the "`0` reserved for kill-the-backend" clause of D-012 and D-013(1).
+- **Who:** HUMAN (A5), recorded by ORCHESTRATOR
+
+## D-015 — S3 proof = the production Vouch Stream (no hello-contract Stream)
+- **Date:** 2026-11-16
+- **Decision:** The hello-contract test Stream (`vouch-s3-hello-spike`) is dropped. The human creates ONE production Stream in the QuickNode dashboard for the final Vouch contract (start block = final deploy block). It is the S3 live proof, and QE Part B verifies against it. The Hello filter and runbook stay as offline/QE artifacts.
+- **Reason:** Human Amendment A5 #2: one Stream, fewer credits, no throwaway dashboard work.
+- **Supersedes:** ORCHESTRATOR.md "Next up" items 1–2 (hello stream checklist and verification).
+- **Who:** HUMAN (A5), recorded by ORCHESTRATOR
+
+## D-016 — Stable API host on Railway before the production Stream (Phase 5 deploy pulled forward)
+- **Date:** 2026-11-16
+- **Decision:** `apps/api` is deployed to **Railway** (Dockerfile, managed Postgres, fixed `*.up.railway.app` HTTPS domain) before the production Stream is created; the Stream's webhook is `<railway-domain>/webhooks/streams`. Secrets (`STREAMS_WEBHOOK_SECRET`, later relayer keys) are set by the human in Railway → service → Variables, and mirrored in the local `.env`. Quick tunnels (D-005) are now for phone tests only.
+- **Reason:** Human Amendment A5 #3: quick tunnels died three times and every death changes the URL. Railway: trial is a one-time $5 credit, no card; services stay on; Postgres is one click. Render's free web services spin down after 15 min idle (about 1 min wake-up), which is bad for webhook deliveries, and its free Postgres expires after 30 days. Fly needs a card.
+- **Alternatives:** Render (sleeps), Fly (card), keep tunnels (rejected by the human).
+- **Who:** HUMAN (A5) + ORCHESTRATOR (host choice)
+
+## D-017 — Design direction approved (MSG-007)
+- **Date:** 2026-11-16
+- **Decision:** The human approved UI_DESIGN's six questions: (a) ink-black primary buttons, green reserved for money going to a person (D-601); (b) Instrument Sans (D-602); (c) split-receipt magnifier/loupe motif, kept **lightweight and projector-readable** (D-603); (d) copy "Confirm with Face ID or fingerprint", never "passkey" on primary screens (D-605); (e) placeholder L2 names Marco and Sofia (D-606); (f) hide Next's dev badge (`devIndicators: false`). Also required: fix the cashback self-loop under Ben in the money graph (MSG-008).
+- **Reason:** Human Amendment A5 #4. Unblocks Phase 3 hi-fi screens.
+- **Who:** HUMAN (A5), recorded by ORCHESTRATOR

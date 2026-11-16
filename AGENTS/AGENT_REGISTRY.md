@@ -1,5 +1,5 @@
 # AGENT_REGISTRY — roles → agent instances
-_Maintained by ORCHESTRATOR (D-009). Snapshot at the session-1 handoff (2026-11-16 ~14:00 ET); IDs may not be resumable from a new session (launch a fresh agent with a full brief if SendMessage fails)._
+_Maintained by ORCHESTRATOR (D-009). Session-1 rows (above the session-2 rows) are likely not resumable from a new session; launch a fresh agent with a full brief if SendMessage fails._
 _One row per launched agent instance. A finished agent can usually be **resumed** with SendMessage using its ID (it keeps its context); a new brief starts fresh._
 
 Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ stopped
@@ -14,3 +14,5 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | CONTRACTS | `ad7b974ed746e5ac4` | 1 | Vouch v1→v2, tests, deploy/verify, smoke, ABI, handoffs | ✅ | v2 0x9C50…b95f; resumable |
 | UI_DESIGN | `a22d241dedf389e0f` | 1 | Design system, components, /design route, screen low-fi, screenshots | ✅ | Orchestrator signed off; human approval pending (MSG-007) |
 | CONTRACTS_QE | `aef55c194d7c6021d` | 1 | Adversarial review + MSG-003 + v2 re-verify | ✅ | PASS-with-findings; resumable |
+| CONTRACTS (session 2) | `a914bc3d449f4f20b` | 1.5 | D-014 v3: remove submitter=0 path, size check, tests (no deploy) | 🟢 | then independent CONTRACTS_QE |
+| STREAMS_INFRA (session 2) | `a7d6b022bcb70614d` | 1.5 | D-016 Railway prep: Dockerfile, PORT, raw delivery table, runbook | 🟢 | the Orchestrator deploys after `railway login` |

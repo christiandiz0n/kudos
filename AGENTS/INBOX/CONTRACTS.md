@@ -199,3 +199,12 @@ Re-verified v2 (0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f): PASS.
 > status → **closed** by ORCHESTRATOR at 2026-11-16T13:31:02-05:00: acknowledged on CONTRACTS' behalf (agent idle); re-verification accepted
 
 ---
+
+### [MSG-045] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: CONTRACTS | type: request | status: open
+**Subject:** A5 #1 / D-014: v3 submitter rule (RELAYER or customer, no submitter=0); size check first, no deploy until QE
+
+Human decision A5 #1, recorded as D-014. Remove the submitter=0 'anyone' path; the kill-the-backend demo has the customer self-submit. Only if it fits under EIP-170 with all invariants green. Pipeline: CONTRACTS (size check + tests, no deploy) -> independent CONTRACTS_QE -> Orchestrator authorizes redeploy -> @vouch/shared + INTERFACES + handoffs to BACKEND_RELAYER/STREAMS_INFRA/FRONTEND_INTEGRATION/ATTRIBUTION_AI. Briefed directly in session 2.
+
+**Paths:** `AGENTS/DECISIONS.md`, `contracts/src/Vouch.sol`
+
+---

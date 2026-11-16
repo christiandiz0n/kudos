@@ -1,7 +1,7 @@
 # ORCHESTRATOR — HANDOFF
-_Last updated: 2026-11-16 ~14:00 ET by ORCHESTRATOR (session 1, before a context reset) — between Phase 1 and Phase 2_
+_Last updated: 2026-11-16 (session 2) by ORCHESTRATOR — Phase 1.5 (A5 follow-ups); Phase 2 waits for "go"_
 
-> **New orchestrator session: read in this order:** this file → `AGENTS/ORCHESTRATOR_PROMPT.md` (original prompt + Amendments A1–A4, which override it) → `AGENTS/README.md` (product story + comms protocol) → `AGENTS/HUMAN_INPUT.md` → `AGENTS/INBOX/_INDEX.md` → `AGENTS/PHASE_LOG.md` → `AGENTS/INTERFACES.md` → `AGENTS/DECISIONS.md` (as needed) → `AGENTS/AGENT_REGISTRY.md`.
+> **New orchestrator session: read in this order:** this file → `AGENTS/ORCHESTRATOR_PROMPT.md` (original prompt + Amendments A1–A5, which override it) → `AGENTS/README.md` (product story + comms protocol) → `AGENTS/HUMAN_INPUT.md` → `AGENTS/INBOX/_INDEX.md` → `AGENTS/PHASE_LOG.md` → `AGENTS/INTERFACES.md` → `AGENTS/DECISIONS.md` (as needed) → `AGENTS/AGENT_REGISTRY.md`.
 
 ## Mission
 Plan each phase, delegate to subagents with self-contained briefs (template: prompt §5.2, plus the inbox rules), integrate, run **independent** QE, keep `AGENTS/` true to the code, maintain `HUMAN_INPUT.md`, route inbox messages, and **stop at every phase gate** for the human. Never mark a phase done on a builder's word. No gate passes with an open `blocker` message.
@@ -10,7 +10,7 @@ Plan each phase, delegate to subagents with self-contained briefs (template: pro
 `AGENTS/README.md`, `AGENTS/ORCHESTRATOR.md`, `AGENTS/ORCHESTRATOR_PROMPT.md`, `AGENTS/HUMAN_INPUT.md`, `AGENTS/PHASE_LOG.md`, `AGENTS/AGENT_REGISTRY.md`. The Orchestrator applies changes to `AGENTS/INTERFACES.md`. Also `scripts/agents/msg.py`, `scripts/setup/gen-env.py`, `scripts/spikes/s2-deploy.sh`, the root `README.md` skeleton (DOCS_SUBMISSION takes it over in Phase 6), and `apps/web/src/app/spike/passkey/`.
 
 ## Current status
-🟡 **Phase 1 gate: contracts PASS; design approval pending.** The human has **not** said "go" for Phase 2 yet. S3 live (Phase 0 leftover) is waiting on the human to create the stream in the QuickNode dashboard, and **the webhook URL I gave them is now dead** (see Running processes). Time used ≈ 6 h of ~40–50; on schedule (target: submit by Fri Nov 20, 9:00 AM CST).
+🟡 **Phase 1.5 (A5).** Phase 1 gate PASS; design approved (D-017). In flight: **v3 submitter rule** (D-014: CONTRACTS → CONTRACTS_QE → redeploy), **Railway API host** (D-016: STREAMS_INFRA prep → human `railway login` → Orchestrator deploys), then **one production Stream** (D-015) from the dashboard checklist. Phone tests (#4) with the human on the session-2 web tunnel. The human has **not** said "go" for Phase 2. Time used ≈ 6.5 h of ~40–50.
 
 ## Mental model (read this first)
 - **Product:** Vouch (D-007). Pay a local venue in USDC on Arc by scanning a QR; the payment atomically splits: cashback 25% / L1 referrers 55% / L2 introducers 20% of the reward pool, remainder to the venue. Canonical: $12.00 → 10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108.
@@ -54,7 +54,8 @@ Wallet public addresses: `packages/shared/src/wallets.public.json`. In code: `VO
 - **Orchestrator / human:**
   - D-001 monorepo · D-002 placeholder name · D-003 secrets policy · D-004 human-run key gen, agents never read `.env` · D-005 cloudflared quick tunnels · D-006 web on port 3100 (3000 is an unrelated app).
   - D-007 name Vouch · D-008 L2 introducer rule · D-009 comms protocol · D-010 L2 per (customer, venue) confirmed; QN key 403 · D-011 Stream via dashboard.
-  - D-012 bind the submitter (QE-C-01) — **awaiting human confirmation (HUMAN_INPUT #12)** · D-013 QE-C-09 residuals routed.
+  - D-012 bind the submitter (QE-C-01) · D-013 QE-C-09 residuals routed.
+  - **Session 2 (A5):** D-014 submitter = RELAYER or customer, no `0` path (v3, conditional) · D-015 one production Stream = S3 proof · D-016 Railway API host · D-017 design approved.
 - **ARCHITECT research:** D-101 network facts · D-102 decimals · D-103 EIP-3009 payments · D-104 wallet B · D-105 Streams feasible.
 - **ARCHITECT scaffold:** D-201 Foundry/OZ via pnpm · D-202 Fastify · D-203 Drizzle + PGlite/Postgres · D-204 shared as TS source · D-205 jsqr/qrcode · D-206 pins (TS 5.9, viem 2.57.18, Next 16.4.6) · D-207 Hello hardening · D-208 EIP-712 v0 · D-209 S1 alignment.
 - **STREAMS_INFRA:** D-301 HMAC, fail closed · D-302 filter envelope v1 · D-303 create defaults/token · D-304 QE hardening.
@@ -67,32 +68,26 @@ Wallet public addresses: `packages/shared/src/wallets.public.json`. In code: `VO
 - **QE:** D-701 test_BUG_ convention · D-702 test_FIXED_ renaming.
 
 ## Open human-input items (HUMAN_INPUT.md)
-- **#3** S3 stream in the QuickNode dashboard. The webhook URL previously given is **dead**: generate a new one and re-send step 1 of the checklist.
-- **#4** phone tests (S6 scan + S6b passkey/PRF). The tunnel URL is dead; give a new one.
-- **#7** ✅ cloudflared.
-- **#8** hosting accounts (Vercel + Railway/Render) by Phase 2/5. **Recommend doing this now**: quick tunnels keep dying.
+- **#3** production Stream (D-015): waits on the final contract + Railway URL; checklist not issued yet.
+- **#4** phone tests on the session-2 web tunnel.
+- **#8** Railway account + `railway login` (D-016): blocking #3.
 - **#9** LLM provider (Phase 4).
-- **#11** approve the design direction (6 questions in MSG-007).
-- **#12** confirm D-012.
+- ✅ #11 design (D-017) · ✅ #12 D-012 (→ D-014, v3 in progress).
 
 ## Open inbox messages (none are blockers)
-- **MSG-007** question UI_DESIGN → ORCHESTRATOR: human design approval. Relay the human's answers to UI_DESIGN, then close it.
-- **MSG-008** fyi ORCHESTRATOR → UI_DESIGN: sign-off notes (fix the cashback self-loop in MoneyGraph; design the error states).
-- Handoffs waiting for Phase 2 consumers:
-  - BACKEND_RELAYER: **MSG-009** (v1 flow), **MSG-034** (v2 address + submitter), **MSG-040** (D-013 requirements).
-  - STREAMS_INFRA: **MSG-036** (v2 address, start block 72584790, topics unchanged).
-  - ATTRIBUTION_AI: **MSG-012** (weights bounds + fallback parity), **MSG-037** (v2 + sybil note).
-- Handoffs for Phase 3 consumers: FRONTEND_INTEGRATION **MSG-006** (design handoff), **MSG-011** (what users sign), **MSG-035** (submitter), **MSG-041** (D-013 UI rules).
-- Check live state any time: `python3 scripts/agents/msg.py list --open`.
+- MSG-007 **closed** (human answers relayed: MSG-043/MSG-044 to UI_DESIGN).
+- Session-2 routing: MSG-044 UI_DESIGN (approved + fixes), MSG-045 CONTRACTS (v3), MSG-046 STREAMS_INFRA (one Stream + Railway), MSG-047 BACKEND_RELAYER and MSG-048 FRONTEND_INTEGRATION (D-014 submitter rule), MSG-049 QE_E2E (Part B target).
+- Still open from session 1 (Phase 2–3 consumer handoffs): MSG-006, -008, -009, -011, -012, -034..-037, -040, -041. A v3 deploy will supersede MSG-034..-037.
+- Live state: `python3 scripts/agents/msg.py list --open`.
 
-## Running processes (ALL die when session 1 ends)
-| What | Port | Status at handoff | Restart command (repo root) |
+## Running processes (session 2; ALL die when this session ends)
+| What | Port | Status | Restart command (repo root) |
 |---|---|---|---|
-| API (Fastify, HMAC webhook) | 4000 | running locally (200) | `pnpm --filter @vouch/api start`; run it as a background task. It loads the root env itself. Restart after `STREAMS_WEBHOOK_SECRET` changes. |
-| API quick tunnel | — | **DEAD** ("Tunnel not found", after a network change) | `cloudflared tunnel --no-autoupdate --url http://localhost:4000` → read the `https://*.trycloudflare.com` URL from its output. Webhook = `<url>/webhooks/streams`. |
-| Web prod server (spikes + `/design`) | 3100 | running locally (200) | `pnpm --filter web build`, then `cd apps/web && node ./node_modules/next/dist/bin/next start -p 3100`. **Do not touch port 3000** (unrelated app). |
-| Web quick tunnel (phone tests) | — | **DEAD** | `cloudflared tunnel --no-autoupdate --url http://localhost:3100` |
-- **Verifying a new tunnel:** wait for "Registered tunnel connection" in its output. Local DNS may cache NXDOMAIN for a new hostname, so verify with `dig +short <host> @1.1.1.1` and `curl --resolve <host>:443:<ip> …`. Expected: `/health` → 200; unsigned `POST /webhooks/streams` → 503 `secret-unset` until the token is set, then 401.
+| API (Fastify, HMAC webhook) | 4000 | running, /health 200; unsigned POST → 503 secret-unset | `pnpm --filter @vouch/api start` (background task) |
+| Web prod server (spikes + `/design`) | 3100 | running, 200 | `cd apps/web && node ./node_modules/next/dist/bin/next start -p 3100`. **Do not touch port 3000.** |
+| Web quick tunnel (phone tests only) | — | `https://accomplish-transmission-thumbnail-cal.trycloudflare.com` (verified 200 via 1.1.1.1) | `cloudflared tunnel --no-autoupdate --url http://localhost:3100` |
+| API quick tunnel | — | **retired** (D-016: the production Stream uses the Railway URL) | — |
+- **Verifying a new tunnel:** wait for "Registered tunnel connection". Local DNS may cache NXDOMAIN, so use `dig +short <host> @1.1.1.1` and `curl --resolve <host>:443:<ip> …`.
 
 ## Known gotchas
 - **`.env` hook:** a PreToolUse hook blocks any Bash that references `.env`, and auto mode denies scripts that read secret values (even a last-4 fingerprint). Never read `.env`. Tools load it themselves (`tsx --env-file-if-exists=../.env` in pnpm scripts; bash wrappers like `scripts/spikes/s2-deploy.sh` that source it internally). When grepping the repo, **exclude `.env`** (I once printed two placeholder lines by accident).
@@ -107,12 +102,12 @@ Wallet public addresses: `packages/shared/src/wallets.public.json`. In code: `VO
 - **Next 16:** `next build` while a `next start` server runs from `.next` can break it; rebuild, then restart the 3100 server.
 - `rtk` filters command output; use `rtk proxy <cmd>` for raw output.
 
-## Next up (exact next actions)
-1. **On resume, before anything else:** start the API (:4000) and both tunnels (commands above) as background tasks. Verify them, then send the human the new webhook URL and phone-test URL (re-issue the S3 checklist from `docs/streams/S3-RUNBOOK.md` with the new webhook URL; all other wizard values are unchanged: name `vouch-s3-hello-spike`, Arc/Testnet, start block **72567874**, run continuously, latest-block delay 0, dataset Logs, filter `docs/streams/filter-hello-s3.js` (copy with `! pbcopy < ~/Desktop/ubc-2026/docs/streams/filter-hello-s3.js`), expected test-filter results: 72567880 → one Ping (tx 0x6a6ad1c2…a3d0, logIndex 4), 72567926 → one Split (tx 0x2de25bf8…8214, logIndex 19), 72567881 → null; destination Webhook, compression none, default retries; create PAUSED; token → `.env` `STREAMS_WEBHOOK_SECRET`; reply "stream created <ID>").
-2. **When the human replies "stream created <ID>":** restart the api (loads the token) → confirm unsigned/forged POST → 401 → tell the human to ACTIVATE → watch `pnpm --filter @vouch/scripts streams:deliveries` for the backfilled Ping (72567880) + Split (72567926) as VERIFIED → `pnpm --filter @vouch/scripts streams:ping --hello 0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` → confirm the live delivery is VERIFIED → tell the human to PAUSE → resume QE_E2E (or launch a fresh QE_E2E if it can't be resumed) for **QE Part B**: reproduce S3 live from the runbook.
-3. Relay the human's answers to MSG-007 (design) and #12 (D-012) when they arrive. Close MSG-007.
-4. **Wait for "go" on Phase 2.** Then: BACKEND_RELAYER (DB schema, endpoints, relayer with submitter=RELAYER, SSE; inbox MSG-009/034/040) ∥ STREAMS_INFRA (production Stream for Vouch v2 via the **dashboard**, start block 72584790, all 6 core events + the extra events in INTERFACES §4; ingest → derived tables; backfill/replay with a state-hash check; inbox MSG-036) → QE gate: QE_E2E + SECURITY_REVIEW in parallel (CLI canonical story through the api with the DB updated via Streams; replay determinism; secrets/rate limits). Strongly suggest the human creates Railway/Render (#8) so the production Stream gets a stable webhook URL.
-5. After each agent returns: route its messages; update AGENT_REGISTRY, PHASE_LOG, HUMAN_INPUT; commit only owned/finished paths.
+## Next up (exact next actions; A5 supersedes the session-1 list)
+1. **v3 (D-014):** when CONTRACTS returns, check size margin + test counts yourself, then launch an **independent CONTRACTS_QE** (brief with acceptance criteria, not the builder's summary). On PASS: authorize the redeploy (CONTRACTS: deploy, Blockscout verify, canonical smoke, `@vouch/shared` deployments, handoffs superseding MSG-034/035/036/037), apply INTERFACES, record the deploy block. If v3 doesn't fit or fails: keep v2 and tell the human.
+2. **Railway (D-016):** when STREAMS_INFRA returns, verify its tests + simulated start; commit; push. After the human replies "railway ready": `railway init` → `railway add --database postgres` → api service (Dockerfile) → vars (`DATABASE_URL=${{Postgres.DATABASE_URL}}`, `CORS_ORIGINS`) → deploy → `railway domain` → verify `/health` 200 (db.kind=postgres) and unsigned POST → 503. Follow `docs/deploy/RAILWAY.md`.
+3. **Production Stream (D-015):** once 1 + 2 are done, render the production filter for the final address/topics and give the human the full dashboard checklist (name, Arc/Testnet, start block = final deploy block, run continuously, latest-block delay, Logs, filter code + expected test output, webhook = Railway URL + `/webhooks/streams`, compression, retries/timeout, where the token is). Human creates it paused, sets `STREAMS_WEBHOOK_SECRET` in Railway Variables + `.env`, replies "stream created <ID>" → redeploy/restart → unsigned/forged → 401 → human activates → verify deliveries in the `stream_deliveries` table / `railway logs` → human pauses → fresh QE_E2E runs **QE Part B** against it.
+4. **Phone tests (#4):** wait for the human's S6/S6b results; record in PHASE_LOG + DECISIONS (PRF support).
+5. **Wait for "go" on Phase 2.** Then BACKEND_RELAYER ∥ STREAMS_INFRA (derived tables from the production Stream) → QE_E2E + SECURITY_REVIEW. UI_DESIGN fixes (MSG-044) at Phase 3 start.
 
 ## Struggles, open questions, known issues
 - The QuickNode credits-per-block multiplier for Arc is unknown (human couldn't find it). Stay on the free plan, keep backfills small, pause when idle.
@@ -125,6 +120,7 @@ Wallet public addresses: `packages/shared/src/wallets.public.json`. In code: `VO
 |---|---|---|---|
 | 0 | 3–4 h | ~3.5 h | S3 live + S6 still pending on the human |
 | 1 | 6–8 h | ~2.5 h wall clock | parallel agents; 1 QE fix round |
+| 1.5 (A5) | ~1–2 h | in progress | v3 + Railway + production Stream |
 Budget: ~40–50 h total to Fri 9:00 AM CST. About 6 h used.
 
 ## How to run / test

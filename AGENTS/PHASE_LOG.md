@@ -74,3 +74,16 @@ _Started 2026-11-16 on the human's "go". Target ~6–8 h._
 - State: Phase 1 gate PASS (contracts), design approval pending; Phase 2 NOT started (waiting for "go").
 - Phase 0 leftovers: S3 live (dashboard stream by the human; previous webhook URL dead), S6/S6b phone tests, QE Part B.
 - Both quick tunnels were dead at handoff (network change). Local api :4000 and web :3100 were up but die with the session.
+
+## Phase 1.5 — A5 follow-ups (session 2, 2026-11-16) — before Phase 2 "go"
+### Plan (Amendment A5, decisions D-014..D-017)
+1. **v3 submitter rule (D-014):** CONTRACTS removes the `submitter = 0` path (size check, tests, no deploy) → independent CONTRACTS_QE → Orchestrator authorizes redeploy → `@vouch/shared`, INTERFACES, consumer handoffs. Conditional on EIP-170 + invariants green; otherwise keep v2 and tell the human.
+2. **Stable API host (D-016):** STREAMS_INFRA prepares Railway (Dockerfile, `PORT`, raw `stream_deliveries` table, runbook `docs/deploy/RAILWAY.md`); the human creates the Railway account + `railway login`; the Orchestrator deploys and verifies.
+3. **One production Stream (D-015):** after 1 + 2, the human creates it in the dashboard from the Orchestrator's checklist (start block = final deploy block). Then QE Part B verifies S3 against it.
+4. **Design approved (D-017):** relayed to UI_DESIGN (MSG-044); MSG-007 closed. Fixes (Ben's cashback self-loop, error states) land at Phase 3 start.
+5. **Phone tests:** web :3100 + fresh quick tunnel up for the human (HUMAN_INPUT #4).
+### Delegated
+- CONTRACTS (session 2): v3 submitter change + size check (running).
+- STREAMS_INFRA (session 2): Railway deploy prep (running).
+### QE results / gate
+_pending_

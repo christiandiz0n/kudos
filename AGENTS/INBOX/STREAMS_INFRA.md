@@ -84,3 +84,12 @@ Proposal text: `docs/proposals/interfaces-phase1.md` §4.
 **Live sample logs:** v2 smoke, Ben's canonical pay tx 0x5c6c9e965371a76e36ef440af422d11a67d8c4abd9a1046cf70369006d348a35.
 
 ---
+
+### [MSG-046] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** A5: one production Stream (no hello Stream) on a stable Railway URL (D-015, D-016)
+
+D-015: the hello-contract Stream is dropped; the human creates ONE production Stream for the FINAL Vouch contract (v3 if D-014 lands, otherwise v2) in the dashboard, start block = final deploy block; it is the S3 proof and QE Part B verifies against it. D-016: apps/api goes to Railway first (Dockerfile + Postgres + fixed domain); webhook = <railway-domain>/webhooks/streams. Quick tunnels are for phone tests only. MSG-036's address/start block may be superseded by a v3 handoff from CONTRACTS.
+
+**Paths:** `AGENTS/DECISIONS.md`
+
+---

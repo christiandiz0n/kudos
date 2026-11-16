@@ -78,3 +78,12 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 **Paths:** `AGENTS/DECISIONS.md`
 
 ---
+
+### [MSG-048] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** D-014: kill-the-backend = customer self-submit; never sign submitter = 0
+
+Human A5 #1. App flow: the customer signs PaymentAuth with submitter = RELAYER (unchanged, MSG-041). Kill-the-backend demo: the customer signs submitter = their own address and submits pay() from their own key (gas in USDC). Never offer submitter = 0. Design copy approved (D-017): 'Confirm with Face ID or fingerprint'; ink-black buttons; Instrument Sans.
+
+**Paths:** `AGENTS/DECISIONS.md`
+
+---

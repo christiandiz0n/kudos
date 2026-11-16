@@ -9,12 +9,13 @@ Ack. The USDC pull is isolated in ONE internal function Vouch._pullPayment(custo
 
 ---
 
-### [MSG-007] 2026-11-16T12:15:31-05:00 FROM: UI_DESIGN TO: ORCHESTRATOR | type: question | status: open
+### [MSG-007] 2026-11-16T12:15:31-05:00 FROM: UI_DESIGN TO: ORCHESTRATOR | type: question | status: closed
 **Subject:** Human approval needed: Vouch visual direction (gate before Phase 3 hi-fi)
 
 Please ask the human to approve or redirect the design direction. Evidence: docs/evidence/phase-1/design/ (start with desktop-01-direction.png, screen-05-pay-confirm.png, screen-06-success.png, desktop-venue-dashboard.png) or run next dev -p 3200 and open /design. Decisions to confirm: (1) D-601 warm paper neutrals + ink-black primary buttons + ONE deep green accent reserved for money-to-people (alternative: green primary buttons). (2) D-602 Instrument Sans. (3) D-603 split-receipt + loupe signature motif. (4) Passkey copy says 'Face ID or fingerprint' rather than 'passkey' (default; Android wording is covered by 'fingerprint'). (5) L2 introducer placeholder names Marco and Sofia (D-606). (6) Optional: next.config devIndicators:false to hide the Next 'N' badge in demos (FRONTEND/ARCHITECT owns next.config; my screenshots hide it via CSS). Default if no answer: proceed with the documented direction in Phase 3.
 
 **Paths:** `docs/design/DESIGN_SYSTEM.md`, `docs/evidence/phase-1/design`
+> status → **closed** by ORCHESTRATOR at 2026-11-16T15:09:15-05:00: see MSG-043
 
 ---
 

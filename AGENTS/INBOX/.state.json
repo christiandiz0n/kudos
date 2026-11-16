@@ -1,5 +1,5 @@
 {
- "counter": 42,
+ "counter": 49,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -72,9 +72,10 @@
    "from": "UI_DESIGN",
    "to": "ORCHESTRATOR",
    "type": "question",
-   "status": "open",
+   "status": "closed",
    "subject": "Human approval needed: Vouch visual direction (gate before Phase 3 hi-fi)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-043"
   },
   "MSG-008": {
    "id": "MSG-008",
@@ -450,6 +451,77 @@
    "subject": "Re: QE-C-09 v2 residuals: submitter binding is only as strong as the chosen submitter; info notes on payout/nonces/grace/floor",
    "re": "MSG-038",
    "resolution": "routing recorded; nothing for QE to do"
+  },
+  "MSG-043": {
+   "id": "MSG-043",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "answer",
+   "status": "closed",
+   "subject": "Re: Human approval needed: Vouch visual direction (gate before Phase 3 hi-fi)",
+   "re": "MSG-007",
+   "resolution": "record of MSG-007 closure; action is in MSG-044"
+  },
+  "MSG-044": {
+   "id": "MSG-044",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "Design direction APPROVED by the human (D-017) + required fixes before Phase 3",
+   "re": null
+  },
+  "MSG-045": {
+   "id": "MSG-045",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "A5 #1 / D-014: v3 submitter rule (RELAYER or customer, no submitter=0); size check first, no deploy until QE",
+   "re": null
+  },
+  "MSG-046": {
+   "id": "MSG-046",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "A5: one production Stream (no hello Stream) on a stable Railway URL (D-015, D-016)",
+   "re": null
+  },
+  "MSG-047": {
+   "id": "MSG-047",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "BACKEND_RELAYER",
+   "type": "fyi",
+   "status": "open",
+   "subject": "D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0",
+   "re": null
+  },
+  "MSG-048": {
+   "id": "MSG-048",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "D-014: kill-the-backend = customer self-submit; never sign submitter = 0",
+   "re": null
+  },
+  "MSG-049": {
+   "id": "MSG-049",
+   "ts": "2026-11-16T15:09:15-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "QE_E2E",
+   "type": "fyi",
+   "status": "open",
+   "subject": "QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
+   "re": null
   }
  }
 }
