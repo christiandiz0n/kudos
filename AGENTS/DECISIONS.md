@@ -202,3 +202,10 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Date:** 2026-11-16
 - **Decision:** The human confirmed D-008's interpretation: the introducer is per (customer, venue). The second QuickNode key also returns 403 on `GET https://api.quicknode.com/streams/rest/v1/streams` with header `x-api-key`. Per the human's instruction, S3 live is stopped (no retries) and escalated. Phase 1 proceeds because it doesn't depend on S3.
 - **Who:** HUMAN / ORCHESTRATOR
+
+## D-011 — S3 Stream created via the QuickNode dashboard (REST API unavailable on trial plans)
+- **Date:** 2026-11-16
+- **Decision:** Create and manage the Stream in the QuickNode dashboard (Create Stream wizard). Network Arc Testnet, dataset Logs, our filter (`infra/streams/filter-logs.js` rendered per contract), start at the contract's deploy block, run continuously, latest-block delay 0, webhook destination `<api>/webhooks/streams`, compression none. The human creates it paused, copies the security token into the root env file as `STREAMS_WEBHOOK_SECRET`, and pauses/resumes it manually in the dashboard. If the dev tunnel URL changes, the human updates the destination URL in the dashboard; it becomes stable after the Phase 5 deploy. The REST CLI (`scripts/streams/streams.ts`) stays in the repo for paid plans.
+- **Reason:** The human verified that the Streams REST API returns 403 on trial plans: an Admin key on a brand-new account gets `{"message":"Insufficient permissions","name":"AuthorizationError"}`, and `qn auth login` fails the same way. Both of our earlier 403s (D-010) are explained by this. The wizard works and offers Arc Testnet. The bounty requires a Stream with a filter + webhook destination, which dashboard creation satisfies.
+- **Alternatives:** upgrade to a paid plan for REST access (not needed for the bounty); QuickNode Webhooks product (not Streams, doesn't qualify).
+- **Who:** HUMAN (finding) / ORCHESTRATOR

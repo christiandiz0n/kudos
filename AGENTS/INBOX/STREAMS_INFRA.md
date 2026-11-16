@@ -11,9 +11,10 @@ Backfilled from docs/qa/phase-0-qe-gate.md when the inbox system was introduced.
 
 ---
 
-### [MSG-002] 2026-11-16T11:40:23-05:00 FROM: ORCHESTRATOR TO: STREAMS_INFRA | type: fyi | status: open
+### [MSG-002] 2026-11-16T11:40:23-05:00 FROM: ORCHESTRATOR TO: STREAMS_INFRA | type: fyi | status: closed
 **Subject:** S3 live still blocked: QuickNode key 403 (human-side, HUMAN_INPUT #3)
 
 Second key also returns 403 AuthenticationError on GET /streams (one call, no retries, per the human). Do not call the QuickNode API until the Orchestrator relays a fix. Tracked as a human item, not an agent blocker.
+> status → **closed** by ORCHESTRATOR at 2026-11-16T11:58:14-05:00: superseded by D-011: REST API unavailable on trial plans; S3 switches to dashboard creation
 
 ---

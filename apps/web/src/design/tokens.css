@@ -1,0 +1,438 @@
+/*
+ * Vouch design tokens (UI_DESIGN, Phase 1). See docs/design/DESIGN_SYSTEM.md.
+ *
+ * Direction: clean fintech on warm "receipt paper" neutrals. Ink-black primary actions.
+ * ONE accent (green) that is reserved for money moving to a person: cashback, rewards,
+ * the referral flow, success. If something is green, somebody got paid.
+ *
+ * Every raw value lives here as a --vx-* variable. Tailwind utilities are generated from the
+ * @theme block at the bottom (bg-surface, text-ink-2, border-line, shadow-2, ease-out, ...).
+ * Light is the default. Dark follows the OS, or is forced with data-theme="dark" on any element.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Neutrals: warm paper + ink */
+  --vx-canvas: #f6f4ef; /* app background */
+  --vx-surface: #ffffff; /* cards, sheets */
+  --vx-surface-2: #eeebe4; /* sunken wells, inputs, segmented track */
+  --vx-surface-3: #e4e0d7; /* pressed / hover on sunken */
+  --vx-line: #e2ddd3; /* hairlines, dividers */
+  --vx-line-strong: #8f877b; /* input borders, focusable outlines (3:1 on surfaces) */
+  --vx-ink: #1b1915; /* primary text, primary button */
+  --vx-ink-2: #57514a; /* secondary text */
+  --vx-ink-3: #6b645b; /* meta, captions (AA on canvas + surface) */
+  --vx-on-ink: #fbfaf7; /* text on ink fills */
+
+  /* The accent: "Vouch green". Money that comes back to people. */
+  --vx-accent: #17694f; /* fills, strokes, large amounts */
+  --vx-accent-ink: #12573f; /* green text on canvas/surface/soft */
+  --vx-accent-soft: #e2efe8; /* tinted backgrounds (cashback chip, reward rows) */
+  --vx-accent-2: #4f9a7f; /* lighter steps for the split loupe */
+  --vx-accent-3: #8cc2ab;
+  --vx-accent-4: #c3e0d2;
+  --vx-on-accent: #ffffff;
+
+  /* Status (used sparingly, never decoratively) */
+  --vx-success: var(--vx-accent);
+  --vx-success-ink: var(--vx-accent-ink);
+  --vx-success-soft: var(--vx-accent-soft);
+  --vx-warning: #9a6200;
+  --vx-warning-ink: #7a4d00;
+  --vx-warning-soft: #fbefd6;
+  --vx-danger: #b42318;
+  --vx-danger-ink: #a01f15;
+  --vx-danger-soft: #fbe8e5;
+  --vx-on-danger: #ffffff;
+
+  /* Focus ring */
+  --vx-focus: #17694f;
+  --vx-focus-halo: rgba(23, 105, 79, 0.22);
+
+  /* Elevation: warm-tinted, low-contrast shadows */
+  --vx-shadow-1: 0 1px 0 rgba(27, 25, 21, 0.04), 0 1px 2px rgba(27, 25, 21, 0.06);
+  --vx-shadow-2: 0 2px 4px rgba(27, 25, 21, 0.04), 0 8px 24px rgba(27, 25, 21, 0.08);
+  --vx-shadow-3: 0 -2px 8px rgba(27, 25, 21, 0.04), 0 -16px 48px rgba(27, 25, 21, 0.14);
+  --vx-scrim: rgba(27, 25, 21, 0.36);
+
+  /* Identity tints for avatars (not accents; ink text on all ≥ 9:1) */
+  --vx-tint-1: #ece3d3; /* oat */
+  --vx-tint-2: #e9dcd6; /* clay */
+  --vx-tint-3: #dde4dc; /* sage */
+  --vx-tint-4: #dfe1e6; /* slate */
+  --vx-tint-5: #ede0e3; /* rose */
+  --vx-tint-6: #e5e1d0; /* sand */
+}
+
+/* Dark: same hues, re-tuned for AA on near-black warm surfaces. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --vx-canvas: #12110f;
+    --vx-surface: #1c1b18;
+    --vx-surface-2: #262420;
+    --vx-surface-3: #312e29;
+    --vx-line: #34312c;
+    --vx-line-strong: #7d766b;
+    --vx-ink: #f4f1eb;
+    --vx-ink-2: #c4bdb2;
+    --vx-ink-3: #a29a8f;
+    --vx-on-ink: #12110f;
+    --vx-accent: #4cc39a;
+    --vx-accent-ink: #6fd3ae;
+    --vx-accent-soft: #173328;
+    --vx-accent-2: #3a9c7b;
+    --vx-accent-3: #2c7860;
+    --vx-accent-4: #215744;
+    --vx-on-accent: #08130e;
+    --vx-warning: #e3b14f;
+    --vx-warning-ink: #ecc274;
+    --vx-warning-soft: #33280f;
+    --vx-danger: #f0857a;
+    --vx-danger-ink: #f59a90;
+    --vx-danger-soft: #3a1a17;
+    --vx-on-danger: #1a0805;
+    --vx-focus: #6fd3ae;
+    --vx-focus-halo: rgba(111, 211, 174, 0.25);
+    --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
+    --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+    --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
+    --vx-scrim: rgba(0, 0, 0, 0.6);
+    --vx-tint-1: #3a3328;
+    --vx-tint-2: #3b2f2c;
+    --vx-tint-3: #2c352e;
+    --vx-tint-4: #2d3038;
+    --vx-tint-5: #3a2d31;
+    --vx-tint-6: #36342a;
+  }
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --vx-canvas: #12110f;
+  --vx-surface: #1c1b18;
+  --vx-surface-2: #262420;
+  --vx-surface-3: #312e29;
+  --vx-line: #34312c;
+  --vx-line-strong: #7d766b;
+  --vx-ink: #f4f1eb;
+  --vx-ink-2: #c4bdb2;
+  --vx-ink-3: #a29a8f;
+  --vx-on-ink: #12110f;
+  --vx-accent: #4cc39a;
+  --vx-accent-ink: #6fd3ae;
+  --vx-accent-soft: #173328;
+  --vx-accent-2: #3a9c7b;
+  --vx-accent-3: #2c7860;
+  --vx-accent-4: #215744;
+  --vx-on-accent: #08130e;
+  --vx-warning: #e3b14f;
+  --vx-warning-ink: #ecc274;
+  --vx-warning-soft: #33280f;
+  --vx-danger: #f0857a;
+  --vx-danger-ink: #f59a90;
+  --vx-danger-soft: #3a1a17;
+  --vx-on-danger: #1a0805;
+  --vx-focus: #6fd3ae;
+  --vx-focus-halo: rgba(111, 211, 174, 0.25);
+  --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
+  --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
+  --vx-scrim: rgba(0, 0, 0, 0.6);
+  --vx-tint-1: #3a3328;
+  --vx-tint-2: #3b2f2c;
+  --vx-tint-3: #2c352e;
+  --vx-tint-4: #2d3038;
+  --vx-tint-5: #3a2d31;
+  --vx-tint-6: #36342a;
+}
+
+/* Motion. Durations collapse under reduced motion (see bottom). */
+:root {
+  --vx-dur-instant: 90ms; /* press feedback */
+  --vx-dur-fast: 160ms; /* fades, color */
+  --vx-dur-base: 240ms; /* small moves, toasts */
+  --vx-dur-slow: 360ms; /* sheets */
+  --vx-dur-celebrate: 640ms; /* success mark */
+  --vx-dur-flow: 2400ms; /* money-graph flow loop */
+  --vx-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --vx-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --vx-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layout */
+  --vx-gutter: 20px;
+  --vx-tap: 48px;
+  --vx-screen: 390px;
+}
+
+/* ---------- Tailwind v4 theme mapping ---------- */
+@theme inline {
+  /* Back-compat for Phase 0 spike pages */
+  --color-background: var(--vx-canvas);
+  --color-foreground: var(--vx-ink);
+
+  --color-canvas: var(--vx-canvas);
+  --color-surface: var(--vx-surface);
+  --color-surface-2: var(--vx-surface-2);
+  --color-surface-3: var(--vx-surface-3);
+  --color-line: var(--vx-line);
+  --color-line-strong: var(--vx-line-strong);
+  --color-ink: var(--vx-ink);
+  --color-ink-2: var(--vx-ink-2);
+  --color-ink-3: var(--vx-ink-3);
+  --color-on-ink: var(--vx-on-ink);
+  --color-accent: var(--vx-accent);
+  --color-accent-ink: var(--vx-accent-ink);
+  --color-accent-soft: var(--vx-accent-soft);
+  --color-accent-2: var(--vx-accent-2);
+  --color-accent-3: var(--vx-accent-3);
+  --color-accent-4: var(--vx-accent-4);
+  --color-on-accent: var(--vx-on-accent);
+  --color-success: var(--vx-success);
+  --color-success-ink: var(--vx-success-ink);
+  --color-success-soft: var(--vx-success-soft);
+  --color-warning: var(--vx-warning);
+  --color-warning-ink: var(--vx-warning-ink);
+  --color-warning-soft: var(--vx-warning-soft);
+  --color-danger: var(--vx-danger);
+  --color-danger-ink: var(--vx-danger-ink);
+  --color-danger-soft: var(--vx-danger-soft);
+  --color-on-danger: var(--vx-on-danger);
+  --color-focus: var(--vx-focus);
+  --color-scrim: var(--vx-scrim);
+
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Type scale (Instrument Sans). Money sizes are display/amount-*. */
+  --text-display: 3.25rem;
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 600;
+  --text-title-1: 1.75rem;
+  --text-title-1--line-height: 1.15;
+  --text-title-1--letter-spacing: -0.02em;
+  --text-title-1--font-weight: 600;
+  --text-title-2: 1.375rem;
+  --text-title-2--line-height: 1.25;
+  --text-title-2--letter-spacing: -0.015em;
+  --text-title-2--font-weight: 600;
+  --text-title-3: 1.125rem;
+  --text-title-3--line-height: 1.35;
+  --text-title-3--letter-spacing: -0.01em;
+  --text-title-3--font-weight: 600;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.45;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.35;
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.3;
+  --text-micro--letter-spacing: 0.06em;
+  --text-micro--font-weight: 600;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-1: var(--vx-shadow-1);
+  --shadow-2: var(--vx-shadow-2);
+  --shadow-3: var(--vx-shadow-3);
+
+  --ease-out: var(--vx-ease-out);
+  --ease-in-out: var(--vx-ease-in-out);
+  --ease-spring: var(--vx-ease-spring);
+
+  --animate-vx-fade-in: vx-fade-in var(--vx-dur-base) var(--vx-ease-out) both;
+  --animate-vx-rise-in: vx-rise-in var(--vx-dur-base) var(--vx-ease-out) both;
+  --animate-vx-sheet-in: vx-sheet-in var(--vx-dur-slow) var(--vx-ease-out) both;
+  --animate-vx-pop: vx-pop var(--vx-dur-celebrate) var(--vx-ease-spring) both;
+  --animate-vx-shimmer: vx-shimmer 1.4s linear infinite;
+  --animate-vx-spin: vx-spin 0.8s linear infinite;
+}
+
+@keyframes vx-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes vx-rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes vx-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes vx-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes vx-ripple {
+  from { transform: scale(0.9); opacity: 0.5; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+@keyframes vx-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes vx-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes vx-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes vx-flow {
+  to { stroke-dashoffset: -24; }
+}
+@keyframes vx-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ---------- Utilities ---------- */
+
+/* Money: always tabular, lining figures. Use on every number that is a dollar amount. */
+@utility money {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -0.01em;
+}
+
+/* Visible focus for custom controls: 2px ring + soft halo, never removed. */
+@utility focus-ring {
+  outline: 2px solid transparent;
+  &:focus-visible {
+    outline: 2px solid var(--vx-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--vx-focus-halo);
+  }
+}
+
+/* Perforated receipt edge (the signature motif). Apply to the top or bottom of a card. */
+@utility perforated-top {
+  -webkit-mask: radial-gradient(circle 5px at 8px 0, transparent 98%, #000) -8px 0 / 16px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 8px 0, transparent 98%, #000) -8px 0 / 16px 100% repeat-x;
+}
+@utility perforated-bottom {
+  -webkit-mask: radial-gradient(circle 5px at 8px 100%, transparent 98%, #000) -8px 0 / 16px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 8px 100%, transparent 98%, #000) -8px 0 / 16px 100% repeat-x;
+}
+
+/* ---------- Component-level CSS that can't be expressed as utilities ---------- */
+
+/* Range slider (Slider component). Track fill is driven by --vx-fill (0–100%). */
+.vx-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: var(--vx-tap);
+  background: transparent;
+  cursor: pointer;
+  --vx-fill: 50%;
+}
+.vx-range:focus {
+  outline: none;
+}
+.vx-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--vx-accent) var(--vx-fill), var(--vx-surface-3) var(--vx-fill));
+}
+.vx-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--vx-surface-3);
+}
+.vx-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--vx-accent);
+}
+.vx-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -11px;
+  border-radius: 999px;
+  background: var(--vx-surface);
+  border: 2px solid var(--vx-accent);
+  box-shadow: var(--vx-shadow-2);
+  transition: transform var(--vx-dur-instant) var(--vx-ease-out);
+}
+.vx-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--vx-surface);
+  border: 2px solid var(--vx-accent);
+  box-shadow: var(--vx-shadow-2);
+}
+.vx-range:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.vx-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--vx-focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 8px var(--vx-focus-halo);
+}
+.vx-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--vx-focus);
+  outline-offset: 3px;
+}
+
+/* Money-graph flow edges (MoneyGraph). Dashes travel along the edge toward the recipient. */
+.vx-flow {
+  stroke-dasharray: 2 10;
+  animation: vx-flow var(--vx-dur-flow) linear infinite;
+}
+
+/* Success mark: ripple + drawn check */
+.vx-ripple {
+  animation: vx-ripple 900ms var(--vx-ease-out) 120ms both;
+}
+.vx-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: vx-draw 360ms var(--vx-ease-out) 260ms forwards;
+}
+.vx-grow-x {
+  transform-origin: left center;
+  animation: vx-grow-x 560ms var(--vx-ease-out) both;
+}
+
+/* ---------- Reduced motion: keep state changes, drop movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vx-dur-instant: 1ms;
+    --vx-dur-fast: 1ms;
+    --vx-dur-base: 1ms;
+    --vx-dur-slow: 1ms;
+    --vx-dur-celebrate: 1ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .vx-flow {
+    animation: none;
+    stroke-dasharray: none;
+  }
+  .vx-ripple {
+    display: none;
+  }
+  .vx-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

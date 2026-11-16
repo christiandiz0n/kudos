@@ -13,20 +13,21 @@
   "dependencies": {
     "@vouch/shared": "workspace:*",
     "jsqr": "1.4.0",
-    "qrcode": "1.5.4",
     "next": "16.4.6",
+    "qrcode": "1.5.4",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^24",
+    "@types/qrcode": "1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "playwright": "1.56.1",
     "tailwindcss": "4.3.3",
-    "typescript": "^5.9.3",
-    "@types/qrcode": "1.5.6"
+    "typescript": "^5.9.3"
   }
 }

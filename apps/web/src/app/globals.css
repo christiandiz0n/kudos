@@ -1,28 +1,21 @@
 @import "tailwindcss";
+/* Vouch design tokens + Tailwind theme (UI_DESIGN owns src/design/). */
+@import "../design/tokens.css";
 
-/* Phase 0 placeholder tokens — UI_DESIGN owns the real design system. */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--vx-canvas);
+  color: var(--vx-ink);
   font-family: var(--font-sans);
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Visible keyboard focus everywhere by default (components add a halo via the focus-ring utility). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--vx-focus);
+  outline-offset: 2px;
 }

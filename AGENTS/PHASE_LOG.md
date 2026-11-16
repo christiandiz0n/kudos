@@ -43,7 +43,18 @@ _Bootstrap, verification spikes, human setup — started 2026-11-15 ~21:30 ET, t
 **PARTIAL.** Everything that doesn't need the human is done. S2/S3/S5 testnet runs + S6 phone + the QE gate are pending human input. Phase 1 must not start until the human says go.
 
 ## Phase 1
-_Not started; waiting for the human's "go"._
+_Started 2026-11-16 on the human's "go". Target ~6–8 h._
+### Plan
+1. Comms system first (D-009) ✅
+2. Parallel: **CONTRACTS** (Vouch.sol, tests incl. fuzz/invariants, fork test, Arc deploy + Blockscout verify, testnet canonical smoke, ABI/eip712/deployments export, handoff packets) and **UI_DESIGN** (tokens, components, `/design`, low-fi screens, money-graph spec, copy guide, screenshots).
+3. Then **CONTRACTS_QE**, independent: adversarial review + the human-required receiveWithAuthorization payee tests (MSG-003). Bugs go to the CONTRACTS inbox.
+4. In parallel: S3 live + QE Part B. **Blocked**: the second QuickNode key also returns 403 (D-010). Stopped per the human; escalated.
+### Delegated tasks
+| Task | Agent | Status |
+|---|---|---|
+| Vouch contract → testnet | CONTRACTS | 🟢 running |
+| Design system | UI_DESIGN | 🟢 running |
+| Adversarial review | CONTRACTS_QE | ⏳ after CONTRACTS |
 ### Human requirements recorded in advance
 - CONTRACTS_QE must explicitly test that USDC `receiveWithAuthorization` is called by the payee contract (see CONTRACTS_QE.md Next up, D-103).
 - L2 introducer rule approved (D-008): top-weight L1 referrer of the first purchase, frozen per (customer, venue).

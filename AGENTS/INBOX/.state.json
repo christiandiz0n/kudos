@@ -1,5 +1,5 @@
 {
- "counter": 4,
+ "counter": 5,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -18,9 +18,10 @@
    "from": "ORCHESTRATOR",
    "to": "STREAMS_INFRA",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "S3 live still blocked: QuickNode key 403 (human-side, HUMAN_INPUT #3)",
-   "re": null
+   "re": null,
+   "resolution": "superseded by D-011: REST API unavailable on trial plans; S3 switches to dashboard creation"
   },
   "MSG-003": {
    "id": "MSG-003",
@@ -38,9 +39,20 @@
    "from": "ORCHESTRATOR",
    "to": "CONTRACTS",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "Design for testability: CONTRACTS_QE will verify the receiveWithAuthorization payee path",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-005"
+  },
+  "MSG-005": {
+   "id": "MSG-005",
+   "ts": "2026-11-16T11:46:38-05:00",
+   "from": "CONTRACTS",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Design for testability: CONTRACTS_QE will verify the receiveWithAuthorization payee path",
+   "re": "MSG-004"
   }
  }
 }
