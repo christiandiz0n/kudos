@@ -71,6 +71,8 @@ contract QeV2ReattackTest is QeBase {
     }
 
     /// @dev The customer's signature cannot be re-targeted to another submitter: submitter is inside the USDC nonce.
+    ///      v3 (D-519): the "downgrade to 0" half is now refused by Vouch itself (UnauthorizedSubmitter, msg.sender is
+    ///      never 0) before USDC is reached; whichever check fires, nothing moves and the authorization stays unused.
     function test_v2_submitterSwapBreaksTheUsdcSignature() public {
         Bundle memory b = _frontRunScenario(relayer);
         b.a.submitter = attacker;
@@ -78,18 +80,39 @@ contract QeV2ReattackTest is QeBase {
         vm.expectRevert("FiatTokenV2: invalid signature");
         vouch.pay(b.o, b.osig, b.w, "", b.a, b.usig);
         b.a.submitter = address(0); // nor "downgraded" to anyone
-        vm.prank(attacker);
-        vm.expectRevert("FiatTokenV2: invalid signature");
-        vouch.pay(b.o, b.osig, b.w, "", b.a, b.usig);
+        address[3] memory callers = [attacker, relayer, ben];
+        for (uint256 i; i < 3; ++i) {
+            vm.prank(callers[i]);
+            vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+            vouch.pay(b.o, b.osig, b.w, "", b.a, b.usig);
+        }
+        b.a.submitter = relayer;
+        assertFalse(usdc.authorizationState(ben, _authNonce(b.a)), "signed authorization still unused");
+        assertFalse(vouch.isOrderSettled(venue, b.o.orderId));
+        _exec(b);
+        assertEq(vouch.introducerOf(venue, ben), ana, "the honest relayer still settles the attributor split");
     }
 
-    /// LIMIT (QE-C-09, Low): submitter = 0 ("anyone", D-012's kill-the-backend path) re-opens QE-C-01 for that payment:
-    /// a front-runner can still force the fallback. The binding is only as good as the client's choice of submitter.
-    function test_LIMIT_zeroSubmitterReopensFrontRun() public {
+    /// FIXED (QE-C-09 residual, was test_LIMIT_zeroSubmitterReopensFrontRun; v3 D-014/D-519): submitter = 0 no longer
+    /// means "anyone". A zero-submitter auth is unpayable by everyone (front-runner, relayer, the customer itself), so
+    /// the QE-C-01 front-run cannot be re-opened by the client choosing 0. No state changes and the USDC authorization
+    /// is never consumed.
+    function test_FIXED_zeroSubmitterUnpayable() public {
         Bundle memory b = _frontRunScenario(address(0));
-        vm.prank(priya);
-        vouch.pay(b.o, b.osig, b.w, hex"dead", b.a, b.usig);
-        assertEq(vouch.introducerOf(venue, ben), priya, "with submitter = 0 the front-runner still wins");
+        address[4] memory callers = [priya, attacker, relayer, ben];
+        uint256 ben0 = usdc.balanceOf(ben);
+        for (uint256 i; i < 4; ++i) {
+            vm.prank(callers[i]);
+            vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+            vouch.pay(b.o, b.osig, b.w, i == 0 ? bytes(hex"dead") : b.wsig, b.a, b.usig);
+        }
+        assertFalse(vouch.isOrderSettled(venue, b.o.orderId), "order not settled");
+        assertFalse(vouch.getCustomer(venue, ben).verified, "customer not verified");
+        assertEq(vouch.introducerOf(venue, ben), address(0), "no introducer frozen");
+        assertEq(vouch.getLiveIntros(venue, ben).length, 2, "intros untouched");
+        assertFalse(usdc.authorizationState(ben, _authNonce(b.a)), "USDC authorization not consumed");
+        assertEq(usdc.balanceOf(ben), ben0);
+        assertEq(usdc.balanceOf(address(vouch)), 0);
     }
 
     /// LIMIT (QE-C-09, Low): a PUBLIC forwarder/multicall as submitter is no binding at all: msg.sender is the forwarder

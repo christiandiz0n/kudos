@@ -1,0 +1,50 @@
+# CONTRACTS_QE v3 mutation check (2026-11-16T21:55:09Z): the QE tests must FAIL on a weakened submitter rule.
+# Each mutant = a scratch copy of the v3 working tree with ONE line of _checkOrder changed (contracts/src untouched):
+#   v2rule : if (auth.submitter != address(0) && msg.sender != auth.submitter) revert ...   (v2, 'anyone' path)
+#   optionB: if (msg.sender != auth.submitter && msg.sender != auth.customer) revert ...   (D-519 option (b))
+#   nocheck: the line deleted
+# Unit/fuzz: forge test --match-path 'test/qe/QeV*' --no-match-test 'GasStarvation|maxSplitGasFloor'
+=== mutant v2rule: 2 submitter refs
+[FAIL: next call did not revert as expected] test_FIXED_zeroSubmitterUnpayable() (gas: 2537991)
+[FAIL: Error != expected error: FiatTokenV2: invalid signature != UnauthorizedSubmitter()] test_v2_submitterSwapBreaksTheUsdcSignature() (gas: 2563688)
+Suite result: FAILED. 10 passed; 2 failed; 0 skipped; finished in 13.20ms (20.81ms CPU time)
+[FAIL: a non-submitter settled; counterexample: calldata=0x26e22fe6000000000000000000000000eb8f5fe119b7b1bf921aaf465502149385cc8446000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030c65908658689a96dcbd8b74ba6be06f95c4435 args=[0xeb8f5FE119b7B1bf921aAF465502149385cc8446, 0, 0x30c65908658689a96dcbd8B74bA6be06f95C4435]] testFuzz_v3_nonSubmitterAlwaysRefused(address,uint8,address) (runs: 0, μ: 0, ~: 0)
+[FAIL: Error != expected error: FiatTokenV2: invalid signature != UnauthorizedSubmitter()] test_v3_relabelMatrix_signatureBindsTheSubmitter() (gas: 2805988)
+[FAIL: a non-submitter settled] test_v3_zeroSubmitter_refusedForEveryone_noWriteNoUsdc() (gas: 2906531)
+Suite result: FAILED. 11 passed; 3 failed; 0 skipped; finished in 16.20ms (58.54ms CPU time)
+Ran 2 test suites in 16.53ms (29.40ms CPU time): 21 tests passed, 5 failed, 0 skipped (26 total tests)
+=== mutant optionB: 2 submitter refs
+[FAIL: next call did not revert as expected] test_FIXED_zeroSubmitterUnpayable() (gas: 2694419)
+[FAIL: next call did not revert as expected] test_v2_submitterMismatch_noStateChange_honestStillSettles() (gas: 2576943)
+[FAIL: Error != expected error: FiatTokenV2: invalid signature != UnauthorizedSubmitter()] test_v2_submitterSwapBreaksTheUsdcSignature() (gas: 2664394)
+Suite result: FAILED. 9 passed; 3 failed; 0 skipped; finished in 91.74ms (22.52ms CPU time)
+[FAIL: a non-submitter settled] test_v3_relayerBound_onlyRelayer_customerRefused() (gas: 4361826)
+[FAIL: a non-submitter settled] test_v3_zeroSubmitter_refusedForEveryone_noWriteNoUsdc() (gas: 4525732)
+Suite result: FAILED. 12 passed; 2 failed; 0 skipped; finished in 91.80ms (164.97ms CPU time)
+Ran 2 test suites in 92.09ms (183.54ms CPU time): 21 tests passed, 5 failed, 0 skipped (26 total tests)
+=== mutant nocheck: 1 submitter refs
+[FAIL: a non-submitter settled; counterexample: calldata=0x26e22fe6000000000000000000000000287906e7ed85b390afdcff44a71f06bc199ca22f000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000abde12aca0d3b08ad0ba34f37091b36b00e52c2f args=[0x287906e7Ed85B390AFdCFf44A71F06bc199Ca22F, 12, 0xAbdE12aca0d3b08AD0BA34f37091b36B00E52C2f]] testFuzz_v3_nonSubmitterAlwaysRefused(address,uint8,address) (runs: 0, μ: 0, ~: 0)
+[FAIL: Error != expected error: FiatTokenV2: invalid signature != UnauthorizedSubmitter()] test_v3_relabelMatrix_signatureBindsTheSubmitter() (gas: 2803959)
+[FAIL: a non-submitter settled] test_v3_relayerBound_onlyRelayer_customerRefused() (gas: 2907787)
+[FAIL: a non-submitter settled] test_v3_selfSubmit_onlyCustomer_relayerRefused() (gas: 2907784)
+[FAIL: next call did not revert as expected] test_v3_smartAccountCustomerSelfSubmits_exactSplit() (gas: 2921049)
+[FAIL: a non-submitter settled] test_v3_zeroSubmitter_refusedForEveryone_noWriteNoUsdc() (gas: 2905400)
+Suite result: FAILED. 8 passed; 6 failed; 0 skipped; finished in 12.34ms (45.79ms CPU time)
+[FAIL: next call did not revert as expected] test_FIXED_zeroSubmitterUnpayable() (gas: 2536860)
+[FAIL: next call did not revert as expected] test_v2_accessControlledContractSubmitterHolds() (gas: 2780997)
+[FAIL: next call did not revert as expected] test_v2_submitterMismatch_noStateChange_honestStillSettles() (gas: 2526454)
+[FAIL: Error != expected error: FiatTokenV2: invalid signature != UnauthorizedSubmitter()] test_v2_submitterSwapBreaksTheUsdcSignature() (gas: 2562108)
+Suite result: FAILED. 8 passed; 4 failed; 0 skipped; finished in 12.37ms (28.03ms CPU time)
+Ran 2 test suites in 12.71ms (24.72ms CPU time): 16 tests passed, 10 failed, 0 skipped (26 total tests)
+
+# Invariant harness (QeLedgerInvariantTest, FOUNDRY_INVARIANT_RUNS=64), after the D-703 handler fix:
+=== mutant v2rule: QeLedgerInvariantTest (64 runs)
+[FAIL: assertion failed: zero-submitter auth was paid != ] invariant_qe_noPerPaymentViolation
+[FAIL: verified: 1 != 0] invariant_qe_statsEqualEventSourcedLedger
+=== mutant optionB: QeLedgerInvariantTest (64 runs)
+[FAIL: assertion failed: front-run by a non-submitter was accepted != ] invariant_qe_noPerPaymentViolation
+[FAIL: verified: 1 != 0] invariant_qe_statsEqualEventSourcedLedger
+=== mutant nocheck: QeLedgerInvariantTest (64 runs)
+[FAIL: assertion failed: front-run by a non-submitter was accepted != ] invariant_qe_noPerPaymentViolation
+[FAIL: verified: 1 != 0] invariant_qe_statsEqualEventSourcedLedger
+# real v3 working tree: QeLedgerInvariantTest ok (see v3-invariants-deep.txt)

@@ -173,21 +173,40 @@ contract QeForkPayeeTest is Test {
         assertFalse(vouch.getCustomer(venue, ben).verified, "customer not verified");
     }
 
-    // ================================================================== deployed v2 == this source
-    /// @dev The fork tests deploy a fresh Vouch from this source; prove the LIVE v2 runs byte-identical code (same
-    ///      USDC immutable, bytecode_hash = none) and exposes the v2 PaymentAuth typehash (with submitter).
-    ///      OZ EIP712 bakes address(this) + the domain separator into immutables, so this source is re-deployed AT the
-    ///      v2 address on the fork (deployCodeTo) and the runtime bytes are compared exactly.
-    function test_fork_deployedV2RuntimeEqualsThisSource() public {
-        address v2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f;
-        bytes memory live = v2.code;
-        assertGt(live.length, 0, "v2 deployed");
-        assertEq(Vouch(v2).PAYMENT_AUTH_TYPEHASH(), T_AUTH);
-        assertEq(address(Vouch(v2).USDC()), address(USDC));
-        deployCodeTo("Vouch.sol:Vouch", abi.encode(address(USDC)), v2);
-        assertEq(keccak256(live), keccak256(v2.code), "deployed v2 runtime == this source compiled");
-        assertEq(Vouch(v2).PAYMENT_AUTH_TYPEHASH(), T_AUTH);
-        assertEq(address(Vouch(v2).USDC()), address(USDC));
+    // ================================================================== deployed code == audited source (D-703)
+    /// @dev keccak256 of the LIVE v2 runtime at 0x9C50…b95f (24,036 B). Recorded by CONTRACTS_QE on 2026-11-16 after
+    ///      re-proving, in a scratch checkout of commit c7280bc/HEAD (the v2 source), that the original
+    ///      `deployCodeTo` equality test passes; evidence: docs/evidence/phase-1/contracts-qe/v3-fork-pin.txt.
+    bytes32 constant V2_RUNTIME_KECCAK = 0xae810c8a5ec482935e8f39469eee493428e4ca5d9f57413c68a5bbe266aa4513;
+    address constant V2 = 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f;
+
+    /// @dev v2 stays pinned to ITS OWN recorded bytecode (it no longer equals this working tree, which is v3). The
+    ///      typehash, USDC immutable and runtime size are re-read live.
+    function test_fork_deployedV2RuntimeEqualsRecordedV2Build() public view {
+        bytes memory live = V2.code;
+        assertEq(live.length, 24_036, "v2 runtime size");
+        assertEq(keccak256(live), V2_RUNTIME_KECCAK, "live v2 runtime == recorded v2 build");
+        assertEq(Vouch(V2).PAYMENT_AUTH_TYPEHASH(), T_AUTH, "v2 typehash == v3 typehash (unchanged by D-519)");
+        assertEq(address(Vouch(V2).USDC()), address(USDC));
+    }
+
+    /// @dev After the v3 redeploy: `VOUCH_V3=<addr> VOUCH_FORK=true forge test --match-path 'test/qe/QeForkPayee.t.sol'`
+    ///      proves the LIVE v3 runs byte-identical code to this source. OZ EIP712 bakes address(this) + the domain
+    ///      separator into immutables, so this source is re-deployed AT that address on the fork (deployCodeTo) and the
+    ///      runtime bytes are compared exactly. Skipped while VOUCH_V3 is unset (v3 not deployed yet).
+    function test_fork_deployedV3RuntimeEqualsThisSource() public {
+        address v3 = vm.envOr("VOUCH_V3", address(0));
+        if (v3 == address(0)) {
+            vm.skip(true);
+            return;
+        }
+        bytes memory live = v3.code;
+        assertGt(live.length, 0, "v3 deployed");
+        assertTrue(keccak256(live) != V2_RUNTIME_KECCAK, "VOUCH_V3 must not point at v2");
+        assertEq(Vouch(v3).PAYMENT_AUTH_TYPEHASH(), T_AUTH);
+        assertEq(address(Vouch(v3).USDC()), address(USDC));
+        deployCodeTo("Vouch.sol:Vouch", abi.encode(address(USDC)), v3);
+        assertEq(keccak256(live), keccak256(v3.code), "deployed v3 runtime == this source compiled");
     }
 
     // ================================================================== (a)
@@ -361,6 +380,92 @@ contract QeForkPayeeTest is Test {
             vm.expectRevert("FiatTokenV2: invalid signature");
             vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
         }
+    }
+
+    // ================================================================== v3 (D-014/D-519) on real Arc USDC
+    function _bundleFor(address submitter) internal returns (B memory b) {
+        b = _bundle();
+        b.a.submitter = submitter;
+        b.usig = _usdcSig(benPk, b.a, address(vouch));
+    }
+
+    /// @dev Kill-the-backend: Ben signs submitter = Ben and sends pay() himself. Real USDC still sees Vouch as the
+    ///      caller/payee (MSG-003: it would otherwise revert "caller must be the payee"), and the split is exact.
+    function test_fork_v3_customerSelfSubmit_payeeIsVouch_exactSplit() public {
+        B memory b = _bundleFor(ben);
+        bytes32 nonce = _nonce(b.a);
+        uint256 ana0 = USDC.balanceOf(vm.addr(anaPk));
+        uint256 priya0 = USDC.balanceOf(vm.addr(priyaPk));
+        uint256 ben0 = USDC.balanceOf(ben) - b.o.amount;
+        uint256 payout0 = USDC.balanceOf(payout);
+        // Ben cannot redeem his own authorization directly: the payee check binds it to Vouch.
+        vm.prank(ben, ben);
+        vm.expectRevert("FiatTokenV2: caller must be the payee");
+        USDC.receiveWithAuthorization(ben, address(vouch), b.o.amount, 0, b.a.deadline, nonce, b.usig);
+        vm.expectCall(
+            address(USDC),
+            abi.encodeWithSignature(
+                "receiveWithAuthorization(address,address,uint256,uint256,uint256,bytes32,bytes)",
+                ben,
+                address(vouch),
+                b.o.amount,
+                uint256(0),
+                uint256(b.a.deadline),
+                nonce,
+                b.usig
+            ),
+            1
+        );
+        vm.prank(ben, ben);
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        assertTrue(USDC.authorizationState(ben, nonce), "real USDC consumed hashStruct(PaymentAuth)");
+        assertEq(USDC.balanceOf(payout) - payout0, 10_560_000, "venue 10.20 + returned L2 0.36 (seeds, no introducer)");
+        assertEq(USDC.balanceOf(vm.addr(anaPk)) - ana0, 693_000);
+        assertEq(USDC.balanceOf(vm.addr(priyaPk)) - priya0, 297_000);
+        assertEq(USDC.balanceOf(ben) - ben0, 450_000);
+        assertEq(USDC.balanceOf(address(vouch)), 0);
+    }
+
+    /// @dev Every submitter value (0, relayer, customer) is refused for every non-named caller on the real token,
+    ///      and the refused attempts leave the real USDC authorization unused and nothing moved.
+    function test_fork_v3_thirdPartiesRefused_allSubmitterValues() public {
+        address[3] memory subs = [address(0), relayer, ben];
+        address[4] memory callers = [attacker, relayer, ben, vm.addr(priyaPk)];
+        for (uint256 s; s < 3; ++s) {
+            B memory b = _bundleFor(subs[s]);
+            uint256 ben0 = USDC.balanceOf(ben);
+            uint256 payout0 = USDC.balanceOf(payout);
+            for (uint256 c; c < 4; ++c) {
+                if (callers[c] == subs[s]) continue;
+                vm.prank(callers[c], callers[c]);
+                vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+                vouch.pay(b.o, b.osig, b.w, hex"dead", b.a, b.usig);
+            }
+            assertFalse(USDC.authorizationState(ben, _nonce(b.a)), "real USDC authorization unused");
+            _assertUntouched(ben0, payout0, b.o.orderId);
+        }
+    }
+
+    /// @dev A signature for one submitter cannot be re-labelled for another on the real token (submitter is in the
+    ///      EIP-3009 nonce); a downgrade to 0 is refused by Vouch before USDC is reached.
+    function test_fork_v3_submitterRelabelRefused() public {
+        B memory b = _bundleFor(ben); // signed for self-submit
+        b.a.submitter = relayer;
+        vm.prank(relayer);
+        vm.expectRevert("FiatTokenV2: invalid signature");
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        B memory c = _bundleFor(relayer); // signed for the relayer
+        c.a.submitter = ben;
+        vm.prank(ben, ben);
+        vm.expectRevert("FiatTokenV2: invalid signature");
+        vouch.pay(c.o, c.osig, c.w, c.wsig, c.a, c.usig);
+        c.a.submitter = address(0);
+        vm.prank(ben, ben);
+        vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+        vouch.pay(c.o, c.osig, c.w, c.wsig, c.a, c.usig);
+        c.a.submitter = relayer;
+        _pay(c); // the original relayer-bound auth is intact
+        assertEq(USDC.balanceOf(vm.addr(anaPk)) - anaStart, 693_000);
     }
 
     // ================================================================== gas starvation on real bytecode

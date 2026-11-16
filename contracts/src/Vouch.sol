@@ -276,6 +276,8 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     ///        Bad/missing/mismatched weights NEVER revert: they select the fallback (PaymentSettled.weightsMode).
     /// @param customerUsdcSig The customer's signature over USDC's ReceiveWithAuthorization{from: customer,
     ///        to: this, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(auth)}.
+    /// @dev msg.sender MUST equal auth.submitter (the relayer, or the customer self-submitting); else
+    ///      UnauthorizedSubmitter. submitter = 0 is unpayable (D-519).
     function pay(
         Order calldata order,
         bytes calldata venueSig,
@@ -586,9 +588,10 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
         if (!SignatureChecker.isValidSignatureNow(v.signer, _hashTypedDataV4(VouchHash.order(order)), venueSig)) {
             revert InvalidVenueSignature();
         }
-        // D-012 / QE-C-01: only the bound submitter (the app's relayer) may submit; 0 = anyone (kill-the-backend path).
+        // D-012 / D-519 (QE-C-01, QE-C-09): ONLY the submitter the customer signed may submit: the app's relayer,
+        // or the customer itself (self-submit). There is no "anyone" value: submitter = 0 is unpayable.
         // Checked last so malformed orders/auths report their specific error first.
-        if (auth.submitter != address(0) && msg.sender != auth.submitter) revert UnauthorizedSubmitter();
+        if (msg.sender != auth.submitter) revert UnauthorizedSubmitter();
     }
 
     /// @dev Live, unexpired intros whose frozen minOrder <= amount, in slot order.

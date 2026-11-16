@@ -251,3 +251,116 @@ _Run 2026-11-16 against v2 `0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f` (block 7
 Fork (`VOUCH_FORK=true`, public RPC): VouchFork **3/3**, QeForkPayee **8/8**. The real-USDC gas threshold is 425,328; 1,551 gas limits were tried, with 201 successes, all exact.
 
 Evidence: `v2-forge-test-summary.txt`, `v2-fork-tests.txt`, `v2-gas-sweeps.txt`, `live-arc-eth-call-v2.{sh,txt}`. The v1 files are kept for history.
+
+---
+
+## v3 (D-014/D-519): independent review of the submitter rule
+
+_2026-11-16, CONTRACTS_QE. Target: the uncommitted working tree, not yet deployed. Live v2 `0x9C50…b95f` is unchanged._
+
+### Verdict: **PASS-with-findings** for a v3 redeploy
+The v3 rule `if (msg.sender != auth.submitter) revert UnauthorizedSubmitter();` meets the human requirement (A5 #1):
+- **No third party.** No third party can settle any PaymentAuth, whether submitter = 0, the relayer or the customer.
+- **Self-submit works.** The customer can self-submit and gets the exact canonical split.
+- **No front-running gap.** The `submitter = 0` path is gone.
+- **Size.** Runtime is **23,998 B** (578 B under EIP-170).
+- **Tests green.** Every builder and QE test passes, and all invariants hold.
+
+The findings are Info only (QE-C-10, QE-C-11). They need docs or integration work, not a code change.
+
+### What I reviewed
+- **The diff.** `git diff -- contracts/src` touches 2 files. The functional change is one line in `_checkOrder`; the rest is NatSpec in `Vouch.sol` and `IVouch.sol`.
+- **Unchanged libraries.** `VouchHash.sol` and `VouchSplit.sol` are untouched.
+- **Check placement.** The check is still the last statement of a `view` function that runs before `_settle`. A refusal therefore can't write state, and it can't reach USDC.
+- **Arguments.** `_pullPayment` is unchanged: it calls `receiveWithAuthorization(customer, address(this), …)`.
+
+### Requirement → evidence (`contracts/test/qe/QeV3Submitter.t.sol`, 16 tests, all pass)
+| Requirement / question | Test(s) | Result |
+|---|---|---|
+| Third parties refused for submitter = **0** | `test_v3_zeroSubmitter_refusedForEveryone_noWriteNoUsdc`: 11 callers, including the relayer and the customer, each with a valid and a garbage attributor sig | all refused |
+| Third parties refused for submitter = **relayer**; the **customer can't settle a relayer-bound auth** | `test_v3_relayerBound_onlyRelayer_customerRefused` | refused; afterwards the relayer settles the ATTRIBUTOR split |
+| Third parties refused for submitter = **customer**; the **relayer can't settle a self-submit auth** | `test_v3_selfSubmit_onlyCustomer_relayerRefused` | refused; afterwards the customer settles the ATTRIBUTOR split |
+| Any non-submitter, any submitter value | `testFuzz_v3_nonSubmitterAlwaysRefused` (1,000 runs; submitter ∈ {0, relayer, customer, random}) | refused |
+| Refused attempts change no state and don't touch the USDC authorization | every refusal above runs under `vm.startStateDiffRecording`: **0 SSTOREs**, **no call reaches USDC**, an observable-state digest is unchanged (balances, order, CustomerState, live intros, VenueStats, AmbassadorStats), and `authorizationState == false` | holds |
+| Customer self-submit: exact canonical split | `test_v3_selfSubmit_canonicalExactSplit_equalsRelayerPathAndPreview` | $12.00 → **10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108**. Byte-identical to the relayer path and equal to `previewPayment`. 6 transfers out of Vouch sum to 12.00, and Vouch holds 0. |
+| MSG-003 under self-submit (mock) | same test, plus `test_v3_selfSubmitter_cannotRedeemOwnAuthorizationOutsideVouch` | `receiveWithAuthorization(ben, Vouch, …, nonce = hashStruct(auth))` is called exactly once, and `lastReceiveCaller == Vouch`. The customer calling USDC directly gets `caller must be the payee`; naming itself as payee gets `invalid signature`. |
+| Signature binds the submitter (relabel) | `test_v3_relabelMatrix_signatureBindsTheSubmitter`: signed for {relayer, customer, 0}, relabelled to {relayer, customer, attacker, 0} | a relabel to 0 is refused by Vouch with `UnauthorizedSubmitter` before USDC is called; any other relabel is refused by USDC with `invalid signature`. The original auth stays usable. |
+| ERC-1271 / contract customer self-submits | `test_v3_smartAccountCustomerSelfSubmits_exactSplit` | settles exactly through the account's `execute`. The owner EOA calling `pay` directly is refused (it is not the submitter). |
+| Kill-the-backend end to end, no relayer | `test_v3_killTheBackend_customerAcceptsIntrosAndPays_noRelayer` | the customer submits its own `acceptIntro` calls and then `pay`; the split is exact |
+| D-509 first-purchase semantics | `test_v3_selfSubmit_firstPurchaseSemanticsUnchanged` | a below-minimum first self-submit is verified and plain (mode 0, no introducer); the next purchase is plain |
+| D-506/D-517 gas guard with msg.sender = customer | `test_v3_selfSubmitGasStarvation_{near_1gas,far}` | threshold 478,631. Near: 951 limits at 1-gas steps, 151 successes, all identical to the ample-gas outcome. Far: 0 successes. |
+| Typehash / nonce / ABI / topics unchanged | `test_v3_typehashNonceSelectorsAndTopicsUnchanged`; `v3-interface-diff.txt` | see below |
+
+### Interface vs v2 (`docs/evidence/phase-1/contracts-qe/v3-interface-diff.txt`)
+- **Typehash.** The `PaymentAuth` typehash is `0xf9bd6d8f…7abcba4`. It equals the keccak of the shared type string, the live v2 `PAYMENT_AUTH_TYPEHASH()`, and `T_AUTH`.
+- **Nonce.** `paymentAuthNonce(a)` equals the independent `hashStruct` for submitter ∈ {0, relayer, customer}. The nonce USDC consumes on a self-submit is that value (D-103).
+- **ABI.** The full ABI is **identical**, compared order-insensitively, against:
+  - the v2 source (`forge inspect`);
+  - the **Blockscout-verified v2 ABI** (`getabi` for `0x9C50…b95f`);
+  - `packages/shared/src/abi/vouch.ts` (`vouchAbi`).
+
+  That is 93 entries, 50 methods, 31 errors and 11 events.
+- **Topics and selectors.** All 11 event topic0s match `VOUCH_EVENT_TOPICS`. `pay` is `0xbaeddac1` and `UnauthorizedSubmitter` is `0x93b78c88`, both unchanged.
+
+### Adversarial questions answered
+- **Can the relayer settle a self-submit auth?** No: `UnauthorizedSubmitter`, with no state change.
+- **Can the customer settle a relayer-bound auth?** Not that auth: `UnauthorizedSubmitter` (the option-(a) pin). The customer *can* sign a **second** self-submit auth for the same order and settle first. That is **QE-C-10**, below.
+- **Does self-submit re-open QE-C-01?** No, not for any third party (matrix, fuzz, invariant probe). The self-submitting customer can degrade its own commit to the fallback by submitting a garbage attributor sig. The outcome is identical to signing `weightsHash = 0` (`test_INFO_selfSubmitterCanDegradeOwnCommitToFallback_sameAsSigningZero`), so that is the customer's own choice, not a third-party power. A customer front-running itself only races its own nonce or order: the order settles once and the second attempt reverts `OrderAlreadySettled`.
+- **D-506/D-517 limits.**
+  - The gas floor and 63/64 guard don't depend on `msg.sender`; the sweep is clean.
+  - The intro-griefing limits (D-517) are unchanged. They get more exposure in kill-the-backend mode, because `acceptIntro` goes through the public mempool (QE-C-11 (2)).
+- **`acceptIntro`, the fallback (D-502) and first purchase (D-509).** All unchanged. `acceptIntro` remains permissionless, and its signatures bind the parties.
+- **Is `submitter = 0` really unpayable?** Yes, because `msg.sender` is never 0. Only a cheatcode prank as 0x0 settles it (`test_INFO_zeroSubmitterUnpayabilityRestsOnMsgSenderNeverZero`).
+- **Public forwarder as submitter.** Still no binding (`test_LIMIT_publicForwarderAsSubmitterIsNoBinding`). D-013(1) still forbids it, and that remains an integration rule.
+
+### MSG-003 still holds
+- **Mock.** `QePayeeAuth` 13/13, plus the self-submit tests above.
+- **Fork, real Arc USDC** (`QeForkPayee`):
+  - `test_fork_v3_customerSelfSubmit_payeeIsVouch_exactSplit`: Ben calling real USDC directly gets `caller must be the payee`. His self-submit `pay` triggers exactly one `receiveWithAuthorization(ben, Vouch, …)` from Vouch. The split is exact (venue 10.56 includes the returned L2, because the fork seeds have no introducer).
+  - `test_fork_v3_thirdPartiesRefused_allSubmitterValues`: the real-USDC authorization stays unused.
+  - `test_fork_v3_submitterRelabelRefused`.
+- **Builder fork tests.** `VouchFork` 5/5, including self-submit and zero-submitter on real USDC.
+
+### Findings
+| ID | Severity | Summary | Message |
+|---|---|---|---|
+| **QE-C-10** | Info/Low | **The order isn't bound to a submitter.** A customer can pre-empt its relayer-bound auth by self-submitting a second auth for the same order (e.g. `weightsHash = 0`, which forces the fallback). The relayer's tx reverts `OrderAlreadySettled`. The customer is charged once, and the relayer-bound authorization stays unused. This gives the customer no new power (in v2 they could already do it, or sign 0), but D-519's "the backend's view is authoritative" holds only per auth. Requested: a Known-limits line, and BACKEND_RELAYER should treat `OrderAlreadySettled` as terminal and read `PaymentSettled`. Repro: `test_INFO_customerCanPreemptRelayerBoundAuthWithOwnSelfSubmitAuth`. | MSG-053 |
+| **QE-C-11** | Info | Kill-the-backend notes. (1) Gas is paid in USDC from the same balance, so FRONTEND must check `balance ≥ amount + gasLimit × maxFee`; this can't be modelled in Foundry. (2) `acceptIntro` goes through the public mempool, which exposes the D-517 limits more. (3) Stale "zeroAddress = anyone may submit" wording in `packages/shared/src/eip712.ts` and INTERFACES §3 must be updated with the redeploy. (4) Zero unpayability rests on `msg.sender ≠ 0`. (5) A post-redeploy `VOUCH_V3` pin. | MSG-054 |
+
+QE-C-09 (MSG-038) is now **fixed** for its zero-submitter part: `test_LIMIT_zeroSubmitterReopensFrontRun` became `test_FIXED_zeroSubmitterUnpayable` (D-702). Its public-forwarder part stays a LIMIT (integration rule D-013(1)).
+
+### QE tests changed (D-701/D-702; no property weakened)
+- **`QeV2Reattack.t.sol`:**
+  - `test_LIMIT_zeroSubmitterReopensFrontRun` → **`test_FIXED_zeroSubmitterUnpayable`**. It asserts refusal for the front-runner, the relayer and the customer, plus no state change and an unused authorization.
+  - `test_v2_submitterSwapBreaksTheUsdcSignature`: the "downgrade to 0" half now expects `UnauthorizedSubmitter`, for 3 callers. The attacker-swap half still expects `invalid signature`. The test now also asserts that the honest relayer still settles the attributor split afterwards, which is stronger than before.
+- **`QeForkPayee.t.sol` (D-703):**
+  - `test_fork_deployedV2RuntimeEqualsThisSource` → **`test_fork_deployedV2RuntimeEqualsRecordedV2Build`**. Live v2 stays pinned to **its own** runtime: keccak `0xae810c8a…6aa4513`, 24,036 B, plus the typehash and the USDC immutable. To record that hash I first re-proved live v2 == v2 source by running the original `deployCodeTo` test in a scratch checkout of HEAD's `contracts/src` (`v3-fork-pin.txt`).
+  - New `test_fork_deployedV3RuntimeEqualsThisSource` targets `VOUCH_V3=<addr>`. It is skipped while that is unset (v3 not deployed), and it refuses to run against the v2 address (guard demonstrated).
+  - Plus 3 new v3 fork tests.
+- **`QeInvariant.t.sol`:**
+  - **Submitter mix.** The handler now signs half its auths for the relayer and half for the customer (self-submit pays are sent with `prank(customer, customer)`).
+  - **Probes.** On every pay it probes a stranger, the *other* legitimate party, and a validly signed zero-submitter auth for the same order from both the relayer and the customer.
+  - **Fixed a latent harness defect** (also present in my v2 probe): a wrongly accepted probe was followed by the honest `pay` reverting `OrderAlreadySettled`, and that revert rolled back the recorded violation, so a broken submitter check went unnoticed. The handler now returns right after a breach. Verified by mutation (below).
+- **New `QeV3Submitter.t.sol`** (16 tests), with `QeSmartAccount` (ERC-1271 customer).
+
+### Mutation check (`v3-mutants.txt`)
+I ran three one-line mutants of `_checkOrder` in scratch copies (`contracts/src` untouched):
+
+| Mutant | What it restores | Unit/fuzz failures | QeLedger invariant |
+|---|---|---|---|
+| v2 rule | the "anyone" path | 5 | fails |
+| option (b) | `|| msg.sender == customer` | 5 | fails |
+| check deleted | no submitter check at all | 10 | fails |
+
+### Commands and counts (v3 working tree)
+- `forge build --sizes`: `| Vouch | 23,998 | 25,032 | 578 | 24,120 |` (`v3-sizes.txt`)
+- `forge test`: **197 passed, 0 failed, 2 skipped** across 21 suites (`v3-forge-test-full.txt`). The 2 skips are the opt-in fork suites. Builder suites: 101 (VouchQeFixes 16). QE suites: 96 (QeV3Submitter 16, QeV2Reattack 14).
+- `VOUCH_FORK=true forge test --match-path 'test/**/*Fork*'`: **16 passed, 0 failed, 1 skipped** (`v3-fork-tests.txt`). VouchFork has 5 tests; QeForkPayee has 12, of which `test_fork_deployedV3RuntimeEqualsThisSource` is skipped until `VOUCH_V3` is set. The real-USDC gas threshold is 425,084: 1,551 limits tried, 201 successes, all exact.
+- Invariants, default 256×64: Vouch (4 invariants) and QeLedger (4) both green, 16,384 calls each with 0 reverts. The deep run at **1024×128** is also green, 131,072 calls each (`v3-invariants-deep.txt`).
+
+### How to re-run
+```bash
+cd contracts && forge test --match-path 'test/qe/QeV3Submitter.t.sol' -vv
+VOUCH_FORK=true forge test --match-path 'test/**/*Fork*' -vv
+VOUCH_V3=<v3 address> VOUCH_FORK=true forge test --match-path 'test/qe/QeForkPayee.t.sol'   # after the redeploy
+```

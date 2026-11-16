@@ -1,0 +1,39 @@
+# CONTRACTS_QE v3 interface diff (2026-11-16T21:55:09Z)
+# v3 = working tree; v2 = HEAD contracts/src (git archive, == live 0x9C50…b95f per v3-fork-pin.txt)
+# forge inspect src/Vouch.sol:Vouch {abi,events,errors,methodIdentifiers} --json for both trees;
+# Blockscout: GET https://explorer.testnet.arc.io/api?module=contract&action=getabi&address=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f
+# shared: packages/shared/src/abi/vouch.ts (vouchAbi, VOUCH_EVENT_TOPICS, VOUCH_TYPE_STRINGS)
+
+ABI v3 == v2 source (HEAD): True (93 vs 93 entries)
+ABI v3 == Blockscout-verified v2 0x9C50…b95f: True (93 vs 93 entries)
+ABI v3 == @vouch/shared vouchAbi: True (93 vs 93 entries)
+events: v3 == v2: True (11 entries)
+errors: v3 == v2: True (31 entries)
+methods: v3 == v2: True (50 entries)
+  topic0 CustomerVerified     0xca816bf56b298971c59e72dcd003c06b351b66ffedb5ec84017d6195ec0152c8  shared: ==
+  topic0 EIP712DomainChanged  0x0a6387c9ea3628b88a633bb4f3b151770f70085117a15f9bf3787cda53f13d31  shared: ==
+  topic0 IntroAccepted        0xe75b5b5d835a46c918feb6cac867d2b1c6ed4d45a112ebaf7067bb9c1fcf37fc  shared: ==
+  topic0 IntroDropped         0x71760f14b6c295e573eb0712240020bcabda6d58907c0f3897ecf55f9ec193ea  shared: ==
+  topic0 PaymentSettled       0x35f580066b94268579e33474e66ad0347864c26fe8683e577efb5072c80e7432  shared: ==
+  topic0 RewardPaid           0xd28b9898dcd3318ef486fd51dbeba03ddb126bdb888b82d4ac7504213412b36a  shared: ==
+  topic0 RewardReturned       0x1cba477ed7240b8110e7fecc9c7f6fd041255365455d9c76f2b2febb4cfb7a15  shared: ==
+  topic0 SeedAmbassadorSet    0x213904416ef720404e57b83f59ff9f8b5029132b1581c57443cf044b11a835b2  shared: ==
+  topic0 TermsUpdated         0x86d80d9334324698e8c0763e1f6a4179b0ae6af2e64a9724746ce284ec78bb8b  shared: ==
+  topic0 VenueKeysUpdated     0xc518545d9074ed155beb97a3caed0bbecc0d2cdcdee6d6d2d16a079883ab2ee2  shared: ==
+  topic0 VenueRegistered      0xf0f4291fd5fccc2af9a998b6cf8aba2121c99823a21bcfac7a4821537f004d77  shared: ==
+UnauthorizedSubmitter selector: 93b78c88
+pay selector: {'pay((address,bytes32,uint256,uint64),bytes,(address,address,bytes32,address[],uint16[]),bytes,(address,address,bytes32,uint256,bytes32,uint64,address),bytes)': 'baeddac1'}
+shared PaymentAuth type string: PaymentAuth(address customer,address venue,bytes32 orderId,uint256 amount,bytes32 weightsHash,uint64 deadline,address submitter)
+RESULT: IDENTICAL
+
+$ cast keccak '<shared PaymentAuth type string>'
+0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4
+
+$ git diff --stat -- contracts/src   (only Vouch.sol + IVouch.sol NatSpec; VouchHash.sol untouched)
+ contracts/src/Vouch.sol             | 7 +++++--
+ contracts/src/interfaces/IVouch.sol | 3 ++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+$ git diff -U0 -- contracts/src/Vouch.sol | grep '^[-+] .*revert'
+-        if (auth.submitter != address(0) && msg.sender != auth.submitter) revert UnauthorizedSubmitter();
++        if (msg.sender != auth.submitter) revert UnauthorizedSubmitter();

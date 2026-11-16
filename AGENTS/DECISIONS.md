@@ -472,3 +472,16 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Alternatives:** keep NDJSON on a Railway volume (not queryable, one more resource); a store-everything table including rejects (unauthenticated public writes to the DB, rejected); `pnpm deploy` (needs `injectWorkspacePackages` or `--legacy`; more moving parts than `--prod`); a tsup/esbuild bundle (D-204 says only if plain node is required).
 - **Caveat:** Railway marks `railway.json` (Config as Code) deprecated in favour of IaC (`.railway/railway.ts`), with legacy support stated until 2026-12-01. RAILWAY.md says to confirm the healthcheck and restart policy in the service settings. Moving to IaC is a follow-up.
 - **Who:** STREAMS_INFRA
+
+## D-703 — QE fork bytecode pin across redeploys; invariant probes must not be rolled back
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Fork bytecode pin.** Each deployed Vouch version is pinned to ITS OWN bytecode, not to the working tree.
+    - `test_fork_deployedV2RuntimeEqualsRecordedV2Build` asserts that live `0x9C50…b95f` has runtime keccak `0xae810c8a…6aa4513` (24,036 B), the v2 typehash and the USDC immutable. The hash was recorded after re-running the original `deployCodeTo` equality test against a scratch checkout of the v2 source (HEAD `contracts/src`).
+    - `test_fork_deployedV3RuntimeEqualsThisSource` proves live == this source for the address in `VOUCH_V3`. It skips while `VOUCH_V3` is unset and refuses the v2 address.
+    - On the next redeploy, the v3 hash gets recorded the same way before the source moves on.
+  - **Invariant probes.** In `QeLedgerHandler`, a probe that a correct contract must refuse RETURNS on breach instead of continuing to the honest call. Otherwise the honest call's revert (e.g. `OrderAlreadySettled`) rolls back the recorded violation under `fail_on_revert = false`.
+- **Reason:**
+  - **Pin.** A source change always breaks a "live == this source" pin for the previous deployment. Re-targeting the pin to the new source would leave the still-live v2 unpinned, and deleting it would lose the deployment proof.
+  - **Probes.** The v2 front-run probe had this blind spot. Mutation testing for v3 (v2 rule / option (b) / no check) showed the harness stayed green until it was fixed.
+- **Who:** CONTRACTS_QE

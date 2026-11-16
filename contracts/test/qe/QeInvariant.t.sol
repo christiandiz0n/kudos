@@ -64,6 +64,8 @@ contract QeLedgerHandler is Test {
     uint256 public attributorPays;
     uint256 public quoteChecks;
     uint256 public frontRunsRefused;
+    uint256 public selfSubmitPays;
+    uint256 public zeroSubmitterRefused;
     string public violation;
 
     constructor() {
@@ -211,14 +213,15 @@ contract QeLedgerHandler is Test {
         usdc.mint(p.customer, p.amount);
         minted += p.amount;
         // v2 (D-012): an actor front-runs with a garbage attributor sig; the submitter binding must refuse it, unchanged
-        vm.prank(actors[(p.c + 1 + modeSeed % 7) % 8]);
-        try vouch.pay(p.o, p.osig, p.w, hex"dead", p.a, p.usig) {
-            _fail("front-run by a non-submitter was accepted");
-        } catch (bytes memory err) {
-            if (bytes4(err) != IVouch.UnauthorizedSubmitter.selector) _fail("front-run refused for the wrong reason");
-            frontRunsRefused++;
-        }
+        // v3 (D-519): the OTHER legitimate party is refused too (relayer on a self-submit auth, customer on a
+        // relayer-bound one), and a zero-submitter auth for the same order is unpayable by either of them.
+        // A breach RETURNS (no revert) so the recorded violation is not rolled back by the honest pay reverting.
+        if (_probeAll(p, modeSeed)) return;
         vm.recordLogs();
+        if (p.a.submitter == p.customer) {
+            selfSubmitPays++;
+            vm.prank(p.customer, p.customer);
+        }
         vouch.pay(p.o, p.osig, p.w, p.wsig, p.a, p.usig);
         Vm.Log[] memory logs = vm.getRecordedLogs();
         pays++;
@@ -280,20 +283,77 @@ contract QeLedgerHandler is Test {
             if (p.mode == 2) p.wsig = hex"00"; // garbage attributor signature (front-runner)
             if (p.mode == 3) p.w.bps[0] = p.w.bps[0] == 1 ? 2 : 1; // swapped weights (hash mismatch)
         }
-        p.a = IVouch.PaymentAuth(p.customer, p.v, p.o.orderId, p.amount, wh, uint64(block.timestamp + 600), address(this));
-        bytes32 nonce = keccak256(
-            abi.encode(T_AUTH, p.a.customer, p.a.venue, p.a.orderId, p.a.amount, p.a.weightsHash, p.a.deadline, p.a.submitter)
-        );
-        p.usig = _sign(
-            pks[p.c],
+        // v3 (D-014/D-519): half the auths name the relayer (this handler), half the customer (kill-the-backend)
+        address submitter = (r >> 3) % 2 == 0 ? address(this) : p.customer;
+        p.a = IVouch.PaymentAuth(p.customer, p.v, p.o.orderId, p.amount, wh, uint64(block.timestamp + 600), submitter);
+        p.usig = _usdcSig(p.c, p.a);
+    }
+
+    function _nonce(IVouch.PaymentAuth memory a) internal pure returns (bytes32) {
+        return keccak256(abi.encode(T_AUTH, a.customer, a.venue, a.orderId, a.amount, a.weightsHash, a.deadline, a.submitter));
+    }
+
+    function _usdcSig(uint256 c, IVouch.PaymentAuth memory a) internal view returns (bytes memory) {
+        return _sign(
+            pks[c],
             keccak256(
                 abi.encodePacked(
                     "\x19\x01",
                     usdc.DOMAIN_SEPARATOR(),
-                    keccak256(abi.encode(T_RWA, p.customer, address(vouch), p.amount, 0, uint256(p.a.deadline), nonce))
+                    keccak256(abi.encode(T_RWA, a.customer, address(vouch), a.amount, 0, uint256(a.deadline), _nonce(a)))
                 )
             )
         );
+    }
+
+    function _probeAll(P memory p, uint256 modeSeed) internal returns (bool breached) {
+        bool b1 = _probe(p, actors[(p.c + 1 + modeSeed % 7) % 8]);
+        bool b2 = _probe(p, p.a.submitter == p.customer ? address(this) : p.customer);
+        bool b3 = _probeZero(p);
+        if (b1 || b2 || b3) return true;
+        if (usdc.authorizationState(p.customer, _nonce(p.a))) {
+            _fail("probe consumed the authorization");
+            return true;
+        }
+        if (vouch.isOrderSettled(p.v, p.o.orderId)) {
+            _fail("probe settled the order");
+            return true;
+        }
+    }
+
+    /// @dev `caller` (never the named submitter) races the payment with a garbage attributor sig: must be refused
+    ///      with UnauthorizedSubmitter.
+    function _probe(P memory p, address caller) internal returns (bool breached) {
+        if (caller == p.a.submitter) _fail("probe harness: caller is the submitter");
+        vm.prank(caller, caller);
+        try vouch.pay(p.o, p.osig, p.w, hex"dead", p.a, p.usig) {
+            _fail("front-run by a non-submitter was accepted");
+            breached = true;
+        } catch (bytes memory err) {
+            if (bytes4(err) != IVouch.UnauthorizedSubmitter.selector) _fail("front-run refused for the wrong reason");
+            frontRunsRefused++;
+        }
+    }
+
+    /// @dev The same order under a validly signed submitter = 0 auth: unpayable by the relayer and the customer.
+    function _probeZero(P memory p) internal returns (bool breached) {
+        IVouch.PaymentAuth memory z = IVouch.PaymentAuth(p.customer, p.v, p.o.orderId, p.amount, p.a.weightsHash, p.a.deadline, address(0));
+        bytes memory zsig = _usdcSig(p.c, z);
+        address[2] memory callers = [address(this), p.customer];
+        for (uint256 i; i < 2; ++i) {
+            vm.prank(callers[i], callers[i]);
+            try vouch.pay(p.o, p.osig, p.w, p.wsig, z, zsig) {
+                _fail("zero-submitter auth was paid");
+                return true;
+            } catch (bytes memory err) {
+                if (bytes4(err) != IVouch.UnauthorizedSubmitter.selector) _fail("zero submitter refused for the wrong reason");
+                zeroSubmitterRefused++;
+            }
+        }
+        if (usdc.authorizationState(p.customer, _nonce(z))) {
+            _fail("zero-submitter authorization consumed");
+            breached = true;
+        }
     }
 
     struct Acc {
@@ -436,6 +496,7 @@ contract QeLedgerInvariantTest is Test {
     function afterInvariant() external view {
         console2.log("qe pays", h.pays(), "rewarded", h.rewardedPays());
         console2.log("qe attributorPays", h.attributorPays(), "quoteChecks", h.quoteChecks());
-        console2.log("qe frontRunsRefused", h.frontRunsRefused());
+        console2.log("qe frontRunsRefused", h.frontRunsRefused(), "selfSubmitPays", h.selfSubmitPays());
+        console2.log("qe zeroSubmitterRefused", h.zeroSubmitterRefused());
     }
 }

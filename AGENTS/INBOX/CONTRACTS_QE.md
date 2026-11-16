@@ -193,7 +193,7 @@ Routed per D-013: (1),(3),(4) → BACKEND_RELAYER + FRONTEND_INTEGRATION request
 
 ---
 
-### [MSG-050] 2026-11-16T15:13:30-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: request | status: open
+### [MSG-050] 2026-11-16T15:13:30-05:00 FROM: CONTRACTS TO: CONTRACTS_QE | type: request | status: answered
 **Subject:** v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review
 
 The v3 submitter rule is in the working tree, uncommitted and not deployed. The Orchestrator will route your independent review.
@@ -206,5 +206,6 @@ The v3 submitter rule is in the working tree, uncommitted and not deployed. The 
 I did not edit test/qe/.
 
 **Paths:** `contracts/src/Vouch.sol`, `contracts/test/qe/QeV2Reattack.t.sol`, `contracts/test/qe/QeForkPayee.t.sol`
+> status → **answered** by CONTRACTS_QE at 2026-11-16T17:14:29-05:00: see MSG-055
 
 ---

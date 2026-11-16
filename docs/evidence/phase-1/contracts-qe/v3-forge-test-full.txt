@@ -1,0 +1,430 @@
+$ forge test -vv   (working tree = v3, 2026-11-16T21:52:47Z)
+No files changed, compilation skipped
+
+Ran 1 test for test/qe/QeForkPayee.t.sol:QeForkPayeeTest
+[SKIP: skipped] setUp() (gas: 0)
+Suite result: ok. 0 passed; 0 failed; 1 skipped; finished in 1.60ms (0.00ns CPU time)
+
+Ran 1 test for test/qe/QeEdges.t.sol:QeReentrancyHookTest
+[PASS] test_reentrancy_tokenHookCannotReenterPay() (gas: 3058161)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 4.04ms (1.96ms CPU time)
+
+Ran 12 tests for test/qe/QeEdges.t.sol:QeEdgesTest
+[PASS] test_FIXED_payoutCanBeTheVouchContract_fundsStuckForever() (gas: 56496)
+[PASS] test_edge_allRecipientsBlacklisted_stillSettlesExactly() (gas: 2595315)
+[PASS] test_edge_authDeadlineMatchesUsdcValidBefore() (gas: 389622)
+[PASS] test_edge_blacklistedCustomerOrVouch_revertsCleanly() (gas: 3077487)
+[PASS] test_edge_blacklistedL2Introducer_shareReturnedExactSum() (gas: 2526134)
+[PASS] test_edge_contractSizeHeadroom() (gas: 9132)
+Logs:
+  Vouch runtime size (B): 23998
+  EIP-170 headroom (B): 578
+
+[PASS] test_edge_decimalsAndAmountBounds() (gas: 1641322)
+[PASS] test_edge_introExpiryInclusiveAtPayment() (gas: 1406315)
+[PASS] test_edge_keyRotationMidFlow() (gas: 2655298)
+[PASS] test_edge_minOrderBoundaries() (gas: 1559820)
+[PASS] test_edge_nonPayableEverywhere() (gas: 243184)
+[PASS] test_edge_orderExpiryInclusive_authDeadlineExclusive() (gas: 579563)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 15.65ms (24.90ms CPU time)
+
+Ran 1 test for test/VouchFork.t.sol:VouchForkTest
+[SKIP: skipped] setUp() (gas: 0)
+Suite result: ok. 0 passed; 0 failed; 1 skipped; finished in 353.92µs (0.00ns CPU time)
+
+Ran 9 tests for test/qe/QeIntrosTerms.t.sol:QeIntrosTermsTest
+[PASS] test_FIXED_backdatedIssuedAtSelectsSupersededBetterTerms() (gas: 199170)
+[PASS] test_LIMIT_submitterChoosesWhichReferrerIsEvicted() (gas: 2743293)
+[PASS] test_LIMIT_sybilSecondAddressCapturesWholePool() (gas: 1493953)
+[PASS] test_cycle_customerIsL2OfEveryReferrer() (gas: 2315192)
+[PASS] test_cycle_threeCycleIsWellFormed() (gas: 2134187)
+[PASS] test_eviction_expiredSlotRecycledBeforeLiveEviction() (gas: 1880470)
+[PASS] test_eviction_thirdPartyCannotEvictWithoutCustomerSignature() (gas: 1664263)
+[PASS] test_terms_frozenAgainstLaterUpdates() (gas: 2317328)
+[PASS] test_terms_sameSecondUpdateInvalidatesIntroCleanly() (gas: 686059)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 27.63ms (26.17ms CPU time)
+
+Ran 11 tests for test/spikes/Hello.t.sol:HelloTest
+[PASS] testFuzz_pullAndSplit_conservesValue(uint64[7]) (runs: 1000, μ: 256552, ~: 259751)
+[PASS] test_ecdsa_recoverMatchesVmAddr() (gas: 11257)
+[PASS] test_ping_emitsEvent() (gas: 36311)
+[PASS] test_pullAndSplit_revertsIfCallerNotFrom() (gas: 62690)
+[PASS] test_pullAndSplit_sevenRecipients_sumsExactly() (gas: 382721)
+[PASS] test_relayedSplit_expired_reverts() (gas: 90022)
+[PASS] test_relayedSplit_lengthMismatch_reverts() (gas: 108950)
+[PASS] test_relayedSplit_replay_reverts() (gas: 349942)
+[PASS] test_relayedSplit_tamperedAmounts_reverts() (gas: 109527)
+[PASS] test_relayedSplit_validSig_succeeds() (gas: 339629)
+[PASS] test_relayedSplit_wrongSigner_reverts() (gas: 108219)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 180.65ms (180.17ms CPU time)
+
+Ran 13 tests for test/qe/QeReplaySignatures.t.sol:QeReplaySignaturesTest
+[PASS] test_FIXED_staleRelayedOwnerActionCannotOverrideNewerDirectAction() (gas: 118013)
+[PASS] test_LIMIT_alwaysValidCustomerWalletCanBeFilledByAnyone() (gas: 444701)
+[PASS] test_LIMIT_personalIntroCanBeSniped() (gas: 368574)
+[PASS] test_crossDomain_introNotReusableAcrossChainCustomerOrDeployment() (gas: 5952769)
+[PASS] test_erc1271_alwaysValidReferrer_stillNeedsCustomerCountersig() (gas: 457579)
+[PASS] test_erc1271_revertingOrGasBurningAttributor_fallsBackNeverBlocks() (gas: 43700173)
+[PASS] test_malleability_highSAttributorSigFallsBack() (gas: 2487525)
+[PASS] test_malleability_highS_and_compactSigsRejectedEverywhere() (gas: 1099862)
+[PASS] test_reentrancy_viaErc1271CallbackIsStatic() (gas: 61654733)
+[PASS] test_replay_linkTypeFlipCannotEscapeSingleUse() (gas: 379552)
+[PASS] test_replay_orderIdCannotSettleTwiceEvenWithAFreshAuthorization() (gas: 612781)
+[PASS] test_replay_ownerSigs_nonceTypeVenueChainAndDeadline() (gas: 554347)
+[PASS] test_replay_personalIntroSingleUse_evenAfterEviction() (gas: 1854027)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 203.88ms (202.78ms CPU time)
+
+Ran 14 tests for test/qe/QeV2Reattack.t.sol:QeV2ReattackTest
+[PASS] test_FIXED_zeroSubmitterUnpayable() (gas: 2351763)
+[PASS] test_INFO_honestPreCutLinkDies72hAfterTermsChange() (gas: 199539)
+[PASS] test_INFO_systemAddressPayoutAcceptedButNothingStuckInVouch() (gas: 789000)
+[PASS] test_LIMIT_futureNonceSignatureBecomesValidAfterDirectActions() (gas: 204461)
+[PASS] test_LIMIT_publicForwarderAsSubmitterIsNoBinding() (gas: 2656175)
+[PASS] test_v2_accessControlledContractSubmitterHolds() (gas: 2791587)
+[PASS] test_v2_graceBoundary_inclusiveAt72h() (gas: 356230)
+[PASS] test_v2_graceBoundary_rejectedAt72hPlus1() (gas: 199642)
+[PASS] test_v2_graceMeasuredPerVersion() (gas: 473162)
+[PASS] test_v2_maxSplitGasFloor_far() (gas: 639328911)
+Logs:
+  max split (5 referrers + 5 introducers): min successful gas limit: 804395
+  Arc block gas limit (live): 30000000
+  successes (all identical to the ample-gas outcome): 0
+
+[PASS] test_v2_maxSplitGasFloor_near_1gas() (gas: 757898501)
+Logs:
+  max split (5 referrers + 5 introducers): min successful gas limit: 804395
+  Arc block gas limit (live): 30000000
+  successes (all identical to the ample-gas outcome): 151
+
+[PASS] test_v2_payoutGuard_allEntryPoints() (gas: 302952)
+[PASS] test_v2_submitterMismatch_noStateChange_honestStillSettles() (gas: 2658440)
+[PASS] test_v2_submitterSwapBreaksTheUsdcSignature() (gas: 2902103)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 1.57s (1.57s CPU time)
+
+Ran 16 tests for test/qe/QeV3Submitter.t.sol:QeV3SubmitterTest
+[PASS] testFuzz_v3_nonSubmitterAlwaysRefused(address,uint8,address) (runs: 1000, μ: 230738, ~: 229921)
+[PASS] test_INFO_customerCanPreemptRelayerBoundAuthWithOwnSelfSubmitAuth() (gas: 2548793)
+[PASS] test_INFO_selfSubmitterCanDegradeOwnCommitToFallback_sameAsSigningZero() (gas: 3177661)
+[PASS] test_INFO_zeroSubmitterUnpayabilityRestsOnMsgSenderNeverZero() (gas: 395227)
+[PASS] test_v3_killTheBackend_customerAcceptsIntrosAndPays_noRelayer() (gas: 2603693)
+[PASS] test_v3_relabelMatrix_signatureBindsTheSubmitter() (gas: 4044926)
+[PASS] test_v3_relayerBound_onlyRelayer_customerRefused() (gas: 4447591)
+[PASS] test_v3_selfSubmitGasStarvation_far() (gas: 322540156)
+Logs:
+  self-submit canonical: min successful gas limit: 478631
+  successes (all identical to the ample-gas outcome): 0
+
+[PASS] test_v3_selfSubmitGasStarvation_near_1gas() (gas: 428802429)
+Logs:
+  self-submit canonical: min successful gas limit: 478631
+  successes (all identical to the ample-gas outcome): 151
+
+[PASS] test_v3_selfSubmit_canonicalExactSplit_equalsRelayerPathAndPreview() (gas: 3374494)
+[PASS] test_v3_selfSubmit_firstPurchaseSemanticsUnchanged() (gas: 2529344)
+[PASS] test_v3_selfSubmit_onlyCustomer_relayerRefused() (gas: 4445088)
+[PASS] test_v3_selfSubmitter_cannotRedeemOwnAuthorizationOutsideVouch() (gas: 499419)
+[PASS] test_v3_smartAccountCustomerSelfSubmits_exactSplit() (gas: 3071774)
+[PASS] test_v3_typehashNonceSelectorsAndTopicsUnchanged() (gas: 698883)
+[PASS] test_v3_zeroSubmitter_refusedForEveryone_noWriteNoUsdc() (gas: 4126464)
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 1.60s (1.59s CPU time)
+
+Ran 4 tests for test/qe/QeGasStarvation.t.sol:QeGasStarvationTest
+[PASS] test_gasSweep_erc1271Attributor_far_cannotBeStarvedIntoFallback() (gas: 752052678)
+Logs:
+  sweep: mock USDC, ERC-1271 attributor, far
+    threshold T (min successful gas limit): 482088
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1860
+
+[PASS] test_gasSweep_erc1271Attributor_near_cannotBeStarvedIntoFallback() (gas: 774036260)
+Logs:
+  sweep: mock USDC, ERC-1271 attributor, near
+    threshold T (min successful gas limit): 482088
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+
+[PASS] test_gasSweep_mockUsdc_far() (gas: 749569771)
+Logs:
+  sweep: mock USDC, EOA attributor, far
+    threshold T (min successful gas limit): 481114
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1860
+
+[PASS] test_gasSweep_mockUsdc_near_1gas() (gas: 771999668)
+Logs:
+  sweep: mock USDC, EOA attributor, near
+    threshold T (min successful gas limit): 481114
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 1.77s (3.47s CPU time)
+
+Ran 4 tests for test/VouchSplit.t.sol:VouchSplitTest
+[PASS] testFuzz_fallbackWeightsSumTo10000(uint8,uint8[5],uint64[5],uint64) (runs: 1000, μ: 13844, ~: 13516)
+[PASS] testFuzz_sliceBoundedByFrozenRate(uint256,uint16[5],uint16[5],uint8) (runs: 1000, μ: 10604, ~: 10190)
+[PASS] test_canonicalSlices() (gas: 2578)
+[PASS] test_fallbackWeights_examples() (gas: 6720)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 103.20ms (103.12ms CPU time)
+
+Ran 2 tests for test/VouchTypehash.t.sol:VouchTypehashTest
+[PASS] test_goldenStructHashes() (gas: 45171)
+[PASS] test_venueIdDerivation() (gas: 5294798)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 345.54µs (250.75µs CPU time)
+
+Ran 64 tests for test/Vouch.t.sol:VouchTest
+[PASS] test_attributor_singleReferrerFullWeight() (gas: 2376963)
+[PASS] test_attributor_tieGoesToLowerIndex() (gas: 2496099)
+[PASS] test_canonical_events() (gas: 2494335)
+[PASS] test_canonical_exactSplit() (gas: 2619411)
+[PASS] test_canonical_previewMatches() (gas: 2024743)
+[PASS] test_canonical_stats() (gas: 2488465)
+[PASS] test_domain() (gas: 15155)
+[PASS] test_fallback_badSignature() (gas: 2501127)
+[PASS] test_fallback_decayFavorsRecentIntro() (gas: 1104007)
+[PASS] test_fallback_garbageSignatureBytes() (gas: 2486431)
+[PASS] test_fallback_hashMismatch() (gas: 2495561)
+[PASS] test_fallback_invalid_duplicate() (gas: 2479116)
+[PASS] test_fallback_invalid_emptyButCommitted() (gas: 2468196)
+[PASS] test_fallback_invalid_lengthMismatch() (gas: 2475006)
+[PASS] test_fallback_invalid_nonHolder() (gas: 2481403)
+[PASS] test_fallback_invalid_overCap() (gas: 2478855)
+[PASS] test_fallback_invalid_sumNot10000() (gas: 2481823)
+[PASS] test_fallback_invalid_tooMany() (gas: 2473762)
+[PASS] test_fallback_invalid_wrongOrderOrCustomer() (gas: 2477891)
+[PASS] test_fallback_invalid_zeroWeight() (gas: 2483883)
+[PASS] test_fallback_noCommitment() (gas: 2461405)
+[PASS] test_fallback_singleReferrerMustBe10000() (gas: 2476185)
+[PASS] test_fallback_weightsValues() (gas: 2045470)
+[PASS] test_gas_canonicalPay() (gas: 2459152)
+Logs:
+  pay() gas, canonical 2-level split (mock USDC): 451790
+
+[PASS] test_intro_acceptStoresFrozenTerms() (gas: 345786)
+[PASS] test_intro_broadcastOncePerCustomer() (gas: 789795)
+[PASS] test_intro_cannotMoveToAnotherVenue() (gas: 367601)
+[PASS] test_intro_capEvictsOldestAndReplacesSameReferrer() (gas: 2002925)
+[PASS] test_intro_erc1271ReferrerAndCustomer() (gas: 1302257)
+[PASS] test_intro_expiredSlotIsReused() (gas: 535545)
+[PASS] test_intro_expiryBoundaryIsInclusive() (gas: 289221)
+[PASS] test_intro_personalIsSingleUse() (gas: 461351)
+[PASS] test_intro_referrerMustBeVerifiedOrSeed() (gas: 660137)
+[PASS] test_intro_selfReferralReverts() (gas: 149405)
+[PASS] test_intro_signatureChecks() (gas: 287245)
+[PASS] test_intro_termsMustBeInForceAtIssuance() (gas: 669174)
+[PASS] test_intro_verifiedCustomerCannotAccept() (gas: 546765)
+[PASS] test_intro_windowAndTypeChecks() (gas: 680006)
+[PASS] test_nonPayable() (gas: 210690)
+[PASS] test_pay_amountBounds() (gas: 174099)
+[PASS] test_pay_belowMinOrderIsPlainAndConsumesFirstPurchase() (gas: 975881)
+[PASS] test_pay_blacklistedPayout_reverts() (gas: 433654)
+[PASS] test_pay_blacklistedReferrer_shareGoesToVenue() (gas: 2564850)
+[PASS] test_pay_cancelledAuthorizationRevertsCleanly() (gas: 2332417)
+[PASS] test_pay_cycle_selfPaymentReturnsToVenue() (gas: 1456430)
+[PASS] test_pay_expiredIntroIsIgnored() (gas: 689804)
+[PASS] test_pay_gasStarvationCannotRedirectShares() (gas: 86451381)
+[PASS] test_pay_insufficientBalanceReverts() (gas: 224003)
+[PASS] test_pay_minOrderBoundaryIsRewarded() (gas: 822575)
+[PASS] test_pay_multipleFrozenTermsVersions() (gas: 1312099)
+[PASS] test_pay_orderChecks() (gas: 482706)
+[PASS] test_pay_orderReplayReverts() (gas: 511464)
+[PASS] test_pay_plainFirstPurchaseWithoutIntros() (gas: 425206)
+[PASS] test_pay_pullIsByVouchAsPayee() (gas: 417725)
+[PASS] test_pay_repeatPurchaseIsPlain_oneRewardEver() (gas: 2741939)
+[PASS] test_pay_seedReferrerWithoutIntroducer_L2ReturnsToVenue() (gas: 830758)
+[PASS] test_pay_tamperedFieldsBreakTheUsdcAuthorization() (gas: 418821)
+[PASS] test_pay_usdcAuthorizationIsPayeeOnly() (gas: 163766)
+[PASS] test_register_relayedWithOwnerSig() (gas: 276558)
+[PASS] test_register_revertsBadSigExpiredDuplicateAndBounds() (gas: 783034)
+[PASS] test_register_storesVenueAndTerms() (gas: 47891)
+[PASS] test_seedAmbassador_relayedAndRevocable() (gas: 257328)
+[PASS] test_setKeys_rotatesSignerAndAttributor() (gas: 331405)
+[PASS] test_updateTerms_versionsAreAppendOnly() (gas: 346136)
+Suite result: ok. 64 passed; 0 failed; 0 skipped; finished in 590.10ms (187.14ms CPU time)
+
+Ran 16 tests for test/VouchQeFixes.t.sol:VouchQeFixesTest
+[PASS] testFuzz_D519_onlyTheNamedSubmitterMayPay(address,address) (runs: 1000, μ: 447589, ~: 452615)
+[PASS] test_C01_attackerFrontRunRevertsAndHonestSettles() (gas: 2671615)
+[PASS] test_C01_submitterIsBoundByTheCustomerSignature() (gas: 288307)
+[PASS] test_C01_submitterMismatch_noStateChange() (gas: 2183291)
+[PASS] test_C02_payoutCannotBeVouchOrUsdc() (gas: 123732)
+[PASS] test_C03_zeroAmountL1IsRecordedInEvents() (gas: 1362753)
+[PASS] test_C04_directActionInvalidatesPendingSignedAction() (gas: 131696)
+[PASS] test_C05_backdatedIntroAfterGraceReverts() (gas: 204775)
+[PASS] test_C05_supersededVersionAcceptableOnlyWithinGrace() (gas: 416594)
+[PASS] test_D519_customerCannotSubmitRelayerBoundAuth() (gas: 2527138)
+[PASS] test_D519_customerSelfSubmits_canonicalExactSplit() (gas: 2663168)
+[PASS] test_D519_submitterDowngradeToZeroRefused() (gas: 193995)
+[PASS] test_D519_thirdPartyCannotSubmitSelfSubmitAuth() (gas: 2671512)
+[PASS] test_D519_zeroSubmitterIsUnpayable_noStateChange() (gas: 2357677)
+[PASS] test_distribute_orderingPinned_nestedTokenStarvationNeverRedirects() (gas: 255741619)
+[PASS] test_distribute_orderingPinned_rewardsBeforePayoutBeforeEvents() (gas: 2499528)
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 1.09s (1.08s CPU time)
+
+Ran 4 tests for test/qe/QeWeights.t.sol:QeWeightsTest
+[PASS] testFuzz_arbitraryWeightsNeverBlockPayment(address[],uint16[],bytes,bool,bool) (runs: 1000, μ: 2661938, ~: 2659088)
+[PASS] test_FIXED_frontRunWithGarbageAttributorSigForcesFallback() (gas: 2696673)
+Logs:
+  priya L1 gained by front-running (base units): 0
+
+[PASS] test_FIXED_frontRunWithSwappedWeightsForcesFallback() (gas: 2673679)
+[PASS] test_badWeightsShapes_alwaysFallBack_neverRevert() (gas: 14595906)
+Logs:
+  pay() gas above a trivial call with the same calldata: 407868
+  pay() gas above a trivial call with the same calldata: 405358
+  pay() gas above a trivial call with the same calldata: 405453
+  pay() gas above a trivial call with the same calldata: 408471
+  pay() gas above a trivial call with the same calldata: 408470
+  pay() gas above a trivial call with the same calldata: 408007
+  pay() gas above a trivial call with the same calldata: 408027
+  pay() gas above a trivial call with the same calldata: 406402
+  pay() gas above a trivial call with the same calldata: 401488
+  pay() gas above a trivial call with the same calldata: 402402
+  pay() gas above a trivial call with the same calldata: 0
+
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 3.55s (3.57s CPU time)
+
+Ran 6 tests for test/qe/QeGasStarvation.t.sol:QeGasStarvationNestedTest
+[PASS] test_FIXED_guardNoFalseNegativeWithNestedToken() (gas: 363134483)
+Logs:
+  burn 120 (~Arc cost): starved transfers reported as plain failures: 0
+  burn 120 (~Arc cost): refused by the guard / floor: 831
+
+[PASS] test_INFO_floorAssumesTransferCostBelowFloor() (gas: 518974797)
+Logs:
+  burn 300 (~95k/move): starved transfers reported as plain failures: 430
+
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_far() (gas: 751270120)
+Logs:
+  sweep: nested USDC, burn 0, far
+    threshold T (min successful gas limit): 483201
+    successes: 0
+    reverts: 2200
+    TransferOutOfGas guard fired: 1917
+
+[PASS] test_gasSweep_nestedUsdc_cheapPrecompile_near() (gas: 780096963)
+Logs:
+  sweep: nested USDC, burn 0, near
+    threshold T (min successful gas limit): 483201
+    successes: 242
+    reverts: 1500
+    TransferOutOfGas guard fired: 1500
+
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_far() (gas: 794332806)
+Logs:
+  sweep: nested USDC, burn 300, far
+    threshold T (min successful gas limit): 1078279
+    successes: 0
+    reverts: 812
+    TransferOutOfGas guard fired: 520
+
+[PASS] test_gasSweep_nestedUsdc_expensivePrecompile_near() (gas: 857271995)
+Logs:
+  sweep: nested USDC, burn 300, near
+    threshold T (min successful gas limit): 1078279
+    successes: 242
+    reverts: 500
+    TransferOutOfGas guard fired: 0
+
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 5.32s (7.75s CPU time)
+
+Ran 13 tests for test/qe/QePayeeAuth.t.sol:QePayeeAuthTest
+[PASS] testFuzz_payee_e_anyFieldMutationInvalidatesTheAuthorization(uint8,uint256) (runs: 1000, μ: 484823, ~: 474943)
+[PASS] test_payee_a_happyPath_pullCalledOnceByVouchWithToEqThis() (gas: 2539116)
+[PASS] test_payee_b_control_sameCallSucceedsOnlyFromThePayee() (gas: 266196)
+[PASS] test_payee_b_thirdPartiesCannotRedeemTheCustomersAuthorization() (gas: 822854)
+[PASS] test_payee_c_anotherVouchDeploymentCannotRedeem() (gas: 6011979)
+[PASS] test_payee_c_cannotRedirectToAnotherPayee() (gas: 221374)
+[PASS] test_payee_c_cannotReuseThroughOtherUsdcFunctions() (gas: 520902)
+[PASS] test_payee_c_noOtherVouchFunctionCallsUsdcPull() (gas: 617778)
+[PASS] test_payee_d_frontRunCancelAuthorization_bothOverloads_noPartialSplit() (gas: 3779394)
+[PASS] test_payee_d_nonceAlreadyUsedByTransferWithAuthorization_noPartialSplit() (gas: 2669817)
+[PASS] test_payee_d_replayOfAUsedAuthorizationReverts() (gas: 517299)
+[PASS] test_payee_e_everyFieldIsBoundByTheUsdcSignature() (gas: 1857418)
+[PASS] test_payee_e_nonceIsThePaymentAuthStructHash() (gas: 409043)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 597.80ms (616.52ms CPU time)
+
+Ran 3 tests for test/VouchFuzz.t.sol:VouchFuzzTest
+[PASS] testFuzz_introReplayReverts(bytes32,bool,uint256) (runs: 1000, μ: 518580, ~: 572899)
+[PASS] testFuzz_pay_exactSumCapAndLegitRecipients((uint256,uint256,uint8,uint8,uint16[5],uint256[5],uint32[5],uint16[5],uint8,uint32)) (runs: 1000, μ: 3325722, ~: 3226188)
+[PASS] testFuzz_pay_garbageAttributorSigFallsBack(bytes,uint16) (runs: 1000, μ: 2493205, ~: 2493020)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 5.31s (7.60s CPU time)
+
+Ran 1 test for test/VouchInvariant.t.sol:VouchInvariantTest
+[PASS]
+VouchInvariantTest invariants:
+[PASS] invariant_atMostOneRewardPerCustomer
+[PASS] invariant_conservation
+[PASS] invariant_noPerPaymentViolation
+[PASS] invariant_statsMatchGhosts
+ VouchInvariantTest invariants (runs: 256, calls: 16384, reverts: 0)
+
+╭--------------+-------------+-------+---------+----------╮
+| Contract     | Selector    | Calls | Reverts | Discards |
++=========================================================+
+| VouchHandler | blacklist   | 2373  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | introduce   | 2405  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | pay         | 2328  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | replay      | 2332  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | seed        | 2316  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | updateTerms | 2274  | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | warp        | 2356  | 0       | 0        |
+╰--------------+-------------+-------+---------+----------╯
+
+Logs:
+  pays 4 rewarded 0
+  fallback 0 intros 2
+  replaysTried 9
+  selfPays 0 submitterRefusals 7
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 9.14s (9.14s CPU time)
+
+Ran 3 tests for test/qe/QeEvents.t.sol:QeEventsTest
+[PASS] testFuzz_previewEqualsSettlement(uint256) (runs: 1000, μ: 2807216, ~: 2774918)
+[PASS] test_FIXED_ambassadorCreditRecoverableFromEvents() (gas: 1365514)
+[PASS] test_events_rebuildEveryStatFromLogsAlone() (gas: 5160560)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 11.41s (11.42s CPU time)
+
+Ran 1 test for test/qe/QeInvariant.t.sol:QeLedgerInvariantTest
+[PASS]
+QeLedgerInvariantTest invariants:
+[PASS] invariant_qe_introducerFrozenAndRewardedImpliesVerified
+[PASS] invariant_qe_noPerPaymentViolation
+[PASS] invariant_qe_statsEqualEventSourcedLedger
+[PASS] invariant_qe_vouchHoldsNothingAndConservation
+ QeLedgerInvariantTest invariants (runs: 256, calls: 16384, reverts: 0)
+
+╭-----------------+-----------------+-------+---------+----------╮
+| Contract        | Selector        | Calls | Reverts | Discards |
++================================================================+
+| QeLedgerHandler | introduce       | 2747  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | pay             | 2664  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | seed            | 2696  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | setTerms        | 2723  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | toggleBlacklist | 2792  | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | warp            | 2762  | 0       | 0        |
+╰-----------------+-----------------+-------+---------+----------╯
+
+Logs:
+  qe pays 6 rewarded 0
+  qe attributorPays 0 quoteChecks 6
+  qe frontRunsRefused 12 selfSubmitPays 4
+  qe zeroSubmitterRefused 12
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 15.84s (15.84s CPU time)
+
+Ran 21 test suites in 15.87s (58.32s CPU time): 197 tests passed, 0 failed, 2 skipped (199 total tests)

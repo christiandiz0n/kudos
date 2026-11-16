@@ -37,7 +37,7 @@ contract VouchQeFixesTest is VouchBase {
         usdc.mint(b.a.customer, amount);
     }
 
-    // ============================================================ QE-C-01 / D-012: submitter binding
+    // ============================================================ QE-C-01 / D-012 / D-519: submitter binding
 
     function test_C01_attackerFrontRunRevertsAndHonestSettles() public {
         _canonicalSetup();
@@ -78,13 +78,119 @@ contract VouchQeFixesTest is VouchBase {
         assertEq(vouch.getVenueStats(venue).grossVolume, s0.grossVolume);
     }
 
-    function test_C01_zeroSubmitterAllowsAnyone() public {
+    // ============================================================ D-519 (v3): no "anyone" submitter (QE-C-09)
+
+    /// @dev v2 let anyone submit when submitter = 0 (QE-C-09). v3: msg.sender must equal auth.submitter, so a
+    ///      zero submitter can never be paid, by a third party, the relayer, or even the customer.
+    function test_D519_zeroSubmitterIsUnpayable_noStateChange() public {
         _canonicalSetup();
         B memory b = _bundle(BEN_PK, 12e6, _arr(ana, priya), _bps(7_000, 3_000), address(0));
-        vm.prank(attacker);
+        uint256 ben0 = usdc.balanceOf(ben);
+        uint256 p0 = usdc.balanceOf(payout);
+        IVouch.VenueStats memory s0 = vouch.getVenueStats(venue);
+        address[3] memory callers = [attacker, relayer, ben];
+        for (uint256 i; i < 3; ++i) {
+            vm.prank(callers[i]);
+            vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+            vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        }
+        assertFalse(vouch.isOrderSettled(venue, b.o.orderId));
+        assertFalse(vouch.getCustomer(venue, ben).verified);
+        assertEq(vouch.introducerOf(venue, ben), address(0));
+        assertEq(vouch.getLiveIntros(venue, ben).length, 2, "intros untouched");
+        assertFalse(usdc.authorizationState(ben, _authNonce(b.a)), "USDC authorization not consumed");
+        assertEq(usdc.balanceOf(ben), ben0);
+        assertEq(usdc.balanceOf(payout), p0);
+        assertEq(usdc.balanceOf(address(vouch)), 0);
+        assertEq(vouch.getVenueStats(venue).grossVolume, s0.grossVolume);
+        assertEq(vouch.getVenueStats(venue).verifiedCustomers, s0.verifiedCustomers);
+    }
+
+    /// @dev Kill-the-backend path (A5 #1): the customer names itself as submitter and calls pay() from its own EOA.
+    ///      The canonical $12.00 story settles with the exact split and the committed attributor weights.
+    function test_D519_customerSelfSubmits_canonicalExactSplit() public {
+        _canonicalSetup();
+        uint256 p0 = usdc.balanceOf(payout);
+        uint256 ben0 = usdc.balanceOf(ben);
+        uint256 ana0 = usdc.balanceOf(ana);
+        uint256 priya0 = usdc.balanceOf(priya);
+        uint256 sam0 = usdc.balanceOf(sam);
+        uint256 omar0 = usdc.balanceOf(omar);
+        B memory b = _bundle(BEN_PK, 12_000_000, _arr(ana, priya), _bps(7_000, 3_000), ben); // mints 12.00 to Ben
+
+        vm.recordLogs();
+        vm.prank(ben, ben); // a plain EOA transaction from the customer
         vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        assertEq(_mode(vm.getRecordedLogs()), 1, "committed attributor weights used");
+
+        assertEq(usdc.balanceOf(payout) - p0, 10_200_000, "venue $10.20");
+        assertEq(usdc.balanceOf(ben) - ben0, 450_000, "ben cashback $0.45"); // minted 12.00, paid 12.00
+        assertEq(usdc.balanceOf(ana) - ana0, 693_000, "ana L1 $0.693");
+        assertEq(usdc.balanceOf(priya) - priya0, 297_000, "priya L1 $0.297");
+        assertEq(usdc.balanceOf(sam) - sam0, 252_000, "sam L2 $0.252");
+        assertEq(usdc.balanceOf(omar) - omar0, 108_000, "omar L2 $0.108");
+        assertEq(usdc.balanceOf(address(vouch)), 0, "contract holds nothing");
+        assertTrue(usdc.authorizationState(ben, _authNonce(b.a)), "USDC authorization consumed");
+        IVouch.CustomerState memory cs = vouch.getCustomer(venue, ben);
+        assertTrue(cs.verified && cs.rewarded);
+        assertEq(cs.introducer, ana);
         assertTrue(vouch.isOrderSettled(venue, b.o.orderId));
+    }
+
+    /// @dev A self-submit auth (submitter = customer) is refused for everyone else, the app's relayer included,
+    ///      with no state change; the customer still settles afterwards.
+    function test_D519_thirdPartyCannotSubmitSelfSubmitAuth() public {
+        _canonicalSetup();
+        B memory b = _bundle(BEN_PK, 12e6, _arr(ana, priya), _bps(7_000, 3_000), ben);
+        address[3] memory callers = [attacker, relayer, priya];
+        for (uint256 i; i < 3; ++i) {
+            vm.prank(callers[i]);
+            vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+            vouch.pay(b.o, b.osig, b.w, hex"deadbeef", b.a, b.usig); // e.g. a garbage attributor sig front-run
+        }
+        assertFalse(vouch.isOrderSettled(venue, b.o.orderId));
+        assertFalse(vouch.getCustomer(venue, ben).verified);
+        assertFalse(usdc.authorizationState(ben, _authNonce(b.a)));
+        vm.prank(ben);
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        assertEq(vouch.introducerOf(venue, ben), ana, "honest attributor split, not the fallback");
+    }
+
+    /// @dev Option (a) pin: the customer cannot race the relayer on an auth that names the relayer.
+    function test_D519_customerCannotSubmitRelayerBoundAuth() public {
+        _canonicalSetup();
+        B memory b = _bundle(BEN_PK, 12e6, _arr(ana, priya), _bps(7_000, 3_000), relayer);
+        vm.prank(ben);
+        vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+        vouch.pay(b.o, b.osig, b.w, hex"deadbeef", b.a, b.usig);
+        vm.prank(relayer);
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
         assertEq(vouch.introducerOf(venue, ben), ana);
+    }
+
+    /// @dev A signed submitter cannot be downgraded to 0 either: the Vouch check refuses before USDC is reached.
+    function test_D519_submitterDowngradeToZeroRefused() public {
+        B memory b = _bundle(BEN_PK, 6e6, new address[](0), new uint16[](0), relayer);
+        b.a.submitter = address(0);
+        vm.prank(attacker);
+        vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+    }
+
+    /// @dev Property: whatever the signed submitter (0 included), every other caller is refused.
+    function testFuzz_D519_onlyTheNamedSubmitterMayPay(address caller, address submitter) public {
+        vm.assume(caller != submitter);
+        assumeNotForgeAddress(caller);
+        assumeNotForgeAddress(submitter);
+        B memory b = _bundle(BEN_PK, 6e6, new address[](0), new uint16[](0), submitter);
+        vm.prank(caller);
+        vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+        vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+        if (submitter != address(0)) {
+            vm.prank(submitter);
+            vouch.pay(b.o, b.osig, b.w, b.wsig, b.a, b.usig);
+            assertTrue(vouch.isOrderSettled(venue, b.o.orderId));
+        }
     }
 
     function test_C01_submitterIsBoundByTheCustomerSignature() public {

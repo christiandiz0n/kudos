@@ -132,7 +132,11 @@ contract VouchForkTest is Test {
         bytes32 nonce;
     }
 
-    function _build(address ben, address[] memory refs, uint16[] memory bps) internal view returns (P memory p) {
+    function _build(address ben, address[] memory refs, uint16[] memory bps, address submitter)
+        internal
+        view
+        returns (P memory p)
+    {
         p.o = IVouch.Order(venue, bytes32("fork-order-1"), 12_000_000, uint64(block.timestamp + 600));
         p.osig =
             _sign(signerPk, _digest(keccak256(abi.encode(T_ORDER, p.o.venue, p.o.orderId, p.o.amount, p.o.expiresAt))));
@@ -143,8 +147,8 @@ contract VouchForkTest is Test {
             )
         );
         p.wsig = _sign(attrPk, _digest(wh));
-        p.a = IVouch.PaymentAuth(ben, venue, p.o.orderId, p.o.amount, wh, uint64(block.timestamp + 600), relayer);
-        p.nonce = keccak256(abi.encode(T_AUTH, ben, venue, p.o.orderId, p.o.amount, wh, p.a.deadline, relayer));
+        p.a = IVouch.PaymentAuth(ben, venue, p.o.orderId, p.o.amount, wh, uint64(block.timestamp + 600), submitter);
+        p.nonce = keccak256(abi.encode(T_AUTH, ben, venue, p.o.orderId, p.o.amount, wh, p.a.deadline, submitter));
         bytes32 rwa = keccak256(abi.encode(T_RWA, ben, address(vouch), p.o.amount, 0, uint256(p.a.deadline), p.nonce));
         p.usig = _sign(benPk, keccak256(abi.encodePacked("\x19\x01", USDC.DOMAIN_SEPARATOR(), rwa)));
     }
@@ -160,7 +164,7 @@ contract VouchForkTest is Test {
         uint16[] memory bps = new uint16[](2);
         bps[0] = 7_000;
         bps[1] = 3_000;
-        P memory p = _build(ben, refs, bps);
+        P memory p = _build(ben, refs, bps, relayer);
 
         uint256 p0 = USDC.balanceOf(payout);
         uint256 ana0 = USDC.balanceOf(refs[0]);
@@ -176,5 +180,65 @@ contract VouchForkTest is Test {
         assertEq(USDC.balanceOf(ben), 450_000, "ben cashback");
         assertEq(USDC.balanceOf(address(vouch)), 0);
         assertTrue(USDC.authorizationState(ben, p.nonce));
+    }
+
+    function _canonicalRefs() internal view returns (address[] memory refs, uint16[] memory bps) {
+        refs = new address[](2);
+        refs[0] = vm.addr(anaPk);
+        refs[1] = vm.addr(priyaPk);
+        bps = new uint16[](2);
+        bps[0] = 7_000;
+        bps[1] = 3_000;
+    }
+
+    /// @dev D-519 kill-the-backend path on REAL Arc USDC: Ben names himself as submitter and sends pay() from his
+    ///      own EOA. USDC's payee check still sees msg.sender == Vouch, so the pull works; the split is exact.
+    ///      (Forge does not charge gas here; on chain Ben's balance must also cover the tx fee, paid in USDC.)
+    function test_fork_customerSelfSubmitsOnRealUsdc() public {
+        address ben = vm.addr(benPk);
+        _intro(anaPk, benPk, 0);
+        _intro(priyaPk, benPk, 1);
+        _fund(ben, 12e6);
+        (address[] memory refs, uint16[] memory bps) = _canonicalRefs();
+        P memory p = _build(ben, refs, bps, ben);
+        uint256 p0 = USDC.balanceOf(payout);
+        uint256 ana0 = USDC.balanceOf(refs[0]);
+        uint256 priya0 = USDC.balanceOf(refs[1]);
+
+        vm.prank(relayer); // the relayer cannot take over a self-submit authorization
+        vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+        vouch.pay(p.o, p.osig, p.w, p.wsig, p.a, p.usig);
+
+        vm.prank(ben, ben);
+        vouch.pay(p.o, p.osig, p.w, p.wsig, p.a, p.usig);
+        assertEq(USDC.balanceOf(payout) - p0, 10_560_000, "venue (10.20 + returned L2 0.36)");
+        assertEq(USDC.balanceOf(refs[0]) - ana0, 693_000, "ana L1");
+        assertEq(USDC.balanceOf(refs[1]) - priya0, 297_000, "priya L1");
+        assertEq(USDC.balanceOf(ben), 450_000, "ben cashback");
+        assertEq(USDC.balanceOf(address(vouch)), 0);
+        assertTrue(USDC.authorizationState(ben, p.nonce));
+        assertEq(vouch.introducerOf(venue, ben), refs[0]);
+    }
+
+    /// @dev D-519 on REAL Arc USDC: submitter = 0 is unpayable; the authorization stays unconsumed.
+    function test_fork_zeroSubmitterUnpayableOnRealUsdc() public {
+        address ben = vm.addr(benPk);
+        _intro(anaPk, benPk, 0);
+        _fund(ben, 12e6);
+        (address[] memory refs, uint16[] memory bps) = _canonicalRefs();
+        refs = new address[](1);
+        refs[0] = vm.addr(anaPk);
+        bps = new uint16[](1);
+        bps[0] = 10_000;
+        P memory p = _build(ben, refs, bps, address(0));
+        address[3] memory callers = [relayer, ben, makeAddr("fork-attacker")];
+        for (uint256 i; i < 3; ++i) {
+            vm.prank(callers[i]);
+            vm.expectRevert(IVouch.UnauthorizedSubmitter.selector);
+            vouch.pay(p.o, p.osig, p.w, p.wsig, p.a, p.usig);
+        }
+        assertFalse(USDC.authorizationState(ben, p.nonce));
+        assertEq(USDC.balanceOf(ben), 12e6);
+        assertFalse(vouch.isOrderSettled(venue, p.o.orderId));
     }
 }

@@ -1,5 +1,5 @@
 {
- "counter": 52,
+ "counter": 55,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -531,9 +531,10 @@
    "from": "CONTRACTS",
    "to": "CONTRACTS_QE",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-055"
   },
   "MSG-051": {
    "id": "MSG-051",
@@ -555,6 +556,36 @@
    "status": "open",
    "subject": "Re: Vouch v2 redeployed: new address + start block (topics unchanged)",
    "re": "MSG-036"
+  },
+  "MSG-053": {
+   "id": "MSG-053",
+   "ts": "2026-11-16T16:55:47-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-10 (Info/Low) v3: customer can pre-empt a relayer-bound auth with a second self-submit auth for the same order (docs + relayer handling)",
+   "re": null
+  },
+  "MSG-054": {
+   "id": "MSG-054",
+   "ts": "2026-11-16T16:55:47-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-C-11 (Info) v3 kill-the-backend notes: gas-in-USDC balance check, public acceptIntro, stale 'zero = anyone' docs in shared/INTERFACES, VOUCH_V3 pin",
+   "re": null
+  },
+  "MSG-055": {
+   "id": "MSG-055",
+   "ts": "2026-11-16T17:14:29-05:00",
+   "from": "CONTRACTS_QE",
+   "to": "CONTRACTS",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: v3 (D-014/D-519) in working tree: 3 QE tests pin v2 behaviour and need updating; please run the independent v3 review",
+   "re": "MSG-050"
   }
  }
 }

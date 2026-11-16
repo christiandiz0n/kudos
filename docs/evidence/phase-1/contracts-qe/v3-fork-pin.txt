@@ -1,0 +1,23 @@
+# CONTRACTS_QE v3 review: how the fork bytecode pin is handled (D-703), 2026-11-16T21:49:10Z
+
+## 1. Re-prove live v2 == v2 source (HEAD = c7280bc contracts/src, git-archived to a scratch dir, original pin test)
+$ git archive HEAD contracts/src contracts/test contracts/foundry.toml | tar -x -C <scratch>/v2
+$ (cd <scratch>/v2/contracts && forge build --sizes | grep Vouch)
+| Vouch                   | 24,036           | 25,070            | 540                | 24,082              |
+$ (cd <scratch>/v2/contracts && VOUCH_FORK=true forge test --match-test test_fork_deployedV2RuntimeEqualsThisSource)
+[PASS] test_fork_deployedV2RuntimeEqualsThisSource() (gas: 128614)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 887.85ms (55.66ms CPU time)
+
+## 2. Record the live v2 runtime hash (read-only)
+$ cast code 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f --rpc-url https://rpc.testnet.arc.io | cast keccak
+runtime bytes: 24036
+0xae810c8a5ec482935e8f39469eee493428e4ca5d9f57413c68a5bbe266aa4513
+$ cast call 0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f 'PAYMENT_AUTH_TYPEHASH()(bytes32)'
+0xf9bd6d8f7594705f0e81baf13ad79ce6624e48eab3cbbb41c3ba9a97b7abcba4
+block: 72603340
+
+## 3. Guard: VOUCH_V3 pointed at v2 must fail (proves the v3 test is live once VOUCH_V3 is set)
+$ VOUCH_V3=0x9C502fBF77BF31c6e88C92b55D1c67A21491b95f VOUCH_FORK=true forge test --match-test test_fork_deployedV3RuntimeEqualsThisSource
+[FAIL: VOUCH_V3 must not point at v2] test_fork_deployedV3RuntimeEqualsThisSource() (block: 72603343) (gas: 17133)
+Suite result: FAILED. 0 passed; 1 failed; 0 skipped; finished in 926.41ms (42.62ms CPU time)
+[FAIL: VOUCH_V3 must not point at v2] test_fork_deployedV3RuntimeEqualsThisSource() (block: 72603343) (gas: 17133)

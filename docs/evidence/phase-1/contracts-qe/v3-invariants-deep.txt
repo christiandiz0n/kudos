@@ -1,0 +1,72 @@
+$ FOUNDRY_INVARIANT_RUNS=1024 FOUNDRY_INVARIANT_DEPTH=128 forge test --match-contract 'InvariantTest' -vv   (2026-11-16T21:53:03Z)
+No files changed, compilation skipped
+
+Ran 1 test for test/VouchInvariant.t.sol:VouchInvariantTest
+[PASS]
+VouchInvariantTest invariants:
+[PASS] invariant_atMostOneRewardPerCustomer
+[PASS] invariant_conservation
+[PASS] invariant_noPerPaymentViolation
+[PASS] invariant_statsMatchGhosts
+ VouchInvariantTest invariants (runs: 1024, calls: 131072, reverts: 0)
+
+╭--------------+-------------+-------+---------+----------╮
+| Contract     | Selector    | Calls | Reverts | Discards |
++=========================================================+
+| VouchHandler | blacklist   | 19030 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | introduce   | 18837 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | pay         | 18587 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | replay      | 18674 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | seed        | 18737 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | updateTerms | 18444 | 0       | 0        |
+|--------------+-------------+-------+---------+----------|
+| VouchHandler | warp        | 18763 | 0       | 0        |
+╰--------------+-------------+-------+---------+----------╯
+
+Logs:
+  pays 6 rewarded 0
+  fallback 0 intros 5
+  replaysTried 18
+  selfPays 2 submitterRefusals 18
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 60.24s (60.24s CPU time)
+
+Ran 1 test for test/qe/QeInvariant.t.sol:QeLedgerInvariantTest
+[PASS]
+QeLedgerInvariantTest invariants:
+[PASS] invariant_qe_introducerFrozenAndRewardedImpliesVerified
+[PASS] invariant_qe_noPerPaymentViolation
+[PASS] invariant_qe_statsEqualEventSourcedLedger
+[PASS] invariant_qe_vouchHoldsNothingAndConservation
+ QeLedgerInvariantTest invariants (runs: 1024, calls: 131072, reverts: 0)
+
+╭-----------------+-----------------+-------+---------+----------╮
+| Contract        | Selector        | Calls | Reverts | Discards |
++================================================================+
+| QeLedgerHandler | introduce       | 21856 | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | pay             | 21958 | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | seed            | 21718 | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | setTerms        | 21905 | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | toggleBlacklist | 21821 | 0       | 0        |
+|-----------------+-----------------+-------+---------+----------|
+| QeLedgerHandler | warp            | 21814 | 0       | 0        |
+╰-----------------+-----------------+-------+---------+----------╯
+
+Logs:
+  qe pays 4 rewarded 2
+  qe attributorPays 0 quoteChecks 4
+  qe frontRunsRefused 8 selfSubmitPays 1
+  qe zeroSubmitterRefused 8
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 111.76s (111.76s CPU time)
+
+Ran 2 test suites in 111.77s (172.01s CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)

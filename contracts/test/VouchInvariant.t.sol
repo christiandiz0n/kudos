@@ -47,10 +47,13 @@ contract VouchHandler is Test {
     uint256 public ghostFallbackPays;
     uint256 public ghostIntros;
     uint256 public ghostReplaysTried;
+    uint256 public ghostSelfPays; // D-519: settled by the customer itself (submitter = customer)
+    uint256 public ghostSubmitterRefusals; // D-519: non-submitter attempts refused with UnauthorizedSubmitter
     mapping(address => uint256) public rewardedCount;
     string public violation; // empty = none
 
     bytes internal lastPayCalldata;
+    address internal lastPaySubmitter;
     bytes internal lastIntroCalldata;
     uint256 internal seq;
 
@@ -147,14 +150,26 @@ contract VouchHandler is Test {
         uint256 payout0;
     }
 
+    /// @dev D-519 routes: 0 = relayer-bound (the customer tries to race it), 1 = relayer-bound (another actor tries),
+    ///      2 = self-submit (the relayer tries), 3 = submitter 0 (must be unpayable by anyone).
     function pay(uint256 cust, uint256 amount, uint256 wseed, uint8 mode) external {
         Ctx memory c = _ctx(cust, amount);
-        bytes memory cd = _buildPay(c, wseed, mode);
+        uint256 route = uint256(keccak256(abi.encode(wseed, "route"))) % 4;
+        address submitter = route < 2 ? address(this) : route == 2 ? c.customer : address(0);
+        (bytes memory cd, bytes32 orderId) = _buildPay(c, wseed, mode, submitter);
+        if (route == 3) {
+            _expectSubmitterRefusal(cd, orderId, address(this));
+            _expectSubmitterRefusal(cd, orderId, c.customer);
+            return;
+        }
         usdc.mint(c.customer, c.amount);
         ghostMinted += c.amount;
         c.payout0 = usdc.balanceOf(payout);
+        // a non-submitter is refused before anything happens (front-run with the exact honest calldata)
+        _expectSubmitterRefusal(cd, orderId, route == 0 ? c.customer : route == 1 ? actor(cust % 8 + 1) : address(this));
 
         vm.recordLogs();
+        if (submitter != address(this)) vm.prank(submitter);
         (bool ok, bytes memory ret) = address(vouch).call(cd);
         Vm.Log[] memory logs = vm.getRecordedLogs();
         if (!ok) {
@@ -166,6 +181,8 @@ contract VouchHandler is Test {
             return;
         }
         lastPayCalldata = cd;
+        lastPaySubmitter = submitter;
+        if (route == 2) ghostSelfPays++;
         ghostPays++;
         ghostGross += c.amount;
         _check(c, logs);
@@ -186,7 +203,18 @@ contract VouchHandler is Test {
         }
     }
 
-    function _buildPay(Ctx memory c, uint256 wseed, uint8 mode) internal returns (bytes memory) {
+    function _expectSubmitterRefusal(bytes memory cd, bytes32 orderId, address caller) internal {
+        vm.prank(caller);
+        (bool ok, bytes memory ret) = address(vouch).call(cd);
+        if (ok || bytes4(ret) != IVouch.UnauthorizedSubmitter.selector) _flag("non-submitter not refused");
+        if (vouch.isOrderSettled(venue, orderId)) _flag("refused pay changed state");
+        ghostSubmitterRefusals++;
+    }
+
+    function _buildPay(Ctx memory c, uint256 wseed, uint8 mode, address submitter)
+        internal
+        returns (bytes memory, bytes32)
+    {
         IVouch.Order memory o = IVouch.Order({
             venue: venue,
             orderId: bytes32(++seq),
@@ -203,10 +231,10 @@ contract VouchHandler is Test {
             c.amount,
             mode % 3 == 0 ? bytes32(0) : _wh(w),
             o.expiresAt,
-            wseed % 2 == 0 ? address(this) : address(0) // bound to this handler, or open (D-012)
+            submitter // D-519: this handler (the relayer) or the customer; 0 must be unpayable
         );
         bytes memory usig = _usig(c.cpk, a);
-        return abi.encodeCall(vouch.pay, (o, osig, w, wsig, a, usig));
+        return (abi.encodeCall(vouch.pay, (o, osig, w, wsig, a, usig)), o.orderId);
     }
 
     function _weights(Ctx memory c, IVouch.Order memory o, uint256 wseed, uint8 mode)
@@ -313,6 +341,7 @@ contract VouchHandler is Test {
         bytes memory cd = intro ? lastIntroCalldata : lastPayCalldata;
         if (cd.length == 0) return;
         ghostReplaysTried++;
+        if (!intro && lastPaySubmitter != address(this)) vm.prank(lastPaySubmitter); // replay as the real submitter
         (bool ok,) = address(vouch).call(cd);
         if (ok) _flag(intro ? "intro replay succeeded" : "pay replay succeeded");
     }
@@ -384,5 +413,6 @@ contract VouchInvariantTest is Test {
         console2.log("pays", handler.ghostPays(), "rewarded", handler.ghostRewardedPays());
         console2.log("fallback", handler.ghostFallbackPays(), "intros", handler.ghostIntros());
         console2.log("replaysTried", handler.ghostReplaysTried());
+        console2.log("selfPays", handler.ghostSelfPays(), "submitterRefusals", handler.ghostSubmitterRefusals());
     }
 }

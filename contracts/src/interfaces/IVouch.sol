@@ -46,7 +46,8 @@ interface IVouch {
 
     /// @notice Not signed directly: hashStruct(PaymentAuth) is the nonce of the customer's USDC
     ///         ReceiveWithAuthorization (D-103). weightsHash = hashStruct(Weights) or bytes32(0) for the fallback.
-    ///         submitter = the only address allowed to call pay() with it (the app's relayer), or 0 = anyone (D-012).
+    ///         submitter = the only address allowed to call pay() with it: the app's relayer, or the customer itself
+    ///         to self-submit. There is no "anyone" value; submitter = 0 can never be paid (D-012, D-519).
     struct PaymentAuth {
         address customer;
         address venue;
