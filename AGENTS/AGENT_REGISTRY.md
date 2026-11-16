@@ -11,4 +11,4 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | STREAMS_INFRA | `a55dd50bb9a376571` | 0 | HMAC webhook, filter, Streams CLI, runbook; QE fixes | ⏸ | waits on a valid QuickNode key (HUMAN_INPUT #3) |
 | QE_E2E | `ae51ee4ecd9fe7bb9` | 0 | Phase 0 gate Part A (done); Part B = S3 live from runbook | ⏸ | resume for Part B once the key works |
 | CONTRACTS | `ad7b974ed746e5ac4` | 1 | Vouch.sol + tests + Arc deploy/verify + smoke + ABI export + handoffs | 🟢 | launched 2026-11-16 |
-| UI_DESIGN | `a22d241dedf389e0f` | 1 | Design system, components, /design route, screen low-fi, screenshots | 🟢 | launched 2026-11-16 |
+| UI_DESIGN | `a22d241dedf389e0f` | 1 | Design system, components, /design route, screen low-fi, screenshots | ✅ | Orchestrator signed off; human approval pending (MSG-007) |

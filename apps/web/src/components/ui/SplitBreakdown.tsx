@@ -116,11 +116,11 @@ export function SplitBreakdown({
           >
             <span aria-hidden className={cn("h-6 w-1 shrink-0 rounded-full", isVenue ? "bg-line-strong" : fillFor(ri))} />
             <Avatar name={p.label} size="sm" kind={isVenue ? "venue" : isYou ? "you" : "person"} />
-            <span className="min-w-0 flex-1">
+            <span className="min-w-0 shrink">
               <span className="block truncate text-body-sm font-semibold text-ink">{p.label}</span>
               {p.reason ? <span className="block truncate text-caption text-ink-3">{p.reason}</span> : null}
             </span>
-            <span aria-hidden className="mx-1 hidden h-px flex-1 border-b border-dotted border-line-strong/60 min-[360px]:block" />
+            <span aria-hidden className="mx-1 h-px min-w-3 flex-1 self-end mb-3 border-b border-dotted border-line-strong/70" />
             <AmountDisplay value={p.amount} precision={precision} size="md" variant={isVenue ? "plain" : "positive"} />
           </li>
         );

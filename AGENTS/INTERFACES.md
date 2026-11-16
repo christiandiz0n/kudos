@@ -1,5 +1,5 @@
 # INTERFACES — cross-agent source of truth
-_Last updated: 2026-11-15T21:30:00-05:00 by ORCHESTRATOR — v0 skeleton. Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
+_Last updated: 2026-11-16 by ORCHESTRATOR — §2–§4 v1 FINAL from CONTRACTS (D-501..D-511). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
 
 ## 1. Network (Arc Testnet)
 _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence/phase-0/research-s1-s3-s4.md. Decisions D-101..D-105._
@@ -31,44 +31,104 @@ _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence
 |---|---|---|---|
 | `Hello` (**spike only**, canonical for S3, not production) | `0x66cb4392322B2aEDE460A4314cE092E0cc1c2B32` | 72567874 | `0x382fa0221cf39cf3c1107ffc6e2ecfef39620ddcc4e465a4aa363fbce6410f93` |
 | `Hello` (QE gate re-deploy, Blockscout-verified; not watched by the Stream) | `0xc6282732b1852726F73D7Cea98cE6D03f9021906` | 72569134 | see `docs/evidence/phase-0/qe/` |
-| _Vouch main contract_ | _Phase 1_ | | |
+| **`Vouch` (production, Blockscout-verified)** | `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` | 72580272 | `0xe3648ea62c60c46f92c30ff3753d907bc4b626417ffcee282883ff1f3a16016f` |
+
+Constructor: `Vouch(IFiatTokenV2_2 usdc = 0x3600…0000)`. No owner, no admin, no upgradeability, non-payable. Code: `packages/shared/src/deployments.ts` (`VOUCH_ARC_TESTNET`), ABI `packages/shared/src/abi/vouch.ts` (`vouchAbi`, regenerate with `bash contracts/script/export-abi.sh`).
 
 ## 3. EIP-712
-> **v0 DRAFT (ARCHITECT, 2026-11-15) — CONTRACTS/BACKEND finalize.** Code mirror: `packages/shared/src/eip712.ts` (field order = type string = typehash; keep them identical to the Solidity `*_TYPEHASH` constants).
+**Domain** (main contract): `{ name: "Vouch", version: "1", chainId: 5042002, verifyingContract: 0xfEe6…b2d3 }` (ERC-5267 `eip712Domain()` available; TS `vouchDomain(chainId, address)`).
 
-**Domain** (main contract): `{ name: "Vouch", version: "1", chainId, verifyingContract: <main contract> }`.
-`name` comes from `APP_NAME` at Phase 0 but is the separate literal `EIP712_DOMAIN_NAME`, **frozen at deploy**; a display-name change must not change it.
-
-| Type | Signed by | Fields (in order) | typehash = keccak256(type string) |
+| Type | Signed by | Fields (in order) | typehash |
 |---|---|---|---|
 | `Intro` | referrer | `address venue, address referrer, uint32 termsVersion, uint8 linkType, uint64 issuedAt, uint64 expiresAt, bytes32 nonce` | `0xdc4192f6…dbb7c3` |
 | `IntroAcceptance` | customer | `bytes32 introHash, address customer, uint64 deadline` | `0x400ca88e…a469d0` |
 | `Order` | venue **signer** key | `address venue, bytes32 orderId, uint256 amount, uint64 expiresAt` | `0xd418cbc9…11d8a3` |
 | `Weights` | venue **attributor** key | `address venue, address customer, bytes32 orderId, address[] referrers, uint16[] bps` | `0x6d9e3bfc…27720c` |
-| `PaymentAuth` | customer (committed via EIP-3009 nonce, not signed separately) | `address customer, address venue, bytes32 orderId, uint256 amount, bytes32 weightsHash, uint64 deadline` | `0x83204ea1…35b253` |
-| `ReceiveWithAuthorization` (USDC's own type, domain `{name:"USDC",version:"2",chainId:5042002,verifyingContract:0x3600…}`) | customer | `address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce` | `0xd099cc98…413de8` |
+| `PaymentAuth` | (not signed; its hashStruct is the EIP-3009 nonce) | `address customer, address venue, bytes32 orderId, uint256 amount, bytes32 weightsHash, uint64 deadline` | `0x83204ea1…35b253` |
+| `RegisterVenue` | venue **owner** | `address owner, bytes32 salt, address payout, address signer, address attributor, uint16 rewardBps, uint256 minOrder, string metadataURI, uint256 nonce, uint64 deadline` | `0x8c44f0dc…be789d` |
+| `UpdateTerms` | venue owner | `address venue, uint16 rewardBps, uint256 minOrder, uint256 nonce, uint64 deadline` | `0x4a721d19…e52d54` |
+| `SetVenueKeys` | venue owner | `address venue, address payout, address signer, address attributor, uint256 nonce, uint64 deadline` | `0x93435561…3d98c6` |
+| `SetSeedAmbassador` | venue owner | `address venue, address ambassador, bool allowed, uint256 nonce, uint64 deadline` | `0x35f94fc4…3dd2c4` |
+| `ReceiveWithAuthorization` (USDC domain `{USDC, 2, 5042002, 0x3600…}`) | customer | `address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce` | `0xd099cc98…413de8` |
+
+Full typehashes:
+```
+Intro              0xdc4192f6970873be49c69a70fecca1bd4ec35227b3516fe7213b516246dbb7c3
+IntroAcceptance    0x400ca88e9ec28bb1f7e73d44cb8743cd861d151b07da51fae9ff083083a469d0
+Order              0xd418cbc9a68e3abda5b09e4e1b5c5404de5701543ff1c0c5a807f80f9d11d8a3
+Weights            0x6d9e3bfc06d45d14351cb1d560fee0b175c5b21e7134c820b3c65deab627720c
+PaymentAuth        0x83204ea1500cc20bbe24158546e6acd5b12f1284315bff525545b80a5635b253
+RegisterVenue      0x8c44f0dcdc50560c5ff9c175514985b60426873e5e734c2cd9d1ca80acbe789d
+UpdateTerms        0x4a721d19699712def4975cf0278ea92f7a6e53f7c54df3c211bfd9c525e52d54
+SetVenueKeys       0x93435561eda21e37e71f216160aa9814f9afe1da95bc8cdb71f25c44213d98c6
+SetSeedAmbassador  0x35f94fc49cd1dc823291d31054c54ddbcef90e2d3c9085f777d953f7f53dd2c4
+ReceiveWithAuth    0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8  (USDC/EIP-3009)
+```
+Encoding: arrays = `keccak256(abi.encodePacked(T[]))` (elements padded to 32 bytes), `string` = `keccak256(bytes(s))`. This is identical to viem `hashStruct`, and golden vectors are pinned in both `contracts/test/VouchTypehash.t.sol` and `packages/shared/src/eip712.test.ts`.
 
 Rules (contract-enforced):
-- **Intro.** `linkType`: 0 = personal, 1 = broadcast. `termsVersion` pins the venue terms in force when the referrer shared; the payment uses those frozen terms. `expiresAt` is bounded by the contract (max TTL, e.g. 30 days, CONTRACTS decides). `nonce` is random 32 bytes, so the referrer can revoke it (`revokeIntro(nonce)`, optional).
-- **IntroAcceptance.** `introHash` is the **full EIP-712 digest** of the Intro (`hashTypedData(domain, Intro)`), so it already binds venue, referrer, chain and contract. `customer` must equal the recovered signer, and `customer != referrer` (no self-referral).
-  - Personal intro: **single-use**. The first valid acceptance consumes `introHash`.
-  - Broadcast intro: many customers can accept it, but each `(introHash, customer)` pair only once.
-  - So an intro can never be moved to another venue (venue is in the Intro), and a personal intro can't be reused for a second customer.
-  - The relayer submits `acceptIntro(intro, referrerSig, acceptance, customerSig)`, which emits `IntroAccepted`.
-- **Order.** `amount` is in USDC base units (6 decimals). `orderId` is unique per venue and becomes `settled` after one payment. Recovered signer == `venues[venue].signer`.
-- **Weights.** `referrers.length == bps.length`, length between 1 and `MAX_REFERRERS` (5). `Σbps == 10_000`. Each `bps[i] <= 8_000` unless there is a single referrer. No duplicates. Every referrer holds an accepted, unexpired intro for this (customer, venue). Recovered signer == `venues[venue].attributor`. If weights are invalid or missing, the contract falls back on-chain (equal split across valid intros, capped at 5, most recent first; CONTRACTS finalizes).
-- **PaymentAuth (D-103).** The payment goes through USDC EIP-3009 `receiveWithAuthorization`, and the customer signs **one** message.
-  - **Nonce.** `nonce = hashStruct(PaymentAuth)`, the EIP-712 struct hash with no domain.
-  - **What the customer signs.** USDC's `ReceiveWithAuthorization{from: customer, to: <main contract>, value: amount, validAfter: 0, validBefore: deadline, nonce}`, under the USDC domain.
-  - **What the contract does.** It recomputes the nonce from the call params, calls `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)`, then splits with `USDC.transfer`, all in one tx.
-  - **What this binds.** The relayer can't change amount, venue, order or weights. Payee-only receive means the authorization can't be front-run. EIP-3009 nonces are unique per authorizer, so no sequential nonce is needed.
-  - **No approve, no allowance, no customer gas.**
-  - **`weightsHash`** = `hashStruct(Weights)` of the quoted attributor-signed weights, or `bytes32(0)` to accept the on-chain fallback.
-  - **`amount`** must equal `Order.amount`.
-  - **Fallback:** EIP-2612 `permit` + `transferFrom`, also supported on Arc USDC.
-- **Contract-wide (D-102/D-104).**
-  - Signature checks for Intro, IntroAcceptance, Order and Weights use OZ `SignatureChecker` (ECDSA + ERC-1271), so smart accounts can be added later.
-  - The main contract is **non-payable**: no `msg.value`, no native sends. All amounts are 6-dec USDC via `0x3600…`.
+
+**Venues (D-501)**
+- The venue id is `address(uint160(uint256(keccak256(abi.encode(owner, salt)))))` (`computeVenueId`). Each owner action has one entry point:
+  - `registerVenue(owner, salt, VenueConfig{payout, signer, attributor, rewardBps, minOrder, metadataURI}, deadline, ownerSig) → venue`
+  - `updateTerms(venue, rewardBps, minOrder, deadline, ownerSig)`
+  - `setKeys(venue, payout, signer, attributor, deadline, ownerSig)`
+  - `setSeedAmbassador(venue, ambassador, allowed, deadline, ownerSig)`
+- If `msg.sender == owner`, the signature is ignored. Otherwise the owner's signature over the matching type is required, with `nonce = nonces(owner)` (sequential, shared by all four types) and an inclusive deadline.
+- Terms: `1 ≤ rewardBps ≤ 5,000` and `minOrder ≤ $10,000`. Versions start at 1, `updateTerms` appends `termsVersion + 1`, and stored versions are immutable (`getTerms(venue, v)`).
+- **Seed ambassadors** (D-507) may refer without a prior purchase. They have no introducer.
+
+**Intro + IntroAcceptance (D-505)**
+- `introHash` = the full EIP-712 digest of the Intro (`hashIntro`).
+- Window: `0 < expiresAt − issuedAt ≤ 30 days`, `issuedAt ≤ now + 15 min`, and `now ≤ expiresAt` (inclusive). `acceptance.deadline ≥ now`.
+- `termsVersion` must be the version **in force at `issuedAt`**, so clients must use chain time for `issuedAt`.
+- Parties: customer ≠ referrer. The referrer must be verified at the venue or a seed. The customer must NOT be verified yet.
+- Use limits: a personal intro is single-use. A broadcast intro can be used once per customer.
+- Live intros: ≤ 5 slots per (customer, venue), one per referrer. Slot choice: same referrer → replace; else the first expired slot; else append; else evict the oldest. Each drop emits `IntroDropped`.
+
+**Order**
+- Signed by `venues[venue].signer`, valid while `now ≤ expiresAt`. `orderId` is single-use per venue. `amount ∈ [1, 1,000,000e6]`.
+
+**Weights (D-502)**
+- Used only if all of these hold:
+  - `PaymentAuth.weightsHash == hashStruct(Weights) != 0`
+  - `venue`, `customer` and `orderId` match the payment
+  - length 1–5, equal to the `bps` length
+  - each bps > 0 and ≤ 8,000 unless single, Σ == 10,000, no duplicates
+  - every referrer holds an **eligible** intro: unexpired, and `amount ≥ minOrder` of its frozen version
+  - signed by `venues[venue].attributor`
+- Otherwise the **fallback** applies (never a revert):
+  - `raw_i = (personal ? 2 : 1) × 2^20 >> min(floor(age_i / 3 days), 10)`
+  - `w_i = floor(raw_i × 10,000 / Σraw)`
+  - the remainder goes to the most recently accepted intro (ties → lower index)
+- `PaymentSettled.weightsMode` reports which path was used.
+
+**PaymentAuth / pay (D-103, D-509)**
+- The customer signs USDC `ReceiveWithAuthorization{from: customer, to: Vouch, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(PaymentAuth)}`. TS helper: `receiveAuthForPayment(auth, VOUCH)`.
+- The call is `pay(order, venueSig, weights, attributorSig, auth, customerUsdcSig)`, with `auth.{venue, orderId, amount}` equal to the order's. `now < auth.deadline`.
+- `weightsHash = 0` selects the fallback.
+- The pull is `USDC.receiveWithAuthorization(customer, address(this), amount, 0, deadline, nonce, sig)` (bytes overload, ERC-1271-ready), followed by `transfer`s, all in one tx.
+
+**Split (D-503, D-504, D-508)**
+- `slice_i = floor(amount × w_i × frozenRate_i / 10⁸)`.
+- Each slice is split into `floor(25%)` cashback, `floor(55%)` L1 → referrer_i, and `floor(20%)` L2 → `introducerOf(venue, referrer_i)`.
+- An L2 share returns to the venue if the introducer is 0 or is the paying customer.
+- A failed recipient transfer also returns to the venue (D-506).
+- The venue gets `amount − Σ transferred`.
+- Only the **first** purchase per (customer, venue) can be rewarded. It is rewarded iff ≥ 1 eligible intro exists. It always marks the customer verified, and records `introducer` = the top-weight L1 (ties → lower index), frozen forever.
+
+**Contract-wide**
+- `SignatureChecker` (ECDSA + ERC-1271) is used for every signature.
+- `nonReentrant` on `pay`; non-payable.
+
+**Read helpers**
+- Venues and terms: `getVenue`, `getTerms`, `currentTerms`
+- Customers and referral rights: `getCustomer`, `introducerOf`, `getLiveIntros`, `canRefer`, `isSeedAmbassador`
+- Replay state: `isIntroUsed`, `isOrderSettled`
+- Stats: `getVenueStats`, `getAmbassadorStats`
+- Hashing: `hashIntro`, `hashWeights`, `paymentAuthNonce`, `domainSeparator`, `computeVenueId`, `nonces`
+- Quotes: **`previewPayment(venue, customer, orderId, amount, weights, attributorSig, weightsHash) → Quote`** returns the exact split `pay` would make (use it for `/payments/quote`).
+
 - **Spike only:** `SplitAuth` (Hello.sol, domain `{name:"WomHello",version:"1"}`) has fields `address token, address from, bytes32 recipientsHash, bytes32 amountsHash, uint256 nonce, uint256 deadline`, typehash `0xa5393841…050168`. Array hashes are `keccak256(abi.encodePacked(arr))`. Proven locally in S5. The spike uses approve + `transferFrom`, not EIP-3009.
 
 Full typehashes:
@@ -83,26 +143,44 @@ SplitAuth(spike) 0xa539384164e343b0ca91506ffcd85c6cabf826e8dda0690ff23c9b0aa1050
 ```
 
 ## 4. Events (Streams filter targets)
-> **v0 DRAFT — CONTRACTS finalizes.** `topic0 = keccak256("Name(type1,type2,…)")`: canonical types, no names, no spaces, no `indexed`. Compute with `cast keccak "<sig>"` or viem `toEventSelector`. Indexed fields are topics 1–3 (max 3). The payload is designed so the DB can be **rebuilt from logs alone** (backfill/replay).
-> **Filter by our contract address only.** On Arc every USDC transfer also emits an 18-dec EIP-7708 system `Transfer` log from `0xffff…fffe`. Ignore it (D-102). `eth_getLogs` pages are ≤ 9,999 blocks and finality is 1 block (D-101).
+> `topic0 = keccak256("Name(types)")`. Filter by the Vouch address `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` only (never the `0xffff…fffe` system emitter). Start block **72580272**. Code: `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` in `@vouch/shared`.
 
 | Event | Signature (indexed marked) | topic0 |
 |---|---|---|
-| `VenueRegistered` | `(address indexed venue, address indexed owner, address signer, address attributor, string metadataURI)` | `0xd58cd644fd18c3281d0b2b5087d2e5ab6dbb3bedaad3e8c7312b6e290ee0f7d4` |
-| `VenueKeysUpdated` _(proposed)_ | `(address indexed venue, address signer, address attributor)` | `0x7f81f0bfae01323140c6d4001aa094b57b8674b05afc2cb8c1339e24a09e6f2e` |
-| `TermsUpdated` | `(address indexed venue, uint32 indexed termsVersion, uint16 rewardBps, uint256 minOrderAmount, uint64 effectiveAt)` | `0x86d80d9334324698e8c0763e1f6a4179b0ae6af2e64a9724746ce284ec78bb8b` |
+| `VenueRegistered` | `(address indexed venue, address indexed owner, bytes32 salt, address payout, address signer, address attributor, string metadataURI)` | `0xf0f4291fd5fccc2af9a998b6cf8aba2121c99823a21bcfac7a4821537f004d77` |
+| `TermsUpdated` | `(address indexed venue, uint32 indexed termsVersion, uint16 rewardBps, uint256 minOrder, uint64 effectiveAt)` | `0x86d80d9334324698e8c0763e1f6a4179b0ae6af2e64a9724746ce284ec78bb8b` |
+| `VenueKeysUpdated` | `(address indexed venue, address payout, address signer, address attributor)` | `0xc518545d9074ed155beb97a3caed0bbecc0d2cdcdee6d6d2d16a079883ab2ee2` |
+| `SeedAmbassadorSet` | `(address indexed venue, address indexed ambassador, bool allowed)` | `0x213904416ef720404e57b83f59ff9f8b5029132b1581c57443cf044b11a835b2` |
 | `IntroAccepted` | `(address indexed venue, address indexed referrer, address indexed customer, bytes32 introHash, uint32 termsVersion, uint8 linkType, uint64 expiresAt)` | `0xe75b5b5d835a46c918feb6cac867d2b1c6ed4d45a112ebaf7067bb9c1fcf37fc` |
-| `PaymentSettled` | `(address indexed venue, address indexed customer, bytes32 indexed orderId, uint256 amount, uint256 venueAmount, uint256 rewardPool, uint32 termsVersion, bool firstPurchase, bool fallbackWeights)` | `0xbaab006054cc197f7fd4876bdf177f9358ee432b9afea0feeacc842a99dc2adf` |
-| `RewardPaid` | `(bytes32 indexed orderId, address indexed recipient, address indexed venue, uint8 role, uint256 amount, address viaReferrer)` | `0x4016cba481ec6fd9d671d18c19dd9b62b4fc63403c17edfafb37c52edeabf2c8` |
+| `IntroDropped` | `(address indexed venue, address indexed customer, address indexed referrer, bytes32 introHash, uint8 reason)` | `0x71760f14b6c295e573eb0712240020bcabda6d58907c0f3897ecf55f9ec193ea` |
 | `CustomerVerified` | `(address indexed venue, address indexed customer, address indexed introducer, bytes32 orderId)` | `0xca816bf56b298971c59e72dcd003c06b351b66ffedb5ec84017d6195ec0152c8` |
+| `PaymentSettled` | `(address indexed venue, address indexed customer, bytes32 indexed orderId, uint256 amount, uint256 venueAmount, uint256 rewardPool, bool firstPurchase, bool rewarded, uint8 weightsMode)` | `0x35f580066b94268579e33474e66ad0347864c26fe8683e577efb5072c80e7432` |
+| `RewardPaid` | `(bytes32 indexed orderId, address indexed recipient, address indexed venue, address customer, uint8 role, uint256 amount, address viaReferrer)` | `0xd28b9898dcd3318ef486fd51dbeba03ddb126bdb888b82d4ac7504213412b36a` |
+| `RewardReturned` | `(bytes32 indexed orderId, address indexed intendedRecipient, address indexed venue, address customer, uint8 role, uint256 amount, address viaReferrer, uint8 reason)` | `0x1cba477ed7240b8110e7fecc9c7f6fd041255365455d9c76f2b2febb4cfb7a15` |
+| `EIP712DomainChanged` (OZ, never emitted in practice) | `()` | `0x0a6387c9ea3628b88a633bb4f3b151770f70085117a15f9bf3787cda53f13d31` |
 
 Semantics:
-- `RewardPaid.role`: 0 = CASHBACK, 1 = L1, 2 = L2 (`REWARD_ROLE` in shared constants).
-  - `viaReferrer`: for L2, the L1 referrer whose introducer is being paid. For L1, the referrer itself. For CASHBACK, `address(0)`. This field draws the money-graph edges.
-  - Amounts are USDC base units.
-- One `PaymentSettled`, followed by N `RewardPaid` logs in the same tx (share `orderId`). Invariant: `venueAmount + Σ RewardPaid.amount == amount`. Undistributable shares go into `venueAmount`.
-- `CustomerVerified` fires on a customer's **first** purchase at a venue. `introducer` is the top-weight L1 referrer of that purchase (ties go to the lower array index), or `address(0)` if there was none. It becomes the customer's L2 parent when they later refer someone. _CONTRACTS to confirm the L2 parent rule._
-- Spike events: `Ping(address indexed from, bytes32 tag, uint256 at)` `0x20aede858ee515bfb2b198e62ba10a8133ae61e0c55d61c40b4c6d4191c0ca55`; `Split(address indexed token, address indexed from, address indexed relayer, uint256 recipientCount, uint256 total)` `0x42fb8796ffe3237a1f58f3e03a85a890f71c1582e5ef97e78936c4f5b6968cd9`.
+- **Order within one `pay` tx:** `CustomerVerified` (first purchase only, emitted before the USDC pull), then `PaymentSettled`, then N × `RewardPaid` / `RewardReturned` in this order: cashback, L1 (by referrer index), L2 (by referrer index). The USDC `Transfer` logs come from `0x3600…`, interleaved. Join key: `(venue, orderId)` or the txHash. orderIds are unique per venue only.
+- **Invariants:** `venueAmount + Σ RewardPaid.amount == amount`. `rewardPool = Σ slices = Σ RewardPaid + Σ RewardReturned + dust`, where dust ≤ 2 base units per referrer and goes to the venue.
+- **`role`:** 0 = CASHBACK (`viaReferrer` = 0), 1 = L1 (`viaReferrer` = the recipient), 2 = L2 (`viaReferrer` = the L1 whose introducer is paid; it draws the money-graph edge).
+- **`RewardReturned.reason`:** 0 = NO_INTRODUCER (`intendedRecipient` = 0), 1 = SELF_PAYMENT, 2 = TRANSFER_FAILED.
+- **`IntroDropped.reason`:** 0 = REPLACED, 1 = EXPIRED, 2 = EVICTED.
+- **`weightsMode`:** 0 NONE (plain), 1 ATTRIBUTOR, 2 FALLBACK_NOT_COMMITTED, 3 FALLBACK_HASH_MISMATCH, 4 FALLBACK_INVALID, 5 FALLBACK_BAD_SIGNATURE.
+- **`CustomerVerified.introducer`:** the customer's L2 parent at this venue (D-008/D-508), or 0. It fires exactly once per (customer, venue).
+- **`VenueRegistered` is followed by `TermsUpdated(version 1)`** in the same tx.
+- **Rebuilding every view from logs:**
+
+  | View | How to rebuild it |
+  |---|---|
+  | venue config | `VenueRegistered` + `VenueKeysUpdated` |
+  | terms history | `TermsUpdated` |
+  | seeds | `SeedAmbassadorSet` |
+  | live intros | `IntroAccepted` − `IntroDropped`, then filter by `expiresAt` |
+  | verified / introducer | `CustomerVerified` |
+  | venue stats | verified = count of `CustomerVerified`; rewarded = count of `PaymentSettled.rewarded`; gross = Σ `amount`; rewardsPaid = Σ `RewardPaid`; rewardsReturned = Σ `RewardReturned` |
+  | ambassador stats | customersCredited = count of distinct (venue, orderId) with `RewardPaid` role 1 to the address¹; venues = distinct venues among those; l1/l2 earned = Σ `RewardPaid` by role |
+
+  ¹ On-chain, `customersCredited` also counts an L1 whose transfer failed, i.e. `RewardReturned` role 1 with reason 2.
 
 ## 5. API endpoints
 > **v0 DRAFT — BACKEND_RELAYER finalizes (Phase 2).** Fastify service (`apps/api`), JSON bodies, amounts as **decimal strings of base units** (never JS numbers), addresses checksummed, all signatures 0x-hex. Auth = session cookie/bearer from the passkey/wallet flow (S4 pending). "relay" = the backend relayer submits the tx and pays gas.
@@ -153,7 +231,7 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `ARC_CHAIN_ID` | api, scripts | `5042002` (D-101) |
 | `ARC_EXPLORER_URL` | web, docs | `https://explorer.testnet.arc.io` (Blockscout, D-101) |
 | `USDC_ADDRESS` | all | `0x3600000000000000000000000000000000000000` (6 dec, D-101) |
-| `WOM_CONTRACT_ADDRESS` · `WOM_DEPLOY_BLOCK` | api, streams, web | Main contract + deploy block (backfill start) |
+| `VOUCH_CONTRACT_ADDRESS` · `VOUCH_DEPLOY_BLOCK` | api, streams, web | Main contract + deploy block (backfill start). Prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` (D-510) |
 | `HELLO_ADDRESS` | scripts (S2/S5 spike) | Hello spike contract |
 | `DEPLOYER_PRIVATE_KEY` | contracts scripts | Deploys contracts (**secret**) |
 | `RELAYER_PRIVATE_KEY` | api | Submits all user txs, pays gas (**secret**) |
@@ -168,3 +246,5 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `PUBLIC_API_URL` · `NEXT_PUBLIC_API_URL` | web | API base URL (server-side / browser) |
 | `LLM_PROVIDER` · `LLM_API_KEY` | api (Tier 3) | Optional AI attribution refinement (`none` disables) |
 | `STREAMS_SPIKE_LOG` _(optional)_ | api | Override path of the S3 NDJSON log |
+
+**Phase 1 note (D-510):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` / `VOUCH_DEPLOY_BLOCK=72580272`. Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.

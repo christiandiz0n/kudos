@@ -1,4 +1,5 @@
 import { parseUsdc } from "@vouch/shared";
+import type { MoneyGraphProps } from "@/components/ui/MoneyGraph";
 import type { SplitPart } from "@/components/ui/SplitBreakdown";
 
 /**
@@ -27,9 +28,20 @@ export const STORY = {
 /** The six-way split of Ben's first $12.00 purchase, from Ben's point of view. */
 export const STORY_SPLIT: SplitPart[] = [
   { id: "venue", label: "Lena's café", reason: "your order", amount: STORY.parts.venue, role: "venue" },
-  { id: "you", label: "You", reason: "welcome back", amount: STORY.parts.cashback, role: "you" },
+  { id: "you", label: "You", reason: "welcome cashback", amount: STORY.parts.cashback, role: "you" },
   { id: "ana", label: "Ana", reason: "recommended Lena's", amount: STORY.parts.ana, role: "referrer" },
   { id: "priya", label: "Priya", reason: "recommended Lena's", amount: STORY.parts.priya, role: "referrer" },
   { id: "marco", label: "Marco", reason: "brought Ana in", amount: STORY.parts.marco, role: "introducer" },
   { id: "sofia", label: "Sofia", reason: "brought Priya in", amount: STORY.parts.sofia, role: "introducer" },
 ];
+
+/** The same payment as a money graph (Ben → Lena's, Ana → Marco, Priya → Sofia). */
+export const STORY_GRAPH: Omit<MoneyGraphProps, "size"> = {
+  venue: { name: STORY.venue.name, amount: STORY.parts.venue },
+  customer: { name: "Ben", cashback: STORY.parts.cashback },
+  total: STORY.total,
+  referrers: [
+    { name: "Ana", amount: STORY.parts.ana, introducer: { name: "Marco", amount: STORY.parts.marco } },
+    { name: "Priya", amount: STORY.parts.priya, introducer: { name: "Sofia", amount: STORY.parts.sofia } },
+  ],
+};

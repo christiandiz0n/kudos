@@ -1,5 +1,7 @@
 import {
   concat,
+  encodeAbiParameters,
+  getAddress,
   hashStruct,
   hashTypedData,
   keccak256,
@@ -11,8 +13,10 @@ import {
 } from 'viem';
 
 /**
- * EIP-712 typed-data definitions — v0 DRAFT (ARCHITECT). CONTRACTS finalizes in Phase 1.
- * Mirrors AGENTS/INTERFACES.md §3. Any change here must match the Solidity TYPEHASH strings exactly.
+ * EIP-712 typed-data definitions — v1 FINAL (CONTRACTS, Phase 1; D-501..D-510).
+ * Mirrors AGENTS/INTERFACES.md §3 and contracts/src/libraries/VouchHash.sol. `eip712.test.ts` asserts that every
+ * type string built from these definitions equals VOUCH_TYPE_STRINGS (extracted from the Solidity source by
+ * contracts/script/export-abi.sh), and checks golden struct hashes shared with contracts/test/VouchTypehash.t.sol.
  *
  * Field order matters: it defines the type string and therefore the typehash.
  */
@@ -24,12 +28,14 @@ import {
 export const EIP712_DOMAIN_NAME = 'Vouch' as const;
 export const EIP712_DOMAIN_VERSION = '1' as const;
 
-export function womDomain(chainId: number, verifyingContract: Address): TypedDataDomain {
+export function vouchDomain(chainId: number, verifyingContract: Address): TypedDataDomain {
   return { name: EIP712_DOMAIN_NAME, version: EIP712_DOMAIN_VERSION, chainId, verifyingContract };
 }
+/** @deprecated legacy name from the `wom` placeholder era; use vouchDomain. */
+export const womDomain = vouchDomain;
 
 // ---------------------------------------------------------------------------------------------
-// Main protocol types (draft)
+// Main protocol types (final, Phase 1)
 // ---------------------------------------------------------------------------------------------
 
 /**
@@ -103,6 +109,62 @@ export const PAYMENT_AUTH_TYPES = {
   ],
 } as const;
 
+// ---------------------------------------------------------------------------------------------
+// Venue-owner actions (D-501). The owner either calls directly (msg.sender == owner, signature ignored) or signs
+// one of these and the relayer submits it. `nonce` = Vouch.nonces(owner) (sequential, shared by all four types);
+// `deadline` is inclusive (valid while block.timestamp <= deadline).
+// ---------------------------------------------------------------------------------------------
+
+/** registerVenue(owner, salt, cfg, deadline, sig). venue id = address(uint160(uint256(keccak256(abi.encode(owner, salt))))). */
+export const REGISTER_VENUE_TYPES = {
+  RegisterVenue: [
+    { name: 'owner', type: 'address' },
+    { name: 'salt', type: 'bytes32' },
+    { name: 'payout', type: 'address' },
+    { name: 'signer', type: 'address' },
+    { name: 'attributor', type: 'address' },
+    { name: 'rewardBps', type: 'uint16' },
+    { name: 'minOrder', type: 'uint256' },
+    { name: 'metadataURI', type: 'string' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint64' },
+  ],
+} as const;
+
+/** updateTerms(venue, rewardBps, minOrder, deadline, sig) → appends termsVersion + 1. */
+export const UPDATE_TERMS_TYPES = {
+  UpdateTerms: [
+    { name: 'venue', type: 'address' },
+    { name: 'rewardBps', type: 'uint16' },
+    { name: 'minOrder', type: 'uint256' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint64' },
+  ],
+} as const;
+
+/** setKeys(venue, payout, signer, attributor, deadline, sig). */
+export const SET_VENUE_KEYS_TYPES = {
+  SetVenueKeys: [
+    { name: 'venue', type: 'address' },
+    { name: 'payout', type: 'address' },
+    { name: 'signer', type: 'address' },
+    { name: 'attributor', type: 'address' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint64' },
+  ],
+} as const;
+
+/** setSeedAmbassador(venue, ambassador, allowed, deadline, sig). */
+export const SET_SEED_AMBASSADOR_TYPES = {
+  SetSeedAmbassador: [
+    { name: 'venue', type: 'address' },
+    { name: 'ambassador', type: 'address' },
+    { name: 'allowed', type: 'bool' },
+    { name: 'nonce', type: 'uint256' },
+    { name: 'deadline', type: 'uint64' },
+  ],
+} as const;
+
 /**
  * USDC EIP-3009 ReceiveWithAuthorization (Circle FiatToken v2). Signed by the CUSTOMER under the USDC
  * domain (ARC_TESTNET_USDC_EIP712_DOMAIN: name "USDC", version "2"). `to` = our payment contract
@@ -161,6 +223,54 @@ export interface ReceiveWithAuthorization {
   validAfter: bigint;
   validBefore: bigint;
   nonce: Hex;
+}
+
+export interface VenueConfig {
+  payout: Address;
+  signer: Address;
+  attributor: Address;
+  rewardBps: number;
+  minOrder: bigint;
+  metadataURI: string;
+}
+export interface RegisterVenue extends VenueConfig {
+  owner: Address;
+  salt: Hex;
+  nonce: bigint;
+  deadline: bigint;
+}
+export interface UpdateTerms {
+  venue: Address;
+  rewardBps: number;
+  minOrder: bigint;
+  nonce: bigint;
+  deadline: bigint;
+}
+export interface SetVenueKeys {
+  venue: Address;
+  payout: Address;
+  signer: Address;
+  attributor: Address;
+  nonce: bigint;
+  deadline: bigint;
+}
+export interface SetSeedAmbassador {
+  venue: Address;
+  ambassador: Address;
+  allowed: boolean;
+  nonce: bigint;
+  deadline: bigint;
+}
+
+/** Venue id the contract derives for (owner, salt): address(uint160(uint256(keccak256(abi.encode(owner, salt))))). */
+export function computeVenueId(owner: Address, salt: Hex): Address {
+  const h = keccak256(encodeAbiParameters([{ type: 'address' }, { type: 'bytes32' }], [owner, salt]));
+  return getAddress(`0x${h.slice(26)}`);
+}
+
+/** hashStruct(Order) (no domain). */
+export function orderStructHash(o: Order): Hex {
+  return hashStruct({ types: ORDER_TYPES, primaryType: 'Order', data: o });
 }
 
 /** Full EIP-712 digest of an Intro — the value used as IntroAcceptance.introHash. */

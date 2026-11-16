@@ -49,3 +49,21 @@ tab_width = 4
 bracket_spacing = false
 int_types = "long"
 quote_style = "double"
+
+# Lint (forge 1.9 runs it on build). Excluded classes are intentional in Vouch (CONTRACTS, D-506/D-509):
+#  block-timestamp      expiries/deadlines are timestamp-based by design (Arc finality = 1 block)
+#  reentrancy-events    pay() emits after the USDC calls on purpose (a transfer's outcome decides RewardPaid vs
+#                       RewardReturned); pay() is nonReentrant and USDC has no callbacks; the other hits are
+#                       ERC-1271 staticcalls
+#  unsafe-typecast      uint128/uint64 casts are bounded (MAX_ORDER_AMOUNT, block.timestamp)
+#  uninitialized-local  zero-initialized locals are intended defaults
+#  environment-read-across-mutation, require-revert-in-loop  test-only patterns
+[lint]
+exclude_lints = [
+  "block-timestamp",
+  "reentrancy-events",
+  "unsafe-typecast",
+  "uninitialized-local",
+  "environment-read-across-mutation",
+  "require-revert-in-loop",
+]

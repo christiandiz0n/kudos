@@ -9,7 +9,7 @@ library VouchSplit {
     uint256 internal constant L1_BPS = 5_500;
     uint256 internal constant L2_BPS = 2_000;
     uint256 internal constant HALF_LIFE = 3 days;
-    uint256 internal constant MAX_HALVINGS = 20;
+    uint256 internal constant MAX_HALVINGS = 10; // = MAX_INTRO_TTL / HALF_LIFE; guarantees every weight >= 1
     uint256 internal constant FALLBACK_SCALE_SHIFT = 20;
 
     /// @notice Referrer i's slice of the reward pool, priced at ITS intro's frozen rate:
@@ -26,7 +26,7 @@ library VouchSplit {
     }
 
     /// @notice On-chain fallback attribution (D-502): raw_i = linkWeight_i × 2^20 >> floor(age_i / 3 days)
-    ///         (personal = 2, broadcast = 1, halvings capped at 20), w_i = floor(raw_i × 10,000 / Σraw), and the
+    ///         (personal = 2, broadcast = 1, halvings capped at 10), w_i = floor(raw_i × 10,000 / Σraw), and the
     ///         rounding remainder goes to the most recently accepted intro (ties → lower index). Σw == 10,000.
     function fallbackWeights(uint8[5] memory linkType, uint64[5] memory acceptedAt, uint256 n, uint256 nowTs)
         internal

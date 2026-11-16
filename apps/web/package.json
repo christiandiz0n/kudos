@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "dev:https": "next dev --experimental-https -H 0.0.0.0"
+    "dev:https": "next dev --experimental-https -H 0.0.0.0",
+    "design:shots": "node --no-warnings scripts/design-shots.ts",
+    "design:contrast": "node --no-warnings scripts/contrast.ts"
   },
   "dependencies": {
     "@vouch/shared": "workspace:*",

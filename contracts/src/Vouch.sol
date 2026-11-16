@@ -34,28 +34,30 @@ contract Vouch is IVouch, EIP712, Nonces, ReentrancyGuardTransient {
     uint64 public constant MAX_INTRO_TTL = 30 days;
     uint64 public constant MAX_CLOCK_SKEW = 15 minutes;
 
-    uint8 public constant LINK_PERSONAL = 0;
-    uint8 public constant LINK_BROADCAST = 1;
+    // Enum-like codes are internal to stay under the EIP-170 size limit; mirrored in
+    // packages/shared/src/abi/vouchConstants.ts (WEIGHTS_MODE, RETURN_REASON, INTRO_DROP_REASON) and constants.ts.
+    uint8 internal constant LINK_PERSONAL = 0;
+    uint8 internal constant LINK_BROADCAST = 1;
 
-    uint8 public constant ROLE_CASHBACK = 0;
-    uint8 public constant ROLE_L1 = 1;
-    uint8 public constant ROLE_L2 = 2;
+    uint8 internal constant ROLE_CASHBACK = 0;
+    uint8 internal constant ROLE_L1 = 1;
+    uint8 internal constant ROLE_L2 = 2;
 
-    uint8 public constant RETURN_NO_INTRODUCER = 0;
-    uint8 public constant RETURN_SELF_PAYMENT = 1;
-    uint8 public constant RETURN_TRANSFER_FAILED = 2;
+    uint8 internal constant RETURN_NO_INTRODUCER = 0;
+    uint8 internal constant RETURN_SELF_PAYMENT = 1;
+    uint8 internal constant RETURN_TRANSFER_FAILED = 2;
 
-    uint8 public constant DROP_REPLACED = 0;
-    uint8 public constant DROP_EXPIRED = 1;
-    uint8 public constant DROP_EVICTED = 2;
+    uint8 internal constant DROP_REPLACED = 0;
+    uint8 internal constant DROP_EXPIRED = 1;
+    uint8 internal constant DROP_EVICTED = 2;
 
     /// @notice PaymentSettled.weightsMode. NONE = not a rewarded purchase.
-    uint8 public constant WEIGHTS_NONE = 0;
-    uint8 public constant WEIGHTS_ATTRIBUTOR = 1;
-    uint8 public constant WEIGHTS_FALLBACK_NOT_COMMITTED = 2;
-    uint8 public constant WEIGHTS_FALLBACK_HASH_MISMATCH = 3;
-    uint8 public constant WEIGHTS_FALLBACK_INVALID = 4;
-    uint8 public constant WEIGHTS_FALLBACK_BAD_SIGNATURE = 5;
+    uint8 internal constant WEIGHTS_NONE = 0;
+    uint8 internal constant WEIGHTS_ATTRIBUTOR = 1;
+    uint8 internal constant WEIGHTS_FALLBACK_NOT_COMMITTED = 2;
+    uint8 internal constant WEIGHTS_FALLBACK_HASH_MISMATCH = 3;
+    uint8 internal constant WEIGHTS_FALLBACK_INVALID = 4;
+    uint8 internal constant WEIGHTS_FALLBACK_BAD_SIGNATURE = 5;
 
     bytes32 public constant INTRO_TYPEHASH = VouchHash.INTRO_TYPEHASH;
     bytes32 public constant INTRO_ACCEPTANCE_TYPEHASH = VouchHash.INTRO_ACCEPTANCE_TYPEHASH;

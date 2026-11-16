@@ -1,0 +1,80 @@
+{
+  "base": "http://localhost:3200",
+  "at": "2026-11-16T17:14:33.653Z",
+  "focusVisible": [
+    {
+      "tag": "A",
+      "text": "Type",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "text": "Space · radius · elevation · motion",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "text": "Components",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "text": "Screens",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "text": "Dark",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "text": "Money graph",
+      "visible": true
+    }
+  ],
+  "bannedWords": {},
+  "reducedMotion": {
+    "normal": {
+      "flowAnimation": "vx-flow",
+      "riseDuration": "0.24s"
+    },
+    "reduce": {
+      "flowAnimation": "none",
+      "riseDuration": "0.001s"
+    }
+  },
+  "consoleErrors": [],
+  "screenshots": [
+    "390-01-direction.png",
+    "390-02-color.png",
+    "390-03-type.png",
+    "390-04-layout.png",
+    "390-05-components.png",
+    "390-08-money-graph.png",
+    "390-09-copy.png",
+    "390-focus-ring-button.png",
+    "screen-01-sign-in.png",
+    "screen-02-intro.png",
+    "screen-03-wallet.png",
+    "screen-04-scan.png",
+    "screen-05-pay-confirm.png",
+    "screen-06-success.png",
+    "screen-07-recommend.png",
+    "screen-08-ambassador.png",
+    "screen-09-venue-onboarding.png",
+    "screen-10-order-entry.png",
+    "screen-11-order-qr.png",
+    "screen-12-venue-dashboard.png",
+    "screen-13-transparency.png",
+    "dark-wallet.png",
+    "dark-pay-confirm.png",
+    "dark-success.png",
+    "dark-venue-dashboard.png",
+    "desktop-venue-dashboard.png",
+    "desktop-01-direction.png",
+    "desktop-money-graph.png",
+    "desktop-money-graph-section.png",
+    "desktop-screens-overview.png"
+  ]
+}

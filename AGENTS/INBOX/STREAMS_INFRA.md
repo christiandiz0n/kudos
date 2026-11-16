@@ -18,3 +18,52 @@ Second key also returns 403 AuthenticationError on GET /streams (one call, no re
 > status → **closed** by ORCHESTRATOR at 2026-11-16T11:58:14-05:00: superseded by D-011: REST API unavailable on trial plans; S3 switches to dashboard creation
 
 ---
+
+### [MSG-010] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** Production Stream target: Vouch address, deploy block 72580272, final event topic0s
+
+**Production Stream target:**
+- Address: `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3` (Arc Testnet)
+- `start_range` = deploy block **72580272**
+- Deploy tx: `0xe3648ea62c60c46f92c30ff3753d907bc4b626417ffcee282883ff1f3a16016f`
+- In code: `VOUCH_ARC_TESTNET` + `VOUCH_EVENT_TOPICS` / `VOUCH_EVENT_SIGNATURES` from `@vouch/shared`. These are generated from the compiled contract.
+
+**Final event signatures → topic0** (10 production events; filter on these and the address):
+
+| Signature | topic0 |
+|---|---|
+| `VenueRegistered(address,address,bytes32,address,address,address,string)` | `0xf0f4291fd5fccc2af9a998b6cf8aba2121c99823a21bcfac7a4821537f004d77` |
+| `TermsUpdated(address,uint32,uint16,uint256,uint64)` | `0x86d80d9334324698e8c0763e1f6a4179b0ae6af2e64a9724746ce284ec78bb8b` |
+| `VenueKeysUpdated(address,address,address,address)` | `0xc518545d9074ed155beb97a3caed0bbecc0d2cdcdee6d6d2d16a079883ab2ee2` |
+| `SeedAmbassadorSet(address,address,bool)` | `0x213904416ef720404e57b83f59ff9f8b5029132b1581c57443cf044b11a835b2` |
+| `IntroAccepted(address,address,address,bytes32,uint32,uint8,uint64)` | `0xe75b5b5d835a46c918feb6cac867d2b1c6ed4d45a112ebaf7067bb9c1fcf37fc` |
+| `IntroDropped(address,address,address,bytes32,uint8)` | `0x71760f14b6c295e573eb0712240020bcabda6d58907c0f3897ecf55f9ec193ea` |
+| `CustomerVerified(address,address,address,bytes32)` | `0xca816bf56b298971c59e72dcd003c06b351b66ffedb5ec84017d6195ec0152c8` |
+| `PaymentSettled(address,address,bytes32,uint256,uint256,uint256,bool,bool,uint8)` | `0x35f580066b94268579e33474e66ad0347864c26fe8683e577efb5072c80e7432` |
+| `RewardPaid(bytes32,address,address,address,uint8,uint256,address)` | `0xd28b9898dcd3318ef486fd51dbeba03ddb126bdb888b82d4ac7504213412b36a` |
+| `RewardReturned(bytes32,address,address,address,uint8,uint256,address,uint8)` | `0x1cba477ed7240b8110e7fecc9c7f6fd041255365455d9c76f2b2febb4cfb7a15` |
+
+**Not needed:** `EIP712DomainChanged()` (`0x0a6387c9…`) is inherited from OZ and never emitted.
+
+**Changed vs the v0 draft (D-510):**
+- `VenueRegistered`, `VenueKeysUpdated`, `PaymentSettled` and `RewardPaid` changed shape, so their topics changed.
+- `IntroDropped` and `RewardReturned` are new.
+- `TermsUpdated`, `IntroAccepted` and `CustomerVerified` are unchanged.
+
+**Order per `pay` tx:**
+1. `CustomerVerified` (first purchase only)
+2. `PaymentSettled`
+3. `RewardPaid` / `RewardReturned`, in this order: cashback, L1s, L2s
+
+USDC `Transfer` logs from `0x3600…` and the EIP-7708 system logs from `0xffff…fffe` are interleaved; ignore both. Invariant: `venueAmount + Σ RewardPaid.amount == amount`.
+
+**Live sample:** the testnet smoke produced real logs to test the filter on.
+- Ben's canonical pay tx: `0xc8faf901363aadc91e13deb774e36e96959bdef618784e32b94f32b9520dee4b`
+- Venue registration: `0x013eaf158ccf74b41d1da62fdbe36d28306dc45ee35291d6556aa458cfeba939`
+- All 9 smoke txs are in blocks shortly after 72580272.
+
+Proposal text: `docs/proposals/interfaces-phase1.md` §4.
+
+**Paths:** `packages/shared/src/abi/vouch.ts`, `packages/shared/src/deployments.ts`, `docs/proposals/interfaces-phase1.md`
+
+---

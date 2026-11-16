@@ -146,7 +146,7 @@ export function MoneyGraph({ venue, customer, referrers, total, size = "projecto
       ))}
       {/* cashback loop back to the customer */}
       <path
-        d={`M ${C.x + R * 0.7} ${C.y + R * 0.7} C ${C.x + R * 3.2} ${C.y + R * 3}, ${C.x - R * 3.2} ${C.y + R * 3}, ${C.x - R * 0.7} ${C.y + R * 0.7}`}
+        d={`M ${C.x + R * 0.8} ${C.y + R * 0.9} C ${C.x + R * 2.6} ${C.y + R * 3.4}, ${C.x - R * 2.6} ${C.y + R * 3.4}, ${C.x - R * 0.8} ${C.y + R * 0.9}`}
         fill="none"
         stroke="var(--vx-accent)"
         strokeWidth={Math.max(3, width(customer.cashback, total, maxEdge) * 0.6)}

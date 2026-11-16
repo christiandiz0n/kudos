@@ -59,7 +59,7 @@ export function Avatar({ name, size = "md", kind = "person", className, decorati
         className,
       )}
     >
-      {initials(name)}
+      {kind === "you" && /^you$/i.test(name) ? <span className="text-[0.85em]">You</span> : initials(name)}
     </span>
   );
 }

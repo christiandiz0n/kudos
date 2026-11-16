@@ -1,2 +1,55 @@
 # INBOX — FRONTEND_INTEGRATION
 _Messages addressed to FRONTEND_INTEGRATION. Newest at the bottom. Post/answer via `scripts/agents/msg.py` (D-009)._
+
+### [MSG-006] 2026-11-16T12:15:30-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** Design system v0 handoff: components, screens, conventions (direction pending human approval)
+
+WHAT: Tokens + Tailwind v4 theme, 25 props-only UI components, 13 props-only screen components, living /design route. Direction is PENDING human approval (D-601..D-606); screen props may still change in Phase 3, components/tokens are stable.
+WHERE: tokens src/design/tokens.css (imported by app/globals.css); font src/design/fonts.ts (applied in app/layout.tsx); money helpers src/design/money.ts (formatMoney, roundToCents, moneyParts, formatBps); story fixtures src/design/fixtures.ts; components src/components/ui (barrel: import { Button, AmountDisplay, Sheet, ... } from '@/components/ui'); screens src/screens/{customer,venue,public}; mocks wiring example src/app/design/_mocks/ScreenMock.tsx; copy rules src/design/COPY.md; overview docs/design/DESIGN_SYSTEM.md.
+CONVENTIONS: (1) money props are bigint USDC base units, never numbers/floats; AmountDisplay precision='cents' default (half-up), 'exact' only on transparency. variant positive (+green) for money in, signed for activity rows. (2) Components never fetch; timers/queues belong to you: QRFrame takes secondsLeft/totalSeconds/state('live'|'expired'|'paid')/onRefresh; Toast + ToastViewport (aria-live) — you own the queue; SuccessMark is pure CSS (call navigator.vibrate?.(12) yourself). (3) Sheet = modal (portal, focus trap, Esc, backdrop, drag-to-close, focus restore; dismissible=false while paying). SheetPanel = static visual. Pay flow: <Sheet open title='Confirm payment' footer={<PayConfirmFooter amount paying onPay/>}><PayConfirmContent .../></Sheet> from src/screens/customer/PayConfirm.tsx. (4) One primary ink Button per screen in <Screen footer>. Use buttonClasses() for next/link. (5) Technical facts (fee, receipt ID, chain, addresses) only inside <Details>/<DetailRow mono> or on the transparency page; design:shots scans for banned words. (6) QrCode renders SVG synchronously from a payload string (qrcode.create), dark-on-white in both themes. (7) MoneyGraph takes {venue, customer, referrers[{name, amount, introducer?}], total}: build from PaymentSettled + RewardPaid (viaReferrer -> L2 edge). (8) VenueOnboardingScreen exports exampleSplit(order, rewardBps) using shared mulBps/SPLIT_BPS (single referrer case).
+SCREENS: SignInScreen, IntroLandingScreen, WalletHomeScreen(ActivityItem[]), ScanScreen(camera slot: pass your <video>), PayConfirmContent/Footer/Mock, PaymentSuccessScreen, RecommendScreen(kind personal|public), AmbassadorScreen, VenueOnboardingScreen, OrderEntryScreen(+Keypad, you parse with parseUsdc), OrderQRScreen, VenueDashboardScreen + VenueDashboardDesktop(FeedItem[]), TransparencyScreen. Full-bleed previews: /design/screens/<id>.
+KNOWN GAPS: no useCountdown/useToasts hooks (your src/hooks); no route-level loading/error screens yet (Skeleton/EmptyState exist; error states: expired order, insufficient balance, relayer down, already rewarded are Phase 3 design); money graph network view (20/60 nodes) is spec-only; Sheet has no exit animation; ScanScreen has no torch/permission-denied state yet; transparency contract address is a placeholder until CONTRACTS deploys. Scripts: pnpm --filter web design:contrast | design:shots (needs next dev -p 3200).
+
+**Paths:** `apps/web/src/components/ui/index.ts`, `apps/web/src/screens`, `apps/web/src/design`, `docs/design/DESIGN_SYSTEM.md`
+
+---
+
+### [MSG-011] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** What users sign (Intro / IntroAcceptance / one USDC ReceiveWithAuthorization per payment)
+
+**What users sign.** Users never send transactions; the relayer submits everything. Domains:
+- Vouch domain: `vouchDomain(5042002, VOUCH_ARC_TESTNET.address)` = `{name: "Vouch", version: "1"}`. The Vouch address is `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3`.
+- USDC domain: `ARC_TESTNET_USDC_EIP712_DOMAIN` (`{USDC, 2}`).
+
+Typed-data definitions are in `@vouch/shared` `eip712.ts`.
+
+1. **Referrer (Recommend button)** signs `Intro` (`INTRO_TYPES`):
+   - `{venue, referrer, termsVersion, linkType (0 personal, single-use / 1 broadcast, once per customer), issuedAt, expiresAt, nonce (random 32B)}`
+   - `issuedAt` = latest **block** timestamp, not the phone clock. `termsVersion` = `currentTerms(venue)` at that time.
+   - `expiresAt` ≤ issuedAt + 30 days (we suggest 7 days).
+   - Only verified customers of the venue (`canRefer(venue, addr)`) or seed ambassadors may refer.
+2. **Customer opening a link** countersigns `IntroAcceptance` (`INTRO_ACCEPTANCE_TYPES`):
+   - `{introHash: introDigest(domain, intro), customer, deadline}`
+   - Rejected if the customer already bought at the venue (`getCustomer(venue, me).verified`), or for self-referral.
+   - A customer holds at most 5 live intros per venue, one per referrer. The oldest is evicted.
+3. **Customer paying (scan → confirm with passkey):** exactly ONE signature, USDC `ReceiveWithAuthorization` = `receiveAuthForPayment(paymentAuth, VOUCH)` with `RECEIVE_WITH_AUTHORIZATION_TYPES` under the USDC domain.
+   - `paymentAuth` = `{customer, venue, orderId, amount, weightsHash, deadline}`; the backend's quote returns it.
+   - The authorization's nonce = `paymentAuthNonce(paymentAuth)`, which commits the amount, the order and the quoted weights. No approve, no gas.
+   - "You'll get $X back" = `quote.cashback`, from the contract's `previewPayment`.
+4. **Venue owner** signs `RegisterVenue` / `UpdateTerms` / `SetVenueKeys` / `SetSeedAmbassador` (`REGISTER_VENUE_TYPES` etc.), with `nonce = nonces(owner)`.
+
+**Live updates:**
+- Event topics: `VOUCH_EVENT_TOPICS`.
+- `RewardPaid.role`: 0 cashback, 1 L1, 2 L2. `viaReferrer` = the money-graph edge.
+- `RewardReturned` = a share that went back to the venue (reasons in `RETURN_REASON`).
+- `CustomerVerified.introducer`.
+
+**UX warnings (D-509):**
+- A customer's FIRST purchase at a venue is their only reward chance. If the amount is below the frozen minimum (`quote.rewarded == false` with live intros), warn before signing.
+- Referrers: their personal link works once.
+
+**Reference flow:** `scripts/deploy/smoke-canonical.ts` signs every message with viem exactly as the app should.
+
+**Paths:** `packages/shared/src/eip712.ts`, `packages/shared/src/abi/vouchConstants.ts`, `scripts/deploy/smoke-canonical.ts`
+
+---

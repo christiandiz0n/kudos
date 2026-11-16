@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ARC_TESTNET_CHAIN_ID, ARC_TESTNET_EXPLORER_URL, ARC_TESTNET_USDC_ADDRESS, parseUsdc } from "@vouch/shared";
 import { QrCode, type KeypadKey } from "@/components/ui";
-import { STORY, STORY_SPLIT } from "@/design/fixtures";
+import { STORY, STORY_GRAPH, STORY_SPLIT } from "@/design/fixtures";
 import { AmbassadorScreen } from "@/screens/customer/AmbassadorScreen";
 import { IntroLandingScreen } from "@/screens/customer/IntroLandingScreen";
 import { PayConfirmMock } from "@/screens/customer/PayConfirm";
@@ -20,23 +20,13 @@ import { TransparencyScreen } from "@/screens/public/TransparencyScreen";
 const usd = parseUsdc;
 const P = STORY.parts;
 
-const GRAPH: VenueDashboardProps["graph"] = {
-  venue: { name: STORY.venue.name, amount: P.venue },
-  customer: { name: "Ben", cashback: P.cashback },
-  total: STORY.total,
-  referrers: [
-    { name: "Ana", amount: P.ana, introducer: { name: "Marco", amount: P.marco } },
-    { name: "Priya", amount: P.priya, introducer: { name: "Sofia", amount: P.sofia } },
-  ],
-};
-
 const DASHBOARD: VenueDashboardProps = {
   venueName: STORY.venue.name,
   verifiedCustomers: 23,
   costPerVerified: usd("1.80"),
   rewardsPaid: usd("41.40"),
   salesFromRecommendations: usd("276.00"),
-  graph: GRAPH,
+  graph: STORY_GRAPH,
   feed: [
     { id: "1", who: "Ben", title: "Ben, first visit", meta: "Paid $12.00 · 5 people thanked · now", amount: P.venue, kind: "sale", fresh: true },
     { id: "2", who: "Ana", title: "Ana recommended Ben", meta: "Recommender · now", amount: P.ana, kind: "reward", fresh: true },
@@ -85,7 +75,7 @@ function RecommendDemo() {
 }
 
 function VenueOnboardingDemo() {
-  const [bps, setBps] = useState(STORY.venue.rewardBps);
+  const [bps, setBps] = useState<number>(STORY.venue.rewardBps);
   const [min, setMin] = useState("5.00");
   return (
     <VenueOnboardingScreen
@@ -227,4 +217,3 @@ export function ScreenMock({ id }: { id: string }) {
   }
 }
 
-export { GRAPH as STORY_GRAPH };

@@ -8,7 +8,7 @@ import { cn } from "@/design/cn";
  */
 export function Screen({ header, footer, children, className, tone = "canvas" }: { header?: ReactNode; footer?: ReactNode; children: ReactNode; className?: string; tone?: "canvas" | "surface" }) {
   return (
-    <div className={cn("flex h-full min-h-full flex-col", tone === "canvas" ? "bg-canvas" : "bg-surface", className)}>
+    <div className={cn("flex h-full min-h-full flex-1 flex-col", tone === "canvas" ? "bg-canvas" : "bg-surface", className)}>
       {header}
       <main className="flex-1 overflow-y-auto px-[var(--vx-gutter)] pb-6">{children}</main>
       {footer ? (

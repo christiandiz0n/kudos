@@ -1,5 +1,5 @@
 {
- "counter": 5,
+ "counter": 13,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -50,9 +50,90 @@
    "from": "CONTRACTS",
    "to": "ORCHESTRATOR",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Design for testability: CONTRACTS_QE will verify the receiveWithAuthorization payee path",
-   "re": "MSG-004"
+   "re": "MSG-004",
+   "resolution": "ack; noted for CONTRACTS_QE brief"
+  },
+  "MSG-006": {
+   "id": "MSG-006",
+   "ts": "2026-11-16T12:15:30-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Design system v0 handoff: components, screens, conventions (direction pending human approval)",
+   "re": null
+  },
+  "MSG-007": {
+   "id": "MSG-007",
+   "ts": "2026-11-16T12:15:31-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "question",
+   "status": "open",
+   "subject": "Human approval needed: Vouch visual direction (gate before Phase 3 hi-fi)",
+   "re": null
+  },
+  "MSG-008": {
+   "id": "MSG-008",
+   "ts": "2026-11-16T12:16:37-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Orchestrator sign-off on design system v0 (human approval pending via MSG-007)",
+   "re": null
+  },
+  "MSG-009": {
+   "id": "MSG-009",
+   "ts": "2026-11-16T12:28:28-05:00",
+   "from": "CONTRACTS",
+   "to": "BACKEND_RELAYER",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vouch v1 deployed: ABI, typed data, relayer flow for registerVenue/acceptIntro/pay",
+   "re": null
+  },
+  "MSG-010": {
+   "id": "MSG-010",
+   "ts": "2026-11-16T12:28:28-05:00",
+   "from": "CONTRACTS",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Production Stream target: Vouch address, deploy block 72580272, final event topic0s",
+   "re": null
+  },
+  "MSG-011": {
+   "id": "MSG-011",
+   "ts": "2026-11-16T12:28:28-05:00",
+   "from": "CONTRACTS",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "What users sign (Intro / IntroAcceptance / one USDC ReceiveWithAuthorization per payment)",
+   "re": null
+  },
+  "MSG-012": {
+   "id": "MSG-012",
+   "ts": "2026-11-16T12:28:28-05:00",
+   "from": "CONTRACTS",
+   "to": "ATTRIBUTION_AI",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Weights bounds the contract enforces + exact on-chain fallback parity rule",
+   "re": null
+  },
+  "MSG-013": {
+   "id": "MSG-013",
+   "ts": "2026-11-16T12:28:28-05:00",
+   "from": "CONTRACTS",
+   "to": "CONTRACTS_QE",
+   "type": "request",
+   "status": "open",
+   "subject": "Vouch ready for adversarial review: pull isolated in _pullPayment, mock + fork tests, attack list",
+   "re": null
   }
  }
 }

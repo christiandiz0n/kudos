@@ -209,3 +209,122 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
 - **Reason:** The human verified that the Streams REST API returns 403 on trial plans: an Admin key on a brand-new account gets `{"message":"Insufficient permissions","name":"AuthorizationError"}`, and `qn auth login` fails the same way. Both of our earlier 403s (D-010) are explained by this. The wizard works and offers Arc Testnet. The bounty requires a Stream with a filter + webhook destination, which dashboard creation satisfies.
 - **Alternatives:** upgrade to a paid plan for REST access (not needed for the bounty); QuickNode Webhooks product (not Streams, doesn't qualify).
 - **Who:** HUMAN (finding) / ORCHESTRATOR
+
+## D-601 — Visual direction: warm paper neutrals, ink primary, one green accent reserved for money-to-people (PENDING human approval)
+- **Date:** 2026-11-16
+- **Decision:** Neutrals are warm "receipt paper" (`canvas #f6f4ef`, `surface #fff`, ink `#1b1915`). Primary buttons are ink-black, not the accent. The single accent is deep green `#17694f` (dark `#4cc39a`), used only for money moving to a person (cashback, rewards, referral flow, success). Amber/brick are status-only. Spending is never shown in red. Light + dark tokens, all text pairs ≥ AA (table in `docs/design/DESIGN_SYSTEM.md`).
+- **Reason:** A green CTA would make green mean "button"; keeping it for payouts gives the colour a job ("green = somebody got paid") and keeps the UI calm.
+- **Who:** UI_DESIGN
+
+## D-602 — Type: Instrument Sans (variable, next/font), tabular figures via `money` utility
+- **Date:** 2026-11-16
+- **Decision:** One family, Instrument Sans 400–700 + wdth, via `next/font/google` (`src/design/fonts.ts`, CSS var `--font-instrument`). Every amount uses the `money` utility (`tnum`+`lnum`). Mono is system `ui-monospace`, only for hashes in Details/transparency.
+- **Reason:** Precise but warmer and less template-y than Inter/Geist; narrow figures fit large amounts at 390px; real `tnum` (verified in GSUB).
+- **Who:** UI_DESIGN
+
+## D-603 — Signature motif: the split receipt (SplitBreakdown) + loupe; money graph edges ∝ √amount
+- **Date:** 2026-11-16
+- **Decision:** Payments are shown as a perforated receipt: bar (venue share vs reward slice) → loupe magnifying the reward slice into one segment per person → recipient lines. Used in pay sheet, success, venue onboarding, transparency. Money graph: venue edge neutral, reward edges green, width = 2 + k·√(amount/total) so $0.11 stays visible next to $10.20.
+- **Who:** UI_DESIGN
+
+## D-604 — Money display rules: bigint in, half-up cents on primary screens, exact on transparency
+- **Date:** 2026-11-16
+- **Decision:** UI takes USDC base units as `bigint` only. `src/design/money.ts` rounds half-up to cents (via `@vouch/shared` `formatUsd`) for primary screens; `precision="exact"` (e.g. $0.693) only on the transparency page. Positive money-in = `+$0.45` green; money-out = `−$12.00` with U+2212 in ink. Thousands grouped.
+- **Note:** Rounded parts can differ from the total by a cent in other stories; the canonical $12.00 story sums exactly at cents too ($10.20/$0.45/$0.69/$0.30/$0.25/$0.11).
+- **Who:** UI_DESIGN
+
+## D-605 — Copy: banned technical words on primary screens; Details drawer is the only exception
+- **Date:** 2026-11-16
+- **Decision:** `apps/web/src/design/COPY.md`. Banned on primary screens: USDC/token/crypto, gas, wallet address/0x…, transaction/hash, sign/signature/countersign, seed/recovery phrase/private key, blockchain/on-chain/smart contract, referral/referrer, testnet (except "Top up (testnet demo)"). Allowed inside `<Details>` (`data-copy-scope="details"`) and on the transparency page. Passkey copy = "Face ID or fingerprint". Enforced by `pnpm --filter web design:shots`.
+- **Who:** UI_DESIGN
+
+## D-606 — Design-only placeholders: L2 introducers named Marco (→Ana) and Sofia (→Priya); dev port 3200 for UI_DESIGN
+- **Date:** 2026-11-16
+- **Decision:** The canonical story leaves the level-2 introducers unnamed; mocks use Marco ($0.25) and Sofia ($0.11). UI_DESIGN's dev server runs on 3200 (3000 unrelated, 3100 = human's phone test build, per D-006 brief).
+- **Who:** UI_DESIGN
+
+## D-501 — Venue identity + relayed venue-owner actions
+- **Date:** 2026-11-16
+- **Decision:** A venue id is `address(uint160(uint256(keccak256(abi.encode(owner, salt)))))` (`computeVenueId`, also in `@vouch/shared`). The id is not a key: `Order/Intro/Weights.venue` carry it. Every owner action (`registerVenue`, `updateTerms`, `setKeys`, `setSeedAmbassador`) has ONE entry point that takes `(…, uint64 deadline, bytes ownerSig)`. If `msg.sender == owner` the signature is ignored. Otherwise anyone (the relayer) may submit it with the owner's EIP-712 signature (`RegisterVenue` / `UpdateTerms` / `SetVenueKeys` / `SetSeedAmbassador`), which consumes `nonces(owner)` (OZ `Nonces`, sequential and shared by the four types). The deadline is inclusive. Signatures go through `SignatureChecker`, so ERC-1271 owners work. There is no ownership transfer.
+- **Reason:** users never pay gas, venue owners included. A salt lets one owner run several venues, and lets each demo rehearsal or smoke run use a fresh venue: customers are verified per venue, so a reused venue can't replay the story.
+- **Alternatives:** venue == owner address (rejected: one venue per key, and the canonical story can only run once per key); msg.sender only (rejected: the owner would need gas).
+- **Who:** CONTRACTS
+
+## D-502 — On-chain fallback attribution rule
+- **Date:** 2026-11-16
+- **Decision:** Attributor weights are used only if ALL of these hold: `PaymentAuth.weightsHash != 0`, `hashStruct(weights) == weightsHash`, `weights.{venue,customer,orderId}` match, length 1–5 (equal to `bps` length), every bps > 0 and ≤ 8,000 unless single, Σ == 10,000, no duplicates, every referrer holds an *eligible* intro (see D-505), and the venue attributor signed it. Otherwise the fallback applies and the payment never reverts. Fallback over the eligible intros in slot order: `raw_i = linkWeight_i × 2^20 >> floor(age_i / 3 days)`, where personal = 2, broadcast = 1, age = now − acceptedAt and halvings are capped at 10. Then `w_i = floor(raw_i × 10,000 / Σraw)`, and the remainder goes to the most recently accepted intro (ties go to the lower index). Every eligible intro gets w ≥ 1, and the 8,000 cap does not apply to the fallback. `PaymentSettled.weightsMode`: 0 NONE, 1 ATTRIBUTOR, 2 FALLBACK_NOT_COMMITTED, 3 FALLBACK_HASH_MISMATCH, 4 FALLBACK_INVALID, 5 FALLBACK_BAD_SIGNATURE.
+- **Reason:** it is deterministic, cheap, and matches the off-chain baseline's link-type weight and 3-day half-life (no opens signal on chain). The customer commits to the weights inside the USDC authorization nonce, so a relayer that swaps weights can only degrade the split to the neutral rule, never block it.
+- **Alternatives:** an equal split (ignores the link-type signal); reverting on a hash mismatch (rejected: violates "never revert because of weights").
+- **Who:** CONTRACTS
+
+## D-503 — Frozen terms with multiple intros: per-referrer slices
+- **Date:** 2026-11-16
+- **Decision:** `slice_i = floor(amount × w_i × rewardBps(frozen version of intro_i) / 10,000²)` and `pool = Σ slice_i`. Each slice is split 25/55/20 independently: `floor(slice × 2,500/10,000)` cashback, `floor(slice × 5,500/10,000)` L1 to referrer i, and `floor(slice × 2,000/10,000)` L2 to referrer i's introducer. Cashback is summed into one transfer. The frozen `minOrder` of each intro also applies (D-505).
+- **Reason:** each referrer is paid at the rate in force when they shared. Total reward ≤ amount × max frozen rate. Canonical numbers are exact (10,200,000 / 450,000 / 693,000 / 297,000 / 252,000 / 108,000).
+- **Alternatives:** one pool at the max or min frozen rate (rejected: one referrer's old terms would change another's pay).
+- **Who:** CONTRACTS
+
+## D-504 — Rounding
+- **Date:** 2026-11-16
+- **Decision:** Every share is floored, as above. The venue receives `amount − Σ(successfully transferred shares)`, which includes per-slice dust (≤ 2 units per referrer) and all returned shares. Σ transfers == amount exactly. Invariant for indexers: `PaymentSettled.venueAmount + Σ RewardPaid.amount == amount`.
+- **Who:** CONTRACTS
+
+## D-505 — Intro rules: TTL, terms in force, live-intro cap, eligibility
+- **Date:** 2026-11-16
+- **Decision:**
+  - `expiresAt − issuedAt ∈ (0, 30 days]`. `issuedAt ≤ now + 15 min`.
+  - `termsVersion` must be the version in force at `issuedAt`. Old-rate exposure therefore ends ≤ 30 days after any terms change, and a referrer can't pick a superseded, better version. Clients must set `issuedAt` from **chain time** (latest block timestamp).
+  - Expiry is inclusive: valid while `now ≤ expiresAt`.
+  - Customer ≠ referrer, and the referrer must be verified at the venue or a seed ambassador. A customer who is already verified cannot accept intros.
+  - Personal intros are single-use (key = introHash). Broadcast intros are once per customer (key = keccak(introHash, customer)).
+  - **≤ 5 live intro slots per (customer, venue), at most one per referrer.** The slot is chosen in this order: same referrer → replace (`IntroDropped` reason 0); else the first expired slot → reuse (reason 1); else append; else evict the oldest `acceptedAt` (reason 2).
+  - An intro is **eligible** at payment time iff it is unexpired AND `amount ≥ minOrder` of its frozen version.
+  - No `revokeIntro`.
+- **Who:** CONTRACTS
+
+## D-506 — Recipient griefing: failed transfers return to the venue; gas starvation reverts
+- **Date:** 2026-11-16
+- **Decision:** Reward shares are sent with a low-level `USDC.transfer` call. If one fails (e.g. a blacklisted recipient), its share goes to the venue payout and `RewardReturned(reason = TRANSFER_FAILED)` is emitted. If the failure looks like out-of-gas (`gasleft() ≤ gasBefore/63` after the call), the whole tx reverts (`TransferOutOfGas`), so a relayer cannot starve transfers to redirect referrers' shares to the venue (tested by sweeping gas limits). A failing venue payout transfer reverts the payment (`PayoutTransferFailed`). Events are emitted after the transfers, because the outcome decides `RewardPaid` vs `RewardReturned`. Everything that decides who is paid is written before the USDC pull; stats counters are updated after it, under `nonReentrant`.
+- **Who:** CONTRACTS
+
+## D-507 — Seed-ambassador bootstrap
+- **Date:** 2026-11-16
+- **Decision:** The venue owner allowlists addresses with `setSeedAmbassador(venue, a, allowed, …)` (relayable). A seed may sign intros without a prior purchase. A seed has no introducer, so L2 shares through a seed's referrals return to the venue (`RewardReturned` NO_INTRODUCER). Revoking a seed does not cancel intros already accepted. A seed may also be a customer: its first purchase follows the normal rules.
+- **Who:** CONTRACTS
+
+## D-508 — L2 details, cycles and self-payment (refines D-008/D-010)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Introducer.** It is the top-weight L1 of the first rewarded purchase, per (customer, venue). Ties go to the lower index of the weights array actually used: the attributor array order, or slot order under the fallback. It is frozen forever. A first purchase that isn't rewarded leaves the introducer at address(0).
+  - **L2 recipient.** `introducerOf(venue, L1_i)`. If that is address(0), the share returns to the venue (NO_INTRODUCER).
+  - **Cycles.** If it equals the paying customer (the A→B→A cycle), the share also returns to the venue (SELF_PAYMENT).
+  - **One recipient, two roles.** A referrer may receive both L1 and L2 in one payment (e.g. Ana L1 for Ben and L2 via Priya, whom Ana introduced). These are distinct contributions and each is paid once.
+- **Who:** CONTRACTS
+
+## D-509 — First-purchase semantics and payment binding
+- **Date:** 2026-11-16
+- **Decision:**
+  - **First purchase.** A customer's FIRST purchase at a venue always verifies them, and it is their only chance at a reward there. With ≥ 1 eligible intro it is rewarded. Otherwise it is a plain payment (e.g. below the frozen minOrder), and later purchases are plain. Clients should warn before a below-minimum first purchase.
+  - **Customer signature.** The customer signs ONLY USDC `ReceiveWithAuthorization{from, to: Vouch, value: amount, validAfter: 0, validBefore: auth.deadline, nonce: hashStruct(PaymentAuth)}`. PaymentAuth stays `{customer, venue, orderId, amount, weightsHash, deadline}`. The deadline is exclusive (`now < deadline`), as in USDC.
+  - **Where the pull happens.** The USDC pull lives in exactly one internal function, `_pullPayment` (MSG-004).
+  - **Order.** `amount` must be in 1…1,000,000e6. Order expiry is inclusive.
+  - **No ETH.** The contract is non-payable and has no receive/fallback.
+- **Who:** CONTRACTS
+
+## D-510 — Event schema v1, size, deployment
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Events.** Final schema in `IVouch.sol` / INTERFACES §4 (proposal `docs/proposals/interfaces-phase1.md`). Changes vs the v0 draft:
+    - `VenueRegistered` adds `salt` and `payout`.
+    - `VenueKeysUpdated` adds `payout`.
+    - `PaymentSettled` replaces `termsVersion` + `fallbackWeights` with `rewarded` + `uint8 weightsMode`.
+    - `RewardPaid` adds `customer`.
+    - New events: `IntroDropped` and `RewardReturned`.
+  - **Contract size.** Enum-like constants are `internal` to stay under EIP-170 (runtime 23,570 B). Their values are mirrored in `@vouch/shared` `abi/vouchConstants.ts`.
+  - **Deployment.** Arc Testnet `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3`, block 72580272, Blockscout-verified.
+- **Who:** CONTRACTS
+
+## D-511 — Fork tests shim Arc's native-transfer precompile
+- **Date:** 2026-11-16
+- **Decision:** On a Foundry fork, Arc USDC (`NativeFiatTokenV2_2`) runs for real (payee check, EIP-712 signature, authorization nonces), but its balance move calls the Arc precompile `0x1800…0000` `transfer(from, to, value18)`, which revm lacks. `VouchForkTest` etches a shim there that moves the native balance with `vm.deal`. The fork tests are opt-in: `VOUCH_FORK=true` or `bash scripts/deploy/fork-test.sh`.
+- **Who:** CONTRACTS

@@ -10,7 +10,8 @@
     "test": "tsx --test streams/*.test.ts",
     "streams": "tsx --env-file-if-exists=../.env streams/streams.ts",
     "streams:deliveries": "tsx --env-file-if-exists=../.env streams/show-deliveries.ts",
-    "streams:ping": "tsx --env-file-if-exists=../.env streams/ping.ts"
+    "streams:ping": "tsx --env-file-if-exists=../.env streams/ping.ts",
+    "smoke:canonical": "tsx --env-file-if-exists=../.env deploy/smoke-canonical.ts"
   },
   "dependencies": {
     "@vouch/shared": "workspace:*",

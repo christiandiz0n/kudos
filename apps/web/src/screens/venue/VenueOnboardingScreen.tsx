@@ -73,7 +73,7 @@ export function VenueOnboardingScreen(p: VenueOnboardingScreenProps) {
         <dl className="mt-4 flex flex-col gap-2 text-body-sm">
           {[
             ["You keep", s.venue, false],
-            ["Welcome back to the new customer", s.cashback, true],
+            ["Welcome cashback, new customer", s.cashback, true],
             ["To whoever recommended you", s.l1, true],
             ["To whoever brought them in", s.l2, true],
           ].map(([label, amount, reward]) => (

@@ -47,7 +47,7 @@ export function PayConfirmContent(p: PayConfirmProps) {
       <div className="mt-5 flex flex-col items-start">
         <AmountDisplay value={p.amount} size="display" as="p" />
         {p.cashback > 0n ? (
-          <p className="mt-2 inline-flex h-8 items-center gap-1.5 rounded-full bg-accent-soft px-3 text-body-sm font-medium text-accent-ink">
+          <p className="mt-2 inline-flex h-8 items-center gap-1 rounded-full bg-accent-soft px-3 text-body-sm font-medium text-accent-ink">
             You&apos;ll get <AmountDisplay value={p.cashback} size="sm" className="font-semibold text-accent-ink" /> back
           </p>
         ) : (
