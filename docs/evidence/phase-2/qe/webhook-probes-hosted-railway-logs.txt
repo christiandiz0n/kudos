@@ -1,0 +1,11 @@
+2026-11-17T01:56:12.418441498Z [INFO] streams delivery time=1794880569454 pid=1 hostname="9e7d97ab91cd" reqId="req-18" delivery={"verified":false,"status":401,"reason":"missing-signature-headers","bytes":2}
+2026-11-17T01:56:32.391576118Z [INFO] streams delivery time=1794880584342 pid=1 hostname="9e7d97ab91cd" reqId="req-1h" delivery={"verified":false,"status":401,"reason":"missing-signature-headers","bytes":2}
+2026-11-17T01:56:32.392780152Z [INFO] streams delivery time=1794880584404 pid=1 hostname="9e7d97ab91cd" reqId="req-1j" delivery={"verified":false,"status":401,"reason":"missing-signature-headers","bytes":7}
+2026-11-17T01:56:32.392801385Z [INFO] streams delivery time=1794880584462 pid=1 hostname="9e7d97ab91cd" reqId="req-1l" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":7}
+2026-11-17T01:56:32.393984354Z [INFO] streams delivery time=1794880584520 pid=1 hostname="9e7d97ab91cd" reqId="req-1n" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":7}
+2026-11-17T01:56:32.394009583Z [INFO] streams delivery time=1794880584591 pid=1 hostname="9e7d97ab91cd" reqId="req-1p" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":273}
+2026-11-17T01:56:32.395068441Z [INFO] streams delivery time=1794880584649 pid=1 hostname="9e7d97ab91cd" reqId="req-1r" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":39}
+2026-11-17T01:56:32.396317920Z [INFO] streams delivery time=1794880584710 pid=1 hostname="9e7d97ab91cd" reqId="req-1t" delivery={"verified":false,"status":400,"reason":"body-decode-failed","bytes":16}
+2026-11-17T01:56:32.396334564Z [INFO] streams delivery time=1794880584773 pid=1 hostname="9e7d97ab91cd" reqId="req-1v" delivery={"verified":false,"status":401,"reason":"missing-signature-headers","bytes":16}
+2026-11-17T01:56:32.397429074Z [INFO] streams delivery time=1794880584892 pid=1 hostname="9e7d97ab91cd" reqId="req-1z" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":0}
+2026-11-17T01:56:32.397435043Z [INFO] streams delivery time=1794880584834 pid=1 hostname="9e7d97ab91cd" reqId="req-1x" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":7}

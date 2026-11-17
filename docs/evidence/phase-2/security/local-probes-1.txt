@@ -1,0 +1,11 @@
+## P-L1 session token in ?token= is written to the request log (local api :4040, fake token)
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} HTTP 401
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} HTTP 401
+log lines containing the token:
+2
+{"level":30,"time":1794880507414,"pid":34901,"hostname":"Christians-Laptop.local","reqId":"req-2","req":{"method":"GET","url":"/auth/session?token=v1.FAKEPAYLOAD.FAKEMAC_sec_review","host":"127.0.0.1:4040","remoteAddress":"127.0.0.1","remotePort":65145},"msg":"incoming request"}
+{"level":30,"time":1794880507422,"pid":34901,"hostname":"Christians-Laptop.local","reqId":"req-3","req":{"method":"GET","url":"/me/wallet?token=v1.FAKEPAYLOAD.FAKEMAC_sec_review","host":"127.0.0.1:4040","remoteAddress":"127.0.0.1","remotePort":65146},"msg":"incoming request"}
+
+## P-L2 X-Forwarded-For is ignored by the per-IP challenge limiter (31 requests, 31 distinct XFF values)
+200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 429 
+(30 x 200 then 429 = one bucket for every client behind the same proxy hop; XFF not trusted, so not spoofable either)

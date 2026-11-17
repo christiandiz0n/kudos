@@ -1,0 +1,12 @@
+webhook probes → https://api-production-902bc54c.up.railway.app/webhooks/streams (2026-11-17T01:56:24Z)
+ok   unsigned {} (no X-QN-* headers)                            want 401 got 401  {"ok":false,"error":"missing-signature-headers"}
+ok   nonce+timestamp, no signature                              want 401 got 401  {"ok":false,"error":"missing-signature-headers"}
+ok   forged signature (64 zeros)                                want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   forged signature, non-hex                                  want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   forged signature, envelope with a fake PaymentSettled      want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   gzip body (valid gzip), forged signature                   want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   content-encoding gzip + garbage body, headers present      want 400 got 400  {"ok":false,"error":"body-decode-failed"}
+ok   content-encoding gzip + garbage body, no headers           want 401 got 401  {"ok":false,"error":"missing-signature-headers"}
+ok   text/plain garbage, forged signature                       want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   empty body, forged signature                               want 401 got 401  {"ok":false,"error":"bad-signature"}
+ok   GET (wrong method)                                         want 404 got 404  {"message":"Route GET:/webhooks/streams not found","error":"Not Found","statusCode":404}

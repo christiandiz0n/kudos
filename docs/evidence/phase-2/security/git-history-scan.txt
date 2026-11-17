@@ -1,0 +1,7 @@
+# Git history secret scan (2026-11-17T01:59:42Z, HEAD 75ec6c6)
+commits (all refs): 27   unreachable objects: 7 blobs (scanned separately: 2 unique 64-hex, 0 matches)
+files ever committed matching env/key/pem/secret patterns: .env.example only
+64-hex scan (git log -p --all | scan-keys.mjs): see git-history-key-scan.json
+token-pattern counts (quiknode.pro/<key>, ghp_, github_pat_, sk-ant-, sk-, xox?-, AKIA, PEM, api_key=, qn_, SESSION_SECRET=<value>, PRIVATE_KEY=0x…, Bearer <long>, v1.<payload>.<mac>, whsec_): all 0
+postgres URL with password: 1 hit = test fixture 'postgresql://postgres:***@roundhouse.proxy.rlwy.net' (literal ***, redaction test)
+STREAMS_WEBHOOK_SECRET=<value>: 5 hits = '<token>' placeholder, QE local test secret 'qe-t…' (local pglite run), '__placeholder__' test fixture; none is the production token (not verifiable without it; prod token was set only in the Railway dashboard per RAILWAY.md §4)

@@ -1,0 +1,12 @@
+[settled] http://127.0.0.1:4030
+  ok   QE-C-10 intent: GET /payments/:id → status settled from Streams (split from events, not the quote)
+  ok     settled.venueAmount 10000, no reward lines, relayStatus already_settled
+  ok   quote for the settled order (now ingested) → 409 ORDER_ALREADY_PAID
+  ok     details.settled populated, waitingOnStreams false
+  ok   relayed $0.01 intent → status settled
+  ok   GET order (public) → status paid, paid true
+  ok   GET /venues/:v → status registered from Streams, terms v1
+  ok   GET /venues/:v/stats → verified 1, payments 2, gross 20000
+  note C activity after streams: payment/settled, payment/settled
+
+PASSED: 8 ok, 0 failed

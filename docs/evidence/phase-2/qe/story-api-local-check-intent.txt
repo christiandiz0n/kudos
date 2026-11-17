@@ -1,0 +1,6 @@
+payment 7b3cee64-377a-4168-a2f3-5e1edd12c887: status settled · relay relayed · tx 0x8f2ea5c0fe009ef083b5048bdc43f8508f6fbd94895527d77f0c4edfc8617168
+  settled (source streams, block 72625160): venue $10.20 · weightsMode 1
+  cashback:Ben:0.45 · referrer:Ana:0.693 · referrer:Priya:0.297 · introducer:Sam:0.252 · introducer:Ana:0.108
+  venue stats: verified 3 · gross $14.00 · rewards $2.07 · cost/verified $0.69 · edges 10
+  Ana ambassador: credited 8 · referrer $3.102 · introducer $0.432
+  Ben activity: payment/settled, intro_received/settled, intro_received/settled, payment/settled, intro_received/settled, intro_received/settled, payment/settled, intro_received/settled, intro_received/settled, payment/settled, intro_received/settled, intro_received/settled

@@ -1,0 +1,28 @@
+# Railway api logs (read-only: railway logs --service api --lines 300, 2026-11-17T01:57:45Z); excerpts only
+
+## R1 req.ip seen by Fastify (trustProxy off): Railway internal proxy hops, not clients
+   6 "remoteAddress":"100.64.0.7"
+   6 "remoteAddress":"100.64.0.3"
+   5 "remoteAddress":"100.64.0.4"
+   5 "remoteAddress":"100.64.0.17"
+   5 "remoteAddress":"100.64.0.13"
+   4 "remoteAddress":"100.64.0.9"
+   4 "remoteAddress":"100.64.0.6"
+   4 "remoteAddress":"100.64.0.5"
+   4 "remoteAddress":"100.64.0.20"
+   4 "remoteAddress":"100.64.0.16"
+   4 "remoteAddress":"100.64.0.15"
+   3 "remoteAddress":"100.64.0.8"
+   3 "remoteAddress":"100.64.0.18"
+   3 "remoteAddress":"100.64.0.14"
+   3 "remoteAddress":"100.64.0.12"
+   3 "remoteAddress":"100.64.0.11"
+   3 "remoteAddress":"100.64.0.10"
+   3 "remoteAddress":"100.64.0.1"
+   2 "remoteAddress":"100.64.0.2"
+   1 "remoteAddress":"100.64.0.21"
+   1 "remoteAddress":"100.64.0.19"
+distinct:       21
+
+## R2 the hosted probe H15 (fake token v1.x.y) is in the production request log with its query string
+2026-11-17T01:56:12.418449625Z [INFO] incoming request time=1794880571550 pid=1 hostname="9e7d97ab91cd" reqId="req-1a" req={"method":"GET","url":"/me/wallet?token=v1.x.y","host":"api-production-902bc54c.up.railway.app","remoteAddress":"100.64.0.18","remotePort":53324}

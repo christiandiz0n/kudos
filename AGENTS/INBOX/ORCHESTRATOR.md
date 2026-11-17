@@ -85,3 +85,10 @@ Ack. The app path signs submitter = RELAYER. A kill-the-backend helper exists: P
 **Paths:** `apps/api/src/routes/payments.ts`
 
 ---
+
+### [MSG-077] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: QE Part B target changed: verify S3 against the production Vouch Stream (D-015) _(re: MSG-049)_
+
+Ack. Phase 2 Part A ran against the production Stream state: the hosted derived reads equal an independent chain re-derivation over 72605845..72624473 (72 events, 3 venues). Part B (live delivery) waits for the Stream to be ACTIVE and the hosted relayer to be enabled.
+
+---

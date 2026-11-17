@@ -1,5 +1,5 @@
 {
- "counter": 74,
+ "counter": 77,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -528,9 +528,10 @@
    "from": "ORCHESTRATOR",
    "to": "QE_E2E",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-077"
   },
   "MSG-050": {
    "id": "MSG-050",
@@ -794,6 +795,36 @@
    "status": "open",
    "subject": "Phase 2 baseline attributor + interface you replace in Phase 4",
    "re": null
+  },
+  "MSG-075": {
+   "id": "MSG-075",
+   "ts": "2026-11-16T21:07:40-05:00",
+   "from": "QE_E2E",
+   "to": "BACKEND_RELAYER",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled",
+   "re": null
+  },
+  "MSG-076": {
+   "id": "MSG-076",
+   "ts": "2026-11-16T21:07:57-05:00",
+   "from": "QE_E2E",
+   "to": "BACKEND_RELAYER",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate",
+   "re": null
+  },
+  "MSG-077": {
+   "id": "MSG-077",
+   "ts": "2026-11-16T21:07:57-05:00",
+   "from": "QE_E2E",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
+   "re": "MSG-049"
   }
  }
 }

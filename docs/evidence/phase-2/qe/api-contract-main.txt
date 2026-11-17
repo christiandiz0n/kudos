@@ -1,0 +1,111 @@
+[main] http://127.0.0.1:4030
+  O 0x5cD3707f85E895524341073062B7cF13084cEdc3 · C 0xbeC2Ce1000c5C263F3dF8eE605bDEF4F6e7C0DD0 (bal 200000) · U 0x2aB221831Ffa0B0252D98df1BD8999Fea7a37Abc · X 0xA208e08e1EE832649e72d592c1B8cCd25cdEA7b6
+  ok   POST /venues/prepare rewardBps 0 → 400 BAD_REQUEST
+  ok   POST /venues/prepare rewardBps 5001 → 400 BAD_REQUEST
+  ok   POST /venues/prepare minOrder > $10,000 → 400 INVALID_TERMS
+  FAIL POST /venues/prepare payout = Vouch (contract refuses: InvalidPayout) → 400 INVALID_PAYOUT
+       {"status":200,"body":{"venue":"0x738ca1ebe8f3C00cC9e763C75a635E952AA39367","slug":"qe","typedData":{"domain":{"name":"Vouch","version":"1","chainId":5042002,"verifyingContract":"0xF4B641dc628de05336aa983B07D5d181254ff08e"},"types":{"RegisterVenue":[{"name":"owner","type":"address"},{"name":"salt","type":"bytes32"},{"name":"payout","type":"address"},{"name":"signer","type":"address"},{"name":"attributor","type":"address"},{"name":"rewardBps","type":"uint16"},{"name":"minOrder","type":"uint256"},{"name":"metadataURI","type":"string"},{"name":"nonce","type":"uint256"},{"name":"deadline","type":"u
+  ok   POST /venues/prepare → 200
+  ok     shape {venue, slug, typedData{domain,types,primaryType:RegisterVenue,message}}
+  ok     typedData signer/attributor = our VENUE_SIGNER / ATTRIBUTOR (D-804)
+  ok   POST /venues signed by a non-owner → 400 INVALID_SIGNATURE
+  ok   POST /venues by another session → 404 NOT_FOUND
+  ok   POST /venues → 202
+  ok     shape {venue, status:"pending", txHash, relayId}
+  ok   POST /venues again while relaying/registered → 409
+  tx   registerVenue (QE O) 0x2ecd6bef652c1afaebe90d9f7a17bf8d84ccb209f513b54a1f95f8932b9b0950
+  ok   GET /venues/:v (registered via API, local api has no Stream) → 200, managedByVouch
+  note GET /venues/:v status "registered", waitingOnStreams true
+  ok   GET /auth/session for the owner → roles.venueOwner
+  ok   PATCH /venues/:v by owner → 200
+  ok   PATCH /venues/:v by non-owner → 403 FORBIDDEN
+  ok   POST orders by non-owner → 403 FORBIDDEN
+  ok   POST orders amount 0 → 400 INVALID_AMOUNT
+  ok   POST orders amount > 1,000,000e6 → 400 INVALID_AMOUNT
+  ok   POST orders amount "1.5" (not base units) → 400 BAD_REQUEST
+  ok   POST orders ttlSeconds 10 (< 30) → 400 BAD_REQUEST
+  ok   POST orders for a venue we do not manage (v3 story venue, Lena-owned) → 403 FORBIDDEN
+  ok   POST orders → 201 {order, signature, qrPayload, status:"pending"}
+  ok   GET /venues/:v/orders/:id (public) → 200 status pending, settled null
+  ok   GET /venues/:v/orders (owner) → 200 list
+  ok   GET /venues/:v/orders (non-owner) → 403 FORBIDDEN
+  ok   POST /payments/quote (relayed) → 200
+  ok     shape has intentId, quote, attribution, weights, weightsSignature, paymentAuth, typedData, balance, canAfford, warnings
+  ok     paymentAuth.submitter = RELAYER (never 0)
+  ok     typedData = USDC ReceiveWithAuthorization to Vouch, value = amount
+  ok     plain first purchase: weightsHash 0, quote venueAmount = amount
+  ok     warnings include first_purchase_without_recommendation
+  ok   POST /payments/quote unknown order → 404 NOT_FOUND
+  ok   POST /payments/quote mode "bogus" → 400 BAD_REQUEST
+  ok   GET /payments/:intentId of another user → 404 NOT_FOUND
+  ok   POST /payments intent of another user → 404 NOT_FOUND
+  ok   POST /payments signature by a different key → 400 INVALID_SIGNATURE
+  ok     nothing sent (relayer nonce unchanged)
+  ok   quote for an unfunded customer → 200, canAfford false, warning insufficient_balance
+  ok   POST /payments with balance < amount (QE-C-11 relayed) → 402 INSUFFICIENT_BALANCE
+  ok     details {balance, needed, shortfall}
+  ok     nothing sent (relayer nonce unchanged)
+  note intent after 402: relayStatus quoted, status pending (can it be retried after a top-up? relayStatus must stay "quoted")
+  ok     intent stays retryable after a 402 (relayStatus quoted)
+  C balance 200000; 900k × 24500000000 wei ≈ 22050 base units; probe order amount 188975
+  ok   relayed quote for amount ≤ balance → canAfford true
+  ok   self-submit quote with amount ≤ balance < amount + 900k×maxFee (QE-C-11) → 402 INSUFFICIENT_BALANCE
+  ok     details.selfSubmit true, needed = amount + ceil(900k × maxFee / 1e12) (±fee drift)
+  ok   self-submit quote → 200, paymentAuth.submitter = customer (never 0), selfSubmit.needed
+  ok   POST /payments with a self-submit intent (API never relays it) → 400 BAD_REQUEST
+  tx   self-submit pay by C (QE-C-10 setup) 0x2ddeb2f71d6640dd2d58b9d055acc76edaaf66683a53b6f34510003a1b4a7cec status success gas 211262
+  ok     self-submit pay() from the customer EOA succeeded (submitter = customer)
+  ok   POST /payments (relayed intent) after the order was settled by self-submit (QE-C-10) → 409 ORDER_ALREADY_PAID
+  ok     terminal: retryable false, details.waitingOnStreams true (no Stream on this api)
+  ok     nothing sent (relayer nonce unchanged)
+  ok   POST /payments same intent again → 409 ORDER_ALREADY_PAID
+  ok   GET /payments/:id → relayStatus already_settled, status pending (not settled until Streams), waitingOnStreams
+  ok   POST /payments/quote for the settled order → 409 ORDER_ALREADY_PAID
+  ok   POST /intros/prepare by a verified customer → 200 {intro, typedData}
+  ok   POST /intros/prepare by a non-verified user → 403 REFERRER_NOT_ELIGIBLE
+  ok   POST /intros/prepare ttlDays 31 → 400 BAD_REQUEST
+  ok   POST /intros by someone else (referrer ≠ session) → 403 FORBIDDEN
+  ok   POST /intros → 201
+  ok     shape {code, url, introHash}
+  note POST /intros with the same signed intro again → 200 (same code: true)
+  ok   GET /intros/:code → 200 status active, reissueBy null
+  FAIL   terms.minOrder uses the {baseUnits, display} money shape
+       {"rewardBps":1000,"minOrder":{"baseUnits":"0"}}
+  ok   POST /intros/:code/accept/prepare by the referrer (self) → 400 SELF_REFERRAL
+  ok   POST /intros/:code/accept/prepare (bystander) → 200 {acceptance, typedData}
+  ok   POST /intros/:code/accept with a signature by another key → 400 INVALID_SIGNATURE
+  ok   POST /intros/:code/opens by the referrer → not recorded (own_link)
+  FAIL POST /intros/:code/opens anonymous: 10 recorded, then rate limited
+       [true,true,true,true,true,true,true,true,true,false,false]
+  FAIL GET /me/links → my link with opens = 10 (anonymous opens count, referrer excluded)
+       {"links":[{"code":"08qxyQXT4","url":"http://localhost:3100/i/08qxyQXT4","venue":"0xd5eab90441172616F87DfFc5b4A32e85DD159422","linkType":"broadcast","termsVersion":1,"expiresAt":"1796090587","opens":9,"status":"active","reissueBy":null,"currentTermsVersion":1}]}
+  ok   POST /venues/:v/actions by non-owner → 403 FORBIDDEN
+  ok   POST /venues/:v/actions kind bogus → 400 BAD_REQUEST
+  ok   POST /venues/:v/actions updateTerms → 200 {actionId, typedData}
+  ok   POST /venues/:v/actions/:id (older, superseded by a newer prepare) → 409 OWNER_NONCE_STALE
+  ok   POST /venues/:v/actions/:id signed by a non-owner key → 400 INVALID_SIGNATURE
+  ok   GET /venues/:v/actions/:id → 200 status prepared
+  ok   GET /venues/:v/actions/:id by non-owner → 404 NOT_FOUND
+  note setSeedAmbassador {allowed: "false"} (string) → message.allowed = false
+  FAIL setSeedAmbassador {allowed: "true"} (string) is rejected or parsed as true (not silently false)
+       {"venue":"0xd5eab90441172616F87DfFc5b4A32e85DD159422","ambassador":"0xA208e08e1EE832649e72d592c1B8cCd25cdEA7b6","allowed":false,"nonce":"1","deadline":"1794881587"}
+  ok   quote for a 30 s order (fresh) → 200, paymentAuth.deadline ≤ order.expiresAt + 1
+  … waiting 36 s for the order to expire
+  ok   POST /payments/quote after the order expired → 410 ORDER_EXPIRED
+  ok   POST /payments for a quote whose order expired → 410
+  note expired pay code: PAYMENT_EXPIRED (D-806 lists ORDER_EXPIRED 410 for OrderExpired; the auth deadline fires first → PAYMENT_EXPIRED)
+  ok     nothing sent (relayer nonce unchanged)
+  ok   GET order after expiry → status expired
+  double POST /payments same intent → 202 {"intentId":"ac6246ef-f197-482e-9ed0-43b7d20854a2","status":"pending","txHash":"0x2ed87a72051331eb9002db29f0c1adecce134dce44842fa09a59b6cc0e2c43dd","relayId":"5 | 409 {"error":{"code":"ORDER_ALREADY_PAID","message":"This order is already paid.","retryable":false,"details":{"venue":"0xd5eab90441172616F87DfFc5b4A32e85DD159422",
+  ok   concurrent double POST /payments → exactly one 202 and one 409
+  ok     202 shape {intentId, status:"pending", txHash, relayId}
+  tx   relayed pay C $0.01 (double-submit probe) 0x2ed87a72051331eb9002db29f0c1adecce134dce44842fa09a59b6cc0e2c43dd
+  FAIL   GET /payments/:id after mining → relayStatus relayed (not overwritten to already_settled by the losing duplicate)
+       {"intentId":"ac6246ef-f197-482e-9ed0-43b7d20854a2","venue":"0xd5eab90441172616F87DfFc5b4A32e85DD159422","orderId":"0xdd238d36d8d60c24ad2b30fa3c31288bcb594190ca4c9fbb941d54cec07b56fb","amount":{"baseUnits":"10000","display":"0.01"},"relayStatus":"already_settled","txHash":"0x2ed87a72051331eb9002db29f0c1adecce134dce44842fa09a59b6cc0e2c43dd","errorCode":"ORDER_ALREADY_PAID","status":"pending","settled":null,"waitingOnStreams":true}
+  ok   GET /relay/:id → {id, kind:"pay", status:"mined", txHash, gasUsed, blockNumber}
+  ok   GET /relay/:id by another user → 404 NOT_FOUND
+  ok   GET /me/wallet → {address, balance{baseUnits,display}, rewardsEarned, pending[]}
+  ok   GET /me/activity → {address, items[], cursor}
+  note C activity before streams: 
+
+FAILED: 83 ok, 6 failed

@@ -1,0 +1,22 @@
+## P-L3 unauthenticated gzip bomb to POST /webhooks/streams (local api :4040, NO x-qn-* headers)
+rss before:  70576 KB
+bomb-100m.gz -> {"ok":false,"error":"missing-signature-headers"} HTTP 401 in 0.326721s (uploaded 101941 B)
+rss after bomb-100m.gz: 529392 KB
+  /health during: 200 0.335336s
+  /health during: 200 0.001940s
+  /health during: 200 0.001898s
+  /health during: 200 0.001164s
+  /health during: 200 0.001140s
+  /health during: 200 0.001429s
+  /health during: 200 0.002141s
+bomb-1g.gz -> {"statusCode":500,"code":"ERR_STRING_TOO_LONG","error":"Internal Server Error","message":"Cannot create a string longer than 0x1fffffe8 characters"} HTTP 500 in 0.832547s (uploaded 1043656 B)
+  /health during: 200 0.508981s
+rss after bomb-1g.gz: 1609776 KB
+  /health during: 200 0.002607s
+  /health during: 200 0.001855s
+  /health during: 200 0.002388s
+  /health during: 200 0.002726s
+{"level":30,"time":1794880524898,"pid":34901,"hostname":"Christians-Laptop.local","reqId":"req-z","delivery":{"verified":false,"status":401,"reason":"missing-signature-headers","bytes":101941},"msg":"streams delivery"}
+rss ~10s later: 104240 KB
+node v24.13.0 buffer.constants.MAX_LENGTH = 9007199254740991 MAX_STRING_LENGTH = 536870888
+gzip ratio: 1,043,656 B upload -> 1,073,741,824 B inflated (~1029x). The route accepts 50 MiB bodies (bodyLimit 50*1024*1024), i.e. ~52 GB inflated per request, before any header/signature check.

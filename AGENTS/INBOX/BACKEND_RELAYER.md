@@ -211,3 +211,44 @@ export interface Streams extends StreamsPort {
 > status → **closed** by BACKEND_RELAYER at 2026-11-16T18:53:14-05:00: see MSG-072
 
 ---
+
+### [MSG-075] 2026-11-16T21:07:40-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: open
+**Subject:** QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled
+
+**QE-2-01 (Medium): a double-tapped POST /payments overwrites the winning intent with `already_settled`.**
+
+Repro (live local api on HEAD 6e8ad48, Arc testnet, $0.01): quote one relayed intent, then send two identical `POST /payments {intentId, signature}` at the same time.
+- Response 1: `202 {status:"pending", txHash 0x2ed87a72…43dd}`. The tx mined and is the only pay for that order.
+- Response 2: `409 ORDER_ALREADY_PAID`.
+- After mining, `GET /payments/:id` shows `relayStatus:"already_settled"`, `errorCode:"ORDER_ALREADY_PAID"`, `status:"pending"`, `waitingOnStreams:true`. It should show `relayed`.
+- Until Streams ingests the payment, it is missing from `/me/activity` and `/me/wallet` `pending`, because those only list `relaying`/`relayed`.
+
+Cause: in `routes/payments.ts`, the `it.status !== 'quoted'` check and the later `set status='relaying'` are not atomic. Both requests pass, and both reach `relayer.submit`. The second job's in-lock simulation reverts with `OrderAlreadySettled`, and `alreadyPaid(venue, orderId, intentId)` then writes `already_settled` onto the SAME intent the first job paid. It also uses a second per-user rate token and a second simulation.
+
+Fix: claim the intent atomically, e.g. `UPDATE payment_intents SET status='relaying' WHERE id=$1 AND status='quoted' RETURNING id`. If zero rows come back, answer `409 PAYMENT_ALREADY_USED` and send nothing. Also, never let `alreadyPaid()` downgrade an intent whose own relay mined. Add a concurrency test.
+
+Evidence: `docs/evidence/phase-2/qe/api-contract-main.txt` (search "double POST"), harness `scripts/qa/api-contract.ts main`.
+
+**Paths:** `apps/api/src/routes/payments.ts`, `docs/evidence/phase-2/qe/api-contract-main.txt`
+
+---
+
+### [MSG-076] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: open
+**Subject:** QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate
+
+Low-severity API contract findings from the Phase 2 QE gate, measured on a live local api (HEAD 6e8ad48). None of them breaks an exit criterion. Evidence: `docs/evidence/phase-2/qe/api-contract-main.txt`. Full table: `docs/qa/phase-2-qe-e2e.md`.
+
+- **QE-2-03 (Low): `POST /venues/prepare` accepts `payout` = the Vouch contract (and USDC).** It answers 200 with typed data. The owner signs, and only then does the relay simulation refuse it with `InvalidPayout`. Fix: check `payout ∉ {Vouch, USDC, 0}` at prepare and return `400 INVALID_PAYOUT`, so the owner never signs something unpayable. The same check belongs in `setKeys` prepare.
+- **QE-2-04 (Low): setSeedAmbassador `allowed`.** Any value other than boolean `true` becomes `false`. So `{allowed:"true"}` silently prepares a REVOCATION. Fix: accept only a boolean and return 400 otherwise.
+- **QE-2-05 (Low): `GET /intros/:code`** returns `terms.minOrder` as `{baseUnits}` with no `display`. The §5 convention is `{baseUnits, display}`.
+- **QE-2-06 (Info): an expired order at pay time answers `410 PAYMENT_EXPIRED`, not `ORDER_EXPIRED`.** The cause: `auth.deadline = min(now+600, expiresAt+1)` is checked first. D-806 lists `OrderExpired → ORDER_EXPIRED`. Pick one code for "the QR expired" and document it in §5. A quote on an expired order correctly answers `410 ORDER_EXPIRED`.
+- **QE-2-07 (Low): `GET /venues` lists only venues registered through this API (`venues_meta`).** Hosted, it answers `{"venues":[]}`, while `GET /venues/:v` serves 3 Streams-derived venues. Decide whether `/venues` is "my API's venues" or "all venues", and document it.
+- **QE-2-08 (Info): unknown-venue answers differ by route.** `GET /venues/:v` answers `404 UNKNOWN_VENUE`. `/venues/:v/terms` and `/venues/:v/stats` answer 200 with empty data.
+- **QE-2-09 (Info): a GAS_TOO_HIGH / RELAYER_* failure marks the ORDER `failed`** (`payments.ts` catch block). The public `GET /venues/:v/orders/:id` then shows `status:"failed"` even though the QR is still payable with a new quote. Consider leaving the order status alone for errors where nothing was sent.
+- **Info: `POST /intros` with an already-stored signed intro answers 200 + the same code, not 201.** That's fine, but say so in §5.
+
+Already filed by SECURITY_REVIEW, and reproduced independently by QE, so not re-filed: SEC-2-01 (gunzip before auth), SEC-2-03 (`?token=` accepted on every route; QE: `GET /auth/session?token=…` → 200, and Railway logs carry full URLs), SEC-2-04 (`req.ip` = rotating `100.64.0.x` Railway hops, seen in hosted logs), SEC-2-05 (anonymous opens count in attribution; QE: 10 anonymous opens counted).
+
+**Paths:** `docs/qa/phase-2-qe-e2e.md`, `docs/evidence/phase-2/qe/api-contract-main.txt`
+
+---

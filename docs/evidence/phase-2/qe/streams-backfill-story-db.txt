@@ -1,0 +1,5 @@
+backfill 72605845..72625323 → pglite:///private/tmp/claude-501/-Users-christiandizon-Desktop-ubc-2026/938526f8-462b-461a-8225-5c286db870a3/scratchpad/qe-story-db · rpc https://rpc.testnet.arc.io
+  72605845..72615844: 72 logs → 1 envelope(s)
+  72615845..72625323: 29 logs → 1 envelope(s)
+new events: 101
+derived          e9bde4e553654748eb23526f1522e670fe5fc8728bdd58f5ee435c991fe680ee  (events=101 cursor=1 venues=5 terms=5 seeds=4 intros=16 verified=13 payments=14 rewards=44 venue_stats=5 ambassadors=16)

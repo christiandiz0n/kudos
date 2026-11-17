@@ -139,13 +139,8 @@ Rules (contract-enforced):
 
 - **Spike only:** `SplitAuth` (Hello.sol, domain `{name:"WomHello",version:"1"}`) has fields `address token, address from, bytes32 recipientsHash, bytes32 amountsHash, uint256 nonce, uint256 deadline`, typehash `0xa5393841…050168`. Array hashes are `keccak256(abi.encodePacked(arr))`. Proven locally in S5. The spike uses approve + `transferFrom`, not EIP-3009.
 
-Full typehashes:
+Other typehashes (the Vouch types are in the canonical block above; a stale pre-submitter PaymentAuth line was removed here per QE-2-02):
 ```
-Intro            0xdc4192f6970873be49c69a70fecca1bd4ec35227b3516fe7213b516246dbb7c3
-IntroAcceptance  0x400ca88e9ec28bb1f7e73d44cb8743cd861d151b07da51fae9ff083083a469d0
-Order            0xd418cbc9a68e3abda5b09e4e1b5c5404de5701543ff1c0c5a807f80f9d11d8a3
-Weights          0x6d9e3bfc06d45d14351cb1d560fee0b175c5b21e7134c820b3c65deab627720c
-PaymentAuth      0x83204ea1500cc20bbe24158546e6acd5b12f1284315bff525545b80a5635b253
 ReceiveWithAuth  0xd099cc98ef71107a616c4f0f941f04c322d8e254fe26b3c6668db87aae413de8  (USDC/EIP-3009)
 SplitAuth(spike) 0xa539384164e343b0ca91506ffcd85c6cabf826e8dda0690ff23c9b0aa1050168
 ```

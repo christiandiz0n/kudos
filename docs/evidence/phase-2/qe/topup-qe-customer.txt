@@ -1,0 +1,8 @@
+name         address                                        before       sent      after
+ad-hoc       0xbeC2Ce1000c5C263F3dF8eE605bDEF4F6e7C0DD0       0.00       0.20       0.20
+
+tx ad-hoc       0xbe10ab8ac57d2ad766e5fdc2c4a1e4c9e61637e24555f55dab61c852887aaded  status=success
+   https://explorer.testnet.arc.io/tx/0xbe10ab8ac57d2ad766e5fdc2c4a1e4c9e61637e24555f55dab61c852887aaded
+gas fee total      0.0015083352 USDC (1508335200000000 wei, 18-dec)
+deployer           before=$13.996606 after=$13.795098  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111
+done: 1 transfer(s), $0.20 sent.

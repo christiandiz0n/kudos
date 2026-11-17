@@ -1,0 +1,10 @@
+chain: Vouch v3 0xF4B641dc628de05336aa983B07D5d181254ff08e · blocks 72605845..72612484 · rpc https://rpc.testnet.arc.io
+  eth_getLogs 72605845..72612484 (6640 blocks) → 48 logs
+live deliveries: 29 signed POSTs (each 5-block batch twice + 1 overlapping batch), statuses 200
+chain-backfill   0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34  (events=48 cursor=1 venues=2 terms=2 seeds=2 intros=8 verified=6 payments=6 rewards=22 venue_stats=2 ambassadors=8)
+live (webhook)   0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34  (events=48 cursor=1 venues=2 terms=2 seeds=2 intros=8 verified=6 payments=6 rewards=22 venue_stats=2 ambassadors=8)
+replay (copy)    0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34  (events=48 cursor=1 venues=2 terms=2 seeds=2 intros=8 verified=6 payments=6 rewards=22 venue_stats=2 ambassadors=8)
+replay (wipe)    0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34  (events=48 cursor=1 venues=2 terms=2 seeds=2 intros=8 verified=6 payments=6 rewards=22 venue_stats=2 ambassadors=8)
+rebuild          0b0c880dbc314569c80ba1d2df8c569d3072bb6b9c660cbdcf454d7bf45c1f34  (events=48 cursor=1 venues=2 terms=2 seeds=2 intros=8 verified=6 payments=6 rewards=22 venue_stats=2 ambassadors=8)
+OK: chain-backfill == live == replay == rebuild
+exit 0

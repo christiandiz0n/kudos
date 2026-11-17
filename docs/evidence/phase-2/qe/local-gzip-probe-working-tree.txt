@@ -1,0 +1,6 @@
+# local 500 MB gzip probe (509,616 B compressed) against a local api started 02:1x UTC from the WORKING TREE (uncommitted SEC-2-01 fix in apps/api/src/routes/webhooks.ts, mtime 02:03:26Z), NOT HEAD 6e8ad48
+unsigned (no X-QN headers): 401 in 0.0009 s, peak RSS unchanged (168 MB) -> no decompression before auth
+forged signature: 413 decoded-body-too-large in 0.009 s, peak RSS 117 MB
+{"level":30,"time":1794881134930,"pid":38695,"hostname":"Christians-Laptop.local","reqId":"req-g","delivery":{"verified":false,"status":401,"reason":"missing-signature-headers","bytes":2},"msg":"streams delivery"}
+{"level":30,"time":1794881134936,"pid":38695,"hostname":"Christians-Laptop.local","reqId":"req-h","delivery":{"verified":false,"status":401,"reason":"missing-signature-headers","bytes":509616},"msg":"streams delivery"}
+{"level":30,"time":1794881148024,"pid":38695,"hostname":"Christians-Laptop.local","reqId":"req-i","delivery":{"verified":false,"status":413,"reason":"decoded-body-too-large","bytes":509616},"msg":"streams delivery"}

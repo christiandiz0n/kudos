@@ -1,0 +1,60 @@
+[noauth] http://127.0.0.1:4030
+  ok   GET /auth/session without a token → 401 UNAUTHENTICATED
+  ok   POST /auth/logout without a token → 401 UNAUTHENTICATED
+  ok   PATCH /me without a token → 401 UNAUTHENTICATED
+  ok   POST /venues/prepare without a token → 401 UNAUTHENTICATED
+  ok   POST /venues without a token → 401 UNAUTHENTICATED
+  ok   PATCH /venues/0xf315D0B045697C4a7519d03af35a831008882005 without a token → 401 UNAUTHENTICATED
+  ok   POST /venues/0xf315D0B045697C4a7519d03af35a831008882005/actions without a token → 401 UNAUTHENTICATED
+  ok   POST /venues/0xf315D0B045697C4a7519d03af35a831008882005/actions/abc without a token → 401 UNAUTHENTICATED
+  ok   GET /venues/0xf315D0B045697C4a7519d03af35a831008882005/actions/abc without a token → 401 UNAUTHENTICATED
+  ok   POST /venues/0xf315D0B045697C4a7519d03af35a831008882005/orders without a token → 401 UNAUTHENTICATED
+  ok   GET /venues/0xf315D0B045697C4a7519d03af35a831008882005/orders without a token → 401 UNAUTHENTICATED
+  ok   POST /intros/prepare without a token → 401 UNAUTHENTICATED
+  ok   POST /intros without a token → 401 UNAUTHENTICATED
+  ok   POST /intros/abcdef/accept/prepare without a token → 401 UNAUTHENTICATED
+  ok   POST /intros/abcdef/accept without a token → 401 UNAUTHENTICATED
+  ok   GET /me/links without a token → 401 UNAUTHENTICATED
+  ok   POST /payments/quote without a token → 401 UNAUTHENTICATED
+  ok   POST /payments without a token → 401 UNAUTHENTICATED
+  ok   GET /payments/abc without a token → 401 UNAUTHENTICATED
+  ok   GET /me/wallet without a token → 401 UNAUTHENTICATED
+  ok   GET /me/activity without a token → 401 UNAUTHENTICATED
+  ok   GET /relay/abc without a token → 401 UNAUTHENTICATED
+  ok   GET /events/user/0xA208e08e1EE832649e72d592c1B8cCd25cdEA7b6 without a token → 401 UNAUTHENTICATED
+  ok   GET /auth/session with a garbage bearer → 401 UNAUTHENTICATED
+  ok   GET /health → 200 {ok, chainId 5042002}
+  ok   GET /relayer/status → 200 {enabled, address = RELAYER, signers}
+  ok   GET /venues → 200
+  ok   GET /venues/<not an address> → 400 BAD_REQUEST
+  ok   GET /venues/<unknown> → 404 UNKNOWN_VENUE
+  ok   GET /venues/<unknown>/terms → 200 empty history (no 404)
+  note GET /venues/<unknown>/terms answers 200 (INTERFACES §5 does not say; /venues/:venue answers 404)
+  ok   GET /venues/<unknown>/stats → 200 zeros
+  ok   GET /venues/:v/orders/<unknown> → 404 NOT_FOUND
+  ok   GET /venues/:v/orders/<bad id> → 400 BAD_REQUEST
+  ok   GET /intros/<bad code> → 404 NOT_FOUND
+  ok   POST /intros/<unknown>/opens → 404 NOT_FOUND
+  ok   GET /ambassadors/<nobody> → 200 zeros, source streams
+  ok   GET /ambassadors/<bad> → 400 BAD_REQUEST
+  ok   POST /auth/challenge {address: bad} → 400 BAD_REQUEST
+  ok   POST /auth/challenge (no body) → 400 BAD_REQUEST
+  ok   POST /auth/challenge (invalid JSON) → 400
+  ok   POST /auth/challenge → 200 {challengeId, message, expiresAt}
+  ok   POST /auth/verify signed by another key → 400 INVALID_SIGNATURE
+  ok   POST /auth/verify → 200 {token, expiresAt, user}
+  ok   POST /auth/verify replaying the same challenge → 401 UNAUTHENTICATED
+  ok   POST /auth/verify unknown challenge → 401 UNAUTHENTICATED
+  ok   GET /auth/session → 200 {address, roles}
+  ok   GET /auth/session with a re-signed-less tampered payload → 401 UNAUTHENTICATED
+  FAIL GET /auth/session?token=… (query token) is REJECTED outside SSE (D-802: "?token= (SSE only)")
+       {"status":200}
+  note cookie vouch_session accepted on /auth/session: 200
+  ok   GET /events/user/<someone else> with my token → 403 FORBIDDEN
+  ok   PATCH /me {displayName} → 200
+  ok   PATCH /me {displayName: 61 chars} → 400 BAD_REQUEST
+  ok   POST /auth/logout → 200
+  ok   GET /auth/session after logout → 401 UNAUTHENTICATED
+  ok   GET /events/venue/:v → 200 text/event-stream (public)
+
+FAILED: 53 ok, 1 failed

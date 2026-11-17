@@ -1,0 +1,21 @@
+QE_E2E Phase 2 Part A: testnet transactions (2026-11-17 UTC)
+story:api (local api 127.0.0.1:4030, HEAD 6e8ad48 code; relayer 0x3eAF…8daD)
+  fund Ben +$11.55 from Lena (payout)       0x9ec528b2484cef5af6ba20045db3869a1b3eb7a200cfd9db1cbd1077a4a6285b
+  registerVenue (Lena-signed)               0xfbfafdc28ef48ee5268180d42d138e334a0a507bde5da89535eba15494a1289d
+  setSeedAmbassador Sam (Lena-signed)       0x33b259a4a19a37f7781bc06e434ad3241f5e85c2b371b257d5021e38a3218dd7
+  acceptIntro Sam→Ana (1 opens)             0xf1c028e362a9c12645d701a4d52251f0ff8d89bb1a984cd0def2240a99b465ee
+  pay Ana $1.00                             0x4fe6c005c22833acbc18bcf9138637ee37ee04faa98c0ac7bbbec86c9ea41111
+  acceptIntro Ana→Priya (1 opens)           0xce24c7cb0baca3fe884960d7f8711f7c3fdc46b5d958c3e1922962249e7544a7
+  pay Priya $1.00                           0x2793d31859b55a9855017b8556b1ea506db13dc69c9a1d9c3342e1dba228792d
+  acceptIntro Ana→Ben (3 opens)             0x68e825a773ed92ee386d3001917ef1759428bc73f5e40868553523f5a51bb473
+  acceptIntro Priya→Ben (2 opens)           0xff15ee218361f308bc4a7e253580d249d9d8f5d71a82ad0ddd1d5460ae9e4ed7
+  pay Ben $12.00 (canonical)                0x8f2ea5c0fe009ef083b5048bdc43f8508f6fbd94895527d77f0c4edfc8617168  block 72625160
+  venue 0xBAd7D0083f590C0C36638DA86237d00c9b2dbDbb · intent 7b3cee64-377a-4168-a2f3-5e1edd12c887
+  relayer gas: 0.039585995 USDC (9 txs)
+QE contract harness (throwaway QE wallets; venue 0xd5eab90441172616F87DfFc5b4A32e85DD159422, payout = DEMO_LENA)
+  deployer top-up QE customer C $0.20       0xbe10ab8ac57d2ad766e5fdc2c4a1e4c9e61637e24555f55dab61c852887aaded  fee 0.0015083
+  registerVenue (QE O, relayed)             0x2ecd6bef652c1afaebe90d9f7a17bf8d84ccb209f513b54a1f95f8932b9b0950  fee 0.0036880
+  self-submit pay C $0.01 (QE-C-10 setup)   0x2ddeb2f71d6640dd2d58b9d055acc76edaaf66683a53b6f34510003a1b4a7cec  fee 0.0043309 (paid by C in USDC)
+  relayed pay C $0.01 (double-submit probe) 0x2ed87a72051331eb9002db29f0c1adecce134dce44842fa09a59b6cc0e2c43dd  fee 0.0043308
+Total gas, all payers: ≈ 0.0544 USDC (relayer 0.047605 = 19.718191 → 19.670587; Lena 0.000999; C 0.004331; deployer 0.001508)
+Value moved: $0.20 deployer → QE customer C (≈ $0.176 left there); customer cents ($14.02) → Lena (payout) and the demo referrers.

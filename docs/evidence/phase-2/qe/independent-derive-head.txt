@@ -1,0 +1,74 @@
+[topic0] keccak256(signature) vs INTERFACES §4
+  ok   VenueRegistered
+  ok   TermsUpdated
+  ok   VenueKeysUpdated
+  ok   SeedAmbassadorSet
+  ok   IntroAccepted
+  ok   IntroDropped
+  ok   CustomerVerified
+  ok   PaymentSettled
+  ok   RewardPaid
+  ok   RewardReturned
+
+[logs] Vouch 0xF4B641dc628de05336aa983B07D5d181254ff08e blocks 72605845..72624473: 72 raw logs, 72 decoded
+  VenueRegistered=3 TermsUpdated=3 SeedAmbassadorSet=3 IntroAccepted=12 CustomerVerified=9 PaymentSettled=9 RewardPaid=30 RewardReturned=3
+  venues: 0xf315D0B045697C4a7519d03af35a831008882005, 0x88Da03C25F092D0c062A4bEd1042Ce54a40552Cf, 0x374E084A46C3C14ab3720f46b8402d1a38d18b89
+
+[invariants] venueAmount + Σ RewardPaid == amount; rewardPool − (Σ paid + Σ returned) ∈ [0, 2 × referrers]
+  ok   0x60041591 conservation
+  ok   0x60041591 dust 0 ≤ 2
+  ok   0xf12a1c09 conservation
+  ok   0xf12a1c09 dust 0 ≤ 2
+  ok   0x95cbda97 conservation
+  ok   0x95cbda97 dust 0 ≤ 4
+  ok   0xe6590f0d conservation
+  ok   0xe6590f0d dust 0 ≤ 2
+  ok   0x21b0f878 conservation
+  ok   0x21b0f878 dust 0 ≤ 2
+  ok   0xfca0e1ae conservation
+  ok   0xfca0e1ae dust 0 ≤ 4
+  ok   0x631f093c conservation
+  ok   0x631f093c dust 0 ≤ 2
+  ok   0x8aac926a conservation
+  ok   0x8aac926a dust 0 ≤ 2
+  ok   0x4660d5bb conservation
+  ok   0x4660d5bb dust 0 ≤ 4
+
+[receipt] 0x95cbda97e7a015b6c105f07cf364b3cc258cc6769cd13a10ce8ae0697280673e
+  ok   status
+  vouch events: CustomerVerified@74 PaymentSettled@90 RewardPaid@91 RewardPaid@92 RewardPaid@93 RewardPaid@94 RewardPaid@95
+  ok   event order: CustomerVerified, PaymentSettled, RewardPaid cashback → L1 → L2
+  ok   PaymentSettled amount / venueAmount / rewardPool
+  ok   weightsMode ATTRIBUTOR, firstPurchase, rewarded
+  ok   RewardPaid amounts (cashback, L1, L1, L2, L2)
+  ok   USDC customer → Vouch = amount
+  ok   USDC Vouch → reward recipients (RewardPaid order)
+  ok   USDC Vouch → venue payout = venueAmount
+  ok   Σ USDC out of Vouch = amount
+  recipients: C:0xb3331Baa327cc4cf7B3C67C5C66cE94011902344:0x0000000000000000000000000000000000000000 | L1:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L1:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 | L2:0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L2:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611
+  ok   cashback → customer, L2 viaReferrer = the matching L1
+
+[receipt] 0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be
+  ok   status
+  vouch events: CustomerVerified@53 PaymentSettled@69 RewardPaid@70 RewardPaid@71 RewardPaid@72 RewardPaid@73 RewardPaid@74
+  ok   event order: CustomerVerified, PaymentSettled, RewardPaid cashback → L1 → L2
+  ok   PaymentSettled amount / venueAmount / rewardPool
+  ok   weightsMode ATTRIBUTOR, firstPurchase, rewarded
+  ok   RewardPaid amounts (cashback, L1, L1, L2, L2)
+  ok   USDC customer → Vouch = amount
+  ok   USDC Vouch → reward recipients (RewardPaid order)
+  ok   USDC Vouch → venue payout = venueAmount
+  ok   Σ USDC out of Vouch = amount
+  recipients: C:0xb3331Baa327cc4cf7B3C67C5C66cE94011902344:0x0000000000000000000000000000000000000000 | L1:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L1:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 | L2:0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L2:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611
+  ok   cashback → customer, L2 viaReferrer = the matching L1
+
+[onchain] eth_call getVenueStats / getAmbassadorStats at block 72624473
+  ok   venue 0xf315D0B045697C4a7519d03af35a831008882005 (verified, rewarded, gross, paid, returned)
+  ok   venue 0x88Da03C25F092D0c062A4bEd1042Ce54a40552Cf (verified, rewarded, gross, paid, returned)
+  ok   venue 0x374E084A46C3C14ab3720f46b8402d1a38d18b89 (verified, rewarded, gross, paid, returned)
+  ok   ambassador 0xc0496441056d13D2B26edF3E2e792Ce253177896 (credited, venues, l1, l2)
+  ok   ambassador 0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9 (credited, venues, l1, l2)
+  ok   ambassador 0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 (credited, venues, l1, l2)
+  ok   ambassador 0xb3331Baa327cc4cf7B3C67C5C66cE94011902344 (credited, venues, l1, l2)
+
+OK: all independent checks passed

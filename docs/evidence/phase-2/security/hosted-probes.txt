@@ -1,0 +1,122 @@
+# Hosted probes against https://api-production-902bc54c.up.railway.app (2026-11-17T01:56:07Z); one request each, no load
+
+## H1 GET /health (+ response headers)
+HTTP/2 200 
+content-type: application/json; charset=utf-8
+date: Tue, 17 Nov 2026 01:56:07 GMT
+server: railway-hikari
+vary: Origin
+x-railway-request-id: W5kxE6iLQi-cstl3BT7zVQ
+content-length: 112
+x-hikari-trace: jfk1.pqzh
+x-railway-edge: jfk1
+
+{"ok":true,"app":"Vouch","chainId":5042002,"db":{"kind":"postgres","ok":true},"time":"2026-11-17T01:56:07.804Z"}
+
+## H2 CORS preflight from a foreign origin
+HTTP/2 204 
+access-control-allow-headers: authorization,content-type
+access-control-allow-methods: GET,HEAD,POST
+date: Tue, 17 Nov 2026 01:56:07 GMT
+server: railway-hikari
+vary: Origin, Access-Control-Request-Headers
+x-railway-request-id: mP3r581OTFyVgc9oozsQ6Q
+x-hikari-trace: jfk1.aghq
+x-railway-edge: jfk1
+
+## H3 CORS preflight from the allowed origin (http://localhost:3100)
+HTTP/2 204 
+access-control-allow-headers: authorization,content-type
+access-control-allow-methods: GET,HEAD,POST
+access-control-allow-origin: http://localhost:3100
+date: Tue, 17 Nov 2026 01:56:07 GMT
+server: railway-hikari
+vary: Origin, Access-Control-Request-Headers
+x-railway-request-id: Jr934DRxR9WjykeqezItjw
+x-hikari-trace: jfk1.57w5
+x-railway-edge: jfk1
+
+## H4 simple GET with foreign Origin
+HTTP/2 200 
+vary: Origin
+
+## H5 unauthenticated access to authed routes (first attempt: [000] = bug in my probe loop, no request sent; see H5 re-run below)
+GET /auth/session                                                       [000]
+GET /me/wallet                                                          [000]
+GET /me/activity                                                        [000]
+GET /me/links                                                           [000]
+GET /relay/00000000-0000-0000-0000-000000000000                         [000]
+POST /auth/logout                                                       [000]
+POST /venues/prepare                                                    [000]
+POST /payments/quote                                                    [000]
+POST /payments                                                          [000]
+POST /intros/prepare                                                    [000]
+GET /events/user/0x000000000000000000000000000000000000dEaD             [000]
+
+## H6 forged bearer token
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+
+## H7 GET /relayer/status (public)
+{"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":false,"recentFailures":0,"signers":{"venueSigner":null,"attributor":null}}
+
+## H8 POST /auth/challenge (sign-in fail-closed state)
+{"error":{"code":"INTERNAL","message":"Sign-in is unavailable right now.","retryable":true,"details":{"reason":"SESSION_SECRET not set"}}} [503]
+
+## H9 malformed JSON body
+{"error":{"code":"BAD_REQUEST","message":"Body is not valid JSON but content-type is set to 'application/json'","retryable":false}} [400]
+
+## H10 unknown route
+{"message":"Route GET:/nope not found","error":"Not Found","statusCode":404} [404]
+
+## H11 oversized header (one 20 KB header)
+[431]
+
+## H12 oversized JSON body (one 1.2 MB body to a JSON route)
+{"error":{"code":"BAD_REQUEST","message":"Request body is too large","retryable":false}} [413]
+
+## H13 unsigned webhook (plain JSON, no gzip)
+{"ok":false,"error":"missing-signature-headers"} [401]
+
+## H14 public venue SSE with a foreign Origin (2 s, then closed)
+HTTP/2 200 
+cache-control: no-cache, no-transform
+content-type: text/event-stream; charset=utf-8
+date: Tue, 17 Nov 2026 01:56:09 GMT
+server: railway-hikari
+x-accel-buffering: no
+x-railway-request-id: 01zRucLnQhOY0f8f8u2xcg
+x-railway-edge: jfk1
+x-hikari-trace: jfk1.57w5
+
+retry: 3000
+: connected venue:0x000000000000000000000000000000000000dead
+
+ (curl exit 28)
+
+## H15 ?token= accepted on a normal route (fake token -> 401 either way; confirms the query is parsed)
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+
+## H5 (re-run) unauthenticated access to authed routes
+GET    /auth/session                                                    {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /me/wallet                                                       {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /me/activity                                                     {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /me/links                                                        {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /relay/00000000-0000-0000-0000-000000000000                      {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /auth/logout                                                     {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+PATCH  /me                                                              {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /venues/prepare                                                  {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /venues                                                          {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /venues/0x000000000000000000000000000000000000dEaD/orders        {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /venues/0x000000000000000000000000000000000000dEaD/orders        {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /venues/0x000000000000000000000000000000000000dEaD/actions       {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /payments/quote                                                  {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /payments                                                        {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /payments/x                                                      {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /intros/prepare                                                  {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+POST   /intros                                                          {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+GET    /events/user/0x000000000000000000000000000000000000dEaD          {"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+
+## H16 CORS preflight for PATCH from the allowed origin (functional note)
+HTTP/2 204 
+access-control-allow-methods: GET,HEAD,POST
+access-control-allow-origin: http://localhost:3100
