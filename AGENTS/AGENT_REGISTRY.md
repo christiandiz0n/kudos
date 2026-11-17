@@ -19,3 +19,5 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | CONTRACTS_QE (session 2) | `af2eb2c52e8488e91` | 1.5 | Independent v3 review + QE test re-pins (MSG-050) | ✅ | PASS-with-findings (QE-C-10/11 info, D-703); resumable |
 | BACKEND_RELAYER (session 2) | `a69d2dbd43cef70dd` | 2 | Schema, endpoints, relayer (QE-C-10 terminal, QE-C-11 balance+fee), SSE, story:api CLI | ✅ | D-801..D-806; resumable |
 | STREAMS_INFRA (session 2, Phase 2) | `adedd98f81bc90884` | 2 | Ingestion → derived tables, bus/query API, backfill/replay + hash check | ✅ | D-306/D-307; chain==live==replay==rebuild hash 0b0c880d…; awaiting commit with BACKEND_RELAYER |
+| QE_E2E (session 2) | `a238b561112816a7a` | 2 | Phase 2 gate: API vs INTERFACES, determinism, hosted vs chain, story via api (Part A); live hosted story (Part B) | 🟢 | Part B needs Railway secrets + Stream active |
+| SECURITY_REVIEW (session 2) | `aac1f528cc681b030` | 2 | Phase 2 gate: secrets history, auth, signatures, relayer drain, webhook, CORS, deps | 🟢 | |
