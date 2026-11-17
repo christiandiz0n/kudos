@@ -204,8 +204,8 @@ async function main() {
   console.log(`story:api → ${API}  (Vouch ${VOUCH_ARC_TESTNET.address} on Arc Testnet ${arcTestnet.id})`);
   const health = await ok('GET', '/health', undefined, undefined, [200]);
   const rs = await ok('GET', '/relayer/status', undefined, undefined, [200]);
-  console.log(`  api ok (db ${health.db.kind}); relayer ${rs.address} balance ${rs.balance} USDC; venueSigner ${rs.signers.venueSigner}; attributor ${rs.signers.attributor}`);
-  if (!rs.enabled || !rs.signers.venueSigner || !rs.signers.attributor) throw new Error('API is missing RELAYER / VENUE_SIGNER / ATTRIBUTOR keys');
+  if (!rs.enabled) throw new Error('API relayer is disabled (relayer/signing keys not configured on that API)');
+  console.log(`  api ok (db ${health.db.kind}); relayer ${rs.address} balance ${rs.balance} USDC; budget left $${rs.budget.hourly.remaining.display}/h · $${rs.budget.daily.remaining.display}/day`);
   const relayerStart = await pub.getBalance({ address: rs.address });
 
   console.log('\n[0] balances');

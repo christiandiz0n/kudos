@@ -1,8 +1,10 @@
-import { desc } from 'drizzle-orm';
+import { createHash } from 'node:crypto';
+import { desc, eq, sql } from 'drizzle-orm';
 import type { PgliteDatabase } from 'drizzle-orm/pglite';
 import type { DbHandle } from '../db/index';
 import type * as schema from '../db/schema';
 import { streamDeliveries } from '../db/schema';
+import { evDeliveryKeys } from './schema';
 import type { DeliverySummary } from '../routes/webhooks';
 
 /**
@@ -71,10 +73,39 @@ export function buildDeliveryRow(d: VerifiedDelivery): NewDelivery {
  */
 type Db = PgliteDatabase<typeof schema>;
 
-export async function insertDelivery(handle: DbHandle, row: NewDelivery): Promise<{ id: number }> {
+/**
+ * Raw dedupe key (SEC-2-10b, D-309): sha256 over stream id, batch range and the decoded body (JSON re-serialized from
+ * the parsed body, which is deterministic for the same bytes; else the body text). The nonce/signature are NOT in the
+ * key, so a replayed signed delivery and a QuickNode retry of an already-stored batch both map to the first row.
+ */
+export function deliveryKey(row: NewDelivery): string {
+  const body = row.body !== null && row.body !== undefined ? JSON.stringify(row.body) : (row.bodyText ?? '');
+  return createHash('sha256').update(`${row.streamId ?? ''}|${row.batchStart ?? ''}|${row.batchEnd ?? ''}|`).update(body).digest('hex');
+}
+
+/**
+ * Insert a verified delivery, deduped on `deliveryKey`. Returns the existing row id with `duplicate: true` for a repeat
+ * (its `repeats` counter is bumped). One transaction, so a key never exists without its row. `dedupe: false` inserts
+ * unconditionally (tests / forensic copies).
+ */
+export async function insertDelivery(handle: DbHandle, row: NewDelivery, opts: { dedupe?: boolean } = {}): Promise<{ id: number; duplicate: boolean }> {
   const db = handle.db as Db;
-  const [r] = await db.insert(streamDeliveries).values(row).returning({ id: streamDeliveries.id });
-  return r!;
+  if (opts.dedupe === false) {
+    const [r] = await db.insert(streamDeliveries).values(row).returning({ id: streamDeliveries.id });
+    return { id: r!.id, duplicate: false };
+  }
+  const key = deliveryKey(row);
+  return db.transaction(async (tx) => {
+    const [seen] = await tx
+      .update(evDeliveryKeys)
+      .set({ repeats: sql`${evDeliveryKeys.repeats} + 1`, lastAt: new Date() })
+      .where(eq(evDeliveryKeys.key, key))
+      .returning({ id: evDeliveryKeys.deliveryId });
+    if (seen) return { id: seen.id, duplicate: true };
+    const [r] = await tx.insert(streamDeliveries).values(row).returning({ id: streamDeliveries.id });
+    await tx.insert(evDeliveryKeys).values({ key, deliveryId: r!.id });
+    return { id: r!.id, duplicate: false };
+  });
 }
 
 export async function listDeliveries(handle: DbHandle, limit = 20): Promise<DeliveryRow[]> {

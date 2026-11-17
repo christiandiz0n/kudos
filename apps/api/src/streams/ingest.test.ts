@@ -311,6 +311,35 @@ describe('webhook → ingest → bus', () => {
   });
 });
 
+describe('SEC-2-10c: bounded retry of failed deliveries', () => {
+  test('retryFailed: background by default, ≤ RETRY_MAX_ATTEMPTS attempts, backoff respected; ingestPending still catches the rest', async () => {
+    const { RETRY_MAX_ATTEMPTS, retryBackoffMs } = await import('./index');
+    const { handle, streams } = await memoryStreams();
+    try {
+      const db = handle.db as unknown as PgliteDatabase;
+      const [env] = envelopes();
+      const { id } = await insertDelivery(handle, { verified: true, bytes: 1, headers: {}, body: env });
+      const t0 = Date.now();
+      await db.insert(evIngestLog).values({ deliveryId: id, status: 'failed', error: 'boom', attempts: 1, at: new Date(t0) });
+      // Not due yet (backoff 10 s after attempt 1).
+      assert.equal((await streams.retryFailed({ wait: true, now: t0 + 1_000 })).length, 0);
+      // Default call returns immediately (background) with [].
+      assert.deepEqual(await streams.retryFailed({ now: t0 + 1_000 }), []);
+      // Capped: at RETRY_MAX_ATTEMPTS it is never retried by retryFailed …
+      await db.update(evIngestLog).set({ attempts: RETRY_MAX_ATTEMPTS });
+      assert.equal((await streams.retryFailed({ wait: true, now: t0 + 86_400_000 })).length, 0);
+      // … but due + under the cap → retried and succeeds.
+      await db.update(evIngestLog).set({ attempts: 2 });
+      assert.equal((await streams.retryFailed({ wait: true, now: t0 + retryBackoffMs(2) })).length, 1);
+      assert.equal((await streams.cursor()).events, 48);
+      assert.equal(retryBackoffMs(1), 10_000);
+      assert.equal(retryBackoffMs(20), 600_000);
+    } finally {
+      await handle.close();
+    }
+  });
+});
+
 describe('determinism: chain backfill == live webhook == replay == rebuild', () => {
   test('hash equality on the real v3 range with retries and an overlapping batch', async () => {
     const r = await runDeterminism(V3.logs, FROM, TO, { batchSize: 5 });

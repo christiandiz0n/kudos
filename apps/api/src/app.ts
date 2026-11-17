@@ -8,6 +8,7 @@ import { insertDelivery } from './streams/deliveries';
 import { createStreams, type Streams } from './streams/index';
 import { apiRoutes } from './routes/api';
 import { createApiDeps, type ApiDeps, type ApiDepsOverrides } from './services';
+import { applySecurity, corsOptions, fastifyOptions } from './http/security';
 
 export interface BuiltApp {
   app: FastifyInstance;
@@ -19,16 +20,18 @@ export interface BuiltApp {
   deps: ApiDeps;
 }
 
-export async function buildApp(overrides: Partial<ApiEnv> = {}, opts: { logger?: boolean; api?: ApiDepsOverrides } = {}): Promise<BuiltApp> {
+export async function buildApp(overrides: Partial<ApiEnv> = {}, opts: { logger?: boolean | { stream: NodeJS.WritableStream }; api?: ApiDepsOverrides } = {}): Promise<BuiltApp> {
   const env = loadEnv(overrides);
   const db = createDb(env.databaseUrl);
   await db.migrate();
 
-  const app = Fastify({ logger: opts.logger ?? true });
+  // Redacting log serializers, Railway-range trustProxy, security headers, standard 404 (BACKEND_RELAYER, D-809).
+  const app = Fastify(fastifyOptions(opts.logger ?? true));
+  applySecurity(app);
   const streams = createStreams(db, { log: app.log });
   // Catch up deliveries stored but not ingested (crash between raw insert and ingest, or earlier ingest failures).
   await streams.ingestPending({ emit: false }).catch((err) => app.log.error({ err: (err as Error).message }, 'streams ingestPending failed'));
-  await app.register(cors, { origin: env.corsOrigins });
+  await app.register(cors, corsOptions(env.corsOrigins));
 
   app.get('/health', async () => ({
     ok: true,

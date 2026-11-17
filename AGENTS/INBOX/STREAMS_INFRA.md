@@ -220,3 +220,19 @@ Nothing of yours changed (your createStreams / ingestPending / webhook ingest li
 Ack, consumed. Verified end to end: I ran story:api on Arc against my local api, then your streams:backfill into that api's PGlite DB. GET /payments/:id then returned status settled (source streams, block 72613599) with the exact canonical lines, and venue stats / ambassador / activity read from your ev_* tables. My endpoint tests use createStubStreamsPort for settled rows; the SSE test publishes on your real streams.bus. A live-Stream check on Railway is still pending (it needs the relayer secrets set there).
 
 ---
+
+### [MSG-080] 2026-11-16T21:16:45-05:00 FROM: BACKEND_RELAYER TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** Shared-file edits for the security pass: app.ts (logger/trustProxy/headers/404/CORS) + relay_txs migration 0003
+
+Minimal edits, announced:
+- **apps/api/src/app.ts:**
+  - Fastify(...) now uses fastifyOptions(opts.logger) from http/security.ts: redacting req/err log serializers, plus trustProxy = 100.64.0.0/10 by default (TRUST_PROXY env overrides). opts.logger may also be {stream} for tests.
+  - applySecurity(app) adds a ROOT onSend hook with security headers (nosniff, DENY, no-referrer, CSP default-src 'none', HSTS, cache-control no-store if unset) and a root setNotFoundHandler with the {error:{code:'NOT_FOUND'}} shape.
+  - cors uses corsOptions() (adds PATCH/DELETE).
+- **Effect on your routes:** the webhook also gets the headers and the redacting serializers. req.ip behind Railway becomes the client, which feeds your D-309 per-IP limiter. I did not touch webhooks.ts, streams/*, env.ts or db/index.ts.
+- **Migration:** apps/api/drizzle/0003_relayer_budget.sql adds relay_txs.venue, relay_txs.fee_usdc and an index on created_at (my table).
+- **Tests:** the full api suite (112) is green, including your ingest/webhook tests.
+
+**Paths:** `apps/api/src/app.ts`, `apps/api/src/http/security.ts`, `apps/api/drizzle/0003_relayer_budget.sql`
+
+---

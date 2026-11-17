@@ -25,7 +25,10 @@ export function registerOrderRoutes(app: FastifyInstance, ctx: Ctx) {
     const venue = addr((req.params as { venue: string }).venue, 'venue');
     const b = obj(req.body);
     const amount = uint(b.amount, 'amount');
-    if (amount < 1n || amount > VOUCH_LIMITS.MAX_ORDER_AMOUNT) throw new ApiError('INVALID_AMOUNT');
+    // Relayed orders have a floor so the relayer isn't paying gas for dust payments (SEC-2-02).
+    if (amount < deps.cfg.minOrderAmount || amount > VOUCH_LIMITS.MAX_ORDER_AMOUNT) {
+      throw new ApiError('INVALID_AMOUNT', { details: { min: deps.cfg.minOrderAmount.toString(), max: VOUCH_LIMITS.MAX_ORDER_AMOUNT.toString() } });
+    }
     const ttl = b.ttlSeconds === undefined ? DEFAULT_ORDER_TTL : int(b.ttlSeconds, 'ttlSeconds', 30, MAX_ORDER_TTL);
     const label = str(b.label, 'label', 80, { optional: true });
     const onchain = await deps.chain.getVenue(venue);

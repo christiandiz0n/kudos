@@ -610,3 +610,122 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
     - relayer unreachable or unconfigured → `RELAYER_DOWN` 503 (retryable)
   - **Amounts:** amounts in requests and responses are decimal strings of base units, or `{baseUnits, display}`.
 - **Who:** BACKEND_RELAYER
+
+## D-308 — Webhook: cheap checks before decode, 4 MiB raw / 8 MiB decoded caps (SECURITY_REVIEW P-L3 gzip bomb)
+- **Date:** 2026-11-16
+- **Decision:**
+  - **Order of checks.** In `POST /webhooks/streams` the checks now run in this order:
+    1. Secret configured, else 503.
+    2. All three `X-QN-*` headers present, else 401.
+    3. Decode.
+    4. HMAC.
+    5. JSON parse, only after the HMAC verifies.
+    Nothing is decompressed or parsed for a request that can't verify.
+  - **Raw body limit 4 MiB** (was 50 MiB), enforced by Fastify's parser (413 before the handler).
+  - **Gunzip cap.** `gunzipSync(raw, { maxOutputLength: 8 MiB })`. Over the cap → **413 `decoded-body-too-large`**. Other gzip errors → 400. Neither is ever a 500, so QuickNode never gets a retry loop out of them. An uncompressed body over 8 MiB is held to the same cap.
+  - **Over-cap requests store nothing.** They can't be authenticated (the HMAC covers the decoded bytes), so they are treated like every other unauthenticated reject: one log line, no `stream_deliveries` row (D-305), and no decoded body stored anywhere. The local NDJSON spike log keeps rejected bodies only up to 64 KiB.
+- **Reason:**
+  - **Sizing from real deliveries.** One envelope event is about 0.9 KB. Blocks 72606070..74 (8 events) = 7,325 B. The whole v3 history as one envelope is about 44 KB. The Hello S3 deliveries were 758 B. The Stream uses compression none (D-307).
+  - **4 MiB raw** is about 4,500 Vouch events (≈ 650 canonical pays) in one batch, about 100× our history.
+  - **8 MiB decoded** is 2× raw, so anything acceptable uncompressed is also acceptable gzipped.
+  - **Measured.** A 512 MiB-inflating bomb without headers now returns 401 in about 3 ms with no gunzip call. With fake headers it returns 413, with RSS growth under 64 MiB.
+- **Who:** STREAMS_INFRA (finding: SECURITY_REVIEW)
+
+## D-309 — Webhook replay/retry hygiene (SEC-2-10): per-IP rate limit, raw dedupe, bounded retries, skew still log-only
+- **Date:** 2026-11-16
+- **Decision:**
+  - **(a) Rate limit.** In-process per-IP token bucket, keyed on `req.ip` only (X-Forwarded-For is never parsed; trustProxy is BACKEND_RELAYER's).
+    - Burst 600, refill 50 req/s.
+    - Implemented as an `onRequest` hook scoped to the webhook plugin, so it runs before the body is read.
+    - Over the limit → 429 + `Retry-After`, with one log line per refusal episode.
+    - Why this is generous: QuickNode delivers sequentially (it waits for the 2xx), so a backfill burst is a few dozen req/s at most. A 429 is just retried by QuickNode (max_retry 20, interval 1 s).
+  - **(b) Raw dedupe.**
+    - Key: `ev_delivery_keys`, PK = sha256(stream_id | batch_start | batch_end | decoded body). The table is in `apps/api/drizzle-streams/0001_delivery_keys.sql`, so the shared journal is untouched.
+    - A repeat (a replayed signed delivery, or a QuickNode re-send of a stored batch) answers 200 `duplicate: true` and points at the first row, with `repeats` incremented. No new raw row, no re-ingest.
+    - Key and row are written in one transaction.
+    - The table is raw-layer: never wiped by rebuild/replay and not hashed.
+    - Ingest stays idempotent on (tx_hash, log_index).
+  - **(c) Bounded work in the request.**
+    - The webhook waits at most 5 s (`INGEST_WAIT_MS`) for its own ingest. On timeout it answers 200 (the row is durable) and the ingest continues in the background, serialized.
+    - `retryFailed()` no longer runs in the request. It schedules one background pass (only one at a time):
+      - at most 5 deliveries per pass;
+      - only deliveries with attempts < 5;
+      - only once the backoff has elapsed: 10 s × 2^(attempts−1), max 10 min.
+    - Deliveries beyond the cap are left to `ingestPending()` (boot, `streams:replay`).
+  - **(d) Replay window: still log-only.** `X-QN-Timestamp` skew is logged but never rejected, because the unit (s vs ms) is UNVERIFIED until a live delivery. Rejecting on a wrong guess would drop every real delivery. (b) already makes replays harmless to storage, and (tx_hash, log_index) already made them harmless to state. Revisit once the first live deliveries show the unit: then reject skew > 5 min and keep a short nonce cache.
+- **Caveat:** until trustProxy lands, `req.ip` behind Railway's proxy may be the proxy's address, i.e. one shared bucket for everyone. That is still generous for QuickNode, but a flood could then also delay QuickNode (it retries after a 429).
+- **Who:** STREAMS_INFRA (finding: SECURITY_REVIEW SEC-2-10)
+
+## D-807 — Only the paying customer's own signed-in link opens feed attribution (SEC-2-05)
+- **Date:** 2026-11-17
+- **Decision:**
+  - **Recording:** `POST /intros/:code/opens` still records logged-out opens. They are kept for analytics: `opener = null`, IP hash, and the response says `countsForAttribution: false`.
+  - **Scoring:** the baseline score (D-805) counts **only opens made by the paying customer's own session** on that link. The referrer's own opens are never counted. The cap stays at 8.
+  - **Supersedes:** the "anonymous" part of D-805's opens definition.
+  - **Canonical case unchanged:** the canonical story opens while signed in as Ben, so weights stay 7,000 / 3,000. A test pins that 10 anonymous opens leave the 2 : 1 link-type split at 6,667 / 3,333.
+- **Reason:** an unauthenticated signal must not move money that the ATTRIBUTOR signs. Requiring a session for opens would lose the analytics signal from pre-signup visitors.
+- **Who:** BACKEND_RELAYER. Numbered in my D-8xx range; the coordinator asked for "D-5xx", which is CONTRACTS' range.
+
+## D-808 — Relayer spend budget, per-identity quotas, pay lane, balance floor (SEC-2-02, SEC-2-12, QE-2-01)
+- **Date:** 2026-11-17
+- **Decision:**
+  - **Budget:** rolling hourly and daily windows on relayer gas spend, in USDC base units, at three levels: global, per session address, and per venue. A job reserves `gasLimit × maxFeePerGas` before its first send, and a fee bump grows the reservation. At the receipt the reservation becomes the actual `gasUsed × effectiveGasPrice`, **reverts included**. A job that was never broadcast is released.
+  - **Defaults:**
+    - global: $1.00/h, $5.00/day;
+    - per user: $0.20/h, $0.50/day;
+    - per venue: $0.50/h, $2.00/day.
+  - **Refusals:** an exhausted global budget answers `503 RELAYER_BUDGET_EXHAUSTED`; an exhausted identity budget answers `429 SPEND_QUOTA_EXCEEDED` (`details.scope` = user | venue | kind). Both are retryable and send nothing.
+  - **Persistence:** each relay row stores `venue` and `fee_usdc` (migration `0003_relayer_budget`). The last 24 h are re-seeded at boot, so a restart does not reset the budget. `/relayer/status` shows the limit, used and remaining amounts per window.
+  - **Per-kind count quotas per user:**
+    - registerVenue 3/day;
+    - owner actions 20/h;
+    - acceptIntro 20/h;
+    - pay 30/h.
+  - **Pay lane:** the worker always runs a queued `pay` before other kinds, and `RELAYER_PAY_RESERVE` (20) of the 50 queue slots are pay-only.
+  - **Balance floor:** a relayer balance below `RELAYER_MIN_BALANCE_USDC` ($2.00) plus the tx's worst-case cost refuses with `RELAYER_UNDERFUNDED`, and logs one `ALERT` line per episode.
+  - **Minimum order:** orders the API signs must be ≥ `ORDER_MIN_USDC` ($0.50).
+  - **Replacements:** before paying for a fee-bumped replacement, the relayer re-simulates. If the state moved on (e.g. `OrderAlreadySettled`), it stops; that is terminal and the original tx keeps its reservation.
+  - **Payment intents:** `quoted → relaying` is a single conditional `UPDATE … WHERE status='quoted' RETURNING` (identical SQL on PGlite and Postgres), done BEFORE the pre-simulation. The loser of a double submit gets `409 PAYMENT_ALREADY_USED` and never writes the row. `already_settled` can only be written on an intent this request claimed.
+  - **Shared orders:** an order changes status only on chain-confirmed outcomes of a relayed tx (mined → relayed, reverted → failed). A refused attempt never marks it `failed` (QE-2-09).
+- **Reason:** identities are free, so per-address limits alone don't bound spend. The demo wallet holds ~$20, and the canonical story costs ≈ $0.05.
+- **Unchanged:** QE-C-10 (OrderAlreadySettled is terminal; the split comes from Streams) and QE-C-11 (balance pre-flights).
+- **Who:** BACKEND_RELAYER
+
+## D-809 — Request hardening: route-class limits, client IP behind Railway, token transport, SSE caps, headers, redaction (SEC-2-03/04/06/07/08/09/13)
+- **Date:** 2026-11-17
+- **Decision:**
+  - **Per-IP limits by route class** (per minute; each is an env knob):
+    - auth 20 (challenge, verify);
+    - **spend** 20 (everything that enqueues a relay job, plus venue registration and metadata writes);
+    - write 60;
+    - read 300;
+    - sse 20 connects.
+    - The relayer's per-user and global rates stay on top.
+  - **Client IP:** Fastify `trustProxy` defaults to Railway's internal proxy range `100.64.0.0/10`, never blanket `true`. `req.ip` is then the client from X-Forwarded-For, and spoofed leftmost entries are ignored.
+    - `TRUST_PROXY` = `off` | a hop count | a CIDR list overrides it.
+    - Local dev (peer 127.0.0.1) is unaffected.
+    - **UNVERIFIED on Railway:** whether the edge appends any non-100.64 hop to XFF. Check the client IP in the hosted logs after deploy.
+  - **Session token transport:** only `Authorization: Bearer` is accepted. Cookies are no longer accepted (SEC-2-09). `?token=` works only on `GET /events/user/:address`, because EventSource can't set headers.
+  - **Log redaction:** the request-log serializer writes `token=[redacted]`. The error serializer and relayer logs scrub every URL to `<url>`, so a keyed `ARC_RPC_URL` never reaches a log or a response, and raw error text is never copied into `details`.
+  - **SSE limits:**
+    - connection caps: global 500, per client IP 8, per channel 100;
+    - only known venues get a channel;
+    - a slow consumer (`res.write` → false, or over 256 KiB buffered) is dropped;
+    - 15 s heartbeat; connections close after 30 min, and the client reconnects.
+  - **Security headers** on every response: nosniff, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, the CSP `default-src 'none'; frame-ancestors 'none'`, HSTS, COOP, and `cache-control: no-store` by default.
+  - **Standard error shape:** unknown routes return the `{error:{code:"NOT_FOUND",…}}` body.
+  - **CORS:** allows GET, HEAD, POST, PATCH, DELETE and OPTIONS, with the authorization and content-type headers.
+  - **No config disclosure:** errors no longer say which secret is missing. `/relayer/status` exposes one `enabled` flag, with no per-signer detail.
+- **Who:** BACKEND_RELAYER
+
+## D-810 — API contract clarifications from the Phase 2 QE gate (QE-2-03..08)
+- **Date:** 2026-11-17
+- **Decision:**
+  - **Payout check:** `payout ∈ {0, Vouch, USDC}` is refused at prepare (`400 INVALID_PAYOUT`), for registerVenue and setKeys, so the owner never signs an unpayable config.
+  - **setSeedAmbassador `allowed`:** must be a JSON boolean; anything else gives 400.
+  - **"The QR expired":** `ORDER_EXPIRED` at both quote and pay. `PAYMENT_EXPIRED` means only that this signed payment's own window (10 min) ran out while the order is still valid.
+  - **`GET /venues`:** lists venues **registered through this API**, status `registered` only, newest first. Paginated with `?limit≤50&offset≤1000` and `nextOffset`. Streams-only venues are served by `GET /venues/:venue`.
+  - **Unknown venues:** `GET /venues/:venue/terms` and `/stats` answer `404 UNKNOWN_VENUE` like `GET /venues/:venue`. A venue that exists on chain but isn't ingested yet returns empty data with `waitingOnStreams`.
+  - **Money shape:** `GET /intros/:code` `terms.minOrder` uses the standard `{baseUnits, display}` money shape.
+  - **Duplicate intro:** `POST /intros` with an already-stored signed intro answers 200 with the same code (201 means newly created).
+- **Who:** BACKEND_RELAYER

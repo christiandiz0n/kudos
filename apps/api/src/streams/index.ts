@@ -19,7 +19,8 @@ import type { IngestedEvent, StreamsPort } from './types';
  * Webhook semantics (D-306): the raw `stream_deliveries` row commits first (D-305, unchanged); `ingestDelivery` runs
  * right after it in its own transaction. If ingestion fails, the webhook STILL answers 200 (the raw row is durable),
  * the failure is recorded in `ev_ingest_log`, and the delivery is retried from the raw table by `retryFailed()`
- * (after the next delivery) and `ingestPending()` (boot, `streams:replay`). QuickNode is never asked to retry for an
+ * (a bounded background pass after the next delivery: ≤ 5 attempts with backoff, never awaited by the webhook) and
+ * `ingestPending()` (boot, `streams:replay`). QuickNode is never asked to retry for an
  * ingest bug: its retries cannot fix a deterministic failure and would auto-pause the Stream.
  */
 
@@ -49,8 +50,14 @@ export interface Streams extends StreamsPort {
   ingestEnvelope(body: unknown, opts?: IngestCallOpts): Promise<IngestResult>;
   /** Re-ingest every verified delivery without an 'ok' ev_ingest_log row, oldest first (boot, replay). */
   ingestPending(opts?: IngestCallOpts): Promise<IngestResult[]>;
-  /** Re-ingest only deliveries whose last attempt failed (cheap; called after each live delivery). */
-  retryFailed(): Promise<IngestResult[]>;
+  /**
+   * Bounded retry of FAILED deliveries (SEC-2-10c, D-309). Default: schedules one background pass and resolves
+   * immediately with [] (the webhook never waits on it). A pass takes at most RETRY_BATCH deliveries whose attempts <
+   * RETRY_MAX_ATTEMPTS and whose backoff (10 s × 2^(attempts−1), max 10 min) has elapsed; only one pass runs at a time.
+   * `{ wait: true }` runs the pass inline and returns its results (tests, CLI). Beyond the cap a delivery stays 'failed'
+   * and is only retried by ingestPending() (boot, `streams:replay`).
+   */
+  retryFailed(opts?: { wait?: boolean; now?: number }): Promise<IngestResult[]>;
   /** Wipe derived tables and re-apply ev_events (no re-decode). */
   rebuild(): Promise<IngestOutcome['cursor']>;
   /** Wipe ev_events, the cursor, the ingest log and all derived tables. */
@@ -63,6 +70,11 @@ export interface CreateStreamsOpts {
   addresses?: readonly string[];
   log?: { warn(obj: unknown, msg: string): void; error(obj: unknown, msg: string): void };
 }
+
+/** SEC-2-10c bounds for the background retry of failed deliveries. */
+export const RETRY_MAX_ATTEMPTS = 5;
+export const RETRY_BATCH = 5;
+export const retryBackoffMs = (attempts: number) => Math.min(10_000 * 2 ** Math.max(0, attempts - 1), 600_000);
 
 const toResult = (deliveryId: number | null, o: IngestOutcome): IngestResult => ({
   deliveryId,
@@ -79,6 +91,7 @@ export function createStreams(handle: DbHandle, opts: CreateStreamsOpts = {}): S
   const db = () => handle.db as Db;
   const bus = createBus((err, e) => opts.log?.error({ err: (err as Error)?.message, type: e.type }, 'streams bus listener threw'));
   const queries = createQueries(handle);
+  let retrying: Promise<unknown> | null = null;
 
   async function publishNew(events: DecodedEvent[]): Promise<void> {
     if (bus.size() === 0) return;
@@ -174,7 +187,7 @@ export function createStreams(handle: DbHandle, opts: CreateStreamsOpts = {}): S
 
   async function pending(onlyFailed: boolean) {
     return db()
-      .select({ id: streamDeliveries.id, body: streamDeliveries.body })
+      .select({ id: streamDeliveries.id, body: streamDeliveries.body, attempts: evIngestLog.attempts, at: evIngestLog.at })
       .from(streamDeliveries)
       .leftJoin(evIngestLog, eq(evIngestLog.deliveryId, streamDeliveries.id))
       .where(
@@ -210,8 +223,26 @@ export function createStreams(handle: DbHandle, opts: CreateStreamsOpts = {}): S
     async ingestPending(o = {}) {
       return drain(await pending(false), o);
     },
-    async retryFailed() {
-      return drain(await pending(true), {});
+    async retryFailed(o = {}) {
+      const pass = async () => {
+        const now = o.now ?? Date.now();
+        const due = (await pending(true))
+          .filter((r) => (r.attempts ?? 0) < RETRY_MAX_ATTEMPTS && r.at !== null && now - r.at.getTime() >= retryBackoffMs(r.attempts ?? 1))
+          .slice(0, RETRY_BATCH);
+        return drain(due, {});
+      };
+      if (o.wait) return pass();
+      if (!retrying) {
+        retrying = pass()
+          .catch((err) => {
+            opts.log?.warn({ err: (err as Error).message }, 'streams retryFailed pass failed');
+            return [];
+          })
+          .finally(() => {
+            retrying = null;
+          });
+      }
+      return [];
     },
     rebuild: () => rebuildDerived(handle),
     async wipeAll() {

@@ -3,18 +3,15 @@ import { eq } from 'drizzle-orm';
 import { users, venuesMeta } from '../db/schema';
 import { ApiError } from '../http/errors';
 import { addr, obj, reqStr, sig, str } from '../http/json';
-import { RateLimiter } from '../relayer/rate-limit';
 import { send, type Ctx } from './common';
 
 export function registerAuthRoutes(app: FastifyInstance, ctx: Ctx) {
   const { deps } = ctx;
   const db = deps.handle.db;
-  const challengeLimit = new RateLimiter(30);
 
   app.post('/auth/challenge', async (req, reply) => {
     const b = obj(req.body);
     const address = addr(b.address, 'address');
-    if (!challengeLimit.take(ctx.ipKey(req))) throw new ApiError('RATE_LIMITED');
     return send(reply, 200, await deps.sessions.challenge(address));
   });
 

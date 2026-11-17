@@ -14,7 +14,7 @@ import { INTRO_ACCEPTANCE_TYPES, INTRO_TYPES, LINK_TYPE, VOUCH_LIMITS, introDige
 import type { VouchReads } from '../chain/client';
 import { introLinks, linkOpens, users, venuesMeta } from '../db/schema';
 import { ApiError } from '../http/errors';
-import { addr, hex, int, obj, oneOf, sameAddr, sig, str, uint } from '../http/json';
+import { addr, hex, int, money, obj, oneOf, sameAddr, sig, str, uint } from '../http/json';
 import { RateLimiter } from '../relayer/rate-limit';
 import { SseHub } from '../sse/hub';
 import { send, shortCode, typedDataJson, verifyTyped, randomHex32, type Ctx } from './common';
@@ -99,6 +99,9 @@ export function registerIntroRoutes(app: FastifyInstance, ctx: Ctx) {
     };
     const signature = sig(b.signature);
     if (!sameAddr(intro.referrer, c.sub)) throw new ApiError('FORBIDDEN');
+    // Validate at create time (SEC-2-11): a known venue and a referrer who may refer there.
+    if ((await chain.getVenue(intro.venue)).owner === zeroAddress) throw new ApiError('UNKNOWN_VENUE');
+    if (!(await chain.canRefer(intro.venue, c.sub))) throw new ApiError('REFERRER_NOT_ELIGIBLE');
     const window = intro.expiresAt - intro.issuedAt;
     if (window <= 0n || window > BigInt(VOUCH_LIMITS.MAX_INTRO_TTL_SECONDS)) throw new ApiError('BAD_REQUEST', { message: 'Link lifetime must be 1 second to 30 days.' });
     await verifyTyped(c.sub, domain, INTRO_TYPES, 'Intro', { ...intro }, signature);
@@ -137,7 +140,7 @@ export function registerIntroRoutes(app: FastifyInstance, ctx: Ctx) {
       referrer: { address: l.referrer, displayName: ref[0]?.displayName ?? null },
       linkType: l.linkType === 0 ? 'personal' : 'broadcast',
       termsVersion: l.termsVersion,
-      terms: { rewardBps: terms.rewardBps, minOrder: { baseUnits: terms.minOrder.toString() } },
+      terms: { rewardBps: terms.rewardBps, minOrder: money(terms.minOrder) },
       issuedAt: l.issuedAt,
       expiresAt: l.expiresAt,
       introHash: l.introHash,
@@ -153,7 +156,8 @@ export function registerIntroRoutes(app: FastifyInstance, ctx: Ctx) {
     // The referrer opening their own link is not a signal.
     if (c && sameAddr(c.sub, l.referrer)) return send(reply, 202, { recorded: false, reason: 'own_link' });
     await db.insert(linkOpens).values({ code: l.code, opener: c?.sub ?? null, ipHash: ctx.ipKey(req), userAgent: req.headers['user-agent']?.slice(0, 200) ?? null });
-    return send(reply, 201, { recorded: true });
+    // D-807: logged-out opens are kept for analytics but never feed the attribution weights.
+    return send(reply, 201, { recorded: true, countsForAttribution: !!c });
   });
 
   async function precheckAccept(l: LinkRow, customer: Address) {
@@ -188,7 +192,7 @@ export function registerIntroRoutes(app: FastifyInstance, ctx: Ctx) {
     if (t > acceptance.deadline) throw new ApiError('SIGNATURE_EXPIRED');
     const intro = linkToIntro(l);
     const data = encodeFunctionData({ abi: vouchAbi, functionName: 'acceptIntro', args: [intro, l.signature as Hex, acceptance, signature] });
-    const handle = await deps.relayer.submit({ kind: 'acceptIntro', data, user: c.sub, ref: `intro:${l.code}:${c.sub}` });
+    const handle = await deps.relayer.submit({ kind: 'acceptIntro', data, user: c.sub, venue: l.venue, ref: `intro:${l.code}:${c.sub}` });
     const evt = { code: l.code, venue: l.venue, referrer: l.referrer, customer: c.sub, introHash: l.introHash, txHash: handle.hash, relayId: handle.id };
     deps.sse.publish(SseHub.userChannel(c.sub), 'intro.pending', evt);
     deps.sse.publish(SseHub.userChannel(l.referrer), 'intro.pending', evt);
@@ -222,11 +226,14 @@ export function registerIntroRoutes(app: FastifyInstance, ctx: Ctx) {
   });
 }
 
-/** opens of the link carrying `introHash`, by this customer or anonymous (never the referrer), for attribution. */
+/**
+ * Opens of the link carrying `introHash` that count for attribution (D-807, SEC-2-05): only opens made by the paying
+ * customer's own signed-in session. Anonymous opens (and the referrer's own) are recorded but never scored.
+ */
 export async function opensFor(ctx: Ctx, introHash: Hex, customer: Address): Promise<number> {
   const db = ctx.deps.handle.db;
   const [l] = await db.select({ code: introLinks.code, referrer: introLinks.referrer }).from(introLinks).where(eq(introLinks.introHash, introHash)).limit(1);
-  if (!l) return 0;
-  const rows = await db.select({ opener: linkOpens.opener }).from(linkOpens).where(and(eq(linkOpens.code, l.code)));
-  return rows.filter((r) => !r.opener || (sameAddr(r.opener, customer) && !sameAddr(r.opener, l.referrer))).length;
+  if (!l || sameAddr(l.referrer, customer)) return 0;
+  const rows = await db.select({ id: linkOpens.id }).from(linkOpens).where(and(eq(linkOpens.code, l.code), eq(linkOpens.opener, customer)));
+  return rows.length;
 }

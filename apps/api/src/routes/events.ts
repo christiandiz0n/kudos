@@ -6,6 +6,7 @@
 import type { FastifyInstance } from 'fastify';
 import { zeroAddress } from 'viem';
 import { ApiError } from '../http/errors';
+import { sseTokenFrom } from '../auth/session';
 import { addr, sameAddr } from '../http/json';
 import type { IngestedEvent } from '../ports/streams';
 import { SseHub } from '../sse/hub';
@@ -75,15 +76,26 @@ export function registerEventRoutes(app: FastifyInstance, ctx: Ctx, corsOrigins:
 
   app.get('/events/user/:address', async (req, reply) => {
     const address = addr((req.params as { address: string }).address, 'address');
-    const c = await ctx.auth(req);
+    // The only route that accepts ?token= (EventSource cannot send headers); logs redact it (SEC-2-03).
+    const c = await deps.sessions.authenticate(sseTokenFrom(req));
+    if (!c) throw new ApiError('UNAUTHENTICATED');
     if (!sameAddr(c.sub, address)) throw new ApiError('FORBIDDEN');
+    const channel = SseHub.userChannel(address);
+    const ip = ctx.ipKey(req);
+    deps.sse.admit(channel, ip);
     reply.hijack();
-    deps.sse.attach(SseHub.userChannel(address), reply.raw, origin(req.headers.origin));
+    deps.sse.attach(channel, reply.raw, { origin: origin(req.headers.origin), ip });
   });
 
   app.get('/events/venue/:venue', async (req, reply) => {
     const venue = addr((req.params as { venue: string }).venue, 'venue');
+    const channel = SseHub.venueChannel(venue);
+    const ip = ctx.ipKey(req);
+    deps.sse.admit(channel, ip);
+    // Only known venues get a channel (SEC-2-06): Streams-derived, then the chain.
+    const known = (await deps.streams.getVenue(venue)) !== null || (await deps.chain.getVenue(venue)).owner !== zeroAddress;
+    if (!known) throw new ApiError('UNKNOWN_VENUE');
     reply.hijack();
-    deps.sse.attach(SseHub.venueChannel(venue), reply.raw, origin(req.headers.origin));
+    deps.sse.attach(channel, reply.raw, { origin: origin(req.headers.origin), ip });
   });
 }

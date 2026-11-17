@@ -19,8 +19,11 @@ Owns the QuickNode Streams pipeline: Stream configuration (dashboard steps or RE
 ```
 Arc block ─▶ QuickNode Stream "vouch-v3-prod" (arc-testnet / logs / docs/streams/filter-vouch.js, start 72605845)
    ─▶ POST https://api-production-902bc54c.up.railway.app/webhooks/streams   (sequential; waits for our 2xx)
-        1. raw bytes → gunzip → HMAC (503 no secret · 401 bad/missing · 400 bad gzip)
-        2. INSERT stream_deliveries (raw, no dedupe)       fails → 500 (QuickNode retries)          [D-305]
+        0. per-IP token bucket (burst 600, 50/s) in onRequest → 429 + Retry-After                    [D-309]
+        1. 503 no secret · 401 missing X-QN-* headers  (BEFORE any decode)  · raw > 4 MiB → 413        [D-308]
+           → gunzip capped at 8 MiB (413 decoded-body-too-large · 400 bad gzip) → HMAC (401) → JSON parse
+        2. INSERT stream_deliveries deduped on sha256(stream|batch|body) via ev_delivery_keys
+           repeat → 200 duplicate:true, no row, no ingest · insert fails → 500 (QuickNode retries)     [D-305/D-309]
         3. streams.ingestDelivery(rowId, body)                                                       [D-306]
              decodeDelivery: collectLogs(any shape) → keep address == Vouch v3 && topic0 ∈ 10 topics && !removed
                              && strict vouchAbi decode   (USDC 0x3600…, system 0xffff…fffe, unknown topics → ignored)
@@ -29,8 +32,10 @@ Arc block ─▶ QuickNode Stream "vouch-v3-prod" (arc-testnet / logs / docs/str
                any new event before cursor → wipe derived, re-apply ALL ev_events in order (rebuilt: true)
                recompute ev_venue_stats / ev_ambassadors for touched keys · ev_cursor · ev_ingest_log 'ok'
              after commit → bus.publish (new events only; payment.settled = PaymentSettled + its lines)
-           ingest throws → STILL 200 (raw row durable), ev_ingest_log 'failed', retried by retryFailed()
-           after the next delivery and ingestPending() at boot / streams:replay
+           ingest throws → STILL 200 (raw row durable), ev_ingest_log 'failed'; the request waits ≤ 5 s for ingest
+           then answers 200 anyway; retryFailed() = background pass (≤5 rows, <5 attempts, backoff 10 s·2^n ≤ 10 min);
+           beyond the cap only ingestPending() (boot / streams:replay)                                 [D-309]
+           X-QN-Timestamp skew: logged only (unit UNVERIFIED)                                           [D-309d]
         4. one pino line `streams delivery` (+ ingest:{ok,newEvents,duplicates,ignored,rebuilt,cursorBlock,events})
    reads: StreamsPort (queries.ts) over ev_* only — getPayment != null ⇔ settled (QE-C-10)
 ```
@@ -95,6 +100,10 @@ Arc block ─▶ QuickNode Stream "vouch-v3-prod" (arc-testnet / logs / docs/str
 - INTERFACES changes are proposed in the Phase 2 report (§4 rebuild table → ev_* tables, §6 ingestion + 200-on-ingest-failure, a new StreamsPort section).
 
 ## Done (rolling, newest first)
+- 2026-11-16 — **Security pass (D-308 / D-309).**
+  - Gzip bomb (P-L3): the secret and header checks now run before any decode. Raw limit 4 MiB, gunzip capped at 8 MiB → 413. JSON is parsed only after the HMAC verifies.
+  - SEC-2-10: per-IP rate limit (`streams/rate-limit.ts`); raw dedupe via `ev_delivery_keys` (migration `drizzle-streams/0001`); the request waits ≤ 5 s for ingest; `retryFailed` is bounded and runs in the background; skew stays log-only.
+  - Tests: webhooks + streams 43/43. `streams:verify` on real chain (101 events) still shows equality.
 - 2026-11-16 — **Phase 2 (D-306/D-307):**
   - Ingestion: decode → idempotent `ev_events` → ordered apply / rebuild-on-late → ev_* derived tables → cursor → bus.
   - Webhook: an ingest hook that answers 200 when ingest fails, with retries from the raw table.
@@ -121,7 +130,6 @@ Arc block ─▶ QuickNode Stream "vouch-v3-prod" (arc-testnet / logs / docs/str
 
 ## Struggles, open questions, known issues
 - **`blockTimestamp` in Streams logs is UNVERIFIED.** It is stored when present (Arc eth_getLogs has it) and `blockTime` is null otherwise. It is excluded from the hash so live and backfill still agree. If Streams lacks it, BACKEND gets `blockTime: null` on live rows. Fix then: a block-timestamp lookup (one RPC per block) or the delivery `received_at`.
-- **Raw rows are not deduplicated** (D-305): a QuickNode retry is a 2nd `stream_deliveries` row. Ingest dedupes, so the derived state is correct. `streams:deliveries` will show both.
 - **Late-batch rebuild is O(all events).** Fine at our volume (tens to hundreds of logs). Revisit only if `ev_events` grows past ~100k.
 - **Ingest-failure policy:** a poison delivery stays `failed` in `ev_ingest_log` and is retried on every later delivery and boot. It never blocks other deliveries, but it shows up in logs. Check with `streams:hash` / logs.
 - Not tested against real Postgres locally (PGlite only). The aggregates cast to `::text`/`::int` so both drivers return the same JS types, and the hash normalizes jsonb returned as strings. Check `streams:verify --db` on Railway.
@@ -133,7 +141,8 @@ Arc block ─▶ QuickNode Stream "vouch-v3-prod" (arc-testnet / logs / docs/str
   3. `blockTimestamp` presence.
   4. The Arc `logs` credit multiplier / max batch size.
   5. The `batch-*` header names.
-- Webhook replay protection (nonce cache) is not implemented. `(txHash, logIndex)` dedupe makes replays harmless for the derived state.
+- Replay protection: there is no nonce cache or skew rejection yet (D-309d, the unit is unverified). Raw dedupe (D-309b) plus `(txHash, logIndex)` make replays harmless to storage and state.
+- Rate limit keys on `req.ip`. Until BACKEND's trustProxy fix, all traffic behind Railway may share one bucket.
 
 ## How to run / test this area
 ```bash

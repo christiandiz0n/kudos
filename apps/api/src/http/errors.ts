@@ -12,6 +12,9 @@ export type ErrorCode =
   | 'RELAYER_BUSY'
   | 'RELAYER_DOWN'
   | 'RELAYER_UNDERFUNDED'
+  | 'RELAYER_BUDGET_EXHAUSTED'
+  | 'SPEND_QUOTA_EXCEEDED'
+  | 'TOO_MANY_CONNECTIONS'
   | 'SIGNING_UNAVAILABLE'
   | 'GAS_TOO_HIGH'
   | 'ORDER_EXPIRED'
@@ -48,6 +51,9 @@ const DEFAULTS: Record<ErrorCode, { status: number; message: string; retryable: 
   RELAYER_BUSY: { status: 503, message: "We're busy right now. Try again in a few seconds.", retryable: true },
   RELAYER_DOWN: { status: 503, message: "Payments are paused right now. Your money hasn't moved. Try again shortly.", retryable: true },
   RELAYER_UNDERFUNDED: { status: 503, message: "Payments are paused right now. Your money hasn't moved. Try again shortly.", retryable: true },
+  RELAYER_BUDGET_EXHAUSTED: { status: 503, message: "We've hit today's limit for free processing. Your money hasn't moved. Try again later.", retryable: true },
+  SPEND_QUOTA_EXCEEDED: { status: 429, message: "You've reached the limit for now. Your money hasn't moved. Try again later.", retryable: true },
+  TOO_MANY_CONNECTIONS: { status: 429, message: 'Too many live connections. Close other tabs and try again.', retryable: true },
   SIGNING_UNAVAILABLE: { status: 503, message: "This venue can't take payments right now.", retryable: true },
   GAS_TOO_HIGH: { status: 422, message: "This one is unusually expensive to process, so we stopped it. Your money hasn't moved.", retryable: false },
   ORDER_EXPIRED: { status: 410, message: 'This order has expired. Ask the venue for a new code.', retryable: false },

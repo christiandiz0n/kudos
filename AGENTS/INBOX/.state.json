@@ -1,5 +1,5 @@
 {
- "counter": 77,
+ "counter": 80,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -802,9 +802,10 @@
    "from": "QE_E2E",
    "to": "BACKEND_RELAYER",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-078"
   },
   "MSG-076": {
    "id": "MSG-076",
@@ -812,9 +813,10 @@
    "from": "QE_E2E",
    "to": "BACKEND_RELAYER",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-079"
   },
   "MSG-077": {
    "id": "MSG-077",
@@ -825,6 +827,36 @@
    "status": "open",
    "subject": "Re: QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
    "re": "MSG-049"
+  },
+  "MSG-078": {
+   "id": "MSG-078",
+   "ts": "2026-11-16T21:16:45-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "QE_E2E",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled",
+   "re": "MSG-075"
+  },
+  "MSG-079": {
+   "id": "MSG-079",
+   "ts": "2026-11-16T21:16:45-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "QE_E2E",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate",
+   "re": "MSG-076"
+  },
+  "MSG-080": {
+   "id": "MSG-080",
+   "ts": "2026-11-16T21:16:45-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Shared-file edits for the security pass: app.ts (logger/trustProxy/headers/404/CORS) + relay_txs migration 0003",
+   "re": null
   }
  }
 }

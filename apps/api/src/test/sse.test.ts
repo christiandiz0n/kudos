@@ -57,7 +57,8 @@ test('SSE: venue + user channels receive payment.settled / reward.paid from the 
   const t = await makeApp();
   await t.app.listen({ port: 0, host: '127.0.0.1' });
   const base = `http://127.0.0.1:${(t.app.server.address() as AddressInfo).port}`;
-  const venue = P.lena.address; // any address works as a channel key
+  const venue = P.lena.address; // registered in the fake chain below: only known venues get a channel (SEC-2-06)
+  t.chain.venues.set(venue.toLowerCase(), { owner: P.lena.address, termsVersion: 1, registeredAt: 0n, payout: P.lena.address, signer: P.venueSigner.address, attributor: P.attributor.address, terms: [{ version: 1, rewardBps: 1500, effectiveAt: 0n, minOrder: 0n }] });
   const ana = await signIn(t.app, P.ana);
   const v = listen(`${base}/events/venue/${venue}`, { origin: 'http://localhost:3100' });
   const u = listen(`${base}/events/user/${P.ana.address}?token=${encodeURIComponent(ana)}`);
@@ -102,4 +103,55 @@ test('SSE: venue + user channels receive payment.settled / reward.paid from the 
     for (const c of [v, u, forbidden, anon]) c.close();
     await t.close();
   }
+});
+
+test('SseHub: backpressure (write → false) drops the client; max age closes it; caps per client/channel/global', () => {
+  let now = 0;
+  const hub = new SseHub({ maxConnections: 3, maxPerIp: 2, maxPerChannel: 2, maxAgeMs: 1_000, heartbeatMs: 60_000, maxBufferedBytes: 100 }, () => now);
+  const fake = (writeOk: boolean) => {
+    const listeners: Record<string, (() => void)[]> = {};
+    const res = {
+      destroyed: false,
+      writableEnded: false,
+      writableLength: 0,
+      writes: 0,
+      writeHead() {
+        return res;
+      },
+      write() {
+        res.writes++;
+        return writeOk || res.writes === 1; // first frame ("connected") fits, later ones hit backpressure
+      },
+      end() {
+        res.writableEnded = true;
+        for (const f of listeners.close ?? []) f();
+      },
+      destroy() {
+        res.destroyed = true;
+        for (const f of listeners.close ?? []) f();
+      },
+      on(ev: string, f: () => void) {
+        (listeners[ev] ??= []).push(f);
+        return res;
+      },
+    };
+    return res;
+  };
+  const slow = fake(false);
+  hub.attach('venue:a', slow as never, { ip: 'ip1' });
+  hub.publish('venue:a', 'x', { a: 1 });
+  assert.equal(slow.destroyed, true, 'dropped, not buffered');
+  assert.equal(hub.count(), 0);
+  const ok1 = fake(true);
+  const ok2 = fake(true);
+  hub.attach('venue:a', ok1 as never, { ip: 'ip1' });
+  hub.attach('venue:b', ok2 as never, { ip: 'ip1' });
+  assert.throws(() => hub.admit('venue:c', 'ip1'), /Too many live connections/);
+  hub.attach('venue:a', fake(true) as never, { ip: 'ip2' });
+  assert.throws(() => hub.admit('venue:a', 'ip3'), (e: unknown) => (e as { details?: { scope?: string } }).details?.scope !== undefined);
+  now = 2_000;
+  hub.heartbeat();
+  assert.equal(ok1.writableEnded, true, 'closed after maxAgeMs');
+  assert.equal(hub.count(), 0);
+  hub.close();
 });

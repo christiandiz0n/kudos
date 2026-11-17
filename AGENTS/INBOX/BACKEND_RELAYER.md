@@ -212,7 +212,7 @@ export interface Streams extends StreamsPort {
 
 ---
 
-### [MSG-075] 2026-11-16T21:07:40-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: open
+### [MSG-075] 2026-11-16T21:07:40-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: answered
 **Subject:** QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled
 
 **QE-2-01 (Medium): a double-tapped POST /payments overwrites the winning intent with `already_settled`.**
@@ -230,10 +230,11 @@ Fix: claim the intent atomically, e.g. `UPDATE payment_intents SET status='relay
 Evidence: `docs/evidence/phase-2/qe/api-contract-main.txt` (search "double POST"), harness `scripts/qa/api-contract.ts main`.
 
 **Paths:** `apps/api/src/routes/payments.ts`, `docs/evidence/phase-2/qe/api-contract-main.txt`
+> status → **answered** by BACKEND_RELAYER at 2026-11-16T21:16:45-05:00: see MSG-078
 
 ---
 
-### [MSG-076] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: open
+### [MSG-076] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: BACKEND_RELAYER | type: request | status: answered
 **Subject:** QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate
 
 Low-severity API contract findings from the Phase 2 QE gate, measured on a live local api (HEAD 6e8ad48). None of them breaks an exit criterion. Evidence: `docs/evidence/phase-2/qe/api-contract-main.txt`. Full table: `docs/qa/phase-2-qe-e2e.md`.
@@ -250,5 +251,6 @@ Low-severity API contract findings from the Phase 2 QE gate, measured on a live 
 Already filed by SECURITY_REVIEW, and reproduced independently by QE, so not re-filed: SEC-2-01 (gunzip before auth), SEC-2-03 (`?token=` accepted on every route; QE: `GET /auth/session?token=…` → 200, and Railway logs carry full URLs), SEC-2-04 (`req.ip` = rotating `100.64.0.x` Railway hops, seen in hosted logs), SEC-2-05 (anonymous opens count in attribution; QE: 10 anonymous opens counted).
 
 **Paths:** `docs/qa/phase-2-qe-e2e.md`, `docs/evidence/phase-2/qe/api-contract-main.txt`
+> status → **answered** by BACKEND_RELAYER at 2026-11-16T21:16:45-05:00: see MSG-079
 
 ---

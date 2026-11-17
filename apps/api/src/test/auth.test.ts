@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseToken, signToken, tokenFrom } from '../auth/session';
+import { parseToken, signToken, sseTokenFrom, tokenFrom } from '../auth/session';
 import { P, SESSION_SECRET, call, makeApp, signIn } from './helpers';
 
 test('sign-in: EIP-191 challenge → session token → /auth/session → logout revokes', async () => {
@@ -77,6 +77,9 @@ test('token: MAC, expiry and transport (bearer, cookie, ?token=)', () => {
   assert.equal(parseToken('s', tok, exp), null, 'expired at exp');
   assert.equal(parseToken('s', `${tok.slice(0, -2)}xx`), null);
   assert.equal(tokenFrom({ headers: { authorization: `Bearer ${tok}` } }), tok);
-  assert.equal(tokenFrom({ headers: { cookie: `a=1; vouch_session=${encodeURIComponent(tok)}` } }), tok);
-  assert.equal(tokenFrom({ headers: {}, query: { token: tok } }), tok);
+  // SEC-2-03 / SEC-2-09: no cookie, no query string on normal routes; ?token= only via the SSE accessor.
+  assert.equal(tokenFrom({ headers: { cookie: `a=1; vouch_session=${encodeURIComponent(tok)}` } }), undefined);
+  assert.equal(tokenFrom({ headers: {}, query: { token: tok } } as never), undefined);
+  assert.equal(sseTokenFrom({ headers: {}, query: { token: tok } }), tok);
+  assert.equal(sseTokenFrom({ headers: { authorization: `Bearer ${tok}` }, query: {} }), tok);
 });

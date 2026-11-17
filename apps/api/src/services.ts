@@ -2,7 +2,7 @@
  * Dependency container for the BACKEND_RELAYER routes. `buildApp` creates it once; tests inject a fake chain and
  * fixed config through `ApiDepsOverrides`.
  */
-import { eq } from 'drizzle-orm';
+import { and, eq, gt, isNotNull } from 'drizzle-orm';
 import type { Address, Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { ARC_TESTNET_CHAIN_ID, ORDER_TYPES, VOUCH_ARC_TESTNET, WEIGHTS_TYPES, vouchDomain, type Order, type Weights } from '@vouch/shared';
@@ -54,11 +54,11 @@ export function createSigners(cfg: ApiConfig, vouch: Address = VOUCH_ARC_TESTNET
     venueSigner: venue?.address ?? null,
     attributor: attr?.address ?? null,
     async signOrder(order) {
-      if (!venue) throw new ApiError('SIGNING_UNAVAILABLE', { details: { reason: 'VENUE_SIGNER_PRIVATE_KEY not set' } });
+      if (!venue) throw new ApiError('SIGNING_UNAVAILABLE');
       return venue.signTypedData({ domain, types: ORDER_TYPES, primaryType: 'Order', message: order });
     },
     async signWeights(w) {
-      if (!attr) throw new ApiError('SIGNING_UNAVAILABLE', { details: { reason: 'ATTRIBUTOR_PRIVATE_KEY not set' } });
+      if (!attr) throw new ApiError('SIGNING_UNAVAILABLE');
       return attr.signTypedData({ domain, types: WEIGHTS_TYPES, primaryType: 'Weights', message: w });
     },
   };
@@ -75,6 +75,7 @@ function rowToDb(p: Partial<RelayRow>) {
   if (p.maxFeePerGas !== undefined) out.maxFeePerGas = p.maxFeePerGas === null ? null : p.maxFeePerGas.toString();
   if (p.gasUsed !== undefined) out.gasUsed = p.gasUsed;
   if (p.blockNumber !== undefined) out.blockNumber = p.blockNumber;
+  if (p.feeUsdc !== undefined) out.feeUsdc = p.feeUsdc;
   if (p.errorCode !== undefined) out.errorCode = p.errorCode;
   if (p.error !== undefined) out.error = p.error;
   return out;
@@ -88,6 +89,7 @@ export function dbRelayStore(handle: DbHandle): RelayStore {
         kind: r.kind,
         ref: r.ref,
         userAddress: r.user,
+        venue: r.venue,
         status: r.status,
         hashes: [],
         attempts: 0,
@@ -107,13 +109,14 @@ export function createApiDeps(
 ): ApiDeps {
   const cfg = loadApiConfig(process.env, overrides.cfg);
   const chain = overrides.chain ?? createViemChainClient({ rpcUrl: cfg.rpcUrl, relayerKey: cfg.relayerKey });
-  const sse = new SseHub();
+  const sse = new SseHub(cfg.sse);
   const relayer = new Relayer(chain, {
     maxGas: cfg.maxGas,
     maxFeePerGasCap: cfg.maxFeePerGasCap,
     receiptTimeoutMs: cfg.receiptTimeoutMs,
     maxSendAttempts: cfg.maxSendAttempts,
     limits: cfg.limits,
+    budget: cfg.budget,
     store: dbRelayStore(handle),
     log,
     ...overrides.relayerOptions,
@@ -130,4 +133,15 @@ export function createApiDeps(
     streams: overrides.streams ?? streams,
     log,
   };
+}
+
+/** Restore the last 24 h of relayer spend into the budget (so a restart does not reset it, D-808). */
+export async function seedRelayerBudget(deps: ApiDeps): Promise<number> {
+  const since = new Date(Date.now() - 24 * 3_600_000);
+  const rows = await deps.handle.db
+    .select({ id: relayTxs.id, createdAt: relayTxs.createdAt, fee: relayTxs.feeUsdc, user: relayTxs.userAddress, venue: relayTxs.venue })
+    .from(relayTxs)
+    .where(and(gt(relayTxs.createdAt, since), isNotNull(relayTxs.feeUsdc)));
+  deps.relayer.budget.seed(rows.map((r) => ({ id: r.id, at: r.createdAt.getTime(), cost: r.fee!, user: r.user, venue: r.venue })));
+  return rows.length;
 }

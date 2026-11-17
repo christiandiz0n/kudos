@@ -9,7 +9,9 @@ import type { FastifyInstance } from 'fastify';
 import { buildApp } from './app';
 import type { DbHandle } from './db/index';
 import { realSecret } from './env';
-import { summarize, timestampSkew } from './routes/webhooks';
+import { createGzip } from 'node:zlib';
+import Fastify from 'fastify';
+import { decodeStats, MAX_DECODED_BYTES, RAW_BODY_LIMIT, summarize, timestampSkew, webhookRoutes } from './routes/webhooks';
 import { listDeliveries, pickHeaders } from './streams/deliveries';
 
 // Test-only token (not a real stream token).
@@ -44,6 +46,9 @@ const PAYLOAD = JSON.stringify({
     },
   ],
 });
+
+/** A distinct but equivalent body (different blockHash), so raw dedupe (D-309) does not collapse it into an earlier test's row. */
+const variant = (hex2: string) => PAYLOAD.replace('ab'.repeat(32), hex2.repeat(32));
 
 function signedHeaders(payload: string, secret = SECRET) {
   const nonce = 'nonce-' + Math.random().toString(36).slice(2);
@@ -121,7 +126,8 @@ describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
   });
 
   test('verified delivery without batch headers → body envelope streamId/batch used', async () => {
-    const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+    const body = variant('cd');
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(body), payload: body });
     assert.equal(res.statusCode, 200);
     const [row] = await listDeliveries(db, 1);
     assert.equal(row!.streamId, 'stream-test');
@@ -189,21 +195,118 @@ describe('POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set', () => {
   });
 
   test('gzip body: HMAC over the decoded JSON → 200', async () => {
-    const gz = gzipSync(Buffer.from(PAYLOAD));
+    const body = variant('ef');
+    const gz = gzipSync(Buffer.from(body));
     const res = await app.inject({
       method: 'POST',
       url: WH_URL,
-      headers: { ...signedHeaders(PAYLOAD), 'content-encoding': 'gzip' },
+      headers: { ...signedHeaders(body), 'content-encoding': 'gzip' },
       payload: gz,
     });
     assert.equal(res.statusCode, 200);
     const rec = await lastRecord(logFile);
     assert.equal(rec.gzip, true);
-    assert.equal(rec.body, PAYLOAD);
+    assert.equal(rec.body, body);
     const [row] = await listDeliveries(db, 1);
     assert.equal(row!.gzip, true);
     assert.equal(row!.bytes, gz.length, 'bytes = as received (compressed)');
-    assert.deepEqual(row!.body, JSON.parse(PAYLOAD));
+    assert.deepEqual(row!.body, JSON.parse(body));
+  });
+
+  test('SEC-2-10b: a replayed signed delivery (same nonce+signature) or a re-signed retry of the same batch → 200 duplicate, no new row', async () => {
+    const body = variant('12');
+    const headers = signedHeaders(body);
+    const first = await app.inject({ method: 'POST', url: WH_URL, headers, payload: body });
+    assert.equal(first.statusCode, 200);
+    assert.equal(first.json().duplicate, undefined);
+    const count = await rowCount(db);
+    const replay = await app.inject({ method: 'POST', url: WH_URL, headers, payload: body });
+    const resigned = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(body), payload: body });
+    for (const r of [replay, resigned]) {
+      assert.equal(r.statusCode, 200);
+      assert.equal(r.json().duplicate, true);
+      assert.equal(r.json().ingested, undefined, 'duplicates are not re-ingested');
+    }
+    assert.equal(await rowCount(db), count);
+    assert.equal((await lastRecord(logFile)).rowId, (await listDeliveries(db, 1))[0]!.id, 'points at the first row');
+    // Same body, different batch range → a different delivery.
+    const other = await app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders(body), 'batch-start-range': '1', 'batch-end-range': '5' }, payload: body });
+    assert.equal(other.json().duplicate, undefined);
+    assert.equal(await rowCount(db), count + 1);
+  });
+});
+
+describe('SEC-2-10: rate limit and bounded ingest wait', () => {
+  test('per-IP token bucket → 429 + Retry-After before the body is processed; other IPs unaffected', async () => {
+    const app = Fastify({ logger: false });
+    let stores = 0;
+    await app.register(webhookRoutes, {
+      logFile: null,
+      secret: SECRET,
+      rateLimit: { burst: 3, perSec: 1 },
+      store: async () => ({ id: ++stores }),
+    });
+    try {
+      const send = (ip: string) => app.inject({ method: 'POST', url: WH_URL, remoteAddress: ip, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+      const codes = [];
+      for (let i = 0; i < 5; i++) codes.push((await send('203.0.113.7')).statusCode);
+      assert.deepEqual(codes, [200, 200, 200, 429, 429]);
+      const limited = await send('203.0.113.7');
+      assert.equal(limited.statusCode, 429);
+      assert.ok(Number(limited.headers['retry-after']) >= 1);
+      assert.deepEqual(limited.json(), { ok: false, error: 'rate-limited' });
+      assert.equal((await send('198.51.100.9')).statusCode, 200, 'keyed per IP');
+      assert.equal(stores, 4);
+    } finally {
+      await app.close();
+    }
+  });
+
+  test('createRateLimiter refills over time (default sizing is generous: burst 600, 50/s)', async () => {
+    const { createRateLimiter } = await import('./streams/rate-limit');
+    let t = 0;
+    const rl = createRateLimiter({ burst: 2, perSec: 10, now: () => t });
+    assert.equal(rl.take('a').ok, true);
+    assert.equal(rl.take('a').ok, true);
+    const refused = rl.take('a');
+    assert.equal(refused.ok, false);
+    assert.equal(refused.firstRefusal, true);
+    assert.equal(rl.take('a').firstRefusal, false, 'one log line per refusal episode');
+    t += 100; // 0.1 s × 10/s = 1 token
+    assert.equal(rl.take('a').ok, true);
+    const def = createRateLimiter({ now: () => 0 });
+    let ok = 0;
+    for (let i = 0; i < 700; i++) if (def.take('qn').ok) ok++;
+    assert.equal(ok, 600);
+  });
+
+  test('slow ingest: the request answers 200 after ingestWaitMs; ingest finishes in the background', async () => {
+    const app = Fastify({ logger: false });
+    let finished = false;
+    await app.register(webhookRoutes, {
+      logFile: null,
+      secret: SECRET,
+      ingestWaitMs: 50,
+      store: async () => ({ id: 1 }),
+      ingest: async () => {
+        await new Promise((r) => setTimeout(r, 300));
+        finished = true;
+        return { newEvents: 1, duplicates: 0, ignored: 0, rebuilt: false, cursor: { lastBlock: 1, lastLogIndex: 0, events: 1 } };
+      },
+    });
+    try {
+      const t0 = performance.now();
+      const res = await app.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(PAYLOAD), payload: PAYLOAD });
+      const ms = performance.now() - t0;
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.json().ingested, false);
+      assert.ok(ms < 250, `answered in ${ms.toFixed(0)} ms`);
+      assert.equal(finished, false);
+      await new Promise((r) => setTimeout(r, 350));
+      assert.equal(finished, true);
+    } finally {
+      await app.close();
+    }
   });
 });
 
@@ -286,4 +389,119 @@ test('timestampSkew: seconds vs milliseconds', () => {
   assert.deepEqual(timestampSkew('1799999990', now), { unit: 's', skewSec: 10 });
   assert.deepEqual(timestampSkew('1799999990000', now), { unit: 'ms', skewSec: 10 });
   assert.deepEqual(timestampSkew('2026-11-16T00:00:00Z', now), { unit: 'unknown', skewSec: null });
+});
+
+/** A gzip bomb: `mib` MiB of zeros, streamed through gzip so the test itself never holds the inflated bytes. */
+async function gzipBomb(mib: number): Promise<Buffer> {
+  const gz = createGzip({ level: 9 });
+  const out: Buffer[] = [];
+  gz.on('data', (c: Buffer) => out.push(c));
+  const done = new Promise((r) => gz.on('end', r));
+  const chunk = Buffer.alloc(1024 * 1024);
+  for (let i = 0; i < mib; i++) if (!gz.write(chunk)) await new Promise((r) => gz.once('drain', r));
+  gz.end();
+  await done;
+  return Buffer.concat(out);
+}
+
+describe('D-308: gzip bomb / size limits (SECURITY_REVIEW P-L3)', () => {
+  let app: FastifyInstance;
+  let db: DbHandle;
+  let bomb: Buffer;
+  const BOMB_MIB = 512; // inflates to 512 MiB; before D-308 this pushed RSS up by ~the same amount even without headers
+  before(async () => {
+    bomb = await gzipBomb(BOMB_MIB);
+    ({ app, db } = await buildApp({ databaseUrl: 'pglite://memory', streamsSpikeLog: null, streamsWebhookSecret: SECRET }, { logger: false }));
+  });
+  after(async () => app.close());
+
+  const rssMiB = () => process.memoryUsage().rss / (1024 * 1024);
+
+  test('limits: raw 4 MiB, decoded 8 MiB; the bomb is small on the wire', () => {
+    assert.equal(RAW_BODY_LIMIT, 4 * 1024 * 1024);
+    assert.equal(MAX_DECODED_BYTES, 8 * 1024 * 1024);
+    assert.ok(bomb.length < RAW_BODY_LIMIT, `bomb is ${bomb.length} B`);
+  });
+
+  test('missing X-QN-* headers + gzip bomb → 401 WITHOUT decompressing (no gunzip, fast, small RSS delta)', async () => {
+    const calls = decodeStats.gunzipCalls;
+    const rss0 = rssMiB();
+    const t0 = performance.now();
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: { 'content-type': 'application/json', 'content-encoding': 'gzip' }, payload: bomb });
+    const ms = performance.now() - t0;
+    assert.equal(res.statusCode, 401);
+    assert.deepEqual(res.json(), { ok: false, error: 'missing-signature-headers' });
+    assert.equal(decodeStats.gunzipCalls, calls, 'gunzip must not run before the header check');
+    assert.ok(ms < 1000, `took ${ms.toFixed(0)} ms`);
+    assert.ok(rssMiB() - rss0 < 64, `RSS grew ${(rssMiB() - rss0).toFixed(0)} MiB`);
+    // Partial headers are still "missing": no decode either.
+    const partial = await app.inject({ method: 'POST', url: WH_URL, headers: { 'content-encoding': 'gzip', 'x-qn-nonce': 'n', 'x-qn-timestamp': '1' }, payload: bomb });
+    assert.equal(partial.statusCode, 401);
+    assert.equal(decodeStats.gunzipCalls, calls);
+    assert.equal(await rowCount(db), 0);
+  });
+
+  test('secret unset + gzip bomb → 503 without decompressing', async () => {
+    const off = await buildApp({ databaseUrl: 'pglite://memory', streamsSpikeLog: null, streamsWebhookSecret: undefined }, { logger: false });
+    try {
+      const calls = decodeStats.gunzipCalls;
+      const res = await off.app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders('x'), 'content-encoding': 'gzip' }, payload: bomb });
+      assert.equal(res.statusCode, 503);
+      assert.equal(decodeStats.gunzipCalls, calls);
+    } finally {
+      await off.app.close();
+    }
+  });
+
+  test('headers present + gzip bomb → 413 decoded-body-too-large (inflation capped), no row, no 500', async () => {
+    const calls = decodeStats.gunzipCalls;
+    const rss0 = rssMiB();
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders('anything'), 'content-encoding': 'gzip' }, payload: bomb });
+    assert.equal(res.statusCode, 413);
+    assert.deepEqual(res.json(), { ok: false, error: 'decoded-body-too-large' });
+    assert.equal(decodeStats.gunzipCalls, calls + 1);
+    assert.ok(rssMiB() - rss0 < 64, `RSS grew ${(rssMiB() - rss0).toFixed(0)} MiB (cap is 8 MiB)`);
+    assert.equal(await rowCount(db), 0, 'an unauthenticated over-cap body is never stored (D-305)');
+  });
+
+  test('raw body over RAW_BODY_LIMIT → 413 before the handler (no row)', async () => {
+    const big = Buffer.alloc(RAW_BODY_LIMIT + 1, 0x20);
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders('x'), 'content-type': 'application/json' }, payload: big });
+    assert.equal(res.statusCode, 413);
+    assert.equal(await rowCount(db), 0);
+  });
+
+  test('signed gzip deliveries: under the cap → 200 and stored; over the cap → 413 even with a VALID signature', async () => {
+    const stored: unknown[] = [];
+    const small = Fastify({ logger: false });
+    await small.register(webhookRoutes, {
+      logFile: null,
+      secret: SECRET,
+      maxDecodedBytes: 1024,
+      store: async (row) => {
+        stored.push(row);
+        return { id: stored.length };
+      },
+    });
+    try {
+      const ok = await small.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders(PAYLOAD), 'content-encoding': 'gzip' }, payload: gzipSync(Buffer.from(PAYLOAD)) });
+      assert.equal(ok.statusCode, 200);
+      assert.equal(stored.length, 1);
+      const bigBody = JSON.stringify({ v: 1, events: [], pad: 'x'.repeat(2048) });
+      const over = await small.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders(bigBody), 'content-encoding': 'gzip' }, payload: gzipSync(Buffer.from(bigBody)) });
+      assert.equal(over.statusCode, 413);
+      assert.equal(stored.length, 1, 'the oversized decoded body is not stored');
+      // Uncompressed bodies are held to the same decoded cap.
+      const plain = await small.inject({ method: 'POST', url: WH_URL, headers: signedHeaders(bigBody), payload: bigBody });
+      assert.equal(plain.statusCode, 413);
+    } finally {
+      await small.close();
+    }
+  });
+
+  test('bad gzip with headers → 400 body-decode-failed (not 500)', async () => {
+    const res = await app.inject({ method: 'POST', url: WH_URL, headers: { ...signedHeaders('x'), 'content-encoding': 'gzip' }, payload: Buffer.from([0x1f, 0x8b, 0x08, 0x00, 0x01, 0x02]) });
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.json(), { ok: false, error: 'body-decode-failed' });
+  });
 });

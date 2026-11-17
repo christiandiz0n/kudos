@@ -4,7 +4,7 @@
  */
 import type { FastifyInstance } from 'fastify';
 import { and, desc, eq, inArray } from 'drizzle-orm';
-import { getAddress, type Address } from 'viem';
+import { getAddress, zeroAddress, type Address } from 'viem';
 import { formatNativeAsUsdc } from '@vouch/shared';
 import { introLinks, paymentIntents, relayTxs, users, venuesMeta } from '../db/schema';
 import { ApiError } from '../http/errors';
@@ -81,6 +81,8 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
 
   app.get('/venues/:venue/stats', async (req, reply) => {
     const venue = addr((req.params as { venue: string }).venue, 'venue');
+    // QE-2-08: unknown venue → 404 (same as GET /venues/:venue).
+    if (!(await s.getVenue(venue)) && (await deps.chain.getVenue(venue)).owner === zeroAddress) throw new ApiError('UNKNOWN_VENUE');
     const st = (await s.getVenueStats(venue)) as Awaited<ReturnType<typeof s.getVenueStats>> & {
       venueReceived?: bigint;
       cashbackPaid?: bigint;
@@ -122,23 +124,35 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
     });
   });
 
+  /**
+   * Public relayer health. Deliberately coarse (SEC-2-08): one `enabled` flag (relayer + signing keys all present) with
+   * no per-secret breakdown; address/balance only when enabled (both are public on chain anyway); remaining budget.
+   */
   app.get('/relayer/status', async (_req, reply) => {
-    const address = deps.relayer.address;
+    const enabled = !!deps.relayer.address && !!deps.signers.venueSigner && !!deps.signers.attributor;
     let balance: bigint | null = null;
-    try {
-      balance = address ? await deps.chain.relayerBalance() : null;
-    } catch {
-      balance = null;
+    if (enabled) {
+      try {
+        balance = await deps.chain.relayerBalance();
+      } catch {
+        balance = null;
+      }
     }
+    const b = deps.relayer.budget.snapshot();
+    const floor = deps.cfg.budget.minRelayerBalance;
     const recent = await db.select({ status: relayTxs.status }).from(relayTxs).orderBy(desc(relayTxs.createdAt)).limit(20);
     return send(reply, 200, {
-      enabled: !!address,
-      address: address as Address | null,
+      enabled,
+      address: enabled ? (deps.relayer.address as Address) : null,
       queueDepth: deps.relayer.queueDepth,
       balance: balance === null ? null : formatNativeAsUsdc(balance),
-      reachable: balance !== null,
+      reachable: enabled ? balance !== null : null,
+      lowBalance: balance === null ? null : balance / 10n ** 12n < floor,
+      budget: {
+        hourly: { limit: money(b.hourly.limit), used: money(b.hourly.used), remaining: money(b.hourly.remaining) },
+        daily: { limit: money(b.daily.limit), used: money(b.daily.used), remaining: money(b.daily.remaining) },
+      },
       recentFailures: recent.filter((r) => r.status === 'failed' || r.status === 'reverted').length,
-      signers: { venueSigner: deps.signers.venueSigner, attributor: deps.signers.attributor },
     });
   });
 }

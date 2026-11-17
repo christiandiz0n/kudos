@@ -231,6 +231,10 @@ export const relayTxs = pgTable(
     kind: text('kind').notNull(),
     ref: text('ref').notNull(),
     userAddress: text('user_address').notNull(),
+    /** Venue the job belongs to (per-venue spend budget, D-808). */
+    venue: text('venue'),
+    /** Spend charged to the budget, USDC base units: the reservation while in flight, then the actual fee (D-808). */
+    feeUsdc: bigint('fee_usdc', { mode: 'bigint' }),
     /** queued → sent → mined | reverted | failed */
     status: text('status').notNull(),
     nonce: integer('nonce'),
@@ -246,5 +250,5 @@ export const relayTxs = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index('relay_txs_ref_idx').on(t.ref), index('relay_txs_status_idx').on(t.status)],
+  (t) => [index('relay_txs_ref_idx').on(t.ref), index('relay_txs_status_idx').on(t.status), index('relay_txs_created_idx').on(t.createdAt)],
 );

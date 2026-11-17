@@ -1,5 +1,5 @@
 # BACKEND_RELAYER
-_Last updated: 2026-11-16 by BACKEND_RELAYER (Phase 2)_
+_Last updated: 2026-11-17 by BACKEND_RELAYER (Phase 2 + security/QE fix pass)_
 
 ## Mission
 Owns the API service: DB schema, auth/session, venue/order/intro/payment endpoints, venue order signing, payment quotes (baseline attribution + attributor signature), the relayer wallet (nonce mgmt, retries, rate limits, max-gas guard, friendly error mapping) and SSE fan-out. Does NOT own contract logic, the Streams webhook/derived-state ingestion (STREAMS_INFRA), or attribution scoring internals (ATTRIBUTION_AI, from Phase 4).
@@ -63,11 +63,14 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 | `apps/api/src/relayer/relayer.ts` | `Relayer` (queue, `NonceManager`, simulate / pre-flight / gas guard / fees / replacement), `clampFees` | D-801 |
 | `apps/api/src/relayer/preflight.ts` | QE-C-11 balance checks (relayed; self-submit amount + fee) | |
 | `apps/api/src/relayer/rate-limit.ts` | sliding-window `RateLimiter` | in-memory |
+| `apps/api/src/relayer/budget.ts` | `SpendBudget`: hourly/daily windows (global, per user, per venue); reserve → adjust → settle/release; `seed` at boot | D-808; `relay_txs.fee_usdc` |
+| `apps/api/src/http/security.ts` | `fastifyOptions` (redacting log serializers, `trustProxy` = 100.64.0.0/10), `applySecurity` (headers + 404 shape), `corsOptions` | D-809; used by `app.ts` |
+| `apps/api/src/http/redact.ts` | `scrub` (URLs → `<url>`, tokens), `redactUrl` (`token=[redacted]`) | SEC-2-03/07 |
 | `apps/api/src/auth/session.ts` | challenge / verify / token / revoke, `tokenFrom` | D-802 |
 | `apps/api/src/attribution/baseline.ts` | `Attributor` interface + `baselineAttributor`, `sharesToBps` | D-805; ATTRIBUTION_AI replaces it in Phase 4 |
 | `apps/api/src/ports/streams.ts` | StreamsPort types + `createStubStreamsPort` (tests) + `createLocalBus` | Mirrors `streams/types.ts` |
-| `apps/api/src/routes/*.ts` | `api.ts` (plugin + scoped error handler), auth, venues, orders, intros, payments, reads, events (SSE + bus fan-out), views, common | |
-| `apps/api/src/sse/hub.ts` | channels `user:<addr>` / `venue:<addr>`, 15 s heartbeat | Hijacked replies echo the allowed CORS origin themselves |
+| `apps/api/src/routes/*.ts` | `api.ts` (plugin, per-IP route-class limiter `routeClass()`, scoped error handler, budget seeding), auth, venues, orders, intros, payments, reads, events (SSE + bus fan-out), views, common | |
+| `apps/api/src/sse/hub.ts` | channels `user:<addr>` / `venue:<addr>`; caps (global / per IP / per channel), max age, drops slow consumers, 15 s heartbeat | Hijacked replies set CORS + security headers themselves |
 | `apps/api/src/db/schema.ts` + `drizzle/0002_relayer_core.sql` | my 10 tables | `pnpm --filter @vouch/api exec drizzle-kit generate --name …` |
 | `apps/api/src/test/*.test.ts` | api (endpoint contract + canonical story on FakeChain), relayer, auth, attribution, sse, errors | `fake-chain.ts` = in-memory Vouch rules; `helpers.ts` = personas / sign-in / signTd |
 | `scripts/story/story-api.ts` | Phase 2 exit driver: canonical story on Arc through the API; `--check-intent <id>` re-checks settled | `pnpm --filter @vouch/scripts story:api` |
@@ -126,6 +129,25 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
   - **Dropped from the v0 draft:** `POST /onboarding/topup` (the CLI exists).
 
 ## Done (rolling, newest first)
+- 2026-11-17 — **Security + QE fix pass** (SEC-2-02..13, QE-2-01..09; D-807..D-810).
+  - **Spend controls:**
+    - spend budget (global / user / venue, hourly + daily; reverts count; persisted via `relay_txs.fee_usdc`; shown in `/relayer/status`);
+    - per-kind quotas;
+    - pay priority lane + reserved slots;
+    - balance floor + ALERT log;
+    - minimum order $0.50;
+    - re-simulation before replacements.
+  - **Request hardening:**
+    - per-IP route-class limits;
+    - `trustProxy` = Railway range;
+    - bearer-only auth (`?token=` on SSE only, no cookie);
+    - log/URL redaction;
+    - SSE caps + backpressure drop + max age + known venues only;
+    - security headers, a standard 404, CORS PATCH;
+    - no config disclosure.
+  - **Payments state:** atomic intent claim before the pre-simulation (QE-2-01); orders change only on chain-confirmed outcomes.
+  - **Contract fixes:** payout/boolean validation, ORDER_EXPIRED at pay, 404s, `/venues` registered-only + paginated, link opens count only the customer's own signed-in opens.
+  - **Tests:** api 112/112; `pnpm -r typecheck` clean.
 - 2026-11-16 — **Phase 2.**
   - **Delivered:**
     - schema + migration 0002;
@@ -146,13 +168,15 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 
 ## Next up
 - [ ] On Railway: set `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY`, `SESSION_SECRET` and `PUBLIC_WEB_URL`. Then run `story:api -- --api https://<railway> --require-settled` (the exit criterion with the live Stream).
+- [ ] After deploy: check in the hosted logs that `remoteAddress` is the client (not 100.64.x). If Railway's edge appends its own hop, set `TRUST_PROXY` to a hop count (D-809, UNVERIFIED).
+- [ ] Phase 3: TTL cleanup for unbounded tables (link_opens, sessions, relay_txs, payment_intents, orders, owner_actions, intro_links; auth_challenges and stale prepared venues are already pruned).
 - [ ] Relayer crash recovery: on boot, reconcile `relay_txs` rows left in `sent` (today the chain-nonce reconcile covers the nonce, but the row status stays `sent`).
 - [ ] Staff accounts for order creation (today only the venue owner's session may create orders).
-- [ ] Rate limits are in-memory: fine for one Railway instance; move to Postgres if we ever scale out.
+- [ ] Rate limits + the in-flight budget are in-memory (the budget is re-seeded from Postgres at boot): fine for one Railway instance; move to Postgres if we ever scale out.
 - [ ] Phase 4: hand `attribution/baseline.ts` to ATTRIBUTION_AI (the `Attributor` interface stays).
 
 ## Struggles, open questions, known issues
-- **Cookies:** the token is accepted as a cookie, but the API never sets one. A cross-site cookie (web origin ≠ Railway domain) would need `SameSite=None; Secure`. Bearer is the supported path.
+- **Cookies:** not accepted (SEC-2-09). Bearer only; `?token=` is accepted only on the SSE user route and is redacted from logs.
 - **Who verifies signatures:** the FakeChain does not verify signatures. Signature correctness is proven by the off-chain verification in the API plus the live story run.
 - **Mixed-clock order status:** `GET /venues/:venue/orders/:orderId` decides "expired" with server time; quotes and pays use chain time.
 - **`/me/activity` scope:** it also shows a persona's payments from earlier smoke venues (they are real Streams rows).

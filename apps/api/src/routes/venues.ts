@@ -5,13 +5,14 @@
  * relays. One owner action in flight per owner at a time.
  */
 import type { FastifyInstance } from 'fastify';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, lt } from 'drizzle-orm';
 import { encodeFunctionData, getAddress, zeroAddress, type Address, type Hex } from 'viem';
 import {
   REGISTER_VENUE_TYPES,
   SET_SEED_AMBASSADOR_TYPES,
   SET_VENUE_KEYS_TYPES,
   UPDATE_TERMS_TYPES,
+  ARC_TESTNET_USDC_ADDRESS,
   VOUCH_LIMITS,
   computeVenueId,
   vouchAbi,
@@ -27,6 +28,12 @@ const SIGN_WINDOW_SECONDS = 600n;
 type ActionKind = 'updateTerms' | 'setKeys' | 'setSeedAmbassador';
 const ACTION_TYPES = { updateTerms: UPDATE_TERMS_TYPES, setKeys: SET_VENUE_KEYS_TYPES, setSeedAmbassador: SET_SEED_AMBASSADOR_TYPES } as const;
 const PRIMARY = { updateTerms: 'UpdateTerms', setKeys: 'SetVenueKeys', setSeedAmbassador: 'SetSeedAmbassador' } as const;
+
+/** QE-2-03: refuse before the owner signs anything the contract would reject (InvalidPayout / ZeroAddress, D-513). */
+function checkPayout(payout: Address, vouch: Address) {
+  const bad = [zeroAddress, vouch, ARC_TESTNET_USDC_ADDRESS].some((x) => x.toLowerCase() === payout.toLowerCase());
+  if (bad) throw new ApiError('INVALID_PAYOUT');
+}
 
 function checkTerms(rewardBps: number, minOrder: bigint) {
   if (rewardBps < 1 || rewardBps > VOUCH_LIMITS.MAX_REWARD_BPS || minOrder > VOUCH_LIMITS.MAX_MIN_ORDER) throw new ApiError('INVALID_TERMS');
@@ -78,10 +85,13 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
     const minOrder = uint(b.minOrder ?? '0', 'minOrder');
     checkTerms(rewardBps, minOrder);
     const payout = optAddr(b.payout, 'payout') ?? c.sub;
+    checkPayout(payout, chain.vouch);
     if (!deps.signers.venueSigner || !deps.signers.attributor) throw new ApiError('SIGNING_UNAVAILABLE');
     await assertNoInflight(c.sub);
-    const slug = await uniqueSlug(slugify(typeof b.slug === 'string' && b.slug ? b.slug : name));
     const [nonce, t] = await Promise.all([chain.nonces(c.sub), chain.now()]);
+    // Release slugs held by prepared registrations whose signing deadline passed (SEC-2-11).
+    await db.delete(venuesMeta).where(and(eq(venuesMeta.status, 'prepared'), lt(venuesMeta.deadline, t)));
+    const slug = await uniqueSlug(slugify(typeof b.slug === 'string' && b.slug ? b.slug : name));
     const salt = randomHex32();
     const venue = computeVenueId(c.sub, salt);
     const deadline = t + SIGN_WINDOW_SECONDS;
@@ -146,7 +156,7 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
     await db.update(venuesMeta).set({ status: 'relaying', updatedAt: new Date() }).where(eq(venuesMeta.venue, venue));
     let handle;
     try {
-      handle = await deps.relayer.submit({ kind: 'registerVenue', data, user: c.sub, ref: `venue:${venue}` });
+      handle = await deps.relayer.submit({ kind: 'registerVenue', data, user: c.sub, venue, ref: `venue:${venue}` });
     } catch (e) {
       await db.update(venuesMeta).set({ status: 'failed', updatedAt: new Date() }).where(eq(venuesMeta.venue, venue));
       throw e;
@@ -184,9 +194,17 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
     };
   }
 
-  app.get('/venues', async (_req, reply) => {
-    const rows = await db.select().from(venuesMeta).where(inArray(venuesMeta.status, ['relaying', 'registered'])).orderBy(desc(venuesMeta.createdAt)).limit(100);
-    return send(reply, 200, { venues: await Promise.all(rows.map((m) => venueView(m, getAddress(m.venue)))) });
+  /** Registered venues only, newest first, paginated (SEC-2-11): ?limit (≤ 50, default 20) & ?offset (≤ 1000). */
+  app.get('/venues', async (req, reply) => {
+    const q = req.query as { limit?: string; offset?: string };
+    const limit = q.limit === undefined ? 20 : int(q.limit, 'limit', 1, 50);
+    const offset = q.offset === undefined ? 0 : int(q.offset, 'offset', 0, 1000);
+    const rows = await db.select().from(venuesMeta).where(eq(venuesMeta.status, 'registered')).orderBy(desc(venuesMeta.createdAt)).limit(limit + 1).offset(offset);
+    const page = rows.slice(0, limit);
+    return send(reply, 200, {
+      venues: await Promise.all(page.map((m) => venueView(m, getAddress(m.venue)))),
+      nextOffset: rows.length > limit ? offset + limit : null,
+    });
   });
 
   app.get('/venues/:venue', async (req, reply) => {
@@ -216,6 +234,8 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
   app.get('/venues/:venue/terms', async (req, reply) => {
     const venue = addr((req.params as { venue: string }).venue, 'venue');
     const onchain = await deps.streams.getVenue(venue);
+    // QE-2-08: unknown venues answer 404 like GET /venues/:venue (known on chain but not ingested yet → empty + waitingOnStreams).
+    if (!onchain && (await chain.getVenue(venue)).owner === zeroAddress) throw new ApiError('UNKNOWN_VENUE');
     const terms = (onchain?.terms ?? []).map((t) => ({ ...t, minOrder: money(t.minOrder) }));
     return send(reply, 200, { venue, current: terms.at(-1) ?? null, history: terms, source: 'streams', waitingOnStreams: !onchain });
   });
@@ -239,16 +259,20 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
       message = { venue, rewardBps, minOrder, nonce, deadline };
     } else if (kind === 'setKeys') {
       const cur = await chain.getVenue(venue);
+      const payout = optAddr(b.payout, 'payout') ?? cur.payout;
+      checkPayout(payout, chain.vouch);
       message = {
         venue,
-        payout: optAddr(b.payout, 'payout') ?? cur.payout,
+        payout,
         signer: optAddr(b.signer, 'signer') ?? cur.signer,
         attributor: optAddr(b.attributor, 'attributor') ?? cur.attributor,
         nonce,
         deadline,
       };
     } else {
-      const allowed = b.allowed === undefined ? true : b.allowed === true;
+      // QE-2-04: strictly a boolean ("true" must not silently become a revocation).
+      if (b.allowed !== undefined && typeof b.allowed !== 'boolean') throw new ApiError('BAD_REQUEST', { message: 'allowed: expected true or false', details: { field: 'allowed' } });
+      const allowed = b.allowed === undefined ? true : b.allowed;
       message = { venue, ambassador: addr(b.ambassador, 'ambassador'), allowed, nonce, deadline };
     }
     const id = crypto.randomUUID();
@@ -295,7 +319,7 @@ export function registerVenueRoutes(app: FastifyInstance, ctx: Ctx) {
     await db.update(ownerActions).set({ status: 'relaying', signature, updatedAt: new Date() }).where(eq(ownerActions.id, id));
     let handle;
     try {
-      handle = await deps.relayer.submit({ kind: kind as RelayKind, data, user: c.sub, ref: `action:${id}` });
+      handle = await deps.relayer.submit({ kind: kind as RelayKind, data, user: c.sub, venue, ref: `action:${id}` });
     } catch (e) {
       await db
         .update(ownerActions)

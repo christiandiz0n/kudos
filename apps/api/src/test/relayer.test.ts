@@ -34,6 +34,7 @@ class MockChain implements RelayChain {
   receipts = new Map<Hex, ReceiptLite>();
   events: string[] = [];
   onSimulate?: () => void;
+  receiptStatus: 'success' | 'reverted' = 'success';
 
   async pendingNonce() {
     return this.pending;
@@ -75,7 +76,7 @@ class MockChain implements RelayChain {
     }
     const tx = this.sent[[...this.seen.keys()].indexOf(hash)] ?? this.sent.at(-1)!;
     this.latest = Math.max(this.latest, tx.nonce + 1);
-    const r: ReceiptLite = { status: 'success', blockNumber: 1n, gasUsed: 300_000n, effectiveGasPrice: tx.maxFeePerGas, from: RELAYER };
+    const r: ReceiptLite = { status: this.receiptStatus, blockNumber: 1n, gasUsed: 300_000n, effectiveGasPrice: tx.maxFeePerGas, from: RELAYER };
     this.receipts.set(hash, r);
     return r;
   }
@@ -329,4 +330,117 @@ test('preflight: self-submit needs amount + gasLimit × maxFeePerGas (rounded up
   await assert.rejects(assertCanSelfSubmit({ usdcBalance: async () => 12_017_499n }, RELAYER, 12_000_000n, 700_000n, 25_000_000_000n), (e: unknown) => e instanceof ApiError && e.code === 'INSUFFICIENT_BALANCE');
   const ok = await assertCanSelfSubmit({ usdcBalance: async () => 12_017_500n }, RELAYER, 12_000_000n, 700_000n, 25_000_000_000n);
   assert.equal(ok.needed, 12_017_500n);
+});
+
+// ------------------------------------------------------------------------------------------------ D-808 (SEC-2-02/12)
+const BIG = 10n ** 12n;
+const budget = (over: Partial<import('../config').SpendBudgetConfig> = {}) => ({
+  globalHourly: BIG,
+  globalDaily: BIG,
+  perUserHourly: BIG,
+  perUserDaily: BIG,
+  perVenueHourly: BIG,
+  perVenueDaily: BIG,
+  minRelayerBalance: 0n,
+  ...over,
+});
+// MockChain: est 400k → gasLimit 480k; maxFee 40 gwei → reservation 0.0192 USDC; actual 300k × 40 gwei = 0.012.
+
+test('budget: global hourly exhausted → RELAYER_BUDGET_EXHAUSTED before any send', async () => {
+  const c = new MockChain();
+  const { r, rows } = mk(c, { budget: budget({ globalHourly: 10_000n }) });
+  await expectApiError(r.submit(job()), 'RELAYER_BUDGET_EXHAUSTED');
+  assert.equal(c.sent.length, 0);
+  assert.equal([...rows.values()][0]!.feeUsdc, null, 'nothing charged when nothing was sent');
+});
+
+test('budget: reservations settle to the actual fee (reverted txs count too)', async () => {
+  const c = new MockChain();
+  const { r, rows } = mk(c, { budget: budget({ globalHourly: 32_000n }) });
+  const h1 = await r.submit(job());
+  await h1.done;
+  assert.equal(rows.get(h1.id)!.feeUsdc, 12_000n);
+  c.receiptStatus = 'reverted';
+  const out = await (await r.submit(job())).done;
+  assert.equal(out.status, 'reverted');
+  assert.equal(r.budget.snapshot().hourly.used, 24_000n, 'the reverted tx is charged its real fee');
+  await expectApiError(r.submit(job()), 'RELAYER_BUDGET_EXHAUSTED');
+  assert.equal(c.sent.length, 2);
+});
+
+test('budget: per-venue and per-user quotas → SPEND_QUOTA_EXCEEDED; another venue/user is unaffected', async () => {
+  const c = new MockChain();
+  const { r } = mk(c, { budget: budget({ perVenueHourly: 20_000n, perUserHourly: 25_000n }) });
+  await (await r.submit(job({ user: '0xa', venue: '0xv1' }))).done;
+  await assert.rejects(r.submit(job({ user: '0xb', venue: '0xv1' })), (e: unknown) => e instanceof ApiError && e.code === 'SPEND_QUOTA_EXCEEDED' && e.details?.scope === 'venue');
+  await assert.rejects(r.submit(job({ user: '0xa', venue: '0xv2' })), (e: unknown) => e instanceof ApiError && e.code === 'SPEND_QUOTA_EXCEEDED' && e.details?.scope === 'user');
+  await (await r.submit(job({ user: '0xb', venue: '0xv2' }))).done;
+  assert.equal(c.sent.length, 2);
+});
+
+test('budget: seeded spend survives a restart', async () => {
+  const { r } = mk(new MockChain(), { budget: budget({ globalDaily: 50_000n }) });
+  r.budget.seed([{ id: 'old', at: Date.now() - 3_600_000 * 5, cost: 45_000n, user: '0xa', venue: null }]);
+  await expectApiError(r.submit(job()), 'RELAYER_BUDGET_EXHAUSTED');
+});
+
+test('pay lane: pay jumps ahead of queued non-pay jobs, and payReserve slots are pay-only', async () => {
+  const c = new MockChain();
+  c.est = 170_000n;
+  c.polls = 2;
+  const { r } = mk(c, { receiptTimeoutMs: 100, limits: { perUserPerMinute: 100, globalPerMinute: 100, maxQueue: 3, payReserve: 1 } });
+  const a = r.submit(job({ kind: 'acceptIntro', ref: 'a' }));
+  const b = r.submit(job({ kind: 'acceptIntro', ref: 'b' }));
+  await expectApiError(r.submit(job({ kind: 'acceptIntro', ref: 'x' })), 'RELAYER_BUSY');
+  const p = r.submit(job({ kind: 'pay', ref: 'p' }));
+  const ha = await a;
+  const hp = await p;
+  const hb = await b;
+  await Promise.all([ha.done, hp.done, hb.done]);
+  // a was already running; the pay went next, before the earlier-queued b.
+  const nth = (i: number) => keccak256(toHex(`h${i}`));
+  assert.deepEqual([ha.hash, hp.hash, hb.hash], [nth(1), nth(2), nth(3)]);
+});
+
+test('per-kind quota: a user exceeding the acceptIntro quota → SPEND_QUOTA_EXCEEDED (scope kind)', async () => {
+  const c = new MockChain();
+  c.est = 170_000n;
+  const { r } = mk(c, { limits: { perUserPerMinute: 100, globalPerMinute: 100, maxQueue: 50, kindQuota: { acceptIntro: { max: 1, windowMs: 3_600_000 } } } });
+  await (await r.submit(job({ kind: 'acceptIntro' }))).done;
+  await assert.rejects(r.submit(job({ kind: 'acceptIntro' })), (e: unknown) => e instanceof ApiError && e.code === 'SPEND_QUOTA_EXCEEDED' && e.details?.scope === 'kind');
+  await (await r.submit(job({ kind: 'pay' }))).done;
+});
+
+test('balance floor: relayer below RELAYER_MIN_BALANCE → RELAYER_UNDERFUNDED + one ALERT log', async () => {
+  const c = new MockChain();
+  c.balance = 10n ** 18n; // $1.00
+  const logs: string[] = [];
+  const { r } = mk(c, { budget: budget({ minRelayerBalance: 2_000_000n }), log: (m) => void logs.push(m) });
+  await expectApiError(r.submit(job()), 'RELAYER_UNDERFUNDED');
+  await expectApiError(r.submit(job()), 'RELAYER_UNDERFUNDED');
+  assert.equal(logs.filter((l) => l.startsWith('ALERT')).length, 1);
+  assert.equal(c.sent.length, 0);
+});
+
+test('replacement re-simulation: state moved on (OrderAlreadySettled) → no bumped replacement is paid for', async () => {
+  const c = new MockChain();
+  c.stuck.add(1);
+  c.sims = [{ ok: true }, { ok: false, revert: { name: 'OrderAlreadySettled' } }];
+  const { r } = mk(c, { budget: budget() });
+  const h = await r.submit(job());
+  const out = await h.done;
+  assert.equal(out.status, 'failed');
+  assert.equal(out.status === 'failed' && out.error.code, 'ORDER_ALREADY_PAID');
+  assert.equal(c.sent.length, 1, 'no replacement sent');
+  assert.equal(r.budget.snapshot().hourly.used, 19_200n, 'the broadcast tx keeps its reservation (it may still mine)');
+});
+
+test('logs never carry the RPC URL (SEC-2-07)', async () => {
+  const c = new MockChain();
+  c.sendErrors = [new Error('HTTP request failed. URL: https://example.quiknode.pro/SECRETKEY/ Status: 500')];
+  const logs: string[] = [];
+  const { r } = mk(c, { log: (m, x) => void logs.push(`${m} ${JSON.stringify(x)}`) });
+  await (await r.submit(job())).done;
+  assert.ok(logs.length > 0);
+  assert.ok(logs.every((l) => !l.includes('SECRETKEY') && !l.includes('quiknode')), logs.join('\n'));
 });

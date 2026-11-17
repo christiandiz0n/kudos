@@ -222,3 +222,17 @@ export const evAmbassadors = pgTable(
   },
   (t) => [primaryKey({ columns: [t.address, t.venue] })],
 );
+
+/**
+ * RAW-layer dedupe for `stream_deliveries` (SEC-2-10b, D-309). key = sha256(stream_id | batch_start | batch_end |
+ * decoded body). A replayed signed delivery (or a QuickNode retry of a batch we already stored) maps to the first row
+ * instead of adding one. This is NOT derived state: wipeAll/rebuild never touch it, and it is not hashed.
+ * It lives in this migrations folder so the shared apps/api/drizzle journal is not touched.
+ */
+export const evDeliveryKeys = pgTable('ev_delivery_keys', {
+  key: text('key').primaryKey(),
+  deliveryId: bigint('delivery_id', { mode: 'number' }).notNull(),
+  repeats: integer('repeats').notNull().default(0),
+  firstAt: timestamp('first_at', { withTimezone: true }).notNull().defaultNow(),
+  lastAt: timestamp('last_at', { withTimezone: true }).notNull().defaultNow(),
+});

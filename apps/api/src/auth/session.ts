@@ -6,7 +6,7 @@
  * cookie, or `?token=` (SSE only: EventSource cannot set headers). No SESSION_SECRET → auth answers 503 (fail closed).
  */
 import { createHmac, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
-import { eq, sql } from 'drizzle-orm';
+import { eq, lt, sql } from 'drizzle-orm';
 import { getAddress, verifyMessage, type Address, type Hex } from 'viem';
 import { APP_NAME, ARC_TESTNET_CHAIN_ID } from '@vouch/shared';
 import type { DbHandle } from '../db/index';
@@ -75,7 +75,8 @@ export class Sessions {
   ) {}
 
   private need(): string {
-    if (!this.secret) throw new ApiError('INTERNAL', { status: 503, message: 'Sign-in is unavailable right now.', details: { reason: 'SESSION_SECRET not set' } });
+    // Fail closed without saying which setting is missing (SEC-2-08).
+    if (!this.secret) throw new ApiError('INTERNAL', { status: 503, message: 'Sign-in is unavailable right now.' });
     return this.secret;
   }
 
@@ -86,6 +87,8 @@ export class Sessions {
     const expiresAt = new Date(now.getTime() + CHALLENGE_TTL_SECONDS * 1000);
     const message = challengeMessage(address, randomBytes(16).toString('hex'), now, expiresAt, this.origin);
     await this.handle.db.insert(authChallenges).values({ id, address, message, expiresAt });
+    // Bounded growth: drop challenges that expired over an hour ago (cheap, indexed by PK scan on a small table).
+    if (Math.random() < 0.05) await this.handle.db.delete(authChallenges).where(lt(authChallenges.expiresAt, new Date(Date.now() - 3_600_000))).catch(() => {});
     return { challengeId: id, message, expiresAt: expiresAt.toISOString() };
   }
 
@@ -151,14 +154,20 @@ export class Sessions {
   }
 }
 
-/** Bearer header → cookie → `?token=` query. */
-export function tokenFrom(req: { headers: Record<string, string | string[] | undefined>; query?: unknown }): string | undefined {
+/**
+ * `Authorization: Bearer <token>` only (SEC-2-03, SEC-2-09: no cookie, no query string). The SSE route alone also
+ * accepts `?token=` via `sseTokenFrom` (EventSource cannot set headers); request logs redact it.
+ */
+export function tokenFrom(req: { headers: Record<string, string | string[] | undefined> }): string | undefined {
   const h = req.headers.authorization;
   const auth = Array.isArray(h) ? h[0] : h;
-  if (auth?.startsWith('Bearer ')) return auth.slice(7).trim();
-  const cookie = Array.isArray(req.headers.cookie) ? req.headers.cookie.join(';') : req.headers.cookie;
-  const m = cookie ? /(?:^|;\s*)vouch_session=([^;]+)/.exec(cookie) : null;
-  if (m) return decodeURIComponent(m[1]!);
+  if (auth?.startsWith('Bearer ')) return auth.slice(7).trim() || undefined;
+  return undefined;
+}
+
+export function sseTokenFrom(req: { headers: Record<string, string | string[] | undefined>; query?: unknown }): string | undefined {
+  const fromHeader = tokenFrom(req);
+  if (fromHeader) return fromHeader;
   const q = req.query as { token?: unknown } | undefined;
-  return typeof q?.token === 'string' ? q.token : undefined;
+  return typeof q?.token === 'string' && q.token ? q.token : undefined;
 }

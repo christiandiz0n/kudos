@@ -14,7 +14,7 @@
  * QE-C-11 fee pre-flight; the API never relays those.
  */
 import type { FastifyInstance } from 'fastify';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { encodeFunctionData, getAddress, zeroAddress, zeroHash, type Address, type Hex } from 'viem';
 import {
   ARC_TESTNET_USDC_EIP712_DOMAIN,
@@ -39,6 +39,8 @@ import { opensFor } from './intros';
 import { settledView } from './views';
 
 export const AUTH_WINDOW = 600n;
+/** Refusals that leave the intent re-submittable (nothing was attempted on chain). */
+const RETRYABLE_REFUSALS = ['RATE_LIMITED', 'RELAYER_BUSY', 'SPEND_QUOTA_EXCEEDED', 'RELAYER_BUDGET_EXHAUSTED', 'RELAYER_DOWN', 'RELAYER_UNDERFUNDED'];
 /** Upper bound for a self-submitted pay() used to size the fee pre-flight (live canonical ≈ 371–410k; worst ≥ 805k). */
 export const SELF_SUBMIT_GAS_BOUND = 900_000n;
 
@@ -75,7 +77,13 @@ export function registerPaymentRoutes(app: FastifyInstance, ctx: Ctx) {
   }
 
   async function alreadyPaid(venue: Address, orderId: Hex, intentId?: string) {
-    if (intentId) await db.update(paymentIntents).set({ status: 'already_settled', errorCode: 'ORDER_ALREADY_PAID', updatedAt: new Date() }).where(eq(paymentIntents.id, intentId));
+    // Only an intent this request claimed (status relaying, nothing mined for it) may be marked already_settled.
+    if (intentId) {
+      await db
+        .update(paymentIntents)
+        .set({ status: 'already_settled', errorCode: 'ORDER_ALREADY_PAID', updatedAt: new Date() })
+        .where(and(eq(paymentIntents.id, intentId), eq(paymentIntents.status, 'relaying')));
+    }
     const settled = await deps.streams.getPayment(venue, orderId);
     return new ApiError('ORDER_ALREADY_PAID', {
       details: { venue, orderId, settled: settled ? toJson(settledView(settled)) : null, waitingOnStreams: !settled },
@@ -221,24 +229,33 @@ export function registerPaymentRoutes(app: FastifyInstance, ctx: Ctx) {
     const rwa = receiveAuthForPayment(auth, chain.vouch);
     await verifyTyped(c.sub, ARC_TESTNET_USDC_EIP712_DOMAIN, RECEIVE_WITH_AUTHORIZATION_TYPES, 'ReceiveWithAuthorization', { ...rwa }, signature);
     const t = await chain.now();
+    const o = await loadOrder(venue, orderId);
+    // QE-2-06: one code for "the QR expired" (ORDER_EXPIRED, as at quote time); PAYMENT_EXPIRED only when the
+    // order is still valid but this signed payment's own window ran out.
+    if (t > o.expiresAt) throw new ApiError('ORDER_EXPIRED');
     if (t >= auth.deadline) throw new ApiError('PAYMENT_EXPIRED');
     // QE-C-11 (relayed): balance ≥ amount, before anything is sent.
     await assertCanPayRelayed(chain, c.sub, auth.amount);
-    const o = await loadOrder(venue, orderId);
     const order: Order = { venue, orderId, amount: o.amount, expiresAt: o.expiresAt };
     const data = encodeFunctionData({ abi: vouchAbi, functionName: 'pay', args: [order, o.signature as Hex, weights, it.weightsSig as Hex, auth, signature] });
 
+    // Atomic quoted → relaying claim BEFORE anything else can write this intent (QE-2-01, SEC-2-12). The loser of a
+    // double-tap gets 409 and never touches the row (in particular it cannot rewrite the winner to already_settled).
+    const claimed = (await db.execute(sql`update payment_intents set status = 'relaying', updated_at = now() where id = ${intentId} and status = 'quoted' returning id`)) as unknown;
+    const claimedRows = Array.isArray(claimed) ? claimed : ((claimed as { rows?: unknown[] }).rows ?? []);
+    if (claimedRows.length !== 1) throw new ApiError('PAYMENT_ALREADY_USED', { details: { status: 'in progress' } });
+
     // Fast pre-simulation (the relayer simulates again inside its lock). QE-C-10: OrderAlreadySettled is terminal.
+    // We own the claim, so marking THIS intent already_settled is correct (it was never sent).
     const sim = await chain.simulate(data).catch(() => null);
     if (sim && !sim.ok && sim.revert.name === 'OrderAlreadySettled') throw await alreadyPaid(venue, orderId, intentId);
-
-    await db.update(paymentIntents).set({ status: 'relaying', updatedAt: new Date() }).where(eq(paymentIntents.id, intentId));
     let handle;
     try {
       handle = await deps.relayer.submit({
         kind: 'pay',
         data,
         user: c.sub,
+        venue,
         ref: `intent:${intentId}`,
         preflight: async () => {
           await assertCanPayRelayed(chain, c.sub, auth.amount);
@@ -250,9 +267,9 @@ export function registerPaymentRoutes(app: FastifyInstance, ctx: Ctx) {
         .update(paymentIntents)
         .set({ status: 'failed', errorCode: e instanceof ApiError ? e.code : 'INTERNAL', updatedAt: new Date() })
         .where(eq(paymentIntents.id, intentId));
-      if (e instanceof ApiError && !['RATE_LIMITED', 'RELAYER_BUSY'].includes(e.code)) await db.update(orders).set({ status: 'failed', updatedAt: new Date() }).where(and(eq(orders.venue, venue), eq(orders.orderId, orderId)));
-      // A rate-limited / busy attempt can be retried with the same intent.
-      if (e instanceof ApiError && ['RATE_LIMITED', 'RELAYER_BUSY'].includes(e.code)) await db.update(paymentIntents).set({ status: 'quoted', errorCode: null }).where(eq(paymentIntents.id, intentId));
+      // The shared order is NOT touched by one customer's refused attempt (SEC-2-12); failure is per intent.
+      // A limit-type refusal can be retried with the same intent.
+      if (e instanceof ApiError && RETRYABLE_REFUSALS.includes(e.code)) await db.update(paymentIntents).set({ status: 'quoted', errorCode: null }).where(eq(paymentIntents.id, intentId));
       throw e;
     }
     await db.update(paymentIntents).set({ relayTxId: handle.id, txHash: handle.hash, updatedAt: new Date() }).where(eq(paymentIntents.id, intentId));
@@ -267,10 +284,12 @@ export function registerPaymentRoutes(app: FastifyInstance, ctx: Ctx) {
         errorCode = 'ORDER_ALREADY_PAID';
       }
       await db.update(paymentIntents).set({ status, errorCode, ...(out.status !== 'failed' ? { txHash: out.hash } : {}), updatedAt: new Date() }).where(eq(paymentIntents.id, intentId));
-      await db
-        .update(orders)
-        .set({ status: status === 'relayed' ? 'relayed' : status === 'failed' ? 'failed' : 'relayed', ...(out.status !== 'failed' ? { txHash: out.hash } : {}), updatedAt: new Date() })
-        .where(and(eq(orders.venue, venue), eq(orders.orderId, orderId)));
+      // Order status changes only on chain-confirmed outcomes of a relayed tx: mined → relayed, reverted → failed.
+      // A refusal before broadcast (out.status 'failed') leaves the order untouched (SEC-2-12).
+      if (out.status !== 'failed') {
+        const orderStatus = out.status === 'mined' || status === 'already_settled' ? 'relayed' : 'failed';
+        await db.update(orders).set({ status: orderStatus, txHash: out.hash, updatedAt: new Date() }).where(and(eq(orders.venue, venue), eq(orders.orderId, orderId)));
+      }
       if (status !== 'relayed') {
         const fe = { ...evt, status, code: errorCode };
         deps.sse.publish(SseHub.userChannel(c.sub), 'payment.failed', fe);
