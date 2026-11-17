@@ -142,3 +142,6 @@ From a laptop, the private `DATABASE_URL` (`*.railway.internal`) is unreachable.
 | Deliveries `500 persist-failed` | DB unreachable or full. Check the Postgres service; QuickNode retries. |
 | `streams:deliveries --db` says PRIVATE host | Enable Public Networking on Postgres and use `railway run --service Postgres -- …` (section 7). |
 | `railway up` uploads too much | It respects `.gitignore` (so `.env` and `data/local` are never uploaded) and `.railwayignore`. `.dockerignore` additionally keeps `.env*`, `contracts/out|cache`, `broadcast`, `data/`, `.next`, `.git` and `node_modules` out of the image. |
+
+## Non-secret variables set by the Orchestrator
+- `TRUST_PROXY=2` (D-018): Railway is client → edge → internal proxy → app. Verified that a spoofed leftmost XFF entry is ignored.

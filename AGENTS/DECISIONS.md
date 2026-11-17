@@ -729,3 +729,6 @@ _Format: `## D-<nnn> — <title>` · Date · Decision · Reason · Alternatives 
   - **Money shape:** `GET /intros/:code` `terms.minOrder` uses the standard `{baseUnits, display}` money shape.
   - **Duplicate intro:** `POST /intros` with an already-stored signed intro answers 200 with the same code (201 means newly created).
 - **Who:** BACKEND_RELAYER
+
+### D-018 — 2026-11-17 — Railway `TRUST_PROXY=2` (Orchestrator)
+Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railway's edge (`152.233.47.x`, outside the internal range), so per-IP buckets were still shared. Railway's chain is client → edge → internal proxy → app, so a hop count of 2 is correct. Set `TRUST_PROXY=2` as a non-secret service variable via the CLI. Verified in hosted logs: plain requests and requests with a spoofed leftmost `X-Forwarded-For: 1.2.3.4` both log the real client IP. The code default stays `100.64.0.0/10`, which is safe locally.
