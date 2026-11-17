@@ -1,5 +1,5 @@
 # INTERFACES — cross-agent source of truth
-_Last updated: 2026-11-16 (session 2) by ORCHESTRATOR — §2–§4 v3 (D-014, D-519, D-520; CONTRACTS_QE PASS-with-findings); §6–§7 Railway + delivery persistence (D-016, D-305). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
+_Last updated: 2026-11-16 (session 2) by ORCHESTRATOR — §5 v1 + §6 ingestion (Phase 2); §2–§4 v3 (D-014, D-519, D-520; CONTRACTS_QE PASS-with-findings); §6–§7 Railway + delivery persistence (D-016, D-305). Changes require a DECISIONS.md entry; the ORCHESTRATOR applies them._
 
 ## 1. Network (Arc Testnet)
 _Status: VERIFIED 2026-11-15 by ARCHITECT-research (S1). Evidence: docs/evidence/phase-0/research-s1-s3-s4.md. Decisions D-101..D-105._
@@ -192,34 +192,55 @@ Semantics:
   ¹ Count `RewardReturned` role 1 with reason 2 (TRANSFER_FAILED) too: on-chain, `customersCredited` includes an L1 whose transfer failed. Amount-0 L1 credits arrive as `RewardPaid` (v2).
 
 ## 5. API endpoints
-> **v0 DRAFT — BACKEND_RELAYER finalizes (Phase 2).** Fastify service (`apps/api`), JSON bodies, amounts as **decimal strings of base units** (never JS numbers), addresses checksummed, all signatures 0x-hex. Auth = session cookie/bearer from the passkey/wallet flow (S4 pending). "relay" = the backend relayer submits the tx and pays gas.
+> **v1 (Phase 2, BACKEND_RELAYER D-801..D-806; applied by ORCHESTRATOR).** Fastify `apps/api`. Production base URL `https://api-production-902bc54c.up.railway.app`. Source of truth for shapes: the route files in `apps/api/src/routes/` and the tests. "Settled" fields come only from STREAMS_INFRA's derived tables (D-803). `POST /payments` relays with `submitter = RELAYER`; `OrderAlreadySettled` → 409, terminal, split read from Streams (QE-C-10); balance ≥ amount (relayed) / ≥ amount + 900k × maxFee (self-submit) (QE-C-11).
 
-| Method | Path | Purpose / sketch |
-|---|---|---|
-| GET | `/health` | Liveness + DB ping (exists) |
-| POST | `/auth/challenge` | `{address}` → `{nonce, message}` (SIWE-style or passkey challenge, S4) |
-| POST | `/auth/verify` | `{address, signature \| credential}` → session |
-| GET | `/auth/session` · POST `/auth/logout` | Current user `{address, displayName, roles}` / end session |
-| GET | `/venues` · GET `/venues/:venue` | List / detail (name, terms, stats summary) |
-| POST | `/venues` | Register venue → relay `registerVenue` (venue owner signs) |
-| GET | `/venues/:venue/terms` | Current + historical terms (`termsVersion`, `rewardBps`, `minOrderAmount`) |
-| POST | `/venues/:venue/terms` | Update terms → relay `setTerms` (owner-signed) |
-| POST | `/venues/:venue/orders` | Staff keys amount → backend signs `Order` with VENUE_SIGNER key → `{order, signature, qrPayload}` |
-| GET | `/orders/:orderId` | Order status `pending \| paid \| expired` (+ txHash) |
-| POST | `/intros` | Referrer-signed `Intro` (personal/broadcast) stored → `{linkId, url}` |
-| GET | `/intros/:linkId` | Public link landing data (venue, referrer display, terms, expiry) |
-| POST | `/intros/:linkId/opens` | Record a link open (attribution signal; rate-limited, no auth) |
-| POST | `/intros/:linkId/accept` | Customer `IntroAcceptance` sig → relay `acceptIntro` → `{txHash}` |
-| POST | `/payments/quote` | `{order, orderSig, customer, whoSentYou?}` → split preview `{amount, cashback, rewards[], venueAmount}`, `Weights` with attributor sig, `paymentAuth` (incl. `weightsHash`, `deadline`), and the USDC `ReceiveWithAuthorization` typed data to sign (D-103) |
-| POST | `/payments` | `{order, orderSig, weights?, weightsSig?, paymentAuth, receiveAuthSig}` → relay `pay` (maxFeePerGas ≥ 20 gwei) → `{txHash}` |
-| GET | `/me/wallet` | Balance (USDC, formatted + base units), pending/claimed rewards |
-| GET | `/me/activity` | Payments, rewards, intros (from DB, rebuilt from events) |
-| GET | `/ambassadors/:address` | Ambassador record: venues recommended, verified customers brought, earnings (on-chain derived) |
-| GET | `/venues/:venue/stats` | Verified customers, cost per verified customer, reward spend, money-graph edges |
-| POST | `/onboarding/topup` | Testnet demo: simulated top-up (labeled). No approve is needed with EIP-3009 |
-| GET (SSE) | `/events/user/:address` | Live stream: `payment.settled`, `reward.paid`, `intro.accepted` for this user |
-| GET (SSE) | `/events/venue/:venue` | Live stream: `payment.settled`, `reward.paid`, `customer.verified`, `order.status` |
-| POST | `/webhooks/streams` | QuickNode Streams delivery (exists as S3 stub; see §6) |
+- **Conventions:** amounts are base-unit strings or `{baseUnits, display}`. Errors are `{error: {code, message, retryable, details?}}`. Auth is `Authorization: Bearer <token>`. Typed data comes back as `{domain, types, primaryType, message}` with uint fields as decimal strings; convert them to BigInt before signing.
+- **Auth:**
+  - `POST /auth/challenge {address}` → `{challengeId, message, expiresAt}`
+  - `POST /auth/verify {address, challengeId, signature, displayName?, passkeyCredentialId?}` → `{token, expiresAt, user}`
+  - `GET /auth/session`
+  - `POST /auth/logout`
+  - `PATCH /me {displayName}`
+- **Venues:**
+  - `POST /venues/prepare {name, rewardBps, minOrder, payout?, description?, slug?}` → `{venue, slug, typedData}`
+  - `POST /venues {venue, signature}` → 202 `{venue, status: "pending", txHash, relayId}`
+  - `GET /venues`
+  - `GET /venues/:venue`
+  - `PATCH /venues/:venue`
+  - `GET /venues/:venue/terms`
+- **Owner actions:**
+  - `POST /venues/:venue/actions {kind: updateTerms|setKeys|setSeedAmbassador, …}` → `{actionId, typedData}`
+  - `POST /venues/:venue/actions/:id {signature}` → 202
+  - `GET /venues/:venue/actions/:id`
+- **Orders:**
+  - `POST /venues/:venue/orders {amount, ttlSeconds?, label?}` → 201 `{order, signature, qrPayload, …}`
+  - `GET /venues/:venue/orders` (owner)
+  - `GET /venues/:venue/orders/:orderId` (public; `status: pending|relayed|failed|expired|paid`, `settled`)
+- **Intros:**
+  - `POST /intros/prepare {venue, linkType, ttlDays?}` → `{intro, typedData}`
+  - `POST /intros {intro, signature, note?}` → 201 `{code, url, introHash}`
+  - `GET /intros/:code`, which includes `status: active|expired|needs_reissue` and `reissueBy`
+  - `POST /intros/:code/opens`
+  - `POST /intros/:code/accept/prepare` → `{acceptance, typedData}`
+  - `POST /intros/:code/accept {acceptance, signature}` → 202
+  - `GET /me/links`
+- **Payments:**
+  - `POST /payments/quote {venue, orderId, whoSentYou?, mode?}` → `{intentId, quote, attribution, weights, weightsSignature, paymentAuth, typedData, balance, canAfford, warnings}`
+  - `POST /payments {intentId, signature}` → 202 `{intentId, status: "pending", txHash, relayId}`
+  - `GET /payments/:intentId` (`status: pending|settled|failed`, `settled` from Streams)
+- **Reads:**
+  - `GET /me/wallet`
+  - `GET /me/activity`
+  - `GET /ambassadors/:address`
+  - `GET /venues/:venue/stats`
+  - `GET /relay/:id`
+  - `GET /relayer/status`
+- **SSE:**
+  - `GET /events/user/:address?token=` (own address only)
+  - `GET /events/venue/:venue` (public)
+  - Events: `payment.pending`, `payment.failed`, `payment.settled`, `reward.paid`, `intro.pending`, `intro.failed`, `intro.accepted`, `intro.dropped`, `customer.verified`, `venue.pending`, `venue.failed`, `venue.registered`, `venue.action.pending`, `venue.action.failed`, `terms.updated`, `venue.keys`, `seed.set`.
+- **Dropped from the v0 draft:** `POST /onboarding/topup` (the CLI exists).
+- **Also:** `GET /health`; `POST /webhooks/streams` (§6).
 
 ## 6. Webhook (QuickNode Streams → api)
 _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only items still UNVERIFIED until the first real delivery._
@@ -227,7 +248,10 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 - **Auth (D-301):** headers `X-QN-Nonce`, `X-QN-Timestamp`, `X-QN-Signature` = `hex(HMAC-SHA256(key = utf8(STREAMS_WEBHOOK_SECRET), msg = nonce + timestamp + body))` over the exact decoded bytes (gunzip first if `Content-Encoding: gzip`). Constant-time compare.
 - **Responses:** `503` secret unset/placeholder (fail closed) · `401` missing headers / bad signature · `400 body-decode-failed` bad gzip · `500 persist-failed` verified but not stored (QuickNode retries, D-305) · `200` accepted. Timestamp skew is logged, not rejected.
 - **Body (D-302, our filter's envelope v1):** `{ v: 1, streamId, network, dataset, batchStart, batchEnd, batchSource: "metadata"|"logs", events: [ {address, topics, data, blockNumber, transactionHash, logIndex, event, ...} ] }`. The filter (`infra/streams/filter-logs.js`) keeps only logs from our contract address(es) with known topic0s and returns `null` otherwise. It never matches the EIP-7708 system emitter `0xffff…fffe`.
-- **Idempotency key for ingestion (Phase 2):** `(transactionHash, logIndex)`.
+- **Ingestion (D-306, STREAMS_INFRA):** after the raw row commits, logs are decoded strictly with `vouchAbi` (only the v3 address, the 10 topics, `removed=false`; USDC/system-emitter/unknown topics counted as ignored), inserted into `ev_events` `ON CONFLICT (tx_hash, log_index) DO NOTHING`, applied in (block, logIndex) order (a batch behind the cursor triggers an in-order rebuild of derived tables from `ev_events`), one transaction + advisory lock per batch. **Ingest failure still answers 200** (raw row is durable); it is recorded in `ev_ingest_log` and retried from `stream_deliveries` after the next delivery and at boot (`ingestPending`). Response gains `ingested`; the log line gains `ingest:{ok,newEvents,duplicates,ignored,rebuilt,cursorBlock,events}`.
+- **Derived tables (`ev_*`, own migrations folder `apps/api/drizzle-streams/`, table `__drizzle_migrations_streams`):** `ev_events, ev_cursor, ev_ingest_log, ev_venues, ev_terms, ev_seeds, ev_intros, ev_verified, ev_payments, ev_rewards, ev_venue_stats, ev_ambassadors`. Cost per verified customer = `rewardsPaid / verifiedCustomers` (`ev_venue_stats`).
+- **StreamsPort (in-process API):** `createStreams(db)` → queries + `bus`; types in `apps/api/src/streams/types.ts` (structurally equal to `apps/api/src/ports/streams.ts`). The bus emits only NEW events after commit (never for replay/backfill); listener errors are contained.
+- **Determinism:** `pnpm --filter @vouch/scripts streams:verify [--db]` asserts chain-backfill == live == replay == rebuild (hash over derived tables, excluding `blockTime`). Also `streams:backfill`, `streams:replay [--in-place]`, `streams:hash`.
 - **Persistence (D-305):** every *verified* delivery becomes one `stream_deliveries` row before the 200 (`id, received_at, verified, stream_id, batch_start, batch_end, event_count, bytes, gzip, headers jsonb (allow-list, no signature), summary jsonb, body jsonb, body_text`; stream/batch from headers first, then body; no dedupe). 503/401/400 store nothing. One structured log line `streams delivery` per request (no token/signature/body). Read hosted rows: `pnpm --filter @vouch/scripts streams:deliveries --db [--db-url …]` (uses `DATABASE_PUBLIC_URL` then `DATABASE_URL`; refuses `*.railway.internal`).
 - **Spike log (local dev only):** NDJSON at `data/local/streams-spike.ndjson`; off when `NODE_ENV=production` unless `STREAMS_SPIKE_LOG` names a path; `STREAMS_SPIKE_LOG=off` disables it. View with `pnpm --filter @vouch/scripts streams:deliveries`.
 - **UNVERIFIED (live):** the timestamp unit (seconds?), whether the raw dataset arrives 3-deep nested or unwrapped (the filter handles both), and whether `blockTimestamp` is present on logs.
@@ -261,3 +285,5 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `STREAMS_SPIKE_LOG` _(optional)_ | api | Override path of the S3 NDJSON log |
 
 **Phase 1 note (D-510, v2):** `WOM_CONTRACT_ADDRESS` / `WOM_DEPLOY_BLOCK` should become `VOUCH_CONTRACT_ADDRESS=0xF4B641dc628de05336aa983B07D5d181254ff08e` / `VOUCH_DEPLOY_BLOCK=72605845` (v3, D-520). Code should prefer `VOUCH_ARC_TESTNET` from `@vouch/shared` over env vars.
+
+**Phase 2 env additions (D-801, optional with defaults; see `.env.example`):** `SESSION_TTL_SECONDS`, `PUBLIC_WEB_URL`, `RELAYER_MAX_GAS_PAY`, `RELAYER_MAX_FEE_GWEI`, `RELAYER_RECEIPT_TIMEOUT_MS`, `RELAYER_MAX_SEND_ATTEMPTS`, `RELAYER_RATE_PER_USER_PER_MIN`, `RELAYER_RATE_GLOBAL_PER_MIN`, `RELAYER_MAX_QUEUE`, `STORY_API_URL` (scripts). `ARC_RPC_URL` is also used by the `streams:*` commands. Secrets on Railway (api → Variables): `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY`, `SESSION_SECRET`, `STREAMS_WEBHOOK_SECRET`.
