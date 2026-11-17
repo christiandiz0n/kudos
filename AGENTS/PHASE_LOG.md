@@ -104,3 +104,14 @@ _pending_
 - ORCHESTRATOR: secret scan of the Phase 2 diff (367 64-hex strings → derived addresses vs the 9 real wallets: 0 leaks). Committed e90c49d; Railway redeployed from a clean HEAD export: /health db=postgres; boot `ingestPending` rebuilt derived state from the 18 stored Stream deliveries (`/venues/0xf315…2005/stats`: 3 verified, 3 payments, gross $14.00, rewards $2.07, cost/verified $0.69). Relayer disabled on Railway until secrets are set. INTERFACES §5 v1, §6 ingestion, §7 env applied.
 ### QE gate (Phase 2)
 - QE_E2E + SECURITY_REVIEW launched in parallel (independent).
+
+### Phase 2 security loop (2026-11-17)
+- The SECURITY_REVIEW found 2 High (SEC-2-01 webhook decode-before-auth / no caps; SEC-2-02 no relayer spend budget), 4 Med and 7 Low. QE Part A found QE-2-01 (Med, a non-atomic intent claim) plus several Lows.
+- The fixes are in 920a042 (STREAMS_INFRA D-308/D-309; BACKEND_RELAYER D-807..D-810), and Railway was redeployed from a clean HEAD. D-018 sets `TRUST_PROXY=2` on Railway.
+- Re-verify: **PASS-with-notes**. SEC-2-01..13 are FIXED, except SEC-2-10, which is PARTIAL (the timestamp window is log-only per D-309d). It is now safe to set the hosted relayer secrets.
+- Phase 3 backlog:
+  - N-1: reserve part of the budget for `pay`.
+  - N-2: a tighter webhook burst/raw cap.
+  - N-4: a reverted relayed pay marks the order `failed` (display only).
+  - N-5: a one-off PGlite V8 crash in ingest.test (flaky, environmental).
+  - Unbounded tables.

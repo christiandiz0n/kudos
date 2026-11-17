@@ -1,0 +1,16 @@
+# Re-verify SEC-2-01 on the current tree (HEAD aab31f2), local api :4040 only
+rss start: 525104 KB
+R-01a ~1 MB gzip inflating to 1 GiB, no x-qn-* headers:
+{"ok":false,"error":"missing-signature-headers"} HTTP 401 0.002618s
+  rss: 525216 KB
+R-01b same body WITH placeholder x-qn-* headers (signature format valid, value wrong):
+{"ok":false,"error":"decoded-body-too-large"} HTTP 413 0.004103s
+  rss: 527040 KB
+R-01c 5 MB raw body (over the 4 MiB raw limit):
+{"statusCode":413,"code":"FST_ERR_CTP_BODY_TOO_LARGE","error":"Payload Too Large","message":"Request body is too large"} HTTP 413 0.001799s
+  rss: 527152 KB
+R-01d /health afterwards:
+ HTTP 200 0.001449s
+log lines:
+delivery:{"verified":false,"status":401,"reason":"missing-signature-headers","bytes":1043656},"msg":"streams delivery"}
+delivery:{"verified":false,"status":413,"reason":"decoded-body-too-large","bytes":1043656},"msg":"streams delivery"}

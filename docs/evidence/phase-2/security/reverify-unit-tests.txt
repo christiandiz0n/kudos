@@ -1,0 +1,189 @@
+✔ GET /health (in-memory PGlite) (5552.675042ms)
+✔ port: PORT (host-injected, e.g. Railway) wins over API_PORT, default 4000 (0.636125ms)
+✔ NDJSON spike log: on by default locally, off in production unless set, "off" disables (0.609667ms)
+▶ decode + filter on real blocks
+  ✔ frozen production filter: 72606074 → 7 Vouch events of the relayed pay, 72606174 → 7 of the self-submit pay, 72606075 → null (1.634ms)
+  ✔ infra/streams/stream-vouch-prod.json: start block, address and test-filter expectations match the frozen filter (1.262834ms)
+  ✔ unfiltered raw block: USDC, EIP-7708 system-emitter and foreign logs are ignored; only Vouch logs decode (3.231875ms)
+  ✔ unknown topic0 / EIP712DomainChanged / removed logs from the Vouch address are ignored (0.116209ms)
+  ✔ chunkRange never exceeds the 10,000-block eth_getLogs limit (0.553792ms)
+✔ decode + filter on real blocks (7.510792ms)
+▶ derived state from real v3 data
+  ✔ canonical split rows (relayed pay 0x95cbda97): 10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108 (5.997625ms)
+  ✔ canonical split rows (self-submit pay 0xfca0e1ae): 10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108 (3.885791ms)
+  ✔ venue stats + ambassador record are consistent with the lines (7.093875ms)
+✔ derived state from real v3 data (5570.285708ms)
+▶ idempotency, ordering, overlap
+  ✔ re-delivery of the same batch is a no-op (0 new, all duplicates, same hash) (1443.661791ms)
+  ✔ overlapping batches and reverse-order delivery converge to the in-order hash (4455.348208ms)
+  ✔ events are applied in (block, logIndex) order even when shuffled inside one body (1780.511084ms)
+✔ idempotency, ordering, overlap (7680.166917ms)
+▶ webhook → ingest → bus
+  ✔ live webhook path: deliveries stored + ingested; duplicates/overlap emit nothing; listener errors are contained (1371.457459ms)
+
+
+#
+# Fatal error in , line 0
+# Check failed: end > addr.
+#
+#
+#
+#FailureMessage Object: 0x16d0b5418
+----- Native stack trace -----
+
+ 1: 0x102ed56fc node::NodePlatform::GetStackTracePrinter()::$_0::__invoke() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 2: 0x104717b4c V8_Fatal(char const*, ...) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 3: 0x103155130 v8::internal::ThreadIsolation::LookupJitPage(unsigned long, unsigned long) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 4: 0x103156b60 v8::internal::ThreadIsolation::UnregisterWasmAllocation(unsigned long, unsigned long) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 5: 0x103b98d70 v8::internal::wasm::WasmCodeAllocator::FreeCode(v8::base::Vector<v8::internal::wasm::WasmCode* const>) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 6: 0x103bcd88c v8::internal::wasm::WasmImportWrapperCache::Free(std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>&) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 7: 0x103bbf4cc v8::internal::wasm::WasmEngine::FreeDeadCodeLocked(std::__1::unordered_map<v8::internal::wasm::NativeModule*, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>, std::__1::hash<v8::internal::wasm::NativeModule*>, std::__1::equal_to<v8::internal::wasm::NativeModule*>, std::__1::allocator<std::__1::pair<v8::internal::wasm::NativeModule* const, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>>>> const&, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>&) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 8: 0x103bbf2dc v8::internal::wasm::WasmEngine::FreeDeadCode(std::__1::unordered_map<v8::internal::wasm::NativeModule*, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>, std::__1::hash<v8::internal::wasm::NativeModule*>, std::__1::equal_to<v8::internal::wasm::NativeModule*>, std::__1::allocator<std::__1::pair<v8::internal::wasm::NativeModule* const, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>>>> const&, std::__1::vector<v8::internal::wasm::WasmCode*, std::__1::allocator<v8::internal::wasm::WasmCode*>>&) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+ 9: 0x103b97550 v8::internal::wasm::WasmCode::DecrementRefCount(v8::base::Vector<v8::internal::wasm::WasmCode* const>) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+10: 0x103b999ac v8::internal::wasm::WasmCodeRefScope::~WasmCodeRefScope() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+11: 0x103a64edc v8::internal::Runtime_TierUpWasmToJSWrapper(int, unsigned long*, v8::internal::Isolate*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+12: 0x103d5e31c Builtins_WasmCEntry [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+13: 0x103d54390 Builtins_WasmToJsWrapperCSA [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+14: 0x37617a3180d8 
+15: 0x3761796e1abc 
+16: 0x103d53ca4 Builtins_JSToWasmWrapperAsm [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+17: 0x103e2823c Builtins_JSToWasmWrapper [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+18: 0x1588f7d44 
+19: 0x103cc0bec Builtins_InterpreterEntryTrampoline [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+20: 0x158b5ca44 
+21: 0x103cff648 Builtins_AsyncFunctionAwaitResolveClosure [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+22: 0x103dd45f8 Builtins_PromiseFulfillReactionJob [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+23: 0x103ceea50 Builtins_RunMicrotasks [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+24: 0x103cbe7b0 Builtins_JSRunMicrotasksEntry [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+25: 0x1031e8a94 v8::internal::(anonymous namespace)::Invoke(v8::internal::Isolate*, v8::internal::(anonymous namespace)::InvokeParams const&) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+26: 0x1031e9308 v8::internal::(anonymous namespace)::InvokeWithTryCatch(v8::internal::Isolate*, v8::internal::(anonymous namespace)::InvokeParams const&) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+27: 0x1031e9444 v8::internal::Execution::TryRunMicrotasks(v8::internal::Isolate*, v8::internal::MicrotaskQueue*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+28: 0x1032182f0 v8::internal::MicrotaskQueue::RunMicrotasks(v8::internal::Isolate*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+29: 0x103218c50 v8::internal::MicrotaskQueue::PerformCheckpoint(v8::Isolate*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+30: 0x102d45040 node::InternalCallbackScope::Close() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+31: 0x102d44ae8 node::InternalCallbackScope::~InternalCallbackScope() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+32: 0x102e484e8 node::fs::FileHandle::CloseReq::Resolve() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+33: 0x102e63b28 node::fs::FileHandle::ClosePromise()::$_0::__invoke(uv_fs_s*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+34: 0x102e3bedc node::MakeLibuvRequestCallback<uv_fs_s, void (*)(uv_fs_s*)>::Wrapper(uv_fs_s*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+35: 0x103c99924 uv__work_done [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+36: 0x103c9d654 uv__async_io [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+37: 0x103cb19ec uv__io_poll [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+38: 0x103c9dbbc uv_run [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+39: 0x102d45b7c node::SpinEventLoopInternal(node::Environment*) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+40: 0x102e984b0 node::NodeMainInstance::Run() [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+41: 0x102dfe2d8 node::Start(int, char**) [/Users/christiandizon/.nvm/versions/node/v24.13.0/bin/node]
+42: 0x1906a7154 start [/usr/lib/dyld]
+✖ src/streams/ingest.test.ts (17621.207208ms)
+✔ canonical story through the API: register → seed → intros → quotes → pays (exact $12 split) (6023.011458ms)
+✔ QE-C-10: pay after the order was settled by another auth → terminal 409, split read from Streams (not the quote) (1310.118959ms)
+✔ QE-C-11: relayed pay refuses balance < amount before sending; self-submit quote needs amount + fee (1812.051958ms)
+✔ orders: expired order → ORDER_EXPIRED; only the venue owner can create; bad signature on pay → 400 before relay (1480.851125ms)
+✔ owner actions: only the current nonces(owner); stale signature → OWNER_NONCE_STALE (nothing relayed) (872.05325ms)
+✔ intros: self-referral, non-eligible referrer, used personal link, verified customer (967.643583ms)
+✔ relayer down (no RELAYER key): quote and pay answer RELAYER_DOWN 503; nothing pretends to be settled (943.807834ms)
+✔ reads: wallet balance from chain; activity/ambassador/stats from StreamsPort (1103.362291ms)
+✔ rate limits: per-user relay limit → RATE_LIMITED 429 (retryable), nothing sent (772.982291ms)
+✔ canonical: personal ×(1+0.25×3) vs broadcast ×(1+0.25×2) → exactly 7000 / 3000 (1.271542ms)
+✔ link type, opens (capped) and recency (0.123709ms)
+✔ ineligible intros are excluded (expired, below the frozen minOrder); nothing eligible → no weights (0.7115ms)
+✔ "Who sent you here?" boosts the named eligible referrer (+50% of total) (0.923ms)
+✔ contract bounds: ≤ 5 referrers (top scores, slot order kept), cap 8000 unless single, Σ = 10000, each ≥ 1 (4.428666ms)
+✔ duplicate referrer slots collapse to one (no duplicates in Weights) (3.109667ms)
+✔ sign-in: EIP-191 challenge → session token → /auth/session → logout revokes (5153.1265ms)
+✔ sign-in: wrong signer → INVALID_SIGNATURE; challenge is single-use; address mismatch refused (1786.294083ms)
+✔ protected endpoints: no token / forged token / bad body → 401 / 401 / 400 (1247.805792ms)
+✔ SESSION_SECRET unset → sign-in fails closed (503) (1980.139125ms)
+✔ token: MAC, expiry and transport (bearer, cookie, ?token=) (4.294542ms)
+✔ decodeRevert: Vouch custom errors and USDC revert strings from raw revert data in the cause chain (5.467458ms)
+✔ revertCode: every pay/intro/owner revert has a friendly code (0.46225ms)
+✔ classifySendError (0.964333ms)
+✔ happy path: simulate → estimate (×1.2) → send at chain pending nonce → mined (1.663291ms)
+✔ fees below the Arc floor are clamped up to 20 gwei (0.269625ms)
+✔ QE-C-10: OrderAlreadySettled on simulation is terminal — no send, no retry, mapped to ORDER_ALREADY_PAID (0.355625ms)
+✔ other reverts map to friendly codes (expired order, USDC balance string) and are terminal (0.280875ms)
+✔ QE-C-11: job pre-flight (balance) runs inside the lock and refuses before estimating/sending (0.19775ms)
+✔ max-gas guard: estimate × 1.2 above the per-kind cap is refused (GAS_TOO_HIGH), nothing sent (0.320167ms)
+✔ fee cap: a fee quote above RELAYER_MAX_FEE is refused; relayer balance too low → RELAYER_UNDERFUNDED (0.170292ms)
+✔ nonce gap: a dropped tx leaves chain pending behind local → the next job reuses (fills) the lower nonce (0.286125ms)
+✔ external advance: the key was used elsewhere (chain pending ahead) → adopt the chain nonce (0.259458ms)
+✔ "nonce too low" on send → resync from chain and resend (0.628333ms)
+✔ retry with fee bump: no receipt before the timeout → replacement at the SAME nonce with fees ×1.25 (0.319917ms)
+✔ gives up after maxSendAttempts without a receipt (TX_FAILED) and the next job recovers the nonce (0.674292ms)
+✔ transport errors: simulate retried with backoff; persistent outage → RELAYER_DOWN (0.463125ms)
+✔ underpriced replacement → bump and resend (0.1595ms)
+✔ no relayer key → RELAYER_DOWN; queue depth limit → RELAYER_BUSY (2.643541ms)
+✔ rate limits: per-user then global; a refused global hit is refunded to the user (0.376625ms)
+✔ serialized: the second job is simulated only after the first one is mined (0.203084ms)
+✔ NonceManager: first use adopts the chain; commit advances (0.040458ms)
+✔ RateLimiter: sliding window and retryAfter (0.042708ms)
+✔ preflight: self-submit needs amount + gasLimit × maxFeePerGas (rounded up to 6-dec) (0.104125ms)
+✔ budget: global hourly exhausted → RELAYER_BUDGET_EXHAUSTED before any send (0.140083ms)
+✔ budget: reservations settle to the actual fee (reverted txs count too) (0.3415ms)
+✔ budget: per-venue and per-user quotas → SPEND_QUOTA_EXCEEDED; another venue/user is unaffected (0.265375ms)
+✔ budget: seeded spend survives a restart (0.105875ms)
+✔ pay lane: pay jumps ahead of queued non-pay jobs, and payReserve slots are pay-only (0.289708ms)
+✔ per-kind quota: a user exceeding the acceptIntro quota → SPEND_QUOTA_EXCEEDED (scope kind) (0.20425ms)
+✔ balance floor: relayer below RELAYER_MIN_BALANCE → RELAYER_UNDERFUNDED + one ALERT log (0.11775ms)
+✔ replacement re-simulation: state moved on (OrderAlreadySettled) → no bumped replacement is paid for (0.121166ms)
+✔ logs never carry the RPC URL (SEC-2-07) (0.250375ms)
+✔ SEC-2-03/09: ?token= and cookies are refused on normal routes; ?token= works only on the SSE route (4350.924584ms)
+✔ SEC-2-03/07: request logs never contain ?token= values or URLs inside error messages (1105.501583ms)
+✔ SEC-2-04: trustProxy trusts only the Railway range — client IP from XFF, spoofed leftmost entries ignored (1663.462917ms)
+✔ SEC-2-02/09: per-route-class limits — spend routes are tighter than reads (1458.639792ms)
+✔ SEC-2-02: global spend budget exhausted → RELAYER_BUDGET_EXHAUSTED (503, retryable), nothing sent; /relayer/status shows remaining (868.998834ms)
+✔ SEC-2-02: per-user and per-venue quotas → SPEND_QUOTA_EXCEEDED (429) (815.136ms)
+✔ QE-2-01: double-tapped POST /payments → exactly one relay; the loser gets 409 and never rewrites the intent (1003.600459ms)
+✔ SEC-2-12 / QE-2-09: a refused attempt (e.g. insufficient balance, budget) never marks the shared order failed (1015.336541ms)
+✔ SEC-2-05: logged-out opens are recorded but never weighted (canonical signed-in opens stay exact) (905.519417ms)
+✔ SEC-2-06: SSE caps (per client, unknown venue) refuse before streaming (648.361ms)
+✔ SEC-2-08/13: security headers, standard 404 body, CORS allows PATCH (1118.860458ms)
+✔ QE-2-03/04/06/08 + SEC-2-11: payout guard, strict boolean, ORDER_EXPIRED at pay, 404s, min order, registered-only list (594.666042ms)
+✔ SSE: venue + user channels receive payment.settled / reward.paid from the Streams bus (4380.954542ms)
+✔ SseHub: backpressure (write → false) drops the client; max age closes it; caps per client/channel/global (1.782709ms)
+▶ POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set
+  ✔ valid signature → 200, NDJSON line verified with parsed summary (60.925792ms)
+  ✔ verified delivery → one stream_deliveries row (headers allow-listed, signature not stored) (24.44125ms)
+  ✔ verified delivery without batch headers → body envelope streamId/batch used (16.643208ms)
+  ✔ verified non-JSON body → row with body_text, body null (10.579875ms)
+  ✔ rejected requests (401 bad/missing signature) store no row (8.023125ms)
+  ✔ tampered body → 401 (4.334959ms)
+  ✔ signature made with another token → 401 (2.959209ms)
+  ✔ missing signature headers → 401 (15.313667ms)
+  ✔ gzip body: HMAC over the decoded JSON → 200 (14.559375ms)
+  ✔ SEC-2-10b: a replayed signed delivery (same nonce+signature) or a re-signed retry of the same batch → 200 duplicate, no new row (61.053917ms)
+✔ POST /webhooks/streams with STREAMS_WEBHOOK_SECRET set (4316.945834ms)
+▶ SEC-2-10: rate limit and bounded ingest wait
+  ✔ per-IP token bucket → 429 + Retry-After before the body is processed; other IPs unaffected (4.814375ms)
+  ✔ createRateLimiter refills over time (default sizing is generous: burst 600, 50/s) (0.60375ms)
+  ✔ slow ingest: the request answers 200 after ingestWaitMs; ingest finishes in the background (406.516292ms)
+✔ SEC-2-10: rate limit and bounded ingest wait (412.259334ms)
+✔ STREAMS_WEBHOOK_SECRET unset → 503 (fail closed), even with a "valid-looking" signature (1530.401459ms)
+✔ verified delivery whose insert fails → 500 (QuickNode retries), not a silent 200 (1570.914459ms)
+✔ NDJSON spike log disabled (null) → webhook still verifies and answers (911.341ms)
+✔ pickHeaders keeps QuickNode metadata, drops signature/auth/cookies (0.223416ms)
+✔ env placeholders count as unset (0.092916ms)
+✔ summarize: raw logs dataset nesting [block][receipt][log] and [block][log] (0.117458ms)
+✔ timestampSkew: seconds vs milliseconds (0.040083ms)
+▶ D-308: gzip bomb / size limits (SECURITY_REVIEW P-L3)
+  ✔ limits: raw 4 MiB, decoded 8 MiB; the bomb is small on the wire (0.221708ms)
+  ✔ missing X-QN-* headers + gzip bomb → 401 WITHOUT decompressing (no gunzip, fast, small RSS delta) (9.473292ms)
+  ✔ secret unset + gzip bomb → 503 without decompressing (1024.498458ms)
+  ✔ headers present + gzip bomb → 413 decoded-body-too-large (inflation capped), no row, no 500 (4.248208ms)
+  ✔ raw body over RAW_BODY_LIMIT → 413 before the handler (no row) (1.796375ms)
+  ✔ signed gzip deliveries: under the cap → 200 and stored; over the cap → 413 even with a VALID signature (3.190834ms)
+  ✔ bad gzip with headers → 400 body-decode-failed (not 500) (2.787584ms)
+✔ D-308: gzip bomb / size limits (SECURITY_REVIEW P-L3) (3491.44125ms)
+ℹ tests 109
+ℹ suites 6
+ℹ pass 108
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19763.163375
+
+✖ failing tests:
+
+test at src/streams/ingest.test.ts:1:1
+✖ src/streams/ingest.test.ts (17621.207208ms)
+  'test failed'

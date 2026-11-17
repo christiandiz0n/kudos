@@ -1,0 +1,44 @@
+# Hosted re-verify after 920a042/aab31f2 (2026-11-17T02:31:25Z); one request per check
+## V1 GET /health headers
+HTTP/2 200 
+cache-control: no-store
+content-security-policy: default-src 'none'; frame-ancestors 'none'; base-uri 'none'
+cross-origin-opener-policy: same-origin
+referrer-policy: no-referrer
+strict-transport-security: max-age=15552000; includeSubDomains
+x-content-type-options: nosniff
+x-frame-options: DENY
+## V2 tiny gzip body, no x-qn-* headers
+{"ok":false,"error":"missing-signature-headers"} [401]
+## V3 tiny gzip body, placeholder x-qn-* headers
+{"ok":false,"error":"bad-signature"} [401]
+## V4 ?token= on a normal route (fake token)
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+## V5 plain request, marker sec-ip-plain
+[200]
+## V6 spoofed leftmost X-Forwarded-For 203.0.113.99, marker sec-ip-spoof
+[200]
+## V7 unknown route shape
+{"error":{"code":"NOT_FOUND","message":"We couldn't find that.","retryable":false}} [404]
+## V8 CORS preflight PATCH from the allowed origin
+HTTP/2 204 
+access-control-allow-methods: GET, HEAD, POST, PATCH, DELETE, OPTIONS
+access-control-allow-origin: http://localhost:3100
+## V9 CORS preflight from a foreign origin
+HTTP/2 204 
+(no access-control-allow-origin line = refused)
+## V10 /relayer/status
+{"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"baseUnits":"1000000","display":"1.00"},"used":{"baseUnits":"0","display":"0.00"},"remaining":{"baseUnits":"1000000","display":"1.00"}},"daily":{"limit":{"baseUnits":"5000000","display":"5.00"},"used":{"baseUnits":"0","display":"0.00"},"remaining":{"baseUnits":"5000000","display":"5.00"}}},"recentFailures":0}
+## V11 /auth/challenge with sign-in secret unset
+{"error":{"code":"INTERNAL","message":"Sign-in is unavailable right now.","retryable":true}} [503]
+## V12 SSE for an unknown venue
+{"error":{"code":"UNKNOWN_VENUE","message":"We couldn't find that venue.","retryable":false}} [404]
+## V13 unauthenticated authed route
+{"error":{"code":"UNAUTHENTICATED","message":"Please sign in again.","retryable":false}} [401]
+
+# Hosted log check (2026-11-17T02:31:46Z, railway logs --service api, read-only; client IP shown only as a prefix)
+V4 log line url: /me/wallet?token=[redacted]   (fake token value present in logs: 0)
+V5 plain  remoteAddress prefix: 128.6.x.x
+V6 spoof  remoteAddress prefix: 128.6.x.x
+V5 == V6 (same real client): yes   V6 == 203.0.113.99 (spoof honoured): no   in 100.64.0.0/10: no   Railway edge 152.233.*: no
+any 64-hex / key-like strings in the sampled logs: "unique64hex": 0

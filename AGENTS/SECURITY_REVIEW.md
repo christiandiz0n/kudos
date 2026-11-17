@@ -1,5 +1,5 @@
 # SECURITY_REVIEW
-_Last updated: 2026-11-16 by SECURITY_REVIEW — Phase 2 QE gate (security half)_
+_Last updated: 2026-11-17 by SECURITY_REVIEW — Phase 2 re-verification_
 
 ## Mission
 Owns security review: secrets hygiene (git history, client bundles), signature/replay review across EIP-712 flows, relayer abuse/drain limits, CORS and rate limits, webhook authenticity, dependency check. Does NOT do feature work — files findings to owners.
@@ -8,10 +8,11 @@ Owns security review: secrets hygiene (git history, client bundles), signature/r
 - `docs/security/` (review reports, threat model)
 
 ## Current status
-🔴 **Phase 2 BLOCKED pending fixes.** Report: `docs/qa/phase-2-security-review.md`.
-- Open: 2 High (SEC-2-01 webhook decode-before-auth / body caps; SEC-2-02 relayer gas budget / lanes), 4 Medium (SEC-2-03..06), 7 Low (SEC-2-07..13).
-- The coordinator already routed every fix to STREAMS_INFRA (SEC-2-01, 10) and BACKEND_RELAYER (the rest), so no MSGs were sent from here.
-- Next: re-verify once the fixes are committed and redeployed. Hosted checks stay at one request per check; heavy probes run against a local api only.
+🟢 **Phase 2 security: PASS-with-notes.** Re-verified 2026-11-17 at HEAD `aab31f2` (fixes in `920a042`). Report: `docs/qa/phase-2-security-review.md` (section "Re-verification").
+- **Verdicts:** SEC-2-01..09 and SEC-2-11..13 FIXED. SEC-2-10 PARTIAL: the replay window stays log-only until the timestamp unit is verified (D-309d), Low.
+- **Residual notes:** N-1 the global budget isn't reserved for `pay` (availability, Low); N-2 webhook burst/raw cap could be tighter; N-3 `TRUST_PROXY=2` is required on Railway; N-4 a chain-reverted relayed pay still marks the shared order `failed`; N-5 a PGlite/V8 test-runner flake.
+- **`RELAYER_PRIVATE_KEY` on Railway:** safe to set now, with testnet funding sized to the $5/day budget, `TRUST_PROXY=2` kept, and the other secrets set as dashboard variables.
+- **No MSGs:** the coordinator routed the fixes and the residual notes go through the report.
 
 ## Mental model (read this first)
 _Nothing built yet. The first agent to work here rewrites this section._
@@ -20,19 +21,21 @@ _Nothing built yet. The first agent to work here rewrites this section._
 | Path | What it does | Notes |
 |---|---|---|
 | `docs/qa/phase-2-security-review.md` | Phase 2 findings | SEC-2-01..16 |
-| `docs/evidence/phase-2/security/` | Raw probe, scan and audit results | `scan-keys.mjs` derives addresses from 64-hex strings and never prints keys |
+| `docs/evidence/phase-2/security/` | Raw probe, scan and audit results (`reverify-*` = 2026-11-17 re-verification) | `scan-keys.mjs` derives addresses from 64-hex strings and never prints keys |
 
 ## Interfaces consumed / provided
 See `AGENTS/INTERFACES.md`. Relevant sections to be filled as they are defined.
 
 ## Done (rolling, newest first)
+- 2026-11-17: Phase 2 re-verification: PASS-with-notes. Local heavy probes only, one request per hosted check, read-only Railway log check for client IP and token redaction.
 - 2026-11-16: Phase 2 security review. Clean: git history and key scan, `.env` hygiene, image, prod deps, and the auth/replay/signature controls. Verdict BLOCKED (2 High).
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
 - [ ] Phase 0: verify .gitignore covers secrets; no keys in repo
 - [x] Phase 2: signature/replay review, relayer limits, webhook auth, CORS (BLOCKED, see report)
-- [ ] Phase 2 re-verify: SEC-2-01..13 after the fixes are redeployed
+- [x] Phase 2 re-verify: SEC-2-01..13 (PASS-with-notes)
+- [ ] Close SEC-2-10 (replay window) once the X-QN-Timestamp unit is verified; recheck N-1..N-4 if they are fixed
 - [ ] Phase 5: final pass — git history scan, client bundle scan, dependency audit
 
 ## Struggles, open questions, known issues

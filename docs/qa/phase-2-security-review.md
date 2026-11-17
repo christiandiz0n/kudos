@@ -4,9 +4,16 @@ _Reviewer: SECURITY_REVIEW (independent, built none of this). Reviewed 2026-11-1
 _Scope: `apps/api/**`, the `packages/shared` deps, `Dockerfile`, `.dockerignore`, `.gitignore`, `railway.json`, the full git history, and one request per check against public endpoints. Heavy probes were run only against a local api. No product code was changed and nothing was deployed. No chain transactions were sent. `.env` was never read._
 _Evidence: `docs/evidence/phase-2/security/`._
 
-## Verdict: **BLOCKED pending fixes**
+## Verdict after re-verification (2026-11-17, HEAD `aab31f2`, fixes in `920a042`): **PASS-with-notes**
 
-- Two High findings are open:
+- Both Highs are FIXED, and so are all four Mediums.
+- SEC-2-10 is PARTIAL: the replay window stays log-only on purpose (D-309d) until the timestamp unit is confirmed.
+- Residual notes are listed under "Re-verification" at the end of this file. None of them blocks the gate.
+- **It is safe for the human to set `RELAYER_PRIVATE_KEY` on Railway now**, under the conditions listed in that section.
+
+## Original verdict (2026-11-16, HEAD `6e8ad48`): BLOCKED pending fixes
+
+- Two High findings were open:
   - SEC-2-01 is reachable in production today.
   - SEC-2-02 must be fixed before the relayer key is set on Railway.
 - The coordinator has already routed all fixes to STREAMS_INFRA and BACKEND_RELAYER, so this review sends no MSGs.
@@ -230,3 +237,45 @@ _Evidence: `docs/evidence/phase-2/security/`._
 - **Trust in the feed:** "settled" state trusts the HMAC'd Streams feed without a chain cross-check, so compromising the webhook secret would forge paid status. Seal the Railway variable.
 - **Spike log:** the local-only NDJSON spike log records raw headers (keep it off on hosts).
 - **Public venue SSE:** publishes `payment.pending` with the customer address and amount before inclusion.
+
+## Re-verification (2026-11-17)
+
+_Code: `920a042` (D-308, D-309, D-807..D-810), reviewed as a diff against `a6b1296`. Railway setting `TRUST_PROXY=2` (D-018)._
+_Hosted checks: one request each. Heavy probes ran only against a local api on :4040 on the current tree, with throwaway unfunded dummy keys. No chain tx was sent._
+
+**Evidence:**
+- `reverify-local-webhook.txt`
+- `reverify-local-api.txt`
+- `reverify-hosted-probes.txt` (includes the read-only Railway log check)
+- `reverify-unit-tests.txt` (108 / 109 pass; the one failure is an environment flake, see Notes)
+
+| ID | Verdict | How it was verified |
+|---|---|---|
+| SEC-2-01 | **FIXED** | Code: secret and header checks run before any decode; 4 MiB raw limit; 8 MiB inflate cap; unverified bodies are never parsed. Locally, a 1 GiB-inflating body without headers → 401 in 3 ms; with placeholder headers → 413 `decoded-body-too-large`; a 5 MB raw body → 413. RSS stayed flat (+2 MB). Hosted V2/V3 (tiny bodies) → 401. |
+| SEC-2-02 | **FIXED** | Code and unit tests. Budget: hourly and daily windows, global / per user / per venue, reserved at worst case and settled to the actual fee, reverts included, seeded from `relay_txs` at boot. Per-kind quotas; pay-first worker; 20 pay-only queue slots; $2 balance floor with an ALERT log; $0.50 minimum order; re-simulation before any fee bump. Defaults cap total relayer spend at $1/h and $5/day. Locally, `/relayer/status` reports the budget with dummy keys; hosted V10 shows the same limits. |
+| SEC-2-03 | **FIXED** | Locally, a valid token as `?token=` on `/me/wallet` → 401; on the SSE user route → 200; 0 log lines contain the token; the URL is logged as `token=[redacted]`. Hosted V4 is logged as `token=[redacted]`. |
+| SEC-2-04 | **FIXED** | Hosted V5/V6: a plain request and one with a spoofed leftmost XFF both log the same real client address. It is not the spoofed value, not `100.64/10` and not the Railway edge. Locally, an untrusted peer's XFF is ignored. |
+| SEC-2-05 | **FIXED** | Code (`opensFor` counts only the paying customer's own signed-in opens and never the referrer's) plus a unit test (10 anonymous opens leave the weights unchanged). |
+| SEC-2-06 | **FIXED** | Locally, the 9th concurrent connection from one client → 429 and an unknown venue → 404; hosted V12 → 404. Code: global, per-client and per-channel caps, a slow-consumer drop and a 30-min max age. |
+| SEC-2-07 | **FIXED** | Code: URLs and tokens are scrubbed from logs and error text, and raw errors are never copied into `details`. Unit test "logs never carry the RPC URL". |
+| SEC-2-08 | **FIXED** | Hosted V7 returns the standard 404 body; V11 returns a 503 with no reason given; V10 shows one `enabled` flag and no signer details. |
+| SEC-2-09 | **FIXED** | Locally, a valid token in the `vouch_session` cookie → 401. |
+| SEC-2-10 | **PARTIAL** | Fixed: a per-IP limiter runs before the body is read, raw rows are deduped on a body hash plus batch range, and retries run in the background with ≤ 5 attempts and backoff. Still open: timestamp skew is only logged, so a captured signed delivery stays replayable. The replay is harmless to state and storage because of the dedupe, and the window was kept open on purpose (D-309d). Low. Close it once the timestamp unit is confirmed. |
+| SEC-2-11 | **FIXED** | Code: challenges are cleaned up; prepared venues release their slug after the deadline; intro create checks the venue and `canRefer`; `GET /venues` lists registered venues only and is paginated. |
+| SEC-2-12 | **FIXED** | Code and unit tests: the `quoted → relaying` claim is atomic; refusals never touch the shared order; reverts count against the budget; the relayer re-simulates before paying for a replacement. |
+| SEC-2-13 | **FIXED** | Hosted V1 shows nosniff, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, a CSP, HSTS, COOP and `no-store`. V8 preflight allows PATCH; V9 foreign origin is still refused. |
+
+### Residual notes (non-blocking)
+- **N-1 (Low), budget starvation.** The global budget is one pool shared by every job kind. The pay lane reserves queue slots, not budget. Free identities could use non-pay kinds such as `acceptIntro`, which needs no USDC, to exhaust the global hourly or daily budget and pause payments until the window rolls. Money loss is bounded at $5/day, so this is an availability issue only. Suggestion: reserve a share of the global budget for `pay`, e.g. cap non-pay kinds at 50%. Owner: BACKEND_RELAYER.
+- **N-2 (Info), webhook buffering.** The per-IP webhook bucket (burst 600) still allows many concurrent 4 MiB raw uploads from one client. Memory per request is bounded; concurrency is not. Real deliveries are a few KB. Suggestion: a lower burst (e.g. 50) and/or a 1 MiB raw cap. The parser's 413 uses the default Fastify body. Owner: STREAMS_INFRA.
+- **N-3 (Info), `TRUST_PROXY=2` is required on Railway.** The code default (`100.64.0.0/10`) resolves to the edge address there. If the variable is removed, per-IP limits fall back to shared buckets. Spoofing still fails in that case, so it degrades availability only. Suggestion: log the effective trustProxy mode at boot.
+- **N-4 (Low), shared order status.** A relayed pay that reverts on chain still sets the shared order to `failed` (reverted → failed), and any customer who can see the QR can submit one. The order stays payable; only the displayed status is wrong. Suggestion: derive order display from Streams and per-intent state.
+- **N-5 (Info), test runner flake.** In the full parallel test run, `ingest.test.ts` crashed once with a V8/WASM fatal error inside PGlite (`Check failed: end > addr`). The file passes 16/16 on its own. This is environmental, not a product defect. QE may want `--test-concurrency=1` for the PGlite suites.
+
+### Is it safe to set `RELAYER_PRIVATE_KEY` on Railway now? **Yes, under these conditions**
+1. **Funding:** fund the relayer only with testnet USDC sized to the budget (≈ $5–20). The defaults cap spend at $1/h and $5/day. Keep them unless the human raises them on purpose.
+2. **Proxy setting:** keep `TRUST_PROXY=2` on the api service.
+3. **Other secrets:** set `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY` and `SESSION_SECRET` the same way, as dashboard variables (sealed if possible) that never pass through chat or the repo. `/relayer/status` reports `enabled: true` only when all three relay keys are present.
+4. **After setting them:**
+   - check `/relayer/status` once: `enabled: true`, budget at its limits, `lowBalance: false`;
+   - watch for the `ALERT relayer balance below floor` log line.
