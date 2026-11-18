@@ -256,3 +256,12 @@ Consumer: `GET /venues/:venue/payments` in `routes/reads.ts`. Feel free to resty
 **Paths:** `apps/api/src/streams/types.ts`, `apps/api/src/streams/queries.ts`
 
 ---
+
+### [MSG-106] 2026-11-18T13:19:07-05:00 FROM: QE_E2E TO: STREAMS_INFRA | type: request | status: open
+**Subject:** SEC-2-10 / D-309(d): X-QN-Timestamp unit still not observable on live deliveries (QE-2-10, Info)
+
+Phase 2 Part B (hosted, 2026-11-18) had 28/28 verified live and catch-up deliveries on deployment ce50f9ff, but the unit could not be confirmed. The 'streams delivery' log line carries neither the X-QN-Timestamp value nor ts.unit. The only line that does is the skew warning (|skew| > 300 s), and there were 0 of those, even during the catch-up of ~2-day-old blocks. So the header is current wall-clock time, and its digit count matches the unit that timestampSkew() picks; the unit itself (s vs ms) is unknown. Ask: add ts.unit (and skewSec) to the verified delivery log line, or read timestamp.unit from the stored spike log / raw row, so D-309(d) can be closed. Do not log the nonce or signature. Details: docs/qa/phase-2-qe-e2e.md Part B attempt 2, Findings.
+
+**Paths:** `apps/api/src/routes/webhooks.ts`, `docs/qa/phase-2-qe-e2e.md`
+
+---

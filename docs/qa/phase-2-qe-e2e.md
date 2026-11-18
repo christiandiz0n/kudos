@@ -161,3 +161,55 @@ pnpm --filter @vouch/scripts story:api -- --api http://127.0.0.1:4030 --fund-fro
   - **QE-2-01 re-test PASS:** a concurrent duplicate `POST /payments` now gets `409 PAYMENT_ALREADY_USED` at the intent claim, and it uses no rate token.
   - Max-gas guard: `422 GAS_TOO_HIGH` (gasLimit 303,102 > cap 100,000) twice. Then `429 RATE_LIMITED` with `retryAfterMs`. Nothing was sent.
 - **Ready to resume.** The wrapper `scripts/qa/story-latency.mjs` runs `story:api` against the hosted api and timestamps every line. Once `registerVenue` has mined, it opens the public SSE channel `/events/venue/:venue`. It records the `payment.settled` arrival time against the pay tx's block time, writing to `part-b-story-latency.ndjson`.
+
+## Part B (hosted), attempt 2 (2026-11-18 17:51–18:20Z): **PASS-with-findings**
+_Target: Railway deployment `ce50f9ff` (created 17:43:05Z, after the secrets were applied; code `920a042` per D-018 / attempt 1; Railway metadata carries no commit hash). Relayer `enabled:true, reachable:true, lowBalance:false`, balance 19.6706 at the start. Stream `vouch-v3-production` (`6b792277-…df8`), activated "Continue where it left off" at ~17:40Z._
+
+| # | Acceptance item | Result |
+|---|---|---|
+| 1 | Canonical story through the hosted api, exact on chain | **PASS**: `STORY OK (on-chain + settled in DB via Streams)`. Pay `0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb` (block 72890535). Venue 10.20 / cashback 0.45 / L1 0.693 + 0.297 / L2 0.252 + 0.108, re-derived independently from the raw receipt and USDC `Transfer` logs. |
+| 2 | Settled via the live Stream | **PASS**: verified delivery of block 72890535 (`newEvents` 7, `events` 141). `GET /payments/:id` → `settled`, `source streams`. |
+| 3 | tap→settled latency | **About 0.3 s after the relay receipt; 1.0 s after the 202.** SSE `payment.settled` came +0.144 s after the receipt and +0.81 s after block time. `GET /payments/:id` settled at +0.296 s. |
+| 4 | Delivery logs: verified, `ingest.newEvents > 0` | **PASS**: 28/28 `streams delivery` lines on `ce50f9ff` are `verified:true`, status 200, each with `newEvents ≥ 1` and `duplicates 0`. None are unverified. |
+| 5 | Hosted DB == chain (`independent-derive --hosted --onchain`) | **PASS**: 177 ok, 0 FAIL over 72605845..72890596 (141 logs, 9 venues). The receipt check of the canonical pay passes. |
+| 6 | Completeness (the 2 QuickNode dashboard errors) | **No events missing.** The 2 errors were retried or predate the data. Chain has 141 Vouch logs, and hosted ingested 141 (`ingest.events` 141 at the last delivery). Every venue and ambassador read equals the chain. |
+| 7 | `api-contract guards` against hosted | **Not run (by design).** That mode needs an api started with `RELAYER_MAX_GAS_PAY=100000` and `RATE_PER_USER_PER_MIN=2`. On hosted's production caps it would broadcast real relayed pays (and $0.01 orders fall below hosted `ORDER_MIN_USDC` 0.50) instead of hitting the guards. The guards passed 7/7 on the same `920a042` code in attempt 1 (`part-b-guards-local.txt`). |
+
+### Readiness and time box
+- **Last on-chain Vouch event before activation:** block **72625258**, from `eth_getLogs` in 10k windows. That was 101 logs.
+- **Catch-up reached it:** hosted verified that delivery at 17:46:59Z server time (`ingest.events` 101, equal to the chain's 101).
+- **Gap estimate:** 261,877 empty blocks, at a net ~148 blocks/s. That gave an ETA of about 18:16:30Z.
+- **Actual T0:** the Stream was at head earlier. Its first live delivery was block 72889670 at **18:08:58Z**, when head was 72889564 at 18:08:08. So **T0 = 18:08:58Z**.
+- **Within the box:** the story ran 18:15:49–18:16:16Z and the hosted-vs-chain compare finished at 18:17:29Z, both inside the 20-min box.
+- Evidence: `part-b-readiness-attempt2.txt`.
+- **Other traffic:** someone else used the hosted api during the window. Venues `0x4b4917…d8f4`, `0xf57ad2…66ea` and `0xE5e387…7588` ("Shots café 18:16", owner `0xD4f504…b201`) appeared at 18:08–18:16Z, and the relayer spent about 0.030 USDC before the story. Hosted == chain covers their events too. No interference: the relayer queue serialized everything.
+
+### Latency (`part-b-latency-summary.txt`)
+| Step (UTC) | t | vs relay receipt | vs block time (18:16:15, 1 s resolution) |
+|---|---|---|---|
+| `POST /payments` → 202 | 18:16:14.793 | −0.874 s | |
+| Relay receipt seen | 18:16:15.667 | 0 | |
+| Delivery of block 72890535 logged (server) | 18:16:15.814 | +0.147 s | +0.81 s |
+| SSE `payment.settled` | 18:16:15.811 | +0.144 s | +0.81 s |
+| `GET /payments/:id` → settled | 18:16:15.963 | +0.296 s | +0.96 s |
+
+- **The other 8 story txs:** each delivery was logged within −0.32..+0.39 s of the story's receipt line (mixed clocks).
+- **The `GET /payments/:id` figure is pessimistic.** The story's first poll comes after its on-chain checks, so the settle time it prints ("after 0.1s") is measured from that poll.
+
+### Findings
+| ID | Sev | Finding | Owner / msg |
+|---|---|---|---|
+| QE-2-10 | Info | **SEC-2-10 / D-309(d) is still unverified.** The `streams delivery` log line does not include the `X-QN-Timestamp` value or its unit. The only place the unit is logged is the skew warning, which fires only when \|skew\| > 300 s, and there were 0 such lines across 28 live and catch-up deliveries. What this does show: under the digit-count rule (≤11 digits = s, ≥12 = ms), the header is the current wall-clock time and not the block time. During the catch-up, blocks were ~2 days old and still produced no skew line. The unit itself (s vs ms) is not observable from the logs. Fix: add `ts.unit` / `skewSec` to the delivery line, or read `timestamp.unit` from the spike log / raw row. | STREAMS_INFRA (msg below) |
+| — | Note | The QuickNode catch-up ran faster than 150 blocks/s. About 264k blocks took ≤ 22 min, so more than ~200 blocks/s. | — |
+
+### Re-checks on hosted (read-only)
+- **QE-2-08:** fixed. `/venues/:unknown`, `/terms` and `/stats` all answer `404 UNKNOWN_VENUE`.
+- **QE-2-05:** fixed. `GET /intros/:code` `terms.minOrder` = `{baseUnits:"1000000", display:"1.00"}`.
+- **QE-2-07:** `GET /venues` lists API-registered venues, as D-810 documents.
+- **QE-2-03/04/06/09:** not re-tested on hosted. Each needs owner-signed prepares or orders. Carry to Thursday.
+
+**Spend:** relayer gas 0.04443949 USDC for 9 txs (balance 19.640411 → 19.595972). Lena also moved +$11.55 to Ben (`0x9e43d7e6…cdb0`). That is a demo-wallet transfer; the net returns to Lena through the venue split, minus cashback and rewards.
+
+**Evidence:** `part-b-readiness-attempt2.txt`, `part-b-story-latency.txt` / `.ndjson`, `part-b-railway-deliveries.txt`, `part-b-latency-summary.txt`, `part-b-hosted-vs-chain-pre.txt` (pre-story: 105/105, 101 events), `part-b-hosted-vs-chain.txt` + `part-b-independent-model.json` (post-story: 177/177, 141 events).
+
+**Phase 2 gate verdict (QE): PASS-with-findings.** The Stream can be paused.

@@ -200,3 +200,57 @@ Source of truth: `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `a
 **Paths:** `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/reads.ts`, `apps/api/src/test/topup.test.ts`, `apps/api/src/test/feed.test.ts`
 
 ---
+
+### [MSG-091] 2026-11-18T13:06:39-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: open
+**Subject:** customer hi-fi: prop contracts v1 (screens/customer/*) — handoff
+
+UI-customer Phase 3 screens are props-only and documented in a PROP CONTRACT block at the top of each file. You're already importing several (PayFlow/ScanRoute/AccountGate/WalletHome typecheck clean). Summary of what changed vs v0:
+(1) SignInScreen: + name/onNameChange/nameError (displayName for /auth/verify), error: 'cancelled'|'unsupported'|string. Primary is now 'Continue with Face ID or fingerprint' (onCreate); onSignIn unchanged.
+(2) WalletHomeScreen: ActivityItem + status?: 'pending'|'settled' (pending rows muted + 'Pending' tag). New props loading (skeletons), offline (banner), toppingUp, record {verifiedCustomers, venueCount} + onOpenRecord, onOpenActivity(id). Empty activity renders a first-run empty state.
+(3) ScanScreen: + cameraState 'starting'|'live'|'denied'|'unavailable', found (viewfinder tightens), manualOpen, manual {value,onChange,onSubmit,error?,submitting?}, onRetryCamera. Denied/unavailable shows camera-app instructions + paste field automatically.
+(4) PayConfirm: use <PayConfirmSheet open onClose {...props}/> (not dismissible while paying). recommenders: Array<string|{id,name}>; whoSentYou: null|id|'other'|'skip' (send quote whoSentYou only for a recommender id). + quoting, noReward 'repeat'|'belowMinimum'|'noRecommendation' (+minOrder) when cashback=0, balance (balance<amount auto-shows 'insufficient'), problem: PayProblem, onRetry/onRescan/onTopUp/toppingUp. Primary label is 'Confirm with Face ID or fingerprint'.
+(5) PayProblem.tsx: PayProblem = expired|alreadyPaid|insufficient|unavailable|failed|cancelled|offline; mapping from D-806 codes is in the file header (ORDER_EXPIRED→expired, ORDER_ALREADY_PAID→alreadyPaid, INSUFFICIENT_BALANCE/canAfford=false→insufficient, RELAYER_DOWN/RELAYER_BUSY/RATE_LIMITED→unavailable, NotAllowedError→cancelled, navigator.onLine false/fetch TypeError→offline, else failed).
+(6) PaymentSuccessScreen: + status 'pending'|'settled' (pending = gray receipt + 'Arriving'; flip to settled on payment.settled and call navigator.vibrate?.(12)), details {receiptId, network, networkFee, explorerUrl?}.
+(7) IntroLandingScreen: + lockedSince ('Nov 18'), state 'ready'|'accepting'|'accepted'|'expired'|'needsNewLink'|'alreadyCustomer'|'own', error 'cancelled'|string, onDone. accepting kept (deprecated).
+(8) RecommendScreen: BREAKING: linkPreview removed. Now link?: {url, display} (null until created; reset when kind changes), creating + onCreate ('Make my link' = Face ID confirm, POST /intros), locked (not a verified customer → 'Buy once to vouch', onScan), error, copied, canShare (navigator.share → primary Share, else primary Copy).
+(9) AmbassadorScreen: + viewer 'owner'|'visitor', loading, onShare, copied; onBack optional.
+Components: SplitBreakdown + pending prop; SuccessMark + pending prop; EmptyState + tone/role. Every state is viewable at http://localhost:3100/design/screens/<id> (ids in src/app/design/_mocks/meta.customer.ts). Shots: docs/evidence/phase-3/design/customer/.
+
+**Paths:** `apps/web/src/screens/customer`, `apps/web/src/app/design/_mocks/meta.customer.ts`, `docs/evidence/phase-3/design/customer`
+
+---
+
+### [MSG-098] 2026-11-18T13:12:18-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: open
+**Subject:** venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) — handoff
+
+Venue + public screens are hi-fi, and their prop contracts are final for Phase 3. I see you already import the new exports; typecheck is green on both sides as of 13:15 ET. Every state is in /design (ids are in `apps/web/src/app/design/_mocks/meta.venue.ts`).
+
+**MoneyGraph v1** (`@/components/ui`)
+- `<MoneyGraph data={{venue:{id,name}, flows, names?}} highlightPaymentId? mode?="payment"|"network" live?=true replayKey? orientation?="landscape"|"portrait" maxPerTier? />`
+- `MoneyFlow = {paymentId, from, to, level: "venue"|"cashback"|1|2, amount: bigint}`.
+- From stats edges: role/level 0 → "cashback" (the customer self-edge; it renders as a "+$0.45 back" badge, never a loop), 1 → 1, 2 → 2 (`from` = viaReferrer). Add one `"venue"` flow per payment (customer → venue id, venueAmount) with `venueFlowsFromPayments`. Helper: `moneyFlowsFromEdges`.
+- `names` is keyed by address, case-insensitive. Unnamed 0x ids show as "Guest N" (no hex on screen). Payment ids are matched case-insensitively. Zero-amount flows are ignored. You don't need to pre-aggregate; the graph aggregates per (from, to, level).
+- The default highlight is the last paymentId in `flows`; pass `highlightPaymentId` = the newest settled orderId. A new id replays the arrival animation, and so does bumping `replayKey`.
+- Also exported: `layoutMoneyGraph` (pure), `moneyGraphFromPayment`. Legacy v0 props (`venue/customer/referrers/total`, `size`, `animated`) still work.
+
+**VenueDashboardScreen** `{venueName, status: LiveStatus ("live"|"connecting"|"reconnecting"|"offline"), stats: {verifiedCustomers, rewardsPaid, costPerVerified: bigint|null, salesFromRecommendations?}, typicalAdCost: string, onTypicalAdCostChange?, payments: VenuePaymentItem[] (newest first; [] = brand-new empty state), graph?: MoneyGraphData, highlightPaymentId?, graphMode?, onGraphModeChange?, loading?, onNewOrder?, transparencyHref?, layout?: "auto"|"phone"|"wide"}`.
+- `VenuePaymentItem = {id, customerName, amount, venueAmount, cashback, thankedAmount, thankedCount, firstVisit, time, fresh?}`.
+- `layout="auto"`: phone below 1024px, projector layout at ≥1024px (1280×720 safe). The phone layout shows the 8 newest payments.
+- Helpers: `adComparison()`, `paymentLine()`. `VenueDashboardDesktop` = `layout="wide"` (deprecated alias).
+
+**VenueOnboardingScreen** `{venueName, onVenueNameChange, nameError?, rewardBps, onRewardBpsChange, exampleOrder? (default $12), minOrder: string, onMinOrderChange, minOrderError? (use validateMinOrder; ≥ $0.50), status?: "idle"|"confirming"|"saving"|"error", error?, onConfirm}`. The CTA reads "Confirm with Face ID or fingerprint". Also exports `exampleSplit`, `MIN_ORDER_FLOOR`.
+
+**OrderEntryScreen** `{venueName, entry, amount, onKey, label, onLabelChange, error?, firstTimeCashback?, rewardMinOrder?, creating?, onShowCode?, onBack?}`. Helpers: `applyOrderKey`, `parseOrderEntry` (the floor is $0.50, the cap $10,000), `ORDER_MIN`, `ORDER_MAX`.
+
+**OrderQRScreen** `{venueName, amount, orderLabel?, qr, secondsLeft, totalSeconds, state: QRFrameState, autoRefresh?, paid?: OrderPaidSummary, onRefresh?, onCancel?, onNext?}`.
+- `QRFrameState` = "live"|"processing"|"refreshing"|"expired"|"paid". Map `payment.pending` → processing, `payment.settled` → paid, and re-creating an expired order → refreshing.
+- `OrderPaidSummary = {customerName?, venueAmount, cashback?, thankedAmount?, thankedCount?}`.
+
+**TransparencyScreen** `{venueName, rewardBps, termsVersion, termsSince, example:{customer, total, referrers:[{name, weightBps, introducer?}]}, contractAddress, deployTx?, deployBlock?, tokenAddress, explorerUrl, network, chainId}`.
+- The screen computes the exact base-unit split itself (`exactSplit`). Pass `VOUCH_ARC_TESTNET.{address, deployTx, deployBlock, usdc}` + `ARC_TESTNET_EXPLORER_URL`. The /design mock shows exact values.
+
+Known gaps: no count-up on amounts. Animation doesn't pause when the tab is hidden; the loops are finite (about 3s), so this isn't needed.
+
+**Paths:** `apps/web/src/components/ui/MoneyGraph.tsx`, `apps/web/src/screens/venue/VenueDashboardScreen.tsx`, `apps/web/src/screens/venue/OrderScreens.tsx`, `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `apps/web/src/screens/public/TransparencyScreen.tsx`, `apps/web/src/app/design/_mocks/VenueMocks.tsx`
+
+---

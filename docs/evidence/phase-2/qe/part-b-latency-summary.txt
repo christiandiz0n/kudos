@@ -1,0 +1,22 @@
+# Part B attempt 2: canonical pay through the HOSTED api, settled by the LIVE Stream (2026-11-18, QE_E2E)
+# Sources: part-b-story-latency.txt / .ndjson (client clock), part-b-railway-deliveries.txt (server pino time), chain (rpc.testnet.arc.io)
+pay tx        0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb
+block         72890535, block timestamp 2026-11-18T18:16:15Z (1 s resolution)
+intent        3bfe4086-9a69-4751-a2c9-5c8e7c65f727   venue 0xac2573F86624FF6f370008B61155487b933d2Cfc
+on chain      PaymentSettled amount 12,000,000 venueAmount 10,200,000 rewardPool 1,800,000 weightsMode 1 (ATTRIBUTOR)
+              RewardPaid C:Ben 450,000 | L1:Ana 693,000 | L1:Priya 297,000 | L2:Sam 252,000 | L2:Ana 108,000
+              USDC Transfer logs equal (customer->Vouch 12.00; Vouch->payout 10.20; Vouch->each recipient = its RewardPaid; sum out 12.00)
+              balance deltas Lena +10.20, Ben -11.55, Ana +0.801, Priya +0.297, Sam +0.252
+
+timeline (UTC)                                   t           vs relay receipt   vs block time
+POST /payments -> 202 pending (the "tap")        18:16:14.793   -0.874 s
+relay receipt seen by story (waitRelay ok)       18:16:15.667    0
+QuickNode delivery of block 72890535 logged      18:16:15.814   +0.147 s           +0.81 s   (server clock; verified, 200, newEvents 7, events 141)
+SSE payment.settled on /events/venue/:v          18:16:15.811   +0.144 s           +0.81 s
+GET /payments/:id -> status settled (streams)    18:16:15.963   +0.296 s           +0.96 s   (first poll at ~15.87 after the on-chain checks already read settled)
+tap (202) -> SSE payment.settled                 1.02 s
+
+other story txs (delivery logged on server vs the story's receipt line, mixed clocks): all 8 earlier story txs were delivered
+within -0.31..+0.39 s of the story seeing their receipt (registerVenue +0.06, setSeed +0.13, intro +0.10, pay Ana +0.39,
+intro -0.32, pay Priya -0.08, intro -0.22, intro -0.29; part-b-railway-deliveries.txt 18:16:00..18:16:13).
+relayer gas this run 0.04443949 USDC (9 txs; relayer balance 19.640411 -> 19.595972), plus Lena's fund-Ben transfer (Lena pays its own gas).

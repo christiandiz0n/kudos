@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-18T17:32:00Z by QE_E2E — Phase 2 QE gate, Part B attempt 1 (readiness timed out)_
+_Last updated: 2026-11-18T18:22:00Z by QE_E2E — Phase 2 QE gate Part B attempt 2: PASS-with-findings_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,7 +10,15 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟡 Phase 2 gate: **Part A PASS-with-findings**. **Part B attempt 1 (2026-11-18 17:05–17:30Z) timed out on readiness**: the hosted relayer stayed `enabled:false` and the Stream made 0 verified deliveries. No hosted txs, no spend. `guards` on the deployed `920a042` passed 7/7 locally, including the QE-2-01 re-test. To resume: `node scripts/qa/story-latency.mjs --api https://api-production-902bc54c.up.railway.app --out docs/evidence/phase-2/qe/part-b-story-latency.ndjson -- --fund-from-payout --require-settled --settle-timeout 120`.
+🟢 **Phase 2 gate PASS-with-findings** (Part A 2026-11-17; Part B hosted 2026-11-18 18:08–18:17Z).
+- **Hosted story:** the canonical story ran through the hosted api (deployment `ce50f9ff`, code `920a042`).
+  - Pay `0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb` is exact on chain.
+  - It settled via the live Stream ~0.3 s after the relay receipt; SSE `payment.settled` came +0.81 s after block time.
+- **Hosted == chain:** 177/177 checks, 141 events. No events missing.
+- **Deliveries:** 28/28 verified.
+- **Open:** QE-2-10 (Info, MSG-106): the X-QN-Timestamp unit is not observable in the logs, so SEC-2-10 stays open.
+- **The Stream can be paused.**
+- **Next:** Thursday PM QE gate on the deployed web app.
 
 ## Mental model (read this first)
 - Verify from the **written** docs only, and re-derive every claim with an independent tool (cast/curl/Blockscout v2 API) rather than the builder's script. Then also re-run the builder's script.
@@ -26,6 +34,11 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - Local api for tests: `PORT=4030 API_HOST=127.0.0.1 DATABASE_URL=pglite://<scratch>/db STREAMS_SPIKE_LOG=off pnpm --filter @vouch/api start`. Inline vars beat the env file. PGlite is single-process: stop the api before `streams:backfill --db-url pglite://<same dir>`. `pkill -f` on the DB path doesn't kill the tsx child; kill the pid from `lsof -tiTCP:<port> -sTCP:LISTEN`.
 - QE throwaway wallets (O owner, C customer, U unfunded, X bystander) live ONLY in `<scratch>/qe-state.json`. Fund C with `pnpm --filter @vouch/scripts topup -- --to <C> --target 0.20 --max-total 0.25`. QE venue `0xd5eab90441172616F87DfFc5b4A32e85DD159422` (payout = DEMO_LENA).
 - The hosted Stream delivered past 72606174: the 3rd venue was registered at block 72613566. Hosted == chain over 72605845..72624473 (72 events).
+- Part B (2026-11-18):
+  - The Stream reached head 22 min after it re-crossed the last old event (>200 blocks/s, faster than the 150 estimated).
+  - The pino `time=` in railway logs is the true server time; the Railway timestamp lags up to ~2 min.
+  - Other agents/the human use the hosted api concurrently (extra venues); compare against everything, not just QE's venues.
+  - `api-contract guards` can't run against hosted (production caps → it would broadcast real pays).
 - Hosted `/me/*` needs `SESSION_SECRET` on Railway. Postgres public networking is OFF, so there is no hosted hash or cursor read: compare via public reads with `independent-derive.mjs --hosted`.
 
 ## Key files map
@@ -48,6 +61,15 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split topic0), §6 (HMAC, envelope), §7 (env names). Proposed INTERFACES change (via Orchestrator): §6 body field `eventName` → `event` (QE-01).
 
 ## Done (rolling, newest first)
+- 2026-11-18: Phase 2 QE gate Part B attempt 2 (hosted): **PASS-with-findings**.
+  - Hosted story exact on chain (pay `0x40147554…ddfcb`, block 72890535) and settled via the live Stream: SSE +0.144 s and `GET /payments/:id` +0.296 s after the relay receipt.
+  - 28/28 verified deliveries.
+  - Hosted == chain: 105/105 before the story (101 events), 177/177 after (141 events).
+  - Completeness: no events missing (the 2 QuickNode dashboard errors were retried or predate the data).
+  - QE-2-05/08 fixed on hosted.
+  - Messages: MSG-106 (QE-2-10 → STREAMS_INFRA); MSG-078 and MSG-084 closed; MSG-079 left open with a note.
+  - Gas 0.0444 USDC.
+- 2026-11-18: Phase 2 Part B attempt 1. Not run: the relayer was disabled and the Stream idle. `guards` 7/7 on `920a042` locally, including the QE-2-01 re-test.
 - 2026-11-17: Phase 2 QE gate Part A (PASS-with-findings).
   - API contract: 157 live checks.
   - Determinism: reference `0b0c880d…` reproduced; head `73a460fd…`; independent re-derivation equals the derived rows and on-chain stats.
@@ -64,20 +86,23 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
-- [ ] Phase 0 gate Part B: reproduce S3 live from `docs/streams/S3-RUNBOOK.md` steps 1–9 once the Orchestrator confirms a valid key. First confirm `HELLO_ADDRESS` = stream contract (QE-02).
-- [ ] Re-check QE-01/02/03/05 fixes when owners report them.
-- [x] Phase 2 Part A: API contract tests + CLI story (local) + replay determinism + hosted == chain + webhook probes
-- [ ] Phase 2 Part B: hosted `story:api --require-settled`, tap→settled latency (relay receipt → `GET /payments/:id` settled + SSE `payment.settled`), `railway logs … "streams delivery"` (verified, `ingest.newEvents > 0`), `independent-derive.mjs --hosted --onchain`, re-run `api-contract guards` on the deployed commit, then ask for the Stream pause
-- [x] Re-test QE-2-01: PASS on 920a042 (`part-b-guards-local.txt`)
-- [ ] Re-test the QE-2-03..09 Lows on 920a042
-- [ ] Phase 3: Playwright full story (two contexts) + real-phone checklist
-- [ ] Phase 5: full regression + demo rehearsal from written steps
+- [ ] **Thursday PM QE gate on the deployed web app:**
+  - Playwright at 390×844 with two browser contexts (venue + customer), running the full story against the deployed web + hosted api.
+  - A real-phone checklist for the human.
+  - Copy check: no crypto jargon on primary screens.
+- [ ] At Thursday's gate, re-test QE-2-03/04/06/09 on hosted (MSG-079).
+- [ ] Re-check QE-2-10 / SEC-2-10 when STREAMS_INFRA logs the timestamp unit (MSG-106).
+- [ ] Phase 0 gate Part B leftovers: QE-01/02/03/05 re-checks when owners report them.
+- [x] Phase 2 Part A: API contract tests, CLI story (local), replay determinism, hosted == chain, webhook probes.
+- [x] Phase 2 Part B: hosted story `--require-settled`, latency, delivery logs, hosted == chain (2026-11-18).
+- [x] Re-test QE-2-01: PASS on 920a042.
+- [ ] Phase 5: full regression + demo rehearsal from written steps.
 
 ## Struggles, open questions, known issues
 - The Bash guard also blocks commands that merely name `.env.example`. Use the Read tool for that file if needed.
 - The `rtk` hook rewrites some compound commands (`grep`, `cat`, `for … set --`). Put multi-step logic in a script file under `docs/evidence/phase-0/qe/` and run it with `bash`.
 - Arc public RPC rate-limits bursts (`-32005`). Add `sleep 1–3` between heavy `eth_getLogs` calls.
-- Open defects: Phase 0 `docs/qa/phase-0-qe-gate.md` (QE-01, QE-02 major); Phase 2 `docs/qa/phase-2-qe-e2e.md` (QE-2-01 Medium, MSG-075).
+- Open defects: Phase 0 `docs/qa/phase-0-qe-gate.md` (QE-01, QE-02 major); Phase 2 `docs/qa/phase-2-qe-e2e.md` (QE-2-03/04/06/09 not re-tested; QE-2-10 Info, MSG-106). QE-2-01 is closed.
 - Proposed INTERFACES change (QE-2-02): delete the stale second "Full typehashes" block in §3 (PaymentAuth `0x83204ea1…` is pre-D-012).
 
 ## How to run / test this area

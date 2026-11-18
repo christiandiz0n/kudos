@@ -38,15 +38,45 @@ Owns the visual and interaction design: design tokens, typography, color, motion
 | `apps/web/scripts/contrast.ts` | Contrast table from tokens.css | exits 1 on failure |
 | `docs/design/DESIGN_SYSTEM.md` | 1-page direction + usage | |
 
+### Customer (Phase 3)
+_UI-customer instance, 2026-11-18. Owns `screens/customer/**`, `design/**`, `components/ui/*` except the venue set (D-019 #2)._
+- **Screens (props-only, contract block at the top of each file):** SignIn (name + "Continue with Face ID or fingerprint"), WalletHome (pending/settled rows, loading/offline/empty, labelled demo top-up), Scan (cameraState starting/live/denied/unavailable + manual paste), PayConfirm (`PayConfirmSheet`, quoting, noReward, problem states), `PayProblem.tsx` (D-806 code → state mapping), PaymentSuccess (`status` pending→settled, Details receipt), IntroLanding ("Ana vouched for Lena's café", locked-in terms, 7 states), Recommend (make link with Face ID → QR + share/copy; locked "Buy once to vouch"), Ambassador (owner/visitor, share).
+- **Components changed:** SplitBreakdown (grouped ≤3-slice magnifier + `pending`, D-607), SuccessMark (`pending`), EmptyState (`tone`, `role`), ChoiceChips (`quiet` option), Icon (+faceId, camera, cameraOff, wifiOff, clock, lock, qr, pause), Button sm + SegmentedControl → 44px (D-610).
+- **/design:** 28 customer ids in `app/design/_mocks/meta.customer.ts`, rendered by `CustomerMocks.tsx` (ScreenMock delegates). Shots: `docs/evidence/phase-3/design/customer/` via `DESIGN_BASE_URL=http://localhost:3100 DESIGN_WHO=Customer DESIGN_OUT=docs/evidence/phase-3/design/customer pnpm --filter web design:shots`.
+- **Rules added:** green only after settlement (D-609); every pay error says "Nothing was charged" and offers one way forward (D-608); copy table in COPY.md "Phase 3 customer states".
+
+### Venue (Phase 3)
+_UI-venue instance, 2026-11-18. Owns `screens/venue/**`, `screens/public/**`, and MoneyGraph, Slider, Keypad, QrCode, QRFrame, Stat (D-019 #2)._
+- **MoneyGraph v1 (D-611/D-612):** `data={venue, flows: MoneyFlow[], names?}`. Each flow is `{paymentId, from, to, level: "venue"|"cashback"|1|2, amount}`, 1:1 with stats `edges` plus one venue flow per payment (`moneyFlowsFromEdges`, `venueFlowsFromPayments`).
+  - Fixed tiered layout: venue ← customers → recommenders → introducers. Landscape 1280×720, portrait 360 wide. Highlighted people sit in the column of their role. The tail folds into "N more" (7 per column / 4 per row).
+  - Cashback is a "+$0.45 back" badge, never a loop.
+  - Arrival choreography is re-keyed on `highlightPaymentId`/`replayKey`. Reduced motion shows the final frame.
+  - Pure `layoutMoneyGraph` is exported. v0 props are still accepted.
+- **Screens (props-only; contracts in MSG-098):**
+  - VenueDashboard: `layout="auto"` = phone <1024, projector ≥1024. States: live, connecting, reconnecting, offline, loading, empty. Shows cost per new customer vs an editable typical ad cost.
+  - VenueOnboarding: name, slider with a big-type worked example plus a two-part bar, min order ≥ $0.50 (`validateMinOrder`). Status idle/confirming/saving/error.
+  - OrderEntry: `applyOrderKey`, `parseOrderEntry`, optional note.
+  - OrderQR: `QRFrameState` = live/processing/refreshing/expired/paid, plus a paid summary.
+  - Transparency: computes the exact base-unit split itself (`exactSplit`); v3 address, Blockscout links, six events, Streams.
+- **/design:** 25 venue/public ids in `_mocks/meta.venue.ts`, rendered by `_mocks/VenueMocks.tsx`. Seeded networks at 5/20/60 people are in `_mocks/venueFixtures.ts` (the last payment is always Ben's $12.00). The playground is at `/design/money-graph`. `ScreenMock.tsx` is now a dispatcher only.
+- **Evidence:** `node --no-warnings scripts/design-shots-venue.ts` (shared :3100) writes 45 PNGs + checks.json to `docs/evidence/phase-3/design/venue/`.
+- **Gotcha:** an in-place scripted (python) rewrite of a source file was missed by the :3100 watcher. The result was a stale SSR bundle and a hydration mismatch. A normal editor save fixed it.
+
 ## Interfaces consumed / provided
 - Consumes `@vouch/shared`: `formatUsd`, `parseUsdc`, `mulBps`, `SPLIT_BPS`, `USDC_UNIT`, `APP_NAME`, Arc constants (transparency mock).
 - Provides `@/components/ui` + `src/screens/*` props contracts to FRONTEND_INTEGRATION (handoff MSG-006). MoneyGraph expects data derivable from `PaymentSettled` + `RewardPaid` (viaReferrer → L2 edge).
 
 ## Done (rolling, newest first)
+- venue: 2026-11-18 — MoneyGraph v1: cashback self-loop removed (MSG-008/044), arrival choreography, 5/20/60 playground. Venue dashboard hi-fi (phone + projector, live/reconnecting/offline/loading/empty). Onboarding (Face ID or fingerprint, ≥ $0.50 minimum). Counter entry + QR (processing/refreshing/expired/paid). Transparency (base units, rounding rule, v3 + Blockscout, events, Streams). 25 /design ids, 45 shots, 0 banned words, 0 console errors, reduced motion + focus pass. D-611..D-614, handoff MSG-098, fyi MSG-099.
+- customer: 2026-11-18 — Phase 3 hi-fi customer screens + all error/empty/loading states (28 ids), MSG-044 magnifier (D-607), pending→settled (D-609), recommend/intro/ambassador, design:shots phase-3 mode (0 banned words, 0 console errors, 0 targets <44px), D-607..D-610, handoff MSG-091, fyi MSG-092.
 - 2026-11-16 — Phase 1 design system v0: tokens (light+dark, AA verified), Instrument Sans, 25 components, 13 screen mocks at 390px + projector dashboard, money graph mock + scale notes, COPY.md, DESIGN_SYSTEM.md, 30 screenshots + checks.json, D-601..D-606, handoff MSG-006, approval question MSG-007.
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
+- [ ] venue: check the live dashboard on the projector against real hosted data (long display names, >5 recommenders, a "Guest N" fallback) once FRONTEND_INTEGRATION's wiring is deployed
+- [ ] venue: optional count-up on graph amounts; optional pause when the tab is hidden (the loops are already finite)
+- [ ] customer: phone pass on the deployed app (real Face ID prompt timing, sheet height on small phones ~667px, camera denied on iOS Safari)
+- [ ] customer: Sheet exit animation; success → recommend hand-off moment
 - [ ] Human sign-off on direction (MSG-007); apply any redirect to tokens first (everything else follows)
 - [ ] Phase 3 hi-fi: error/edge states (expired order, insufficient balance, relayer down, already rewarded, camera denied), loading skeletons per screen
 - [ ] Sheet exit animation; money graph live-arrival choreography + 20/60-node network view

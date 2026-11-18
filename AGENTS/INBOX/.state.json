@@ -1,5 +1,5 @@
 {
- "counter": 90,
+ "counter": 107,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -83,9 +83,10 @@
    "from": "ORCHESTRATOR",
    "to": "UI_DESIGN",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "Orchestrator sign-off on design system v0 (human approval pending via MSG-007)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-104"
   },
   "MSG-009": {
    "id": "MSG-009",
@@ -476,9 +477,10 @@
    "from": "ORCHESTRATOR",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Design direction APPROVED by the human (D-017) + required fixes before Phase 3",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-103"
   },
   "MSG-045": {
    "id": "MSG-045",
@@ -840,9 +842,10 @@
    "from": "BACKEND_RELAYER",
    "to": "QE_E2E",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-2-01 (Medium): concurrent POST /payments on one intent overwrites the paid intent to already_settled",
-   "re": "MSG-075"
+   "re": "MSG-075",
+   "resolution": "QE-2-01 re-test PASS on the deployed 920a042 code: a concurrent duplicate gets 409 PAYMENT_ALREADY_USED at the intent claim and uses no rate token (docs/evidence/phase-2/qe/part-b-guards-local.txt). Hosted story 2026-11-18 also OK."
   },
   "MSG-079": {
    "id": "MSG-079",
@@ -852,7 +855,8 @@
    "type": "answer",
    "status": "open",
    "subject": "Re: QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate",
-   "re": "MSG-076"
+   "re": "MSG-076",
+   "resolution": "Partially re-verified on hosted ce50f9ff (2026-11-18): QE-2-05 fixed (minOrder has display), QE-2-08 fixed (404 UNKNOWN_VENUE on /, /terms, /stats), QE-2-07 behaves as D-810. QE-2-03/04/06/09 not yet re-tested (they need owner-signed prepares/orders). Keeping it open for the Thursday QE gate."
   },
   "MSG-080": {
    "id": "MSG-080",
@@ -870,9 +874,10 @@
    "from": "ORCHESTRATOR",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "A7/D-019: Phase 3 hi-fi + Phase 4 visuals NOW, two instances (customer / venue)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-094"
   },
   "MSG-082": {
    "id": "MSG-082",
@@ -901,9 +906,10 @@
    "from": "ORCHESTRATOR",
    "to": "QE_E2E",
    "type": "request",
-   "status": "open",
+   "status": "closed",
    "subject": "A7: Phase 2 Part B now (20-min box once the Stream reaches head); Thursday PM gate on the deployed app",
-   "re": null
+   "re": null,
+   "resolution": "Part B run: PASS-with-findings. Pay 0x40147554\u2026ddfcb is exact on chain and settled via the live Stream about 0.3 s after the relay receipt. Hosted == chain 177/177 (141 events); no events missing. See docs/qa/phase-2-qe-e2e.md. Thursday PM gate queued in AGENTS/QE_E2E.md."
   },
   "MSG-085": {
    "id": "MSG-085",
@@ -964,6 +970,176 @@
    "status": "open",
    "subject": "Re: A7/D-019 #4: capped demo top-up endpoint for 'Top up (testnet demo)'",
    "re": "MSG-083"
+  },
+  "MSG-091": {
+   "id": "MSG-091",
+   "ts": "2026-11-18T13:06:39-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "open",
+   "subject": "customer hi-fi: prop contracts v1 (screens/customer/*) \u2014 handoff",
+   "re": null
+  },
+  "MSG-092": {
+   "id": "MSG-092",
+   "ts": "2026-11-18T13:06:39-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "customer hi-fi 1\u20132 done",
+   "re": null
+  },
+  "MSG-093": {
+   "id": "MSG-093",
+   "ts": "2026-11-18T13:07:37-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Design direction APPROVED by the human (D-017) + required fixes before Phase 3",
+   "re": "MSG-044"
+  },
+  "MSG-094": {
+   "id": "MSG-094",
+   "ts": "2026-11-18T13:07:37-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: A7/D-019: Phase 3 hi-fi + Phase 4 visuals NOW, two instances (customer / venue)",
+   "re": "MSG-081"
+  },
+  "MSG-095": {
+   "id": "MSG-095",
+   "ts": "2026-11-18T13:07:37-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Orchestrator sign-off on design system v0 (human approval pending via MSG-007)",
+   "re": "MSG-008"
+  },
+  "MSG-096": {
+   "id": "MSG-096",
+   "ts": "2026-11-18T13:09:21-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "[customer] Orchestrator review of Phase 3 shots: 2 small polish items",
+   "re": null
+  },
+  "MSG-097": {
+   "id": "MSG-097",
+   "ts": "2026-11-18T13:10:00-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Milestone A working end-to-end on hosted api (+ most of B)",
+   "re": null
+  },
+  "MSG-098": {
+   "id": "MSG-098",
+   "ts": "2026-11-18T13:12:18-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "open",
+   "subject": "venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) \u2014 handoff",
+   "re": null
+  },
+  "MSG-099": {
+   "id": "MSG-099",
+   "ts": "2026-11-18T13:12:18-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "[venue] MoneyGraph v1 + venue dashboard hi-fi done (items 1-2); 3-5 first pass in",
+   "re": null
+  },
+  "MSG-100": {
+   "id": "MSG-100",
+   "ts": "2026-11-18T13:14:24-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "UI-customer: 3 copy/prop asks from live wiring (pay success, D-509 warning, pay backdrop)",
+   "re": null
+  },
+  "MSG-101": {
+   "id": "MSG-101",
+   "ts": "2026-11-18T13:14:24-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "UI-venue: dashboard cost comparison edge case + wiring status",
+   "re": null
+  },
+  "MSG-102": {
+   "id": "MSG-102",
+   "ts": "2026-11-18T13:14:24-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Milestone B + C core working on hosted api (venue spine + referral loop)",
+   "re": null
+  },
+  "MSG-103": {
+   "id": "MSG-103",
+   "ts": "2026-11-18T13:18:43-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Design direction APPROVED by the human (D-017) + required fixes before Phase 3",
+   "re": "MSG-044"
+  },
+  "MSG-104": {
+   "id": "MSG-104",
+   "ts": "2026-11-18T13:18:43-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Orchestrator sign-off on design system v0 (human approval pending via MSG-007)",
+   "re": "MSG-008"
+  },
+  "MSG-105": {
+   "id": "MSG-105",
+   "ts": "2026-11-18T13:18:43-05:00",
+   "from": "UI_DESIGN",
+   "to": "UI_DESIGN",
+   "type": "fyi",
+   "status": "open",
+   "subject": "[venue\u2192customer] shared /design edits + MoneyGraph v1 compat",
+   "re": null
+  },
+  "MSG-106": {
+   "id": "MSG-106",
+   "ts": "2026-11-18T13:19:07-05:00",
+   "from": "QE_E2E",
+   "to": "STREAMS_INFRA",
+   "type": "request",
+   "status": "open",
+   "subject": "SEC-2-10 / D-309(d): X-QN-Timestamp unit still not observable on live deliveries (QE-2-10, Info)",
+   "re": null
+  },
+  "MSG-107": {
+   "id": "MSG-107",
+   "ts": "2026-11-18T13:19:43-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "[venue] Orchestrator review of projector shots: 2 polish items (Thursday)",
+   "re": null
   }
  }
 }

@@ -785,3 +785,73 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
 - **Reason:** judges join with a fresh $0 wallet (D-019 #4). Free identities make once-per-address weak, so the global cap is the real bound ($30/day by default). Keeping the top-up outside the gas budget means a burst of top-ups can't pause payments.
 - **Not done:** N-1 (reserve part of the relayer budget for `pay`). It didn't fall out of this work and is still on the backlog.
 - **Who:** BACKEND_RELAYER
+
+## D-607 — Split magnifier v1: grouped by role, ≤3 slices, one soft wedge (MSG-044, D-017c)
+- **Date:** 2026-11-18
+- **Decision:** `SplitBreakdown` magnifies the reward slice into at most three groups (you · the people who recommended it · the people who brought them in), not one segment per person. The loupe is a single soft wedge with no hairlines. The `bar` variant adds a 3-column legend (group name + big amount), and the `receipt` variant keeps one line per person below. Props are unchanged; a new `pending` prop renders the receipt gray with an "Arriving" tag until settlement.
+- **Reason:** the human asked for a lightweight, projector-readable magnifier. With per-person segments, Sofia's $0.11 was a 20px sliver. Three slices stay legible at any scale, and the names live in the lines.
+- **Who:** UI_DESIGN (customer)
+
+## D-608 — Pay sheet: primary "Confirm with Face ID or fingerprint"; explicit Skip; problems swap the sheet
+- **Date:** 2026-11-18
+- **Decision:** The pay sheet's one primary button reads "Confirm with Face ID or fingerprint" (aria-label "Pay $12.00 to Lena's café. Confirm with …"). The amount is the display figure above it, and a caption reads "You pay $12.00. No fees." "Who sent you here?" offers recommender chips, "Someone else" and a quiet "Skip" chip (`whoSentYou`: null | id | "other" | "skip"). It only appears when there is money back. Errors don't show as toasts: they replace the sheet content with a `PayProblem` state, each with one way forward. A balance below the amount turns into "insufficient" automatically. Repeat visits show a kind "regular payment" note, not an error.
+- **Reason:** D-017(d) copy, one primary per screen (COPY.md), and judges score hidden complexity: every failure reassures "Nothing was charged".
+- **Who:** UI_DESIGN (customer)
+
+## D-609 — Pending → settled: gray until the money lands, then green
+- **Date:** 2026-11-18
+- **Decision:** After relay (202) the success screen shows a quiet ink ring, "Paying Lena's café…", a gray receipt marked "Arriving" and "$0.45 back, on its way". On `payment.settled` (Streams) the mark pops green, the receipt floods green and "Ana and Priya were just thanked" appears. The caller vibrates then. Activity rows use the same rule: pending rows are muted with a "Pending" tag.
+- **Reason:** green means somebody got paid (D-601). Turning green before settlement would be a lie that only lasts a few seconds.
+- **Who:** UI_DESIGN (customer)
+
+## D-610 — /design catalogue split by owner; design:shots reads it
+- **Date:** 2026-11-18
+- **Decision:** Customer mocks live in `app/design/_mocks/CustomerMocks.tsx` + `meta.customer.ts`, and `ScreenMock` delegates to them. `design:shots` now parses `_mocks/meta*.ts` instead of a hand-kept list. It takes `DESIGN_WHO` (Customer|Venue|Public) and `DESIGN_OUT` (relative to the repo), and in filtered runs it also reports tap targets under 44px and the first Tab stop's focus ring. `Button size="sm"` and `SegmentedControl` went from 40 to 44px tall.
+- **Reason:** two UI instances edit /design at the same time (D-019 #2). Separate files avoid merge collisions, and a parsed list can't drift.
+- **Who:** UI_DESIGN (customer)
+
+## D-611 — MoneyGraph v1: flat flow input, tiered deterministic layout, √amount edges, "N more" folding
+- **Date:** 2026-11-18
+- **Decision:** `MoneyGraph` takes `data = {venue:{id,name}, flows: MoneyFlow[], names?}`.
+  - `MoneyFlow = {paymentId, from, to, level: "venue"|"cashback"|1|2, amount}`, which is 1:1 with `/venues/:venue/stats` edges (role 0 → "cashback", 1, 2) plus one `"venue"` flow per payment (customer → venue, venueAmount).
+  - Layout is fixed columns with no physics: venue ← customers → recommenders → introducers. Columns run left→right on a projector (1280×720 viewBox) and become rows top→bottom on a phone (360-wide viewBox).
+  - People in the highlighted payment take the column of their role in it, so the story always reads in one direction. Everyone else sits in the highest tier they were paid in. Order within a column follows each node's strongest edge into the next tier, to cut crossings.
+  - Edge width = 2 + k·√(amount / largest edge) (D-603).
+  - The tail folds into one "N more" node per column: 7 per column on a projector, 4 per row on a phone. Highlighted people are always kept.
+  - `mode="payment"` draws one payment; `mode="network"` aggregates per (from, to, level) and keeps history pale.
+  - Unknown addresses show as "Guest N", never hex.
+  - Plain SVG + CSS, no d3. v0 props stay accepted.
+- **Reason:** It is deterministic and readable on a projector at 5, 20 and 60 people (screenshots in `docs/evidence/phase-3/design/venue/`), and FRONTEND_INTEGRATION can derive the input straight from the API.
+- **Who:** UI_DESIGN (venue)
+
+## D-612 — Cashback is a badge, not a loop; arrival choreography keyed on the payment id (MSG-008/MSG-044)
+- **Date:** 2026-11-18
+- **Decision:** The customer's cashback renders as a green "+$0.45 back" pill on the customer node: above it on a projector, to the right on a phone (above when the row is crowded). The role-0 self-edge is never drawn.
+- **Choreography:** when `live` and `highlightPaymentId` (or `replayKey`) changes, the graph assembles in payout order:
+  - 0 ms: the customer pops in.
+  - 250 ms: the venue stream draws (650 ms).
+  - The cashback badge pops.
+  - 700 ms: recommenders, 140 ms apart.
+  - Then introducers.
+  - Each recipient pings when its money lands. Dashes run toward recipients for about 3 s, then fade (finite, so nothing needs pausing on hidden tabs).
+- **Reduced motion:** the final frame, with no draw, dashes or ping.
+- **Who:** UI_DESIGN (venue)
+
+## D-613 — Venue dashboard: cost per new customer vs a typical ad; one component, phone <1024px / projector ≥1024px
+- **Date:** 2026-11-18
+- **Decision:**
+  - The hero KPI is "Cost per new customer" (`costPerVerifiedCustomer`), next to an editable "Typical ad cost" ($20.00 default, caller-stored), with one plain line: "$18.48 less per new customer than a typical ad. About 13× less."
+  - Feed rows read "Ben paid $12.00 · $1.35 to 4 people who sent Ben · now", with "$10.20 to you" on the right.
+  - Live status uses the SSE states live / connecting / reconnecting / offline, with a reassuring note when it's not live.
+  - A brand-new venue gets an empty state explaining how it works in three steps.
+  - `layout="auto"` switches at 1024px. The projector layout fits 1280×720.
+- **Who:** UI_DESIGN (venue)
+
+## D-614 — Counter: $0.50 order floor, explicit processing/refreshing QR states; onboarding drops the loupe for a two-part bar
+- **Date:** 2026-11-18
+- **Decision:**
+  - Order entry: the floor is $0.50 (ORDER_MIN_USDC, D-808), the cap $10,000, max 2 decimals (`applyOrderKey` / `parseOrderEntry`). The note field is optional. The CTA reads "Show code for $12.00".
+  - `QRFrameState` adds `processing` (payment.pending: "Payment on its way…") and `refreshing` (new signed order). Expired codes can auto-refresh. Paid shows "Paid $12.00" and who got what.
+  - Venue onboarding shows the worked example in big type ("+$1.80 in rewards → $0.45 back to the customer, $1.35 to the people who sent them, you keep $10.20"). A two-part keep/rewards bar replaces SplitBreakdown's loupe, per D-017's "lightweight, projector-readable".
+  - The CTA is "Confirm with Face ID or fingerprint". The minimum order must be at least $0.50.
+- **Who:** UI_DESIGN (venue)

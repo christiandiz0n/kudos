@@ -126,7 +126,8 @@ _pending_
 
 ## Session 3 — 2026-11-18 ~13:00 ET — Amendment A7 (schedule triage, D-019)
 - **State at resume (Orchestrator-verified):** Railway secrets applied (names present; `/relayer/status` enabled:true, reachable:true, lowBalance:false, balance 19.67, budget unused; deployment ce50f9ff 12:43 ET). Stream ACTIVE, catching up (hosted cursor 72,625,258 vs head 72,887,135 at 17:47Z; ~150–170 blocks/s). Current deployment: 12/12 webhook deliveries HTTP 200, 0 non-200; older deployments' HTTP logs are gone, so the 2 dashboard errors are attributed by completeness (Part B independent-derive) rather than by log line.
-- **Phase 2 Part B:** fresh QE_E2E launched (20-min box from "Stream at head").
+- **Phase 2 Part B: PASS-with-findings** (fresh QE_E2E, attempt 2). T0 (Stream at head) 18:08:58Z; story 18:15:49–18:16:16Z, inside the box. Canonical pay `0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb` (block 72,890,535) exact on chain (10.20 / 0.45 / 0.693 / 0.297 / 0.252 / 0.108). Relay receipt → verified delivery +0.147 s; SSE `payment.settled` +0.144 s; GET settled +0.296 s; 202 → SSE settled ≈ 1.0 s. All 28 deliveries on ce50f9ff verified/200. Hosted DB == chain 177/177 (141 logs, 9 venues): **no events missing, so the 2 dashboard errors were retried or predate the data.** Finding QE-2-10 (Info): `X-QN-Timestamp` unit still not observable in logs (MSG-106 → STREAMS_INFRA). Hosted guards not re-run (they would broadcast real pays; 7/7 locally on 920a042). Spend 0.044 USDC. Report `docs/qa/phase-2-qe-e2e.md`; evidence `docs/evidence/phase-2/qe/part-b-*`.
+- **Phase 2 gate: PASS-with-findings** (exit criterion met).
 
 ## Phase 3 (+ visual Phase 4) — Frontend, merged (A7: started without a "go")
 ### Plan

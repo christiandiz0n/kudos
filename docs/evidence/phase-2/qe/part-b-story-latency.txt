@@ -1,0 +1,83 @@
+18:15:51.372 story:api → https://api-production-902bc54c.up.railway.app  (Vouch 0xF4B641dc628de05336aa983B07D5d181254ff08e on Arc Testnet 5042002)
+18:15:51.793   api ok (db postgres); relayer 0x3eAFdcE9B632C036146960A03Db720dc84568daD balance 19.640411040538 USDC; budget left $0.969822/h · $4.969822/day
+18:15:51.998 
+18:15:51.998 [0] balances
+18:15:52.164   Ana    $18.646 (needs $1.00)
+18:15:52.332   Priya  $15.0445 (needs $1.00)
+18:15:57.317   ✓ fund Ben +$11.55 from Lena (payout)  https://explorer.testnet.arc.io/tx/0x9e43d7e6eed8e475873fa3b90b3ea777ed04675d16520f19e7ba071c9a08cdb0
+18:15:57.414   Ben    $12.05 (needs $12.00)
+18:15:57.414 
+18:15:57.414 [1] sign in (EIP-191 challenge → session)
+18:15:58.647   ✓ Lena, Sam, Ana, Priya, Ben signed in
+18:15:58.647 
+18:15:58.647 [2] Lena registers her venue (owner-signed, relayed) and seeds Sam
+18:15:58.775   venue 0xac2573F86624FF6f370008B61155487b933d2Cfc  owner nonce 8
+18:16:00.059   ✓ registerVenue (Lena-signed)        https://explorer.testnet.arc.io/tx/0x8ae5815e2cdb563b36371d8d377af9280914ebcc2095afc98f033b2b87459339
+18:16:01.564   ✓ setSeedAmbassador Sam (Lena-signed) https://explorer.testnet.arc.io/tx/0x1cadb89ea0c293c7f54deec34197ffb8e3f48a1f03750662e58b2658f5f44538
+18:16:01.564 
+18:16:01.564 [3] Ana joins via Sam
+18:16:01.929   · Sam shares a personal link http://localhost:3100/i/45Pt0hE2a
+18:16:03.658   ✓ acceptIntro Sam→Ana (1 opens)      https://explorer.testnet.arc.io/tx/0x3727b8e28d774bdfc17b17eded3ce62d437c3b22686c7676247c909d260ad5ba
+18:16:05.384   ✓ pay Ana $1.00                      https://explorer.testnet.arc.io/tx/0x9133c9fa1465020ffdf3b58ab729c3fdd7d68c4d55b864f043f462a31a25f4fe
+18:16:05.385   ✓ Ana quote: 100% Sam
+18:16:05.385 
+18:16:05.385 [4] Priya joins via Ana
+18:16:05.692   · Ana shares a personal link http://localhost:3100/i/y7HzyD2Og
+18:16:07.674   ✓ acceptIntro Ana→Priya (1 opens)    https://explorer.testnet.arc.io/tx/0xa1e35eac4d97659e713b2a15e1d559f980aa3f124e94232946ecb658898de4ca
+18:16:09.451   ✓ pay Priya $1.00                    https://explorer.testnet.arc.io/tx/0x73232da0ba7905373b70847fca668484e544f3095841dd43370e355e49a18566
+18:16:09.451 
+18:16:09.451 [5] Ben: Ana personal (3 opens) + Priya broadcast (2 opens)
+18:16:09.785   · Ana shares a personal link http://localhost:3100/i/FSS5co5P3
+18:16:11.589   ✓ acceptIntro Ana→Ben (3 opens)      https://explorer.testnet.arc.io/tx/0xb81fb5d26ed3fd435ae1b909410c76597050b45e3b6c3cf812000c31bbfa7477
+18:16:11.873   · Priya shares a broadcast link http://localhost:3100/i/LG2V4Arvn
+18:16:13.665   ✓ acceptIntro Priya→Ben (2 opens)    https://explorer.testnet.arc.io/tx/0x507eee0339b16ad331d54d647cb6083081492cfd4822ac0a8a15df60e5033868
+18:16:13.665 
+18:16:13.665 [6] Ben pays $12.00 (quote → one signature → relayed pay)
+18:16:14.035   QR: http://localhost:3100/pay?v=0xac2573F86624FF6f370008B61155487b933d2Cfc&o=0x9657236135aa1686fe203fdc0bc68f4ede62ae1e2fc76f3d1cb4b0833fe6eb5c
+18:16:14.301   quote: pay $12.00, you get $0.45 back; weights Ana/Priya 7000/3000 (baseline-v1)
+18:16:14.301     cashback   —      $0.45
+18:16:14.302     referrer   Ana    $0.693
+18:16:14.302     referrer   Priya  $0.297
+18:16:14.302     introducer Sam    $0.252
+18:16:14.302     introducer Ana    $0.108
+18:16:14.302     venue      Lena   $10.20
+18:16:14.302   ✓ PaymentAuth.submitter = RELAYER (D-014)
+18:16:14.302   ✓ baseline weights Ana 7000 / Priya 3000
+18:16:14.302   ✓ quote venue 10.20 · cashback 0.45
+18:16:14.302   ✓ quote L1 Ana 0.693 · Priya 0.297
+18:16:14.302   ✓ quote L2 Sam 0.252 · Ana 0.108
+18:16:14.793   API: pending 0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb
+18:16:15.667   ✓ pay Ben $12.00 (canonical)         https://explorer.testnet.arc.io/tx/0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb
+18:16:15.668 
+18:16:15.668 [7] on-chain verification (receipt logs + balances)
+18:16:15.770   ✓ pay() sent by the API relayer
+18:16:15.773   ✓ PaymentSettled venueAmount 10,200,000 · weightsMode ATTRIBUTOR
+18:16:15.774   ✓ RewardPaid C:Ben:450000 L1:Ana:693000 L1:Priya:297000 L2:Sam:252000 L2:Ana:108000
+18:16:15.870   ✓ balance deltas Lena 10200000 Ben -11550000 Ana 801000 Priya 297000 Sam 252000
+18:16:15.871 
+18:16:15.871 [8] DB "settled" via Streams (GET /payments/3bfe4086-9a69-4751-a2c9-5c8e7c65f727, up to 120s)
+18:16:15.963   ✓ settled in DB after 0.1s (source streams, block 72890535)
+18:16:15.963   ✓ DB venueAmount 10,200,000
+18:16:15.963     cashback:Ben:450000 · referrer:Ana:693000 · referrer:Priya:297000 · introducer:Sam:252000 · introducer:Ana:108000
+18:16:16.056   venue stats: verified 3, rewards paid $2.07, cost per verified customer $0.69
+18:16:16.149 
+18:16:16.150 [9] transactions
+18:16:16.150     registerVenue (Lena-signed)              0x8ae5815e2cdb563b36371d8d377af9280914ebcc2095afc98f033b2b87459339
+18:16:16.150     setSeedAmbassador Sam (Lena-signed)      0x1cadb89ea0c293c7f54deec34197ffb8e3f48a1f03750662e58b2658f5f44538
+18:16:16.150     acceptIntro Sam→Ana (1 opens)            0x3727b8e28d774bdfc17b17eded3ce62d437c3b22686c7676247c909d260ad5ba
+18:16:16.150     pay Ana $1.00                            0x9133c9fa1465020ffdf3b58ab729c3fdd7d68c4d55b864f043f462a31a25f4fe
+18:16:16.150     acceptIntro Ana→Priya (1 opens)          0xa1e35eac4d97659e713b2a15e1d559f980aa3f124e94232946ecb658898de4ca
+18:16:16.150     pay Priya $1.00                          0x73232da0ba7905373b70847fca668484e544f3095841dd43370e355e49a18566
+18:16:16.150     acceptIntro Ana→Ben (3 opens)            0xb81fb5d26ed3fd435ae1b909410c76597050b45e3b6c3cf812000c31bbfa7477
+18:16:16.150     acceptIntro Priya→Ben (2 opens)          0x507eee0339b16ad331d54d647cb6083081492cfd4822ac0a8a15df60e5033868
+18:16:16.150     pay Ben $12.00 (canonical)               0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb
+18:16:16.150     relayer gas this run: 0.04443949 USDC (9 txs)
+18:16:16.150 
+18:16:16.150 venue 0xac2573F86624FF6f370008B61155487b933d2Cfc · pay intent 3bfe4086-9a69-4751-a2c9-5c8e7c65f727
+18:16:16.151 
+18:16:16.151 STORY OK (on-chain + settled in DB via Streams)
+
+pay 0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb block 72890535 blockTime 2026-11-18T18:16:15.000Z
+SSE payment.settled for this tx: 2026-11-18T18:16:15.811Z (+0.81 s after block time)
+story exit 0; events → docs/evidence/phase-2/qe/part-b-story-latency.ndjson
+exit=0

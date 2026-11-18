@@ -1,0 +1,31 @@
+# railway logs --service api --filter 'streams delivery' (deployment ce50f9ff), captured 2026-11-18T18:16:38Z
+# server time (pino time, UTC) | verified status | batch | eventNames | ingest.newEvents dup events cursorBlock
+2026-11-18 17:46:58.634 verified 200 72625128..72625128 VenueRegistered,TermsUpdated new 2 dup 0 events 74 cursor 72625128
+2026-11-18 17:46:58.678 verified 200 72625131..72625131 SeedAmbassadorSet new 1 dup 0 events 75 cursor 72625131
+2026-11-18 17:46:58.724 verified 200 72625134..72625134 IntroAccepted new 1 dup 0 events 76 cursor 72625134
+2026-11-18 17:46:58.787 verified 200 72625140..72625140 CustomerVerified,PaymentSettled,RewardPaid,RewardReturned new 5 dup 0 events 81 cursor 72625140
+2026-11-18 17:46:58.830 verified 200 72625145..72625145 IntroAccepted new 1 dup 0 events 82 cursor 72625145
+2026-11-18 17:46:58.887 verified 200 72625148..72625148 CustomerVerified,PaymentSettled,RewardPaid new 5 dup 0 events 87 cursor 72625148
+2026-11-18 17:46:58.936 verified 200 72625152..72625152 IntroAccepted new 1 dup 0 events 88 cursor 72625152
+2026-11-18 17:46:58.976 verified 200 72625154..72625154 IntroAccepted new 1 dup 0 events 89 cursor 72625154
+2026-11-18 17:46:59.046 verified 200 72625160..72625160 CustomerVerified,PaymentSettled,RewardPaid new 7 dup 0 events 96 cursor 72625160
+2026-11-18 17:46:59.168 verified 200 72625194..72625194 VenueRegistered,TermsUpdated new 2 dup 0 events 98 cursor 72625194
+2026-11-18 17:46:59.259 verified 200 72625203..72625203 CustomerVerified,PaymentSettled new 2 dup 0 events 100 cursor 72625203
+2026-11-18 17:46:59.427 verified 200 72625258..72625258 PaymentSettled new 1 dup 0 events 101 cursor 72625258
+2026-11-18 18:08:58.570 verified 200 72889670..72889670 VenueRegistered,TermsUpdated new 2 dup 0 events 103 cursor 72889670
+2026-11-18 18:09:18.979 verified 200 72889710..72889710 CustomerVerified,PaymentSettled new 2 dup 0 events 105 cursor 72889710
+2026-11-18 18:12:53.717 verified 200 72890135..72890135 VenueRegistered,TermsUpdated new 2 dup 0 events 107 cursor 72890135
+2026-11-18 18:13:08.596 verified 200 72890165..72890165 CustomerVerified,PaymentSettled new 2 dup 0 events 109 cursor 72890165
+2026-11-18 18:13:25.227 verified 200 72890198..72890198 IntroAccepted new 1 dup 0 events 110 cursor 72890198
+2026-11-18 18:13:36.912 verified 200 72890221..72890221 CustomerVerified,PaymentSettled,RewardPaid,RewardReturned new 5 dup 0 events 115 cursor 72890221
+2026-11-18 18:16:00.114 verified 200 72890504..72890504 VenueRegistered,TermsUpdated new 2 dup 0 events 117 cursor 72890504
+2026-11-18 18:16:01.690 verified 200 72890507..72890507 SeedAmbassadorSet new 1 dup 0 events 118 cursor 72890507
+2026-11-18 18:16:03.762 verified 200 72890511..72890511 IntroAccepted new 1 dup 0 events 119 cursor 72890511
+2026-11-18 18:16:05.773 verified 200 72890515..72890515 CustomerVerified,PaymentSettled,RewardPaid,RewardReturned new 5 dup 0 events 124 cursor 72890515
+2026-11-18 18:16:06.546 verified 200 72890516..72890516 VenueRegistered,TermsUpdated new 2 dup 0 events 126 cursor 72890516
+2026-11-18 18:16:07.356 verified 200 72890518..72890518 IntroAccepted new 1 dup 0 events 127 cursor 72890518
+2026-11-18 18:16:09.370 verified 200 72890522..72890522 CustomerVerified,PaymentSettled,RewardPaid new 5 dup 0 events 132 cursor 72890522
+2026-11-18 18:16:11.372 verified 200 72890526..72890526 IntroAccepted new 1 dup 0 events 133 cursor 72890526
+2026-11-18 18:16:13.375 verified 200 72890530..72890530 IntroAccepted new 1 dup 0 events 134 cursor 72890530
+2026-11-18 18:16:15.814 verified 200 72890535..72890535 CustomerVerified,PaymentSettled,RewardPaid new 7 dup 0 events 141 cursor 72890535
+# 28 delivery lines, 28 verified

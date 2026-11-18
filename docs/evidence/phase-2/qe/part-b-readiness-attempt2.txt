@@ -1,0 +1,18 @@
+# Part B attempt 2 readiness (2026-11-18). QE_E2E.
+# Last on-chain Vouch event before activation (eth_getLogs, 10k windows, rpc.testnet.arc.io, 17:52:56Z): block 72625258; 101 logs 72605845..72887736
+# Hosted verified delivery of block 72625258: 17:46:59.427Z server time (ingest.events 101, = chain's 101)
+# Gap estimate: head 72887135 at ~17:47Z - 72625258 = 261877 blocks; net ~148 blk/s (150 - ~1.8 head growth) => ~1769 s => ETA ~18:16:30Z
+# Observed: first live delivery 18:08:58.570Z (block 72889670; head 72889564 at 18:08:08) => Stream at head, T0 = 18:08:58Z (catch-up faster than 150 blk/s). Box ends 18:28:58Z.
+# Poll every 2 min: head | relayer/status | last verified delivery
+17:55:46 head=72888096 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+17:57:50 head=72888339 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+17:59:54 head=72888586 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+18:01:58 head=72888831 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+18:04:02 head=72889076 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+18:06:05 head=72889321 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+18:08:08 head=72889564 enabled True reachable True bal 19.670586609172 low False lastVerified: "batchEnd":72625258 "newEvents":1 "events":101 
+18:10:12 head=72889808 enabled True reachable True bal 19.660079834172 low False lastVerified: "batchEnd":72889710 "newEvents":2 "events":105 
+18:12:15 head=72890054 enabled True reachable True bal 19.660079834172 low False lastVerified: "batchEnd":72889710 "newEvents":2 "events":105 
+18:14:18 head=72890297 enabled True reachable True bal 19.640411040538 low False lastVerified: "batchEnd":72890221 "newEvents":5 "events":115 
+18:15:37 head=72890453 enabled True reachable True bal 19.640411040538 low False lastVerified: "batchEnd":72890221 "newEvents":5 "events":115 
+18:15:37 wait done

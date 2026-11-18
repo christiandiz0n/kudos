@@ -1,0 +1,195 @@
+[topic0] keccak256(signature) vs INTERFACES §4
+  ok   VenueRegistered
+  ok   TermsUpdated
+  ok   VenueKeysUpdated
+  ok   SeedAmbassadorSet
+  ok   IntroAccepted
+  ok   IntroDropped
+  ok   CustomerVerified
+  ok   PaymentSettled
+  ok   RewardPaid
+  ok   RewardReturned
+
+[logs] Vouch 0xF4B641dc628de05336aa983B07D5d181254ff08e blocks 72605845..72890596: 141 raw logs, 141 decoded
+  VenueRegistered=9 TermsUpdated=9 SeedAmbassadorSet=5 IntroAccepted=21 CustomerVerified=19 PaymentSettled=20 RewardPaid=52 RewardReturned=6
+  venues: 0xf315D0B045697C4a7519d03af35a831008882005, 0x88Da03C25F092D0c062A4bEd1042Ce54a40552Cf, 0x374E084A46C3C14ab3720f46b8402d1a38d18b89, 0xBAd7D0083f590C0C36638DA86237d00c9b2dbDbb, 0xd5eab90441172616F87DfFc5b4A32e85DD159422, 0x4b4917358c7AB0b757F02023Ae6E160eFeF3d8f4, 0xf57ad24012b1e057864F4A4BF798ED8809bb66ea, 0xac2573F86624FF6f370008B61155487b933d2Cfc, 0xE5e3876B796905B01303339680ADfE1463cd7588
+
+[invariants] venueAmount + Σ RewardPaid == amount; rewardPool − (Σ paid + Σ returned) ∈ [0, 2 × referrers]
+  ok   0x60041591 conservation
+  ok   0x60041591 dust 0 ≤ 2
+  ok   0xf12a1c09 conservation
+  ok   0xf12a1c09 dust 0 ≤ 2
+  ok   0x95cbda97 conservation
+  ok   0x95cbda97 dust 0 ≤ 4
+  ok   0xe6590f0d conservation
+  ok   0xe6590f0d dust 0 ≤ 2
+  ok   0x21b0f878 conservation
+  ok   0x21b0f878 dust 0 ≤ 2
+  ok   0xfca0e1ae conservation
+  ok   0xfca0e1ae dust 0 ≤ 4
+  ok   0x631f093c conservation
+  ok   0x631f093c dust 0 ≤ 2
+  ok   0x8aac926a conservation
+  ok   0x8aac926a dust 0 ≤ 2
+  ok   0x4660d5bb conservation
+  ok   0x4660d5bb dust 0 ≤ 4
+  ok   0x4fe6c005 conservation
+  ok   0x4fe6c005 dust 0 ≤ 2
+  ok   0x2793d318 conservation
+  ok   0x2793d318 dust 0 ≤ 2
+  ok   0x8f2ea5c0 conservation
+  ok   0x8f2ea5c0 dust 0 ≤ 4
+  ok   0x2ddeb2f7 conservation
+  ok   0x2ddeb2f7 dust 0 ≤ 0
+  ok   0x2ed87a72 conservation
+  ok   0x2ed87a72 dust 0 ≤ 0
+  ok   0xb72fedff conservation
+  ok   0xb72fedff dust 0 ≤ 0
+  ok   0xc0750187 conservation
+  ok   0xc0750187 dust 0 ≤ 0
+  ok   0x6dd7ca17 conservation
+  ok   0x6dd7ca17 dust 0 ≤ 2
+  ok   0x9133c9fa conservation
+  ok   0x9133c9fa dust 0 ≤ 2
+  ok   0x73232da0 conservation
+  ok   0x73232da0 dust 0 ≤ 2
+  ok   0x40147554 conservation
+  ok   0x40147554 dust 0 ≤ 4
+
+[receipt] 0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb
+  ok   status
+  vouch events: CustomerVerified@20 PaymentSettled@36 RewardPaid@37 RewardPaid@38 RewardPaid@39 RewardPaid@40 RewardPaid@41
+  ok   event order: CustomerVerified, PaymentSettled, RewardPaid cashback → L1 → L2
+  ok   PaymentSettled amount / venueAmount / rewardPool
+  ok   weightsMode ATTRIBUTOR, firstPurchase, rewarded
+  ok   RewardPaid amounts (cashback, L1, L1, L2, L2)
+  ok   USDC customer → Vouch = amount
+  ok   USDC Vouch → reward recipients (RewardPaid order)
+  ok   USDC Vouch → venue payout = venueAmount
+  ok   Σ USDC out of Vouch = amount
+  recipients: C:0xb3331Baa327cc4cf7B3C67C5C66cE94011902344:0x0000000000000000000000000000000000000000 | L1:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L1:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 | L2:0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9:0xc0496441056d13D2B26edF3E2e792Ce253177896 | L2:0xc0496441056d13D2B26edF3E2e792Ce253177896:0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611
+  ok   cashback → customer, L2 viaReferrer = the matching L1
+
+[onchain] eth_call getVenueStats / getAmbassadorStats at block 72890596
+  ok   venue 0xf315D0B045697C4a7519d03af35a831008882005 (verified, rewarded, gross, paid, returned)
+  ok   venue 0x88Da03C25F092D0c062A4bEd1042Ce54a40552Cf (verified, rewarded, gross, paid, returned)
+  ok   venue 0x374E084A46C3C14ab3720f46b8402d1a38d18b89 (verified, rewarded, gross, paid, returned)
+  ok   venue 0xBAd7D0083f590C0C36638DA86237d00c9b2dbDbb (verified, rewarded, gross, paid, returned)
+  ok   venue 0xd5eab90441172616F87DfFc5b4A32e85DD159422 (verified, rewarded, gross, paid, returned)
+  ok   venue 0x4b4917358c7AB0b757F02023Ae6E160eFeF3d8f4 (verified, rewarded, gross, paid, returned)
+  ok   venue 0xf57ad24012b1e057864F4A4BF798ED8809bb66ea (verified, rewarded, gross, paid, returned)
+  ok   venue 0xac2573F86624FF6f370008B61155487b933d2Cfc (verified, rewarded, gross, paid, returned)
+  ok   venue 0xE5e3876B796905B01303339680ADfE1463cd7588 (verified, rewarded, gross, paid, returned)
+  ok   ambassador 0xc0496441056d13D2B26edF3E2e792Ce253177896 (credited, venues, l1, l2)
+  ok   ambassador 0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9 (credited, venues, l1, l2)
+  ok   ambassador 0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 (credited, venues, l1, l2)
+  ok   ambassador 0xb3331Baa327cc4cf7B3C67C5C66cE94011902344 (credited, venues, l1, l2)
+  ok   ambassador 0xC7B105F63635a2e56E3C1065AA91DBbdfF50Ed24 (credited, venues, l1, l2)
+  ok   ambassador 0xB89Fd7F1AaA9870538B0637bc70Ab35c5b289A08 (credited, venues, l1, l2)
+
+[hosted] https://api-production-902bc54c.up.railway.app vs the model (blocks 72605845..72890596)
+  /health 200 db=postgres
+  ok   GET /venues/0xf315D0B045697C4a7519d03af35a831008882005 → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (10)
+  ok   GET /venues/0x88Da03C25F092D0c062A4bEd1042Ce54a40552Cf → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (10)
+  ok   GET /venues/0x374E084A46C3C14ab3720f46b8402d1a38d18b89 → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (10)
+  ok   GET /venues/0xBAd7D0083f590C0C36638DA86237d00c9b2dbDbb → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (10)
+  ok   GET /venues/0xd5eab90441172616F87DfFc5b4A32e85DD159422 → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (0)
+  ok   GET /venues/0x4b4917358c7AB0b757F02023Ae6E160eFeF3d8f4 → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (0)
+  ok   GET /venues/0xf57ad24012b1e057864F4A4BF798ED8809bb66ea → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (2)
+  ok   GET /venues/0xac2573F86624FF6f370008B61155487b933d2Cfc → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (10)
+  ok   GET /venues/0xE5e3876B796905B01303339680ADfE1463cd7588 → 200
+  ok     config (owner, payout, signer, attributor, metadataURI, registeredTx)
+  ok     terms history
+  ok     seeds
+  ok     /terms history
+  ok     stats counts (verified, rewardedPurchases, payments)
+  ok     stats money (gross, rewardsPaid, rewardsReturned, venueReceived)
+  ok     stats byRole
+  ok     costPerVerifiedCustomer
+  ok     edges (0)
+  ok   GET /ambassadors/0xc0496441056d13D2B26edF3E2e792Ce253177896 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (20)
+  ok   GET /ambassadors/0xaAf8214A1d900C446B6CB9994F4B76AFd6864eC9 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (15)
+  ok   GET /ambassadors/0xeD0FA6CDFc6AEEDccA418E5cB2C2730c1003A611 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (10)
+  ok   GET /ambassadors/0xb3331Baa327cc4cf7B3C67C5C66cE94011902344 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (5)
+  ok   GET /ambassadors/0xC7B105F63635a2e56E3C1065AA91DBbdfF50Ed24 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (1)
+  ok   GET /ambassadors/0xB89Fd7F1AaA9870538B0637bc70Ab35c5b289A08 (credited, venues, referrer, introducer, cashback)
+  ok     recent lines (1)
+
+OK: all independent checks passed
