@@ -909,3 +909,35 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
 - **Decision:** After `POST /venues`, the app waits for `venue.registered` (user SSE, from Streams) or `GET /venues/:v` status `registered`. If the registerVenue relay is mined and Streams hasn't confirmed within 15 s, the app goes to the dashboard anyway; the numbers fill in when Streams catches up. Payments are unchanged: "settled" still comes only from Streams (D-904).
 - **Reason:** The human may pause the Stream (MSG-108). A mined registerVenue already means the venue exists on chain, so onboarding shouldn't hang.
 - **Who:** FRONTEND_INTEGRATION
+
+## D-907 — Web: production origins for Vercel (QR, share links, api)
+- **Date:** 2026-11-18
+- **Decision:**
+  - `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_WEB_URL` are parsed as absolute http(s) URLs. Invalid values fall back: the api to the hosted Railway default, the web origin to the page's own origin. Trailing slashes, query and hash are dropped.
+  - QR codes and share links keep using the page's own origin (D-901). `NEXT_PUBLIC_WEB_URL` can pin them, for example to the production domain when the counter runs on a preview URL.
+  - A pinned **localhost** web origin is ignored when the page itself is not on localhost. A dev value baked into a deployed build must not put `localhost` in every QR.
+  - Both vars are inlined at build time, so on Vercel they must be set before the build.
+- **Reason:** Thursday's Vercel deploy. A wrong env value should degrade to "this deployment's origin", not to dead QR codes.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-908 — Web: invalid pay links and owner-only order taking are decided in the client before any api write
+- **Date:** 2026-11-18
+- **Decision:**
+  - **QE-3-01:** `/pay` validates `v` (an address) and `o` (bytes32) before sign-in or any quote (`parsePayParams`). A malformed link shows a full-screen version of PayProblem `invalidLink` (UI_DESIGN's copy and actions: "Scan a new code" / "Close"). A well-formed link that the api answers with `NOT_FOUND`, `UNKNOWN_VENUE`, `UNKNOWN_ORDER` or `BAD_REQUEST` on the order or quote **lookup** shows the same state in the pay sheet. A `NOT_FOUND` at `POST /payments` is not treated as a link problem.
+  - **QE-3-05:** the dashboard offers "Take an order" (and the typical-ad-cost edit) only when the session is the venue owner. Ownership comes from `GET /venues/:v` `.owner`, falling back to `/auth/session` venues. The `/counter` route shows a read-only "Only the owner can take orders here" screen to anyone else.
+  - The api remains the enforcement point: `POST /orders` stays owner-only. The client check is UX only.
+- **Reason:** QE gate findings QE-3-01 and QE-3-05. Neither state can succeed on retry, so neither should offer a dead-end action.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-615 — UI fix pass: opaque thumb-zone footer, "invalidLink" pay state, no-reward copy by reason
+- **Date:** 2026-11-18
+- **Decision:**
+  - **Footer (QE-3-02, MSG-115):** `Screen`'s sticky footer is now opaque (canvas/surface) with a 24px fade above it, instead of a gradient whose transparent top let content show through the caption. `html:has([data-vx-footer])` gets `scroll-padding-bottom: 9.5rem`, so focusing or scrolling to a field never leaves it behind the footer. Applies to every screen with a footer.
+  - **Pay link (QE-3-01):** `PayProblem` gains `"invalidLink"` ("This link doesn't look right" · Scan a new code · Close). It never offers Try again, because the same link can't succeed.
+  - **No money back (QE-3-03, MSG-100):** `PaymentSuccessScreen` takes `noReward` + `minOrder` (same reasons as the pay sheet). Unknown reason → neutral "Thanks for coming in.", never "coming back". On the pay sheet, `belowMinimum` is an amber warning that the visit uses up the first-visit money back (D-509).
+  - **Dashboard:** "New customers" caption is "verified first purchases" (QE-3-04). Cost vs ad skips the "× less" ratio below $0.01 and above 100× (MSG-101). A `viewer: "visitor"` mode hides the ad-cost input and words rows "to the venue" (MSG-119).
+  - **MoneyGraph (MSG-107):** in dense landscape columns the cashback badge is pinned to the customer node's upper-right. Same-column arcs in the last column bulge inward, and the bulge is capped at 30% of the column gap, so arcs stay inside the card.
+  - **Focus (QE-3-07):** a TextField shows one ring, drawn by the wrapper; the bare input's outline is removed (`.vx-field-input`).
+  - **Toast (QE-3-06):** the dismiss button is 44px.
+- **Reason:** These are the QE gate and Orchestrator polish findings. Every prop change is additive and optional, so existing callers keep working.
+- **Who:** UI_DESIGN

@@ -1,0 +1,117 @@
+{
+  "at": "2026-11-18T19:45:52.318Z",
+  "base": "http://localhost:3100",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "venue": "0x295945A9935db7e6e76c32237B20659077b00637",
+  "checks": [
+    {
+      "id": "QE-3-01",
+      "item": "/pay?v=0x295945A9935db7e6e76c32237B20659077b00637 → invalid-link state",
+      "pass": true,
+      "detail": "primaries=[\"Scan a new code\"]",
+      "shot": "f01-pay-missing-order.png"
+    },
+    {
+      "id": "QE-3-01",
+      "item": "/pay?v=0x123&o=nope → invalid-link state",
+      "pass": true,
+      "detail": "primaries=[\"Scan a new code\"]",
+      "shot": "f02-pay-garbage.png"
+    },
+    {
+      "id": "QE-3-01",
+      "item": "/pay?v=0x295945A9935db7e6e76c32237B20659077b00637&o=0xabababababababababababababababababababab → invalid-link state",
+      "pass": true,
+      "detail": "primaries=[\"Scan a new code\"]",
+      "shot": "f03-pay-truncated-order.png"
+    },
+    {
+      "id": "QE-3-01",
+      "item": "Scan a new code → /scan (no loop)",
+      "pass": true,
+      "detail": "/scan"
+    },
+    {
+      "id": "QE-3-08",
+      "item": "/does-not-exist → styled 404 with a way home",
+      "pass": true,
+      "detail": "status=404 primaries=[\"Go to Vouch\"] firstTab={\"tag\":\"A\",\"text\":\"Go to Vouch\",\"outline\":\"solid 2px\",\"shadow\":\"rgba(0, 0, 0, 0) 0px 0px 0px 0px\"}",
+      "shot": "f10-not-found.png"
+    },
+    {
+      "id": "QE-3-08",
+      "item": "Go to Vouch → /",
+      "pass": true,
+      "detail": "/"
+    },
+    {
+      "id": "manifest",
+      "item": "manifest + icons served and linked",
+      "pass": true,
+      "detail": "{\"name\":\"Vouch\",\"theme\":\"#f6f4ef\",\"display\":\"standalone\",\"icons\":3,\"links\":{\"manifest\":\"/manifest.webmanifest\",\"apple\":\"/apple-icon.png?apple-icon.08jnotp_o3f6t.png\",\"theme\":[\"#f6f4ef\",\"#12110f\"]}}"
+    },
+    {
+      "id": "QE-3-01",
+      "item": "unknown order (api 404) → invalid-link state",
+      "pass": true,
+      "detail": "LC ·  · Lena's café 18:24 ·  · Paying with Vouch ·  · This link doesn't look right ·  · Part of it may be missing or mistyped, so we can",
+      "shot": "f04-pay-unknown-order-signed-in.png"
+    },
+    {
+      "id": "QE-3-05",
+      "item": "non-owner dashboard: no 'Take an order'",
+      "pass": true,
+      "detail": "takeOrderButtons=0",
+      "shot": "f20-dashboard-non-owner.png"
+    },
+    {
+      "id": "QE-3-05",
+      "item": "non-owner counter: read-only, no keypad",
+      "pass": true,
+      "detail": "primaries=[\"Go to your place\"]",
+      "shot": "f21-counter-non-owner.png"
+    },
+    {
+      "id": "QE-3-05",
+      "item": "control: owner dashboard still shows 'Take an order'",
+      "pass": true,
+      "detail": "takeOrderButtons=1 (owner forced via GET /venues/:venue)",
+      "shot": "f22-dashboard-owner-control.png"
+    },
+    {
+      "id": "QE-3-05",
+      "item": "control: owner counter shows order entry",
+      "pass": true,
+      "detail": "showCode=1",
+      "shot": "f23-counter-owner-control.png"
+    },
+    {
+      "id": "QE-3-03",
+      "item": "pay sheet: first visit without recommendation copy",
+      "pass": true,
+      "detail": "realQuoteWarnings=[\"first_purchase_without_recommendation\",\"first_purchase_not_rewarded\",\"insufficient_balance\"]",
+      "shot": "f30-pay-sheet-first-visit-no-recommendation.png"
+    },
+    {
+      "id": "QE-3-03",
+      "item": "success (pending): first-visit copy, not 'Thanks for coming back'",
+      "pass": true,
+      "detail": "Paying QE errors café 18:41… · $0.50 · $ · 0 · .50 · Thanks for coming in. · When a friend recommends a place to you, your first visit there gets money back. · This takes",
+      "shot": "f31-success-pending-first-visit.png"
+    },
+    {
+      "id": "QE-3-03",
+      "item": "success (settled): first-visit copy, not 'Thanks for coming back'",
+      "pass": true,
+      "detail": "Paid at QE errors café 18:41 · $0.50 · $ · 0 · .50 · Thanks for coming in. · When a friend recommends a place to you, your first visit there gets money back. · Receipt de",
+      "shot": "f32-success-settled-first-visit.png"
+    },
+    {
+      "id": "console",
+      "item": "no page errors / app console errors",
+      "pass": true,
+      "detail": "none"
+    }
+  ],
+  "pass": true
+}

@@ -8,15 +8,18 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { QrCode } from "@/components/ui";
+import Link from "next/link";
+import { Button, EmptyState, QrCode, Screen, buttonClasses } from "@/components/ui";
 import { OrderEntryScreen, OrderQRScreen, applyOrderKey, parseOrderEntry, type OrderPaidSummary } from "@/screens/venue/OrderScreens";
 import { exampleSplit } from "@/screens/venue/VenueOnboardingScreen";
 import { api, friendlyError, money, type Settled } from "@/lib/api";
 import { resolveNames, nameOr } from "@/lib/names";
 import { webOrigin } from "@/lib/config";
+import { isVenueOwner } from "@/lib/venueStore";
 import { useCountdown } from "@/hooks/useCountdown";
 import { useLiveEvents } from "@/hooks/useLiveEvents";
-import { AccountGate } from "../../../_components/AccountGate";
+import { AccountGate, type AccountCtx } from "../../../_components/AccountGate";
+import { RouteLoading } from "../../../_components/RouteLoading";
 
 const TTL_SECONDS = 120;
 const RENEW_AT_SECONDS = 4;
@@ -209,7 +212,55 @@ function CounterFlow({ venue }: { venue: string }) {
   );
 }
 
+/** QE-3-05: someone else's counter. Read-only: their dashboard, or your own place. */
+function NotYourCounter({ venue }: { venue: string }) {
+  const router = useRouter();
+  return (
+    <Screen
+      footer={
+        <div className="flex flex-col gap-2">
+          <Button block size="lg" onClick={() => router.push("/venue")}>
+            Go to your place
+          </Button>
+          <Link href={`/venue/${venue}`} className={buttonClasses({ variant: "ghost", block: true })}>
+            See this place&apos;s dashboard
+          </Link>
+        </div>
+      }
+    >
+      <div data-counter-state="not-owner">
+        <EmptyState
+          className="pt-24"
+          role="status"
+          icon="store"
+          tone="neutral"
+          title="Only the owner can take orders here"
+          body="This counter belongs to another place. Orders can be taken from the account that set it up."
+        />
+      </div>
+    </Screen>
+  );
+}
+
+function OwnerOnly({ venue, address }: { venue: string } & AccountCtx) {
+  const [owner, setOwner] = useState<boolean | null>(null);
+  useEffect(() => {
+    let alive = true;
+    api
+      .venue(venue)
+      .then((v) => v.owner)
+      .catch(() => null)
+      .then((o) => isVenueOwner(venue, o, address))
+      .then((x) => alive && setOwner(x));
+    return () => {
+      alive = false;
+    };
+  }, [venue, address]);
+  if (owner === null) return <RouteLoading />;
+  return owner ? <CounterFlow venue={venue} /> : <NotYourCounter venue={venue} />;
+}
+
 export function Counter() {
   const { venue } = useParams<{ venue: string }>();
-  return <AccountGate>{() => <CounterFlow venue={venue} />}</AccountGate>;
+  return <AccountGate>{(ctx) => <OwnerOnly venue={venue} {...ctx} />}</AccountGate>;
 }

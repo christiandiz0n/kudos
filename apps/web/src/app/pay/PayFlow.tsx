@@ -6,23 +6,28 @@
  * "pending" (relay response, optimistic) → "settled" ONLY from Streams (user SSE `payment.settled`, polling fallback).
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { isAddress, type Address, type Hex } from "viem";
 import { explorerTxUrl } from "@vouch/shared";
-import { Screen } from "@/components/ui";
-import { PayConfirmSheet, type NoRewardReason } from "@/screens/customer/PayConfirm";
+import { PayBackdrop, PayConfirmSheet, type NoRewardReason } from "@/screens/customer/PayConfirm";
 import type { PayProblem } from "@/screens/customer/PayProblem";
 import { PaymentSuccessScreen } from "@/screens/customer/PaymentSuccessScreen";
 import { ApiError, api, money, type QuoteRes, type Settled } from "@/lib/api";
 import { getSigner, WalletError } from "@/lib/wallet";
 import { assertSafePaymentTypedData, signTypedDataJson } from "@/lib/sign";
 import { resolveNames } from "@/lib/names";
-import { addressesIn, cashbackOf, splitFromQuote, splitFromSettled, thankedFrom, rememberVenueName } from "@/lib/views";
+import { addressesIn, cashbackOf, noRewardReason, splitFromQuote, splitFromSettled, thankedFrom, rememberVenueName } from "@/lib/views";
 import { recordTiming } from "@/lib/timings";
 import { demoTopup } from "@/lib/topup";
 import { useLiveEvents } from "@/hooks/useLiveEvents";
 import { useToasts } from "@/hooks/useToasts";
 import type { AccountCtx } from "../_components/AccountGate";
+
+/** The link names an order/venue the api doesn't know (or params it rejects): PayProblem "invalidLink" (QE-3-01). */
+const INVALID_LINK = new Set(["NOT_FOUND", "UNKNOWN_VENUE", "UNKNOWN_ORDER", "BAD_REQUEST"]);
+export const isInvalidLink = (e: unknown) => e instanceof ApiError && INVALID_LINK.has(e.code);
+/** For the order / quote LOOKUPS only (a NOT_FOUND at POST /payments is not the link's fault). */
+const lookupProblem = (e: unknown): PayProblem => (isInvalidLink(e) ? "invalidLink" : problemFor(e));
 
 const RETRYABLE = new Set(["RELAYER_DOWN", "RELAYER_BUSY", "RELAYER_UNDERFUNDED", "RELAYER_BUDGET_EXHAUSTED", "SPEND_QUOTA_EXCEEDED", "RATE_LIMITED", "TOO_MANY_CONNECTIONS"]);
 
@@ -44,17 +49,10 @@ type Phase =
   | { kind: "pending"; intentId: string; txHash: Hex; t0: number }
   | { kind: "settled"; intentId: string; settled: Settled };
 
-const isOrderId = (s: string | null): s is Hex => !!s && /^0x[0-9a-fA-F]{64}$/.test(s);
-
-export function PayFlow({ address }: AccountCtx) {
+/** `venue` / `orderId` are already validated by PayRoute (parsePayParams); a malformed link never gets here. */
+export function PayFlow({ address, venue, orderId }: AccountCtx & { venue: Address; orderId: Hex }) {
   const router = useRouter();
-  const params = useSearchParams();
   const toasts = useToasts();
-  const venueParam = params.get("v");
-  const orderParam = params.get("o");
-  const venue = (venueParam && isAddress(venueParam) ? venueParam : null) as Address | null;
-  const orderId = isOrderId(orderParam) ? (orderParam.toLowerCase() as Hex) : null;
-  const badLink = !venue || !orderId;
 
   const [venueName, setVenueName] = useState("");
   const [minOrder, setMinOrder] = useState<bigint | undefined>();
@@ -71,7 +69,6 @@ export function PayFlow({ address }: AccountCtx) {
 
   // ---------------------------------------------------------------- order + venue + relayer
   useEffect(() => {
-    if (!venue || !orderId) return;
     let alive = true;
     api.relayerStatus().then((r) => (relayer.current = r.address)).catch(() => {});
     api
@@ -94,7 +91,7 @@ export function PayFlow({ address }: AccountCtx) {
         if (o.status === "paid" || o.paid) setProblem("alreadyPaid");
         else if (o.status === "expired") setProblem("expired");
       })
-      .catch((e) => alive && setProblem(problemFor(e)));
+      .catch((e) => alive && setProblem(lookupProblem(e)));
     return () => {
       alive = false;
     };
@@ -103,7 +100,6 @@ export function PayFlow({ address }: AccountCtx) {
   // ---------------------------------------------------------------- quote (again when "who sent you" changes)
   const runQuote = useCallback(
     async (who: string | null) => {
-      if (!venue || !orderId) return;
       const seq = ++quoteSeq.current;
       setQuoting(true);
       try {
@@ -115,7 +111,7 @@ export function PayFlow({ address }: AccountCtx) {
         resolveNames(addrs).then((n) => seq === quoteSeq.current && setNames(n));
         setProblem(null);
       } catch (e) {
-        if (seq === quoteSeq.current) setProblem(problemFor(e));
+        if (seq === quoteSeq.current) setProblem(lookupProblem(e));
       } finally {
         if (seq === quoteSeq.current) setQuoting(false);
       }
@@ -135,7 +131,7 @@ export function PayFlow({ address }: AccountCtx) {
 
   // ---------------------------------------------------------------- pay
   async function pay() {
-    if (!quote || !venue || !orderId) return;
+    if (!quote) return;
     setPhase({ kind: "paying" });
     const t0 = performance.now();
     try {
@@ -223,9 +219,21 @@ export function PayFlow({ address }: AccountCtx) {
   }
 
   // ---------------------------------------------------------------- render
+  // Why there's no money back (QE-3-03): from the quote while confirming/pending, from the settled payment after.
+  const quoteNoReward = quote
+    ? noRewardReason({ rewarded: quote.quote.rewarded, firstPurchase: quote.quote.firstPurchase, attribution: quote.attribution, warnings: quote.warnings, amount, minOrder })
+    : undefined;
+
   if (phase.kind === "pending" || phase.kind === "settled") {
     const settled = phase.kind === "settled" ? phase.settled : null;
     const txHash = settled?.txHash ?? (phase.kind === "pending" ? phase.txHash : undefined);
+    const noReward = settled
+      ? settled.rewarded
+        ? undefined
+        : !settled.firstPurchase
+          ? "repeat"
+          : (quoteNoReward ?? noRewardReason({ rewarded: false, firstPurchase: true, amount: money(settled.amount), minOrder }))
+      : quoteNoReward;
     return (
       <PaymentSuccessScreen
         venueName={venueName}
@@ -237,41 +245,35 @@ export function PayFlow({ address }: AccountCtx) {
         details={txHash ? { receiptId: `${txHash.slice(0, 6)}…${txHash.slice(-4)}`, network: "Arc Testnet", networkFee: "Under $0.01, paid by Vouch", explorerUrl: explorerTxUrl(txHash) } : undefined}
         onDone={() => router.push("/wallet")}
         onRecommend={settled && settled.firstPurchase ? () => router.push(`/recommend?venue=${venue}`) : undefined}
+        noReward={noReward}
+        minOrder={minOrder}
       />
     );
   }
 
-  const noReward: NoRewardReason | undefined = !quote || quote.quote.rewarded
-    ? undefined
-    : quote.attribution === null || !quote.quote.firstPurchase
-      ? "repeat"
-      : quote.warnings.includes("first_purchase_without_recommendation")
-        ? "noRecommendation"
-        : "belowMinimum";
+  const noReward: NoRewardReason | undefined = quoteNoReward;
   const recommenders = (quote?.attribution?.scores ?? []).filter((s) => s.eligible).map((s) => ({ id: s.referrer, name: names[s.referrer.toLowerCase()] ?? "A friend" }));
 
   return (
     <>
-      <Screen>
-        <div />
-      </Screen>
+      <PayBackdrop venueName={venueName || undefined} />
       <PayConfirmSheet
         open
         onClose={() => router.push("/wallet")}
         venueName={venueName}
-        orderLabel={orderId ? `Order ${orderId.slice(2, 6).toUpperCase()}` : "Order"}
+        orderLabel={`Order ${orderId.slice(2, 6).toUpperCase()}`}
         amount={amount}
         cashback={quote ? money(quote.quote.cashback) : 0n}
         split={quote?.quote.rewarded ? splitFromQuote(quote, venueName, names) : undefined}
         recommenders={recommenders}
         whoSentYou={whoSentYou}
         onWhoSentYouChange={onWho}
-        quoting={badLink ? false : quoting}
+        quoting={quoting}
         paying={phase.kind === "paying"}
         noReward={noReward}
         minOrder={minOrder}
         balance={quote ? money(quote.balance) : undefined}
-        problem={badLink ? "failed" : problem}
+        problem={problem}
         toppingUp={toppingUp}
         onPay={pay}
         onCancel={() => router.push("/wallet")}
@@ -281,7 +283,7 @@ export function PayFlow({ address }: AccountCtx) {
         }}
         onRescan={() => router.push("/scan")}
         onTopUp={topUp}
-        details={orderId ? { networkFee: "Under $0.01", network: "Arc Testnet", orderId: `${orderId.slice(0, 6)}…${orderId.slice(-4)}` } : undefined}
+        details={{ networkFee: "Under $0.01", network: "Arc Testnet", orderId: `${orderId.slice(0, 6)}…${orderId.slice(-4)}` }}
       />
     </>
   );

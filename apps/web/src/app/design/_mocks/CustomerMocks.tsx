@@ -6,6 +6,7 @@
  */
 import { useState, type ReactNode } from "react";
 import { ARC_TESTNET_CHAIN_ID, ARC_TESTNET_EXPLORER_URL, parseUsdc } from "@vouch/shared";
+import { Toast, ToastViewport } from "@/components/ui";
 import { STORY, STORY_SPLIT } from "@/design/fixtures";
 import { AmbassadorScreen } from "@/screens/customer/AmbassadorScreen";
 import { IntroLandingScreen, type IntroLandingState } from "@/screens/customer/IntroLandingScreen";
@@ -24,15 +25,15 @@ const VENUE = STORY.venue.name;
 const ACTIVITY: ActivityItem[] = [
   { id: "p0", title: "Kiln Bakery", meta: "Just now · sending", amount: -usd("4.50"), kind: "payment", status: "pending" },
   { id: "p1", title: VENUE, meta: "Today, 9:41 · first visit", amount: -STORY.total, note: "+$0.45 back", kind: "payment" },
-  { id: "c1", title: "Money back", meta: `Today, 9:41 · ${VENUE}`, amount: P.cashback, kind: "cashback", avatarName: VENUE },
-  { id: "r1", title: "Chloe's first visit", meta: "Yesterday · you recommended Kiln Bakery", amount: usd("0.62"), kind: "reward", avatarName: "Chloe" },
+  { id: "r2", title: "Ana brought Chloe in", meta: "Today, 8:15 · Kiln Bakery", amount: usd("0.21"), kind: "reward", avatarName: "Chloe" },
+  { id: "r1", title: "Chloe came on your recommendation", meta: "Yesterday · Kiln Bakery", amount: usd("0.62"), kind: "reward", avatarName: "Chloe" },
   { id: "t1", title: "Top up (testnet demo)", meta: "Yesterday · simulated", amount: usd("50.00"), kind: "topup" },
 ];
 
 const WALLET: WalletHomeScreenProps = {
   name: "Ben",
   balance: usd("34.57"),
-  earnedThisWeek: P.cashback + usd("0.62"),
+  earnedThisWeek: P.cashback + usd("0.62") + usd("0.21"),
   canRecommend: { venueName: VENUE },
   activity: ACTIVITY,
 };
@@ -49,7 +50,7 @@ const PAY_BASE: Omit<PayConfirmProps, "whoSentYou" | "onWhoSentYouChange"> = {
   details: { networkFee: "$0.01", network: `Arc Testnet (${ARC_TESTNET_CHAIN_ID})`, orderId: "0x8f2c41…a90e" },
 };
 
-function PayDemo(over: Partial<PayConfirmProps>) {
+function PayDemo(over: Partial<PayConfirmProps> & { backdrop?: "scanner" | "pay" }) {
   const [who, setWho] = useState<string | null>("Ana");
   return <PayConfirmMock {...PAY_BASE} whoSentYou={who} onWhoSentYouChange={setWho} {...over} />;
 }
@@ -127,6 +128,15 @@ export function CustomerMock({ id }: { id: string }): ReactNode {
       return <WalletHomeScreen name="Ben" balance={0n} activity={[]} />;
     case "wallet-offline":
       return <WalletHomeScreen {...WALLET} offline />;
+    case "wallet-toast":
+      return (
+        <>
+          <WalletHomeScreen {...WALLET} />
+          <ToastViewport>
+            <Toast tone="success" title="Chloe came on your recommendation" description="+$0.62 just arrived" onDismiss={() => {}} />
+          </ToastViewport>
+        </>
+      );
 
     case "scan":
       return <ScanDemo />;
@@ -153,6 +163,14 @@ export function CustomerMock({ id }: { id: string }): ReactNode {
       return payProblem("cancelled");
     case "pay-offline":
       return payProblem("offline");
+    case "pay-invalid-link":
+      return payProblem("invalidLink");
+    case "pay-below-minimum":
+      return <PayDemo amount={usd("3.00")} cashback={0n} split={undefined} noReward="belowMinimum" minOrder={usd("5.00")} />;
+    case "pay-no-recommendation":
+      return <PayDemo cashback={0n} split={undefined} recommenders={[]} noReward="noRecommendation" />;
+    case "pay-backdrop":
+      return <PayDemo backdrop="pay" />;
 
     case "success-pending":
     case "success":
@@ -166,6 +184,21 @@ export function CustomerMock({ id }: { id: string }): ReactNode {
           thanked={["Ana", "Priya"]}
           details={RECEIPT_DETAILS}
           onRecommend={() => {}}
+        />
+      );
+
+    case "success-first-visit":
+    case "success-below-minimum":
+    case "success-repeat":
+      return (
+        <PaymentSuccessScreen
+          venueName={VENUE}
+          amount={id === "success-below-minimum" ? usd("3.00") : STORY.total}
+          cashback={0n}
+          noReward={id === "success-first-visit" ? "noRecommendation" : id === "success-below-minimum" ? "belowMinimum" : "repeat"}
+          minOrder={usd("5.00")}
+          details={RECEIPT_DETAILS}
+          onRecommend={id === "success-repeat" ? undefined : () => {}}
         />
       );
 

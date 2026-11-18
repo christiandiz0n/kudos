@@ -1,0 +1,5 @@
+{"env":{"api":"- - https://vouch.vercel.app","web":""},"API_URL":"https://api-production-902bc54c.up.railway.app","webOrigin":""}
+{"env":{"api":"https://api.example.com/ https://vouch.app/ https://vouch-git-x.vercel.app","web":""},"API_URL":"https://api.example.com/%20https://vouch.app/%20https://vouch-git-x.vercel.app","webOrigin":""}
+{"env":{"api":"https://api.example.com/v1/?x=1 http://localhost:3100 https://vouch.vercel.app","web":""},"API_URL":"https://api.example.com/v1","webOrigin":""}
+{"env":{"api":"- http://localhost:3100 http://localhost:3100","web":""},"API_URL":"https://api-production-902bc54c.up.railway.app","webOrigin":""}
+{"env":{"api":"not-a-url vouch.app https://vouch.vercel.app","web":""},"API_URL":"https://api-production-902bc54c.up.railway.app","webOrigin":""}

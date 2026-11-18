@@ -29,7 +29,7 @@ export function TextField({ label, hint, error, prefix, className, id, ...rest }
           id={inputId}
           aria-invalid={error ? true : undefined}
           aria-describedby={hint || error ? hintId : undefined}
-          className="h-full min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-3"
+          className="vx-field-input h-full min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-3"
           {...rest}
         />
       </div>

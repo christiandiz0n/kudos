@@ -13,7 +13,7 @@ import { ApiError, api, money, type Settled, type VenueStats } from "@/lib/api";
 import { FLAGS } from "@/lib/config";
 import { rememberName, resolveNames } from "@/lib/names";
 import { flowsFromEdges, paymentItem, recordFromFeed, recordFromSettled, type PaymentRecord } from "@/lib/views";
-import { rememberVenue } from "@/lib/venueStore";
+import { isVenueOwner, rememberVenue } from "@/lib/venueStore";
 import { useLiveEvents } from "@/hooks/useLiveEvents";
 import { useToasts } from "@/hooks/useToasts";
 import { formatMoney } from "@/design/money";
@@ -72,6 +72,9 @@ function DashboardFlow({ venue, address }: { venue: string } & AccountCtx) {
   const [fresh, setFresh] = useState<string | null>(null);
   const [graphMode, setGraphMode] = useState<"payment" | "network">("payment");
   const [adCost, setAdCost] = useAdCost();
+  // QE-3-05: only the owner's session can take orders here (the api refuses others at POST /orders anyway).
+  // null until known, so "Take an order" never flashes for a visitor.
+  const [owner, setOwner] = useState<boolean | null>(null);
 
   const refreshStats = useCallback(async () => {
     const s = await api.venueStats(venue);
@@ -90,7 +93,9 @@ function DashboardFlow({ venue, address }: { venue: string } & AccountCtx) {
         const v = await api.venue(venue);
         if (!alive) return;
         setVenueName(v.name ?? "Your place");
-        const owner = v.owner?.toLowerCase() === address.toLowerCase();
+        const owner = await isVenueOwner(venue, v.owner, address);
+        if (!alive) return;
+        setOwner(owner);
         if (owner) rememberVenue(address, venue);
         const [s, hist] = await Promise.all([refreshStats(), loadHistory(venue, owner).catch(() => [])]);
         if (!alive) return;
@@ -147,14 +152,14 @@ function DashboardFlow({ venue, address }: { venue: string } & AccountCtx) {
         salesFromRecommendations: firstSales > 0n ? firstSales : undefined,
       }}
       typicalAdCost={adCost}
-      onTypicalAdCostChange={setAdCost}
+      onTypicalAdCostChange={owner ? setAdCost : undefined}
       payments={records.map((r) => paymentItem(r, names, r.orderId === fresh))}
       graph={graph}
       highlightPaymentId={fresh ?? records[0]?.orderId}
       graphMode={graphMode}
       onGraphModeChange={setGraphMode}
       loading={loading}
-      onNewOrder={() => router.push(`/venue/${venue}/counter`)}
+      onNewOrder={owner ? () => router.push(`/venue/${venue}/counter`) : undefined}
       transparencyHref={`/transparency?venue=${venue}`}
     />
   );

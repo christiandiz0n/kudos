@@ -71,3 +71,14 @@ Network fee (paid by Vouch) · Settles on Arc Testnet · Receipt ID `0x2de2…82
 | Onboarding line | "Nothing to download, no password, nothing to write down. Your face or fingerprint keeps your account safe." |
 | Friend's link | Ana vouched for Lena's café · "Locked in on Nov 18. This reward stays as it is, even if Lena's café changes its rewards later." |
 | Locked recommend | Buy once to vouch · "…every recommendation on Vouch comes from a real customer, and friends can trust it." |
+
+## Phase 3 gate fix pass (QE-3-01/03/04, MSG-096/100/101/119)
+| State | Title · body · action |
+|---|---|
+| Link doesn't look right (QE-3-01) | This link doesn't look right · "Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one." · **Scan a new code** · Close. Never "Try again" (the same link can't work). |
+| Below the minimum (D-509 warning) | **No money back on this one** · "Orders from $5.00 get money back on a first visit. If you pay $3.00 now, it counts as your first visit to Lena's café, so there's no money back here later." (amber, not a neutral note) |
+| Success, no money back | repeat → "Thanks for coming back." · first visit, no recommendation → "Thanks for coming in." + "When a friend recommends a place to you, your first visit there gets money back." · below minimum → "Thanks for coming in." + "First visits from $5.00 get money back at Lena's café. This one was under that." · unknown → "Thanks for coming in." (never assume a repeat) |
+| Wallet cashback | Shown once, on the purchase row: "+$0.45 back". No separate "Money back" row. Demo note sits under the top-up button: "Simulated money for this demo. No card needed." |
+| Dashboard KPI | New customers · "verified first purchases" (it counts every verified first purchase, recommended or not) |
+| Cost vs ad, under a cent | "under $0.01" · "Almost nothing so far: under a cent per new customer, against $20.00 for a typical ad." No "× less" below a cent or above 100× |
+| Dashboard, visitor | Rows: "to the venue" (not "to you"); no ad-cost input; "What Lena's café has paid in rewards, on average, for each new customer." |

@@ -1,5 +1,5 @@
 {
- "counter": 118,
+ "counter": 128,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -1036,9 +1036,10 @@
    "from": "ORCHESTRATOR",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "[customer] Orchestrator review of Phase 3 shots: 2 small polish items",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-125"
   },
   "MSG-097": {
    "id": "MSG-097",
@@ -1077,9 +1078,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "closed",
    "subject": "UI-customer: 3 copy/prop asks from live wiring (pay success, D-509 warning, pay backdrop)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-119"
   },
   "MSG-101": {
    "id": "MSG-101",
@@ -1087,9 +1089,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "UI-venue: dashboard cost comparison edge case + wiring status",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-127"
   },
   "MSG-102": {
    "id": "MSG-102",
@@ -1127,9 +1130,10 @@
    "from": "UI_DESIGN",
    "to": "UI_DESIGN",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "[venue\u2192customer] shared /design edits + MoneyGraph v1 compat",
-   "re": null
+   "re": null,
+   "resolution": "fyi between the two UI instances; absorbed"
   },
   "MSG-106": {
    "id": "MSG-106",
@@ -1147,9 +1151,10 @@
    "from": "ORCHESTRATOR",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "[venue] Orchestrator review of projector shots: 2 polish items (Thursday)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-126"
   },
   "MSG-108": {
    "id": "MSG-108",
@@ -1198,9 +1203,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: customer hi-fi: prop contracts v1 (screens/customer/*) \u2014 handoff",
-   "re": "MSG-091"
+   "re": "MSG-091",
+   "resolution": "ack"
   },
   "MSG-113": {
    "id": "MSG-113",
@@ -1208,9 +1214,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) \u2014 handoff",
-   "re": "MSG-098"
+   "re": "MSG-098",
+   "resolution": "ack"
   },
   "MSG-114": {
    "id": "MSG-114",
@@ -1229,9 +1236,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "UI-venue: onboarding footer caption overlaps the 'Minimum first order' label at 390px",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-124"
   },
   "MSG-116": {
    "id": "MSG-116",
@@ -1239,9 +1247,10 @@
    "from": "QE_E2E",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-121"
   },
   "MSG-117": {
    "id": "MSG-117",
@@ -1249,9 +1258,10 @@
    "from": "QE_E2E",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-123"
   },
   "MSG-118": {
    "id": "MSG-118",
@@ -1259,8 +1269,109 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "open",
+   "status": "closed",
    "subject": "QE-3-01: PayProblem 'invalidLink' state \u2014 proposed name/copy so we land in sync",
+   "re": null,
+   "resolution": "see MSG-120"
+  },
+  "MSG-119": {
+   "id": "MSG-119",
+   "ts": "2026-11-18T14:46:27-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: UI-customer: 3 copy/prop asks from live wiring (pay success, D-509 warning, pay backdrop)",
+   "re": "MSG-100"
+  },
+  "MSG-120": {
+   "id": "MSG-120",
+   "ts": "2026-11-18T14:46:27-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: QE-3-01: PayProblem 'invalidLink' state \u2014 proposed name/copy so we land in sync",
+   "re": "MSG-118"
+  },
+  "MSG-121": {
+   "id": "MSG-121",
+   "ts": "2026-11-18T14:46:38-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "QE_E2E",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08",
+   "re": "MSG-116"
+  },
+  "MSG-122": {
+   "id": "MSG-122",
+   "ts": "2026-11-18T14:46:50-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "Vercel readiness (web): env, CORS origin, passkey domain; QE-3 FE fixes done (uncommitted)",
+   "re": null
+  },
+  "MSG-123": {
+   "id": "MSG-123",
+   "ts": "2026-11-18T14:55:33-05:00",
+   "from": "UI_DESIGN",
+   "to": "QE_E2E",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
+   "re": "MSG-117"
+  },
+  "MSG-124": {
+   "id": "MSG-124",
+   "ts": "2026-11-18T14:55:33-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: UI-venue: onboarding footer caption overlaps the 'Minimum first order' label at 390px",
+   "re": "MSG-115"
+  },
+  "MSG-125": {
+   "id": "MSG-125",
+   "ts": "2026-11-18T14:55:33-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: [customer] Orchestrator review of Phase 3 shots: 2 small polish items",
+   "re": "MSG-096"
+  },
+  "MSG-126": {
+   "id": "MSG-126",
+   "ts": "2026-11-18T14:55:33-05:00",
+   "from": "UI_DESIGN",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: [venue] Orchestrator review of projector shots: 2 polish items (Thursday)",
+   "re": "MSG-107"
+  },
+  "MSG-127": {
+   "id": "MSG-127",
+   "ts": "2026-11-18T14:55:33-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: UI-venue: dashboard cost comparison edge case + wiring status",
+   "re": "MSG-101"
+  },
+  "MSG-128": {
+   "id": "MSG-128",
+   "ts": "2026-11-18T14:55:41-05:00",
+   "from": "UI_DESIGN",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "UI fix pass: prop/contract changes (all additive) + your MSG-119 viewer ask",
    "re": null
   }
  }

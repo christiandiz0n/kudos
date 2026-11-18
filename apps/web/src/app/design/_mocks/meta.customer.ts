@@ -14,6 +14,7 @@ export const CUSTOMER_SCREENS: ScreenMeta[] = [
   { id: "wallet-loading", title: "Home: loading", who: "Customer", note: "Skeleton balance + activity." },
   { id: "wallet-empty", title: "Home: first run", who: "Customer", note: "No payments yet: what to do next." },
   { id: "wallet-offline", title: "Home: offline", who: "Customer", note: "Last known balance with an offline note." },
+  { id: "wallet-toast", title: "Home: live toast", who: "Customer", note: "A reward just arrived. Dismiss is a 44px target (QE-3-06)." },
   // Scan
   { id: "scan", title: "Scan to pay", who: "Customer", note: "Always-dark camera, calm viewfinder, manual fallback.", fixed: true },
   { id: "scan-manual", title: "Scan: type the code", who: "Customer", note: "Paste the short link while the camera runs.", fixed: true },
@@ -28,9 +29,16 @@ export const CUSTOMER_SCREENS: ScreenMeta[] = [
   { id: "pay-failed", title: "Confirm: payment failed", who: "Customer", note: "Didn't go through. Nothing charged.", fixed: true },
   { id: "pay-cancelled", title: "Confirm: prompt cancelled", who: "Customer", note: "Face ID dismissed. Nothing charged.", fixed: true },
   { id: "pay-offline", title: "Confirm: offline", who: "Customer", note: "No connection. Nothing charged.", fixed: true },
+  { id: "pay-invalid-link", title: "Confirm: link doesn't look right", who: "Customer", note: "Malformed /pay link (QE-3-01): nothing to retry, so Scan a new code.", fixed: true },
+  { id: "pay-below-minimum", title: "Confirm: below the minimum", who: "Customer", note: "D-509 warning: paying now uses up the first-visit money back.", fixed: true },
+  { id: "pay-no-recommendation", title: "Confirm: first visit, no recommendation", who: "Customer", note: "Nobody sent you: a regular payment, said kindly.", fixed: true },
+  { id: "pay-backdrop", title: "Confirm: opened from the camera app", who: "Customer", note: "PayBackdrop behind the sheet when there's no scanner (MSG-100 #3).", fixed: true },
   // Success
   { id: "success-pending", title: "Payment: settling", who: "Customer", note: "Sent; the receipt is gray and 'Arriving' for a few seconds." },
   { id: "success", title: "Payment success", who: "Customer", note: "Green pop, cashback, and the split receipt: who your $12.00 paid." },
+  { id: "success-first-visit", title: "Success: first visit, no recommendation", who: "Customer", note: "Thanks for coming in, not 'coming back' (QE-3-03)." },
+  { id: "success-below-minimum", title: "Success: below the minimum", who: "Customer", note: "First visit under the venue's minimum: why there was no money back." },
+  { id: "success-repeat", title: "Success: repeat visit", who: "Customer", note: "Thanks for coming back." },
   // Recommendations
   { id: "intro", title: "Friend's recommendation", who: "Customer", note: "Ana vouched for Lena's café. Reward locked in. Save with Face ID." },
   { id: "intro-accepted", title: "Recommendation saved", who: "Customer", note: "What happens next time." },

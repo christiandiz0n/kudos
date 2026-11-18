@@ -1,5 +1,5 @@
 # FRONTEND_INTEGRATION
-_Last updated: 2026-11-18T13:30:00-05:00 by FRONTEND_INTEGRATION (session 3, Phase 3 + visual Phase 4 wiring)_
+_Last updated: 2026-11-18T14:50:00-05:00 by FRONTEND_INTEGRATION (session 3, Phase 3 gate fix pass)_
 
 ## Mission
 Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 signing in the client, QR display (venue) and camera scan (customer), API calls, SSE live updates (pending → settled), state management, error states. Does NOT do visual redesign — requests changes from UI_DESIGN.
@@ -7,12 +7,13 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 ## Owned paths
 - `apps/web/src/app/` route files (except `app/design/`)
 - `apps/web/src/lib/`, `apps/web/src/hooks/`, `apps/web/src/state/`
-- `apps/web/scripts/phase3-*`, `apps/web/next.config.*`, `apps/web/package.json` (small deps)
+- `apps/web/scripts/phase3-*`, `apps/web/next.config.*`, `apps/web/package.json` (small deps), `apps/web/public/**`
 
 ## Current status
 🟢 Milestones A–E done on the hosted api + shared dev server :3100. Customer spine, venue spine, referral loop and transparency are live; the error states are wired; evidence is in `docs/evidence/phase-3/`.
 - **D-811 is live (MSG-108)** and verified in-app: the demo top-up from the pay sheet funded a fresh wallet in 2.9 s (`0x515cc6b8…a3f9`), and that wallet's pay `0x48b6322e…166b` settled +0.96 s via SSE.
 - `pnpm --filter web build` passes, typecheck is clean, and lint is clean for my files.
+- **QE gate fixes done (MSG-121, uncommitted):** QE-3-01 invalid pay link, QE-3-03 first-visit success copy, QE-3-05 owner-only order taking, QE-3-08 404 page. Also a web manifest + icons, PayBackdrop, and production origin handling (D-907/D-908). All 16 checks pass in `scripts/phase3-fixes.ts`; evidence in `docs/evidence/phase-3/fixes/fe/`.
 
 ## Mental model (read this first)
 ```
@@ -39,7 +40,9 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 - **Routes are client-only.** Every `page.tsx` is `<ClientPage>` (Suspense + `use(browser())`, Next 16 + cacheComponents), so the server renders a skeleton and the screen renders in the browser (keys, session and IndexedDB live there).
 - **`AccountGate`** wraps signed-in routes. It onboards in place (a scanned `/pay` link or a friend's `/i/<code>` keeps its context), unlocks an existing device account ("Welcome back"), then renders children with `{address, name}`.
 - **Screens are props-only** (UI_DESIGN). Routes only adapt API JSON → props (`lib/views.ts`). Primary screens never show addresses: names come from `/ambassadors/:addr` displayName (`lib/names.ts`), with "A friend" as the fallback.
-- **QR / share links use the page's own origin** (`webOrigin()`, overridable by `NEXT_PUBLIC_WEB_URL`), not the API's `PUBLIC_WEB_URL`. Same `/pay?v=&o=` shape as `qrPayload`, so the phone's native camera opens the pay sheet on whatever host the counter runs (D-901).
+- **QR / share links use the page's own origin** (`webOrigin()`, overridable by `NEXT_PUBLIC_WEB_URL`), not the API's `PUBLIC_WEB_URL`. Same `/pay?v=&o=` shape as `qrPayload`, so the phone's native camera opens the pay sheet on whatever host the counter runs (D-901). Env values are parsed as absolute URLs; a pinned localhost origin is ignored off-localhost (D-907).
+- **`/pay` validates `v`/`o` before the gate** (`parsePayParams` in `lib/qr.ts`): a malformed link shows `InvalidPayLink` (PayProblem "invalidLink" full screen) without sign-in. An api 404 on the order/quote lookup shows "invalidLink" in the sheet (D-908).
+- **Owner-only order taking (client UX; the api enforces):** `isVenueOwner()` (`lib/venueStore.ts`) gates "Take an order" on the dashboard and the whole `/counter` route (D-908).
 
 ## Key files map
 | Path | What it does | Notes |
@@ -50,13 +53,16 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 | `src/lib/api.ts` | typed endpoints, `ApiError`, `friendlyError`, `waitRelay`, `money()` | shapes from apps/api routes + MSG-088 |
 | `src/lib/sign.ts` | `toViemTypedData`, `signTypedDataJson`, `assertSafePaymentTypedData` | MSG-041/057, D-014 |
 | `src/lib/views.ts` | quote/settled → SplitPart[], activity → ActivityItem[], payments → VenuePaymentItem + MoneyFlow | |
-| `src/lib/names.ts`, `qr.ts`, `topup.ts`, `timings.ts`, `venueStore.ts`, `nav.ts` | names cache, scan parser, demo top-up, evidence timings, last venue, safe `next` | |
+| `src/lib/names.ts`, `qr.ts`, `topup.ts`, `timings.ts`, `venueStore.ts`, `nav.ts` | names cache, scan parser + `parsePayParams`, demo top-up, evidence timings, last venue + `isVenueOwner`, safe `next` | |
+| `src/lib/views.ts` `noRewardReason()` | why cashback is 0 (repeat / noRecommendation / belowMinimum), for the pay sheet and the success screen | QE-3-03 |
+| `src/app/not-found.tsx`, `manifest.ts`, `apple-icon.png`, `public/icons/*` | 404 page; add-to-home-screen manifest + icons (from `scripts/phase3-icons.ts`) | theme #f6f4ef = --vx-canvas |
 | `src/state/session.ts`, `state/wallet.ts` | session external store (useSyncExternalStore), device-wallet loader | |
 | `src/hooks/useLiveEvents.ts`, `useToasts.tsx`, `useCountdown.ts` | SSE with reconnect/backoff + status, toast queue, countdown | |
 | `src/app/_components/*` | `ClientPage`, `BrowserOnly`, `RouteLoading`, `AccountGate` (+`Onboarding`, unlock), `Record` | |
 | `src/app/**/page.tsx` + `*Flow.tsx` | routes (table below) | |
 | `scripts/phase3-e2e.ts` | live two/three-context run (venue, Ben, Cara) on :3100 + hosted api, CLI top-up | writes e2e-*.json + e2e/*.png |
 | `scripts/phase3-shots.ts` | every route/state at 390×844 (+ interception-forced errors) | writes screens/*.png + index.json |
+| `scripts/phase3-fixes.ts` | QE-3-01/03/05/08 + manifest checks (16), 390×844; one DB-only order via QE's errors-venue token | writes fixes/fe/*.png + results.json |
 
 ## Routes
 | Route | Screen(s) | Data |
@@ -64,22 +70,24 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 | `/` | SignInScreen (+ "I run a venue") → `/wallet` when signed in | `?next=` (safe relative only) |
 | `/wallet` | WalletHomeScreen | /me/wallet, /me/activity, /ambassadors/me, /me/links (re-issue toast), user SSE, demo top-up |
 | `/scan` | ScanScreen (jsQR, paste fallback) | → `/pay?…` or `/i/<code>` |
-| `/pay?v=&o=` | PayConfirmSheet → PaymentSuccessScreen(pending→settled) | order, venue, quote, pay, user SSE + polling |
+| `/pay?v=&o=` | PayBackdrop + PayConfirmSheet → PaymentSuccessScreen(pending→settled, noReward); malformed → InvalidPayLink | order, venue, quote, pay, user SSE + polling |
 | `/recommend?venue=` | RecommendScreen (locked if not verified) | /intros/prepare → sign → /intros, share/copy |
 | `/i/[code]` | SignInScreen(invite) → IntroLandingScreen(state) | /intros/:code, opens, accept/prepare → sign → accept, user SSE |
 | `/me`, `/a/[address]` | AmbassadorScreen (owner / visitor) | /ambassadors/:addr |
 | `/venue` | → `/venue/<v>` or `/venue/new` | /auth/session venues |
 | `/venue/new` | VenueOnboardingScreen(status) | /venues/prepare → sign → /venues → venue.registered / poll |
 | `/venue/[venue]` | VenueDashboardScreen (phone; projector ≥1024 px) | stats + edges, /venues/:v/payments (flag) or owner /orders, venue SSE |
-| `/venue/[venue]/counter` | OrderEntryScreen → OrderQRScreen | /orders (ttl 120 s), venue SSE + order polling |
+| `/venue/[venue]/counter` | OrderEntryScreen → OrderQRScreen (owner); "Only the owner can take orders here" (others) | /orders (ttl 120 s), venue SSE + order polling |
 | `/transparency[?venue=]` | TransparencyScreen | VOUCH_ARC_TESTNET + venue terms |
 | `/spike/*` | untouched S6 spikes | |
+| unknown path | `app/not-found.tsx` (404, "Go to Vouch") | |
 
 ## Interfaces consumed / provided
 - Consumes INTERFACES §3 (typed data; never `submitter = 0`) and §5 (all endpoints + SSE), plus MSG-088 (D-811: `/demo/topup`, `/venues/:v/payments`, edge display names), feature-detected (404 → fallback).
 - Provides nothing to other roles. Proposed env (for `.env.example`, see report): `NEXT_PUBLIC_API_URL=https://api-production-902bc54c.up.railway.app`, optional `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_FLAG_DEMO_TOPUP`, `NEXT_PUBLIC_FLAG_VENUE_PAYMENTS` (auto|on|off).
 
 ## Done (rolling, newest first)
+- 2026-11-18 — **Phase 3 gate fix pass (MSG-116 → MSG-121):** QE-3-01, QE-3-03, QE-3-05, QE-3-08 fixed. Also MSG-100 #1/#3 wired, a web manifest + icons, and production origin handling for Vercel (D-907, D-908). `phase3-fixes.ts`: 16/16 pass. Typecheck, lint and build are clean. The bundle secret scan is clean (`fixes/fe/bundle-secret-scan.txt`). Spend: chain $0, no top-ups.
 - 2026-11-18 — **Phase 3 wiring.**
   - **A:** customer spine with the D-104 wallet, sign-in, pay with guard, pending → settled. First live run: pay `0xb72fedff…3594`, settled via SSE 1.19 s after the 202.
   - **B:** venue onboarding, counter with auto-renewing QR and processing/paid, dashboard (stats, history, money graph, cost vs ad, projector layout).
@@ -94,8 +102,9 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 
 ## Next up
 - [ ] If the Stream was paused during the last shots run (MSG-114), re-run `phase3-shots.ts` once it is resumed so the dashboard numbers are live.
-- [ ] Apply UI follow-ups once they land: success `noReward` copy, the D-509 below-minimum warning, a pay backdrop (MSG-100/101).
-- [ ] Vercel (Thursday): set `NEXT_PUBLIC_API_URL`; add the Vercel origin to Railway `CORS_ORIGINS`; check passkeys on the real domain (rpId = host).
+- [ ] Vercel (Thursday, MSG-122): `NEXT_PUBLIC_API_URL` is optional (it's the default) and is inlined at build. Leave `NEXT_PUBLIC_WEB_URL` unset. Add the Vercel origin to Railway `CORS_ORIGINS` (human/Orchestrator). Passkeys bind to the host, so run the phone checklist on the final domain.
+- [ ] If UI_DESIGN adds `viewer: "owner"|"visitor"` to VenueDashboardScreen (MSG-119 note), pass it. Visitors still see owner phrasing ("$0.50 to you").
+- [ ] MSG-101 (cost-vs-ad guard) is still with UI_DESIGN.
 - [ ] Phone run on real Face ID / fingerprint (the virtual authenticator proves the code path, not the platform UX).
 
 ## Struggles, open questions, known issues
@@ -103,7 +112,7 @@ Owns wiring the web app: auth/passkey onboarding and embedded wallet, EIP-712 si
 - **Token storage.** The Bearer token lives in localStorage, so XSS could read it. The private key never does: it is decrypted only in memory after a gesture. The token appears in the SSE URL by design (D-809); the API redacts it in logs.
 - **Without the feed endpoint**, the dashboard history comes from the owner's own `GET /venues/:v/orders` settled rows. A non-owner sees stats + edges but an empty "Latest" graph (no venue flow). This resolves itself when `/venues/:v/payments` deploys.
 - **Streams paused/lagging:** payments correctly stay "Arriving" (pending). Venue onboarding continues to the dashboard 15 s after the registerVenue relay is mined even without `venue.registered` (D-906).
-- **Dev StrictMode** double-runs effects, so `/pay` creates two quote intents in dev (harmless; production makes one).
+- **Dev StrictMode** double-runs effects, so `/pay` creates two quote intents in dev (harmless; production makes one). Left as is on purpose.
 - **Phones can't reach `localhost:3100`**, and Railway CORS allows only that origin. A phone test needs a tunnel origin added to `CORS_ORIGINS` (human/Orchestrator), or Thursday's Vercel deploy.
 - **Display names are not unique.** "Who sent you here?" chips map by address id, so two "Ana"s are still distinct.
 
@@ -114,6 +123,8 @@ pnpm --filter web typecheck && pnpm --filter web lint
 node --no-warnings apps/web/scripts/phase3-e2e.ts            # live: venue + Ben (in-app $3 demo top-up) + Cara (CLI $0.55); --fund-mode cli, --no-referral
 
 node --no-warnings apps/web/scripts/phase3-shots.ts          # every route/state → docs/evidence/phase-3/screens/
+node --no-warnings apps/web/scripts/phase3-fixes.ts          # QE-3 fix checks → docs/evidence/phase-3/fixes/fe/ (--order-venue-file {venue,token})
+node --no-warnings apps/web/scripts/phase3-icons.ts          # regenerate manifest/apple icons from the SVG mark
 # fund a test wallet by hand:
 pnpm --filter @vouch/scripts topup --to 0x<addr> --target 1.00 --max-total 5
 ```
@@ -128,5 +139,5 @@ pnpm --filter @vouch/scripts topup --to 0x<addr> --target 1.00 --max-total 5
 7. Record the tx hashes from each receipt's Details (or `window.__vouchTimings` / sessionStorage `vouch.timings`).
 
 ## Handoff notes
-Read `AGENTS/README.md` (product story), `AGENTS/INTERFACES.md` (§3, §5), `AGENTS/DECISIONS.md` (D-104, D-801..D-811, D-901..D-905), and your phase section in `AGENTS/PHASE_LOG.md` before working. Next.js here is 16 with `cacheComponents`: read `node_modules/next/dist/docs/` before touching routing. Keep screens props-only; ask UI_DESIGN (customer vs venue instance, D-019 #2) for visual changes. Update this file before returning. You may only edit this file, append to DECISIONS.md, and propose INTERFACES.md changes in your report.
+Read `AGENTS/README.md` (product story), `AGENTS/INTERFACES.md` (§3, §5), `AGENTS/DECISIONS.md` (D-104, D-801..D-811, D-901..D-908), and your phase section in `AGENTS/PHASE_LOG.md` before working. Next.js here is 16 with `cacheComponents`: read `node_modules/next/dist/docs/` before touching routing. Keep screens props-only; ask UI_DESIGN (customer vs venue instance, D-019 #2) for visual changes. Update this file before returning. You may only edit this file, append to DECISIONS.md, and propose INTERFACES.md changes in your report.
 **Comms (D-009):** before working, read `AGENTS/INBOX/FRONTEND_INTEGRATION.md` and answer/ack everything open addressed to you; post questions, handoffs and bugs to the recipient's inbox with `python3 scripts/agents/msg.py` instead of guessing; list messages sent + unresolved in your report.

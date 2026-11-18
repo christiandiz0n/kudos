@@ -11,13 +11,15 @@
  *     "failed"       ← payment.failed / non-retryable errors → "Try again" + "Scan a new code"
  *     "cancelled"    ← the Face ID / fingerprint prompt was dismissed (NotAllowedError) → "Try again"
  *     "offline"      ← navigator.onLine === false / fetch TypeError → "Try again"
+ *     "invalidLink"  ← the /pay link itself is malformed (missing or garbled venue / order), so nothing could be
+ *                      looked up → "Scan a new code". Never "Try again": retrying the same link can't work (QE-3-01).
  *   Every message reassures that nothing was charged, except "alreadyPaid" (someone else paid) and
- *   "insufficient" (nothing was attempted).
+ *   "insufficient" (nothing was attempted). Added (backwards-compatible) in the Phase 3 fix pass: "invalidLink".
  */
 import { Button, EmptyState, type EmptyStateTone, type IconName } from "@/components/ui";
 import { formatMoney } from "@/design/money";
 
-export type PayProblem = "expired" | "alreadyPaid" | "insufficient" | "unavailable" | "failed" | "cancelled" | "offline";
+export type PayProblem = "expired" | "alreadyPaid" | "insufficient" | "unavailable" | "failed" | "cancelled" | "offline" | "invalidLink";
 
 export interface PayProblemPanelProps {
   problem: PayProblem;
@@ -98,6 +100,13 @@ export function payProblemCopy(p: Pick<PayProblemPanelProps, "problem" | "amount
         title: "You're offline",
         body: "Connect to Wi-Fi or mobile data to pay. Nothing was charged.",
       };
+    case "invalidLink":
+      return {
+        icon: "link",
+        tone: "neutral",
+        title: "This link doesn't look right",
+        body: "Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one.",
+      };
   }
 }
 
@@ -106,6 +115,7 @@ export function PayProblemActions({ problem, onRetry, onRescan, onTopUp, topping
   switch (problem) {
     case "expired":
     case "alreadyPaid":
+    case "invalidLink":
       return (
         <>
           <Button block size="lg" leadingIcon="scan" onClick={onRescan}>

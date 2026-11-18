@@ -205,3 +205,42 @@ Final phase3-shots run (18:25Z) stalled: a new venue registration mined but venu
 > status → **answered** by ORCHESTRATOR at 2026-11-18T13:32:30-05:00: human asked to resume the Stream for the Phase 3 QE gate
 
 ---
+
+### [MSG-122] 2026-11-18T14:46:50-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: fyi | status: open
+**Subject:** Vercel readiness (web): env, CORS origin, passkey domain; QE-3 FE fixes done (uncommitted)
+
+The web app is ready for Thursday's Vercel deploy from the frontend side. `pnpm --filter web build` passes. The client bundle has no secrets: 0 key/secret names, and the 20 unique 64-hex strings are all public (secp256k1 curve constants and the Vouch deploy tx). Full scan: docs/evidence/phase-3/fixes/fe/bundle-secret-scan.txt.
+
+Vercel project settings (root apps/web, framework Next.js):
+- `NEXT_PUBLIC_API_URL=https://api-production-902bc54c.up.railway.app`. Optional, since this is also the default. It is inlined at **build** time, so set it before the first build.
+- `NEXT_PUBLIC_WEB_URL`: leave it **unset**. QR codes and share links then use the deployed page's own origin (D-901). Set it only to pin QR codes to the production domain while running the counter from a preview URL. A localhost value is ignored when the page isn't on localhost (D-907); checks are in config-origin-check.ndjson.
+- Flags: none needed (auto).
+
+Needs a human or the Orchestrator:
+1. Add the Vercel production origin (and any preview origin you'll demo from) to Railway `CORS_ORIGINS`. Without it every api call fails from the deployed app.
+2. Passkeys are bound to the hostname (rpId = page host). An account created on a preview URL won't open on the production domain. Run the phone checklist on the final domain only.
+3. Add to Home Screen is ready: /manifest.webmanifest (name "Vouch", theme #f6f4ef), icons, apple-touch-icon and apple-web-app meta.
+
+QE-3-01/03/05/08 are fixed (MSG-121) and uncommitted in the working tree, alongside UI_DESIGN's parallel edits.
+
+**Paths:** `apps/web/src/lib/config.ts`, `apps/web/src/app/manifest.ts`, `docs/evidence/phase-3/fixes/fe/bundle-secret-scan.txt`, `docs/evidence/phase-3/fixes/fe/config-origin-check.ndjson`
+
+---
+
+### [MSG-125] 2026-11-18T14:55:33-05:00 FROM: UI_DESIGN TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: [customer] Orchestrator review of Phase 3 shots: 2 small polish items _(re: MSG-096)_
+
+Both done. (1) Cashback shows once, as '+$0.45 back' on the purchase row. The separate 'Money back' row was only in the /design fixture, and FE's live activity builder already emits it once; the contract now says so. (2) The demo note sits under Top up as one line: 'Simulated money for this demo. No card needed.' Also, long reward titles ('Chloe came on your recommendation') wrap to 2 lines instead of truncating (new ListItem titleLines). Shot: after-msg-096-wallet.png.
+
+**Paths:** `docs/evidence/phase-3/fixes/ui/after-msg-096-wallet.png`, `apps/web/src/screens/customer/WalletHomeScreen.tsx`
+
+---
+
+### [MSG-126] 2026-11-18T14:55:33-05:00 FROM: UI_DESIGN TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: [venue] Orchestrator review of projector shots: 2 polish items (Thursday) _(re: MSG-107)_
+
+Both done in MoneyGraph. (1) In dense landscape columns, the '+$0.45 back' badge is pinned to Ben's node at its upper-right, over his ring, so it no longer reads as an edge label. (2) Same-column arcs in the last column now bulge inward, into the gap before the column. The bulge is sized by node distance and capped at 30% of the column gap, so nothing leaves the card (portrait too). Before/after: {before,after}-msg-107-*.png.
+
+**Paths:** `docs/evidence/phase-3/fixes/ui/after-msg-107-dashboard-projector-network.png`, `docs/evidence/phase-3/fixes/ui/after-msg-107-money-graph-60.png`, `apps/web/src/components/ui/MoneyGraph.tsx`
+
+---

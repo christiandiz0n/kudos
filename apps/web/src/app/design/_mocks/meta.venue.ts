@@ -24,6 +24,8 @@ export const VENUE_SCREENS: ScreenMeta[] = [
   // Dashboard
   { id: "venue-dashboard", title: "Venue dashboard (phone)", who: V, note: "Cost per new customer vs typical ad, money graph (latest), payments feed." },
   { id: "venue-dashboard-network", title: "Venue dashboard · everyone", who: V, note: "Money graph in network view (20 people)." },
+  { id: "venue-dashboard-visitor", title: "Venue dashboard · visitor", who: V, note: "MSG-119: someone else's place: no order button, no ad-cost input, rows say 'to the venue'." },
+  { id: "venue-dashboard-cost-tiny", title: "Venue dashboard · cost under a cent", who: V, note: "MSG-101: no silly '× less' when a new customer cost almost nothing." },
   { id: "venue-dashboard-reconnecting", title: "Venue dashboard · reconnecting", who: V, note: "Live updates dropped; amber badge + note." },
   { id: "venue-dashboard-offline", title: "Venue dashboard · offline", who: V, note: "Can't reach live updates." },
   { id: "venue-dashboard-loading", title: "Venue dashboard · loading", who: V, note: "First load skeletons." },

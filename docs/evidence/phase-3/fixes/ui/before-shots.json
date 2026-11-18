@@ -1,0 +1,128 @@
+{
+  "base": "http://localhost:3100",
+  "at": "2026-11-18T19:35:47.649Z",
+  "shots": [
+    {
+      "name": "qe-3-02-venue-onboarding",
+      "id": "venue-onboarding",
+      "file": "before-qe-3-02-venue-onboarding.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-02-venue-onboarding-mid-scroll",
+      "id": "venue-onboarding",
+      "file": "before-qe-3-02-venue-onboarding-mid-scroll.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-02-venue-onboarding-bottom",
+      "id": "venue-onboarding",
+      "file": "before-qe-3-02-venue-onboarding-bottom.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-02-venue-onboarding-focus-min",
+      "id": "venue-onboarding",
+      "file": "before-qe-3-02-venue-onboarding-focus-min.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-02-venue-onboarding-error-bottom",
+      "id": "venue-onboarding-error",
+      "file": "before-qe-3-02-venue-onboarding-error-bottom.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-01-pay-failed",
+      "id": "pay-failed",
+      "file": "before-qe-3-01-pay-failed.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-01-pay-invalid-link",
+      "id": "pay-invalid-link",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-01-pay-invalid-link-dark",
+      "id": "pay-invalid-link",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "msg-096-wallet",
+      "id": "wallet",
+      "file": "before-msg-096-wallet.png",
+      "errors": []
+    },
+    {
+      "name": "msg-107-money-graph-60",
+      "id": "money-graph-60",
+      "file": "before-msg-107-money-graph-60.png",
+      "errors": []
+    },
+    {
+      "name": "msg-107-dashboard-projector-network",
+      "id": "venue-dashboard-desktop-network",
+      "file": "before-msg-107-dashboard-projector-network.png",
+      "errors": []
+    },
+    {
+      "name": "msg-107-money-graph-60-390",
+      "id": "money-graph-60",
+      "file": "before-msg-107-money-graph-60-390.png",
+      "errors": []
+    },
+    {
+      "name": "msg-101-dashboard-cost-tiny",
+      "id": "venue-dashboard-cost-tiny",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-04-dashboard-kpi",
+      "id": "venue-dashboard",
+      "file": "before-qe-3-04-dashboard-kpi.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-03-success-first-visit",
+      "id": "success-first-visit",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-03-success-below-minimum",
+      "id": "success-below-minimum",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-03-success-repeat",
+      "id": "success-repeat",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "msg-100-pay-below-minimum",
+      "id": "pay-below-minimum",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "msg-100-pay-first-no-rec",
+      "id": "pay-no-recommendation",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "msg-100-pay-backdrop",
+      "id": "pay-backdrop",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-06-toast",
+      "id": "wallet-toast",
+      "skipped": "id not in /design yet"
+    },
+    {
+      "name": "qe-3-07-textfield-focus",
+      "id": "sign-in",
+      "file": "before-qe-3-07-textfield-focus.png",
+      "errors": []
+    }
+  ]
+}

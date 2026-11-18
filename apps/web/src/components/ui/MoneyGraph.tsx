@@ -392,12 +392,16 @@ export function layoutMoneyGraph(
     const ub = U(b);
     const dir = ub > ua ? 1 : ub < ua ? -1 : 0;
     if (dir === 0) {
-      // same tier (rare: a recommender who was also recommended by a peer): bulge outward
-      const s = { u: ua + R, v: V(a) };
-      const t = { u: ub + R, v: V(b) };
-      const c = 70;
-      const P = (u: number, v: number) => at(u, v);
-      const [p0, p1, p2, p3] = [P(s.u, s.v), P(s.u + c, s.v), P(t.u + c, t.v), P(t.u, t.v)];
+      // Same tier (a recommender who was also recommended by a peer). Bulge into the gap BEFORE the column when it is
+      // the last one, so the arc never leaves the card (MSG-107); otherwise into the gap after it. The bulge grows
+      // with the distance between the two nodes but stays well inside the inter-column gap.
+      const last = ua >= uPos[uPos.length - 1] - 1;
+      const side = last ? -1 : 1;
+      const gapU = uPos.length > 1 ? Math.abs(uPos[uPos.length - 1] - uPos[uPos.length - 2]) : 120;
+      const c = clamp(Math.abs(V(b) - V(a)) * 0.45, 28, Math.min(90, gapU * 0.3));
+      const s = { u: ua + side * (R + 2), v: V(a) };
+      const t = { u: ub + side * (R + 2), v: V(b) };
+      const [p0, p1, p2, p3] = [at(s.u, s.v), at(s.u + side * c, s.v), at(t.u + side * c, t.v), at(t.u, t.v)];
       return `M ${p0.x} ${p0.y} C ${p1.x} ${p1.y}, ${p2.x} ${p2.y}, ${p3.x} ${p3.y}`;
     }
     const su = ua + dir * out(e.from, dir > 0);
@@ -590,13 +594,15 @@ export function MoneyGraph(props: MoneyGraphProps) {
     const bw = btxt.length * bf * 0.56 + 18;
     const bh = bf + 10;
     // Cashback badge (never a loop). Portrait: right of the node (edges leave up/down). Landscape, roomy: centred
-    // above the node. Landscape, dense column: right after the one-line label so it never covers a neighbour.
-    const labelW = (n.name.length + formatMoney(n.hl.paid || n.paid).length + 2) * f * 0.55;
+    // above the node. Landscape, dense column: pinned to the node's upper-right (see below).
     // Portrait row with neighbours: no room to the right, so centre it above the node (over the venue stream's tail).
     const crowdedRow = !L && g.nodes.filter((m) => m.tier === n.tier).length > 1;
     const above = (L && twoLine) || crowdedRow;
-    const bx = above ? n.x - bw / 2 : !L ? n.x + R + 8 : n.x + labelW / 2 + 8;
-    const by = above ? n.y - R - 10 - bh : !L ? n.y - bh / 2 : n.y + R + f * 1.05 - f * 0.36 - bh / 2;
+    // Landscape, dense column (one-line labels): pin it to the node's upper-right like a tag, overlapping the
+    // customer ring, so it reads as Ben's and never as a label on the edge to Ana (MSG-107). It stays above the
+    // node's own label and below the label of the node above.
+    const bx = above ? n.x - bw / 2 : !L ? n.x + R + 8 : n.x + R * 0.45;
+    const by = above ? n.y - R - 10 - bh : !L ? n.y - bh / 2 : n.y - R - bh / 2 + 1;
     const dim = net && g.hlId && !n.hl.on;
     return (
       <g key={n.id} opacity={dim ? 0.92 : 1}>

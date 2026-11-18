@@ -436,3 +436,16 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* Screen with a sticky thumb-zone footer: keep focused / scrolled-to fields clear of it (QE-3-02).
+   ~ the tallest footer (caption + 56px button + safe area) plus a little air. */
+html:has([data-vx-footer]) {
+  scroll-padding-bottom: 9.5rem;
+}
+
+/* TextField: the wrapper draws the one rounded focus ring, so the bare <input> shows none (QE-3-07).
+   Beats the global :where(input):focus-visible outline in globals.css (higher specificity, same layer). */
+.vx-field-input:focus,
+.vx-field-input:focus-visible {
+  outline: none;
+}

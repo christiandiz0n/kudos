@@ -28,7 +28,9 @@ const MOCKS = resolve(here, "../src/app/design/_mocks");
 const ALL_SCREENS: Array<{ id: string; who: string; technical?: boolean; desktop?: boolean }> = [];
 for (const f of readdirSync(MOCKS).filter((n) => /^meta(\.[\w-]+)?\.ts$/.test(n)).sort()) {
   for (const m of readFileSync(join(MOCKS, f), "utf8").matchAll(/\{\s*id:\s*"([^"]+)"[^}]*\}/g)) {
-    const who = /who:\s*"(\w+)"/.exec(m[0])?.[1] ?? "?";
+    // meta.venue.ts writes `who: V` (const V = "Venue").
+    const w = /who:\s*(?:"(\w+)"|(V)\b)/.exec(m[0]);
+    const who = w?.[1] ?? (w?.[2] ? "Venue" : "?");
     ALL_SCREENS.push({ id: m[1], who, technical: /technical:\s*true/.test(m[0]), desktop: /desktop:\s*true/.test(m[0]) });
   }
 }
@@ -164,7 +166,13 @@ async function main() {
           const el = document.activeElement as HTMLElement | null;
           if (!el || el === document.body) return "no focusable";
           const cs = getComputedStyle(el);
-          const ok = (cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2) || cs.boxShadow !== "none";
+          // A TextField's ring is drawn by its wrapper (focus-within 2px inset ring), not the bare input (QE-3-07).
+          // Checked by declaration: in this loop's reused page :focus-within doesn't always resolve in time
+          // (the ring itself is verified in docs/evidence/phase-3/fixes/ui/after-qe-3-07-textfield-focus.png).
+          const wrapRing = el.tagName === "INPUT" && /focus-within:shadow-\[inset_0_0_0_2px/.test(el.parentElement?.className ?? "");
+          // Range sliders draw their ring on ::-webkit-slider-thumb, which getComputedStyle can't see (390-focus-slider.png).
+          const rangeThumb = el.classList.contains("vx-range");
+          const ok = (cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2) || cs.boxShadow !== "none" || wrapRing || rangeThumb;
           return `${ok ? "visible" : "NOT VISIBLE"}: ${el.tagName.toLowerCase()} "${(el.getAttribute("aria-label") ?? el.textContent ?? "").trim().slice(0, 28)}"`;
         });
       }

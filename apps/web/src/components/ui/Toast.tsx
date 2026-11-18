@@ -48,7 +48,7 @@ export function Toast({ tone = "neutral", title, description, action, onDismiss,
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="focus-ring inline-flex size-10 shrink-0 items-center justify-center rounded-full text-ink-3 hover:bg-surface-2"
+          className="focus-ring -my-1 -mr-1 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ink-3 hover:bg-surface-2"
         >
           <Icon name="close" size={16} />
         </button>

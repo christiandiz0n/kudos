@@ -3,6 +3,7 @@
  */
 import { formatMoney } from "@/design/money";
 import { moneyFlowsFromEdges, type MoneyFlow, type SplitPart } from "@/components/ui";
+import type { NoRewardReason } from "@/screens/customer/PayConfirm";
 import type { ActivityItem } from "@/screens/customer/WalletHomeScreen";
 import type { VenuePaymentItem } from "@/screens/venue/VenueDashboardScreen";
 import { api, money, type ActivityItemJson, type MoneyEdge, type QuoteRes, type Settled, type VenuePayment } from "./api";
@@ -85,6 +86,31 @@ export function thankedFrom(lines: { role: string; recipient: string | null; ret
   const out: string[] = [];
   for (const l of lines) if (l.role === "referrer" && l.recipient && !l.returned) out.push(nameOr(names, l.recipient));
   return [...new Set(out)];
+}
+
+/**
+ * Why a payment carries no money back (QE-3-03, MSG-100 #1), for the pay sheet AND the success screen, so a first
+ * visit without a recommendation never reads as "Thanks for coming back".
+ *   repeat           → already a verified customer here (attribution is null / firstPurchase false)
+ *   noRecommendation → first visit, nobody recommended this place (quote warning first_purchase_without_recommendation)
+ *   belowMinimum     → first visit with recommendations, but none eligible (below the venue's minimum order, D-509)
+ * Without quote warnings (a settled payment only), the minimum decides between the last two.
+ */
+export function noRewardReason(p: {
+  rewarded: boolean;
+  firstPurchase: boolean;
+  /** QuoteRes.attribution: null means the customer is already verified here (the API skips attribution). */
+  attribution?: QuoteRes["attribution"];
+  warnings?: string[];
+  amount?: bigint;
+  minOrder?: bigint;
+}): NoRewardReason | undefined {
+  if (p.rewarded) return undefined;
+  if (!p.firstPurchase || p.attribution === null) return "repeat";
+  if (p.warnings?.includes("first_purchase_without_recommendation")) return "noRecommendation";
+  if (p.warnings?.includes("no_eligible_recommendation")) return "belowMinimum";
+  if (p.minOrder !== undefined && p.amount !== undefined && p.amount < p.minOrder) return "belowMinimum";
+  return "noRecommendation";
 }
 
 /** Addresses we'd like names for, from a settled payment. */

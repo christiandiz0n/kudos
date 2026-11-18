@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { chromium, type Browser, type Page } from "playwright";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const OUT = resolve(here, "../../../docs/evidence/phase-3/design/venue");
+const OUT = resolve(here, "../../..", process.env.DESIGN_OUT ?? "docs/evidence/phase-3/design/venue");
 const BASE = process.env.DESIGN_BASE_URL ?? "http://localhost:3100";
 
 /** COPY.md banned words (same regex as design-shots.ts). */

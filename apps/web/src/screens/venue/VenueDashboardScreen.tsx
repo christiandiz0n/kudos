@@ -84,6 +84,9 @@ export interface VenueDashboardProps {
   transparencyHref?: string;
   /** `auto` = phone below 1024px, projector layout from 1024px. */
   layout?: "auto" | "phone" | "wide";
+  /** Who is looking (MSG-119). "visitor" (not the owner) words rows as "to Lena's café" instead of "to you" and
+   *  doesn't speak to the owner about their ad spend. Default "owner". */
+  viewer?: "owner" | "visitor";
 }
 
 /* ------------------------------------------------------------------ helpers -------------------------------------- */
@@ -97,14 +100,20 @@ function parseDollars(s: string): bigint | null {
   }
 }
 
+/** Below one cent, a "× less" ratio is noise ("About 20000000× less", MSG-101). */
+const ONE_CENT = parseUsdc("0.01");
+/** Above this the ratio reads as a gimmick; the dollar difference says enough. */
+const MAX_RATIO = 100;
+
 /** Plain-words comparison of what a new customer cost vs a typical ad. */
 export function adComparison(costPerVerified: bigint | null, typicalAdCost: string): string {
   const ad = parseDollars(typicalAdCost);
   if (costPerVerified === null) return "You'll see this after your first new customer.";
   if (ad === null) return "Enter what an ad usually costs you per new customer to compare.";
+  if (costPerVerified < ONE_CENT) return `Almost nothing so far: under a cent per new customer, against ${formatMoney(ad)} for a typical ad.`;
   if (costPerVerified < ad) {
-    const times = Number((ad * 10n) / (costPerVerified > 0n ? costPerVerified : 1n)) / 10;
-    const x = times >= 2 ? ` About ${times >= 10 ? Math.round(times) : times.toFixed(1)}× less.` : "";
+    const times = Number((ad * 10n) / costPerVerified) / 10;
+    const x = times >= 2 && times <= MAX_RATIO ? ` About ${times >= 10 ? Math.round(times) : times.toFixed(1)}× less.` : "";
     return `${formatMoney(ad - costPerVerified)} less per new customer than a typical ad.${x}`;
   }
   return "About what an ad costs, but you only pay when they buy.";
@@ -176,28 +185,41 @@ function CostCard({ p, wide }: { p: VenueDashboardProps; wide?: boolean }) {
             <Skeleton className="h-10 w-28" />
           ) : cpvc === null ? (
             <span className="money text-title-1 text-ink-3">—</span>
+          ) : cpvc < ONE_CENT ? (
+            <span className="flex items-baseline gap-1.5">
+              <span className="text-body font-medium text-ink-2">under</span>
+              <AmountDisplay value={ONE_CENT} size={wide ? "display" : "xl"} />
+            </span>
           ) : (
             <AmountDisplay value={cpvc} size={wide ? "display" : "xl"} />
           )}
           <span className="text-caption text-ink-3">paid only when they buy</span>
         </div>
-        <label className="flex w-[7.5rem] shrink-0 flex-col gap-1 text-right">
-          <span className="text-caption font-medium text-ink-3">Typical ad cost</span>
-          <span className="flex h-11 items-center gap-1 rounded-md bg-surface px-2.5 shadow-[inset_0_0_0_1px_var(--vx-line-strong)] focus-within:shadow-[inset_0_0_0_2px_var(--vx-focus)]">
-            <span className="text-body-sm text-ink-3">$</span>
-            <input
-              inputMode="decimal"
-              aria-label="Typical ad cost per new customer, in dollars"
-              value={p.typicalAdCost}
-              onChange={(e) => p.onTypicalAdCostChange?.(e.target.value)}
-              readOnly={!p.onTypicalAdCostChange}
-              className="money h-full w-full min-w-0 bg-transparent text-right text-body font-semibold text-ink outline-none"
-            />
-          </span>
-        </label>
+        {p.viewer === "visitor" ? null : (
+          <label className="flex w-[7.5rem] shrink-0 flex-col gap-1 text-right">
+            <span className="text-caption font-medium text-ink-3">Typical ad cost</span>
+            <span className="flex h-11 items-center gap-1 rounded-md bg-surface px-2.5 shadow-[inset_0_0_0_1px_var(--vx-line-strong)] focus-within:shadow-[inset_0_0_0_2px_var(--vx-focus)]">
+              <span className="text-body-sm text-ink-3">$</span>
+              <input
+                inputMode="decimal"
+                aria-label="Typical ad cost per new customer, in dollars"
+                value={p.typicalAdCost}
+                onChange={(e) => p.onTypicalAdCostChange?.(e.target.value)}
+                readOnly={!p.onTypicalAdCostChange}
+                className="vx-field-input money h-full w-full min-w-0 bg-transparent text-right text-body font-semibold text-ink outline-none"
+              />
+            </span>
+          </label>
+        )}
       </div>
       <p aria-live="polite" className="border-t border-line pt-3 text-body-sm text-ink-2">
-        {p.loading ? <Skeleton className="h-4 w-48" /> : adComparison(cpvc, p.typicalAdCost)}
+        {p.loading ? (
+          <Skeleton className="h-4 w-48" />
+        ) : p.viewer === "visitor" ? (
+          cpvc === null ? "No new customers from recommendations yet." : `What ${p.venueName} has paid in rewards, on average, for each new customer.`
+        ) : (
+          adComparison(cpvc, p.typicalAdCost)
+        )}
       </p>
     </Card>
   );
@@ -207,14 +229,15 @@ function StatRow({ p }: { p: VenueDashboardProps }) {
   const s = p.stats;
   const v = (n: ReactNode) => (p.loading ? <Skeleton className="h-8 w-16" /> : n);
   return (
-    <div className="grid grid-cols-2 gap-x-4">
-      <Stat label="New customers" value={v(s.verifiedCustomers)} caption="verified, via recommendations" />
+    <div data-kpi className="grid grid-cols-2 gap-x-4">
+      {/* verifiedCustomers counts every verified first purchase, recommended or not (QE-3-04). */}
+      <Stat label="New customers" value={v(s.verifiedCustomers)} caption="verified first purchases" />
       <Stat label="Rewards paid" value={v(<AmountDisplay value={s.rewardsPaid} size="xl" />)} caption="to customers + the people who sent them" />
     </div>
   );
 }
 
-function Feed({ payments, max }: { payments: VenuePaymentItem[]; max?: number }) {
+function Feed({ payments, max, toLabel = "to you" }: { payments: VenuePaymentItem[]; max?: number; toLabel?: string }) {
   const list = max ? payments.slice(0, max) : payments;
   return (
     <List label="Payments, newest first">
@@ -225,7 +248,7 @@ function Feed({ payments, max }: { payments: VenuePaymentItem[]; max?: number })
             title={`${f.customerName} paid ${formatMoney(f.amount)}`}
             meta={`${paymentLine(f)} · ${f.time}`}
             trailing={<AmountDisplay value={f.venueAmount} />}
-            trailingMeta="to you"
+            trailingMeta={toLabel}
           />
         </li>
       ))}
@@ -331,7 +354,7 @@ function PhoneLayout(p: VenueDashboardProps) {
               <Skeleton className="h-12 w-full" />
             </div>
           ) : (
-            <Feed payments={p.payments} max={8} />
+            <Feed payments={p.payments} max={8} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
           )}
         </>
       ) : null}
@@ -390,7 +413,7 @@ function WideLayout(p: VenueDashboardProps) {
           </Card>
           <Card padding="md" className="min-h-0 flex-1 overflow-hidden">
             <h2 className="px-1 text-body-sm font-semibold text-ink-2">Payments</h2>
-            {empty ? <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p> : <Feed payments={p.payments} max={4} />}
+            {empty ? <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p> : <Feed payments={p.payments} max={4} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />}
           </Card>
         </div>
       </div>

@@ -7,6 +7,8 @@
  *   earnedThisWeek?         bigint: cashback + recommendation rewards in the last 7 days (green chip)
  *   activity                ActivityItem[] newest first (GET /me/activity + SSE). `amount` is signed:
  *                           negative = you paid (ink, "−$12.00"), positive = money in (green, "+$0.45").
+ *                           Cashback shows ONCE: as the purchase row's `note` ("+$0.45 back"). Don't also add a separate
+ *                           "cashback" row for the same payment (MSG-096). Titles may wrap to 2 lines.
  *                           status "pending" rows render muted with a "Pending" tag; settled rows are normal.
  *   loading?                first load: skeleton balance + 3 skeleton rows
  *   offline?                calm banner, keeps showing the last known numbers
@@ -24,7 +26,7 @@ export interface ActivityItem {
   meta: string;
   /** Signed base units: negative = you paid, positive = money in. */
   amount: bigint;
-  /** Small line under the amount, e.g. "+$0.45 back". */
+  /** Small line under the amount, e.g. "+$0.45 back". This is where a purchase's cashback lives (shown once). */
   note?: string;
   kind: "payment" | "reward" | "cashback" | "topup";
   /** Default "settled". Pending = sent, waiting for the public record to confirm (a few seconds). */
@@ -120,11 +122,11 @@ export function WalletHomeScreen({
             ) : null}
           </>
         )}
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-4 flex flex-col items-start gap-1.5">
           <Button size="sm" variant="secondary" leadingIcon="plus" loading={toppingUp} loadingLabel="Adding…" onClick={onTopUp} disabled={loading || offline}>
             Top up (testnet demo)
           </Button>
-          <span className="text-caption text-ink-3">Simulated money for this demo</span>
+          <span className="pl-1 text-caption whitespace-nowrap text-ink-3">Simulated money for this demo. No card needed.</span>
         </div>
       </section>
 
@@ -183,6 +185,7 @@ export function WalletHomeScreen({
                   onClick={onOpenActivity ? () => onOpenActivity(a.id) : undefined}
                   leading={<ActivityAvatar a={a} />}
                   title={a.title}
+                  titleLines={2}
                   meta={a.meta}
                   trailing={<AmountDisplay value={a.amount} variant={pending ? "muted" : "signed"} className={cn(pending && "opacity-80")} />}
                   trailingMeta={

@@ -5,6 +5,8 @@ import { cn } from "@/design/cn";
  * Screen scaffolding for 390px mobile layouts:
  *   <Screen header={<AppBar …/>} footer={<Button block size="lg">Pay $12.00</Button>}>…</Screen>
  * The footer is the thumb zone: exactly one primary action lives there.
+ * The footer is opaque (content scrolls cleanly under it, never through a caption) with a short fade above it;
+ * `data-vx-footer` lets tokens.css add matching scroll-padding so a focused field is never left behind it (QE-3-02).
  */
 export function Screen({ header, footer, children, className, tone = "canvas" }: { header?: ReactNode; footer?: ReactNode; children: ReactNode; className?: string; tone?: "canvas" | "surface" }) {
   return (
@@ -12,7 +14,14 @@ export function Screen({ header, footer, children, className, tone = "canvas" }:
       {header}
       <main className="flex-1 overflow-y-auto px-[var(--vx-gutter)] pb-6">{children}</main>
       {footer ? (
-        <div className="sticky bottom-0 border-t border-line/0 bg-linear-to-t from-canvas via-canvas to-canvas/0 px-[var(--vx-gutter)] pt-3 pb-[max(env(safe-area-inset-bottom),20px)]">
+        <div
+          data-vx-footer
+          className={cn(
+            "sticky bottom-0 z-10 px-[var(--vx-gutter)] pt-3 pb-[max(env(safe-area-inset-bottom),20px)]",
+            "before:pointer-events-none before:absolute before:inset-x-0 before:-top-6 before:h-6 before:bg-linear-to-t before:content-['']",
+            tone === "canvas" ? "bg-canvas before:from-canvas before:to-canvas/0" : "bg-surface before:from-surface before:to-surface/0",
+          )}
+        >
           {footer}
         </div>
       ) : null}

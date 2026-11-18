@@ -15,6 +15,7 @@
  *   quoting?                      quote in flight: cashback + split show skeletons, confirm disabled
  *   paying?                       Face ID prompt / relay in flight: button spins, sheet not dismissible
  *   noReward?                     why cashback is 0: "repeat" (already rewarded here) | "belowMinimum" | "noRecommendation"
+ *                                 "belowMinimum" is a WARNING (D-509): paying now uses up the one first-visit money back here.
  *   minOrder?                     bigint, for "belowMinimum" copy
  *   balance?                      bigint from the quote; if balance < amount the sheet shows "insufficient" by itself
  *   problem?                      PayProblem (see PayProblem.tsx for the API-code mapping) → swaps the sheet to that state
@@ -22,6 +23,7 @@
  *   details?                      { networkFee, network, orderId } → only inside the collapsed Details drawer
  *
  * In the app: <PayConfirmSheet open onClose={…} {...props} />  (portal sheet, focus trap, Esc/drag to close).
+ * Behind it (e.g. /pay opened from the phone's own camera, with nothing else on screen): <PayBackdrop venueName? />.
  */
 import {
   AmountDisplay,
@@ -85,15 +87,29 @@ function recName(r: Recommender) {
   return typeof r === "string" ? r : r.name;
 }
 
-function NoRewardNote({ reason, venueName, minOrder }: { reason?: NoRewardReason; venueName: string; minOrder?: bigint }) {
+/** D-509: a first purchase below the venue's minimum still counts as the first visit, so it uses up the money back. */
+function BelowMinimumWarning({ venueName, amount, minOrder }: { venueName: string; amount: bigint; minOrder?: bigint }) {
+  return (
+    <div role="note" className="mt-3 flex items-start gap-2 rounded-md bg-warning-soft px-3 py-2.5 text-body-sm text-warning-ink">
+      <Icon name="alert" size={18} className="mt-px shrink-0" />
+      <div>
+        <p className="font-semibold">No money back on this one</p>
+        <p className="mt-0.5">
+          {minOrder !== undefined ? `Orders from ${formatMoney(minOrder)} get money back on a first visit. ` : "This order is below the minimum for money back. "}
+          If you pay {formatMoney(amount)} now, it counts as your first visit to {venueName}, so there&apos;s no money back here later.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function NoRewardNote({ reason, venueName }: { reason?: NoRewardReason; venueName: string }) {
   const text =
     reason === "repeat"
       ? `Welcome back. Your first-visit thank-you at ${venueName} has already been paid, so this one is a regular payment.`
-      : reason === "belowMinimum" && minOrder !== undefined
-        ? `Orders from ${formatMoney(minOrder)} get money back on a first visit. This one is a regular payment.`
-        : reason === "noRecommendation"
-          ? "No one recommended this place to you yet, so this is a regular payment."
-          : "This one is a regular payment.";
+      : reason === "noRecommendation"
+        ? "No one recommended this place to you yet, so this is a regular payment."
+        : "This one is a regular payment.";
   return (
     <p className="mt-3 flex items-start gap-2 rounded-md bg-surface-2 px-3 py-2.5 text-body-sm text-ink-2">
       <Icon name="heart" size={18} className="mt-px shrink-0 text-ink-3" />
@@ -142,8 +158,10 @@ export function PayConfirmContent(p: PayConfirmProps) {
           <p className="mt-2 inline-flex h-9 items-center gap-1 rounded-full bg-accent-soft px-3.5 text-body font-medium text-accent-ink">
             You&apos;ll get <AmountDisplay value={p.cashback} size="md" className="text-accent-ink" /> back
           </p>
+        ) : p.noReward === "belowMinimum" ? (
+          <BelowMinimumWarning venueName={p.venueName} amount={p.amount} minOrder={p.minOrder} />
         ) : (
-          <NoRewardNote reason={p.noReward} venueName={p.venueName} minOrder={p.minOrder} />
+          <NoRewardNote reason={p.noReward} venueName={p.venueName} />
         )}
       </div>
 
@@ -230,11 +248,36 @@ export function PayConfirmSheet({ open, onClose, ...p }: PayConfirmProps & { ope
   );
 }
 
+/**
+ * What sits behind the pay sheet when nothing else does (MSG-100 #3: /pay opened from the phone's own camera).
+ * Quiet, decorative, hidden from assistive tech: the venue (or a skeleton while it loads) and a blurred receipt.
+ */
+export function PayBackdrop({ venueName }: { venueName?: string }) {
+  return (
+    <div aria-hidden className="flex min-h-dvh flex-1 flex-col bg-canvas px-[var(--vx-gutter)] pt-8">
+      <div className="flex items-center gap-3">
+        {venueName ? <Avatar name={venueName} kind="venue" size="lg" /> : <Skeleton rounded="full" className="size-14" />}
+        <div className="min-w-0 flex-1">
+          {venueName ? <p className="truncate text-title-3 text-ink">{venueName}</p> : <Skeleton className="h-5 w-40" />}
+          <p className="mt-1 text-caption text-ink-3">Paying with Vouch</p>
+        </div>
+      </div>
+      <Skeleton className="mt-10 h-12 w-44" />
+      <Skeleton rounded="full" className="mt-3 h-8 w-36" />
+      <div className="mt-10 space-y-3">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-4/5" />
+        <Skeleton className="h-3 w-3/5" />
+      </div>
+    </div>
+  );
+}
+
 /** Static mock for /design: the sheet over the dimmed scanner. */
-export function PayConfirmMock(p: PayConfirmProps) {
+export function PayConfirmMock({ backdrop, ...p }: PayConfirmProps & { backdrop?: "scanner" | "pay" }) {
   return (
     <div className="relative h-full overflow-hidden">
-      <ScanScreen />
+      {backdrop === "pay" ? <PayBackdrop venueName={p.venueName} /> : <ScanScreen />}
       <div aria-hidden className="absolute inset-0 bg-scrim" />
       <div className="absolute inset-x-0 bottom-0 max-h-full overflow-y-auto">
         <SheetPanel title={sheetTitle(p)} onClose={p.paying ? undefined : p.onCancel} footer={<PayConfirmFooter {...p} />}>

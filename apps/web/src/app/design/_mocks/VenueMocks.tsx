@@ -50,12 +50,12 @@ function dashboardProps(net: SeedVenue, over: Partial<VenueDashboardProps> = {})
   };
 }
 
-function DashboardDemo({ net, layout, status = "live", mode = "payment", empty, loading }: { net: SeedVenue; layout: "phone" | "wide"; status?: LiveStatus; mode?: "payment" | "network"; empty?: boolean; loading?: boolean }) {
+function DashboardDemo({ net, layout, status = "live", mode = "payment", empty, loading, stats, viewer }: { net: SeedVenue; layout: "phone" | "wide"; status?: LiveStatus; mode?: "payment" | "network"; empty?: boolean; loading?: boolean; stats?: VenueDashboardProps["stats"]; viewer?: "owner" | "visitor" }) {
   const [ad, setAd] = useState("20.00");
   const [graphMode, setGraphMode] = useState<"payment" | "network">(mode);
   const base = dashboardProps(net, { status, layout, typicalAdCost: ad, onTypicalAdCostChange: setAd, graphMode, onGraphModeChange: setGraphMode, loading });
-  const props = empty ? { ...base, payments: [], graph: undefined, stats: { verifiedCustomers: 0, rewardsPaid: 0n, costPerVerified: null } } : base;
-  return <VenueDashboardScreen {...props} />;
+  const props = empty ? { ...base, payments: [], graph: undefined, stats: { verifiedCustomers: 0, rewardsPaid: 0n, costPerVerified: null } } : stats ? { ...base, stats } : base;
+  return viewer === "visitor" ? <VenueDashboardScreen {...props} viewer="visitor" onNewOrder={undefined} onTypicalAdCostChange={undefined} /> : <VenueDashboardScreen {...props} />;
 }
 
 function OnboardingDemo({ variant }: { variant: "default" | "error" | "confirming" }) {
@@ -172,6 +172,11 @@ export function VenueMock({ id }: { id: string }) {
       return <DashboardDemo net={NET_20} layout="phone" />;
     case "venue-dashboard-network":
       return <DashboardDemo net={NET_20} layout="phone" mode="network" />;
+    case "venue-dashboard-visitor":
+      return <DashboardDemo net={NET_20} layout="phone" viewer="visitor" />;
+    case "venue-dashboard-cost-tiny":
+      // MSG-101: most first visits came without a recommendation, so the cost per new customer is under a cent.
+      return <DashboardDemo net={NET_20} layout="phone" stats={{ verifiedCustomers: 3, rewardsPaid: parseUsdc("0.02"), costPerVerified: 6_666n }} />;
     case "venue-dashboard-reconnecting":
       return <DashboardDemo net={NET_20} layout="phone" status="reconnecting" />;
     case "venue-dashboard-offline":

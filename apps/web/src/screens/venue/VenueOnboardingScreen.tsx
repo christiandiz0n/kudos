@@ -148,6 +148,7 @@ export function VenueOnboardingScreen(p: VenueOnboardingScreenProps) {
       <TextField
         className="mt-5"
         label="Minimum first order for a reward"
+        data-min-order
         prefix="$"
         inputMode="decimal"
         value={p.minOrder}

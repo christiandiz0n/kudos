@@ -7,6 +7,9 @@ import { ToastProvider } from "@/hooks/useToasts";
 export const metadata: Metadata = {
   title: APP_NAME,
   description: "Pay local. Thank the friends who sent you.",
+  applicationName: APP_NAME,
+  // Add to Home Screen on iOS (the manifest covers Android/Chrome); icon: app/apple-icon.png.
+  appleWebApp: { capable: true, title: APP_NAME, statusBarStyle: "default" },
 };
 
 // Mobile-first: device-width, no auto-zoom on input focus, respect safe areas (notch).

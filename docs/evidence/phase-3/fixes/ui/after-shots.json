@@ -1,0 +1,30 @@
+{
+  "base": "http://localhost:3100",
+  "at": "2026-11-18T19:53:44.256Z",
+  "shots": [
+    {
+      "name": "msg-101-dashboard-cost-tiny",
+      "id": "venue-dashboard-cost-tiny",
+      "file": "after-msg-101-dashboard-cost-tiny.png",
+      "errors": []
+    },
+    {
+      "name": "qe-3-04-dashboard-kpi",
+      "id": "venue-dashboard",
+      "file": "after-qe-3-04-dashboard-kpi.png",
+      "errors": []
+    },
+    {
+      "name": "msg-119-dashboard-visitor",
+      "id": "venue-dashboard-visitor",
+      "file": "after-msg-119-dashboard-visitor.png",
+      "errors": []
+    },
+    {
+      "name": "msg-119-dashboard-visitor-feed",
+      "id": "venue-dashboard-visitor",
+      "file": "after-msg-119-dashboard-visitor-feed.png",
+      "errors": []
+    }
+  ]
+}

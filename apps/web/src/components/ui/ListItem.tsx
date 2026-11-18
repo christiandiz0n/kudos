@@ -16,15 +16,17 @@ export interface ListItemProps {
   /** Render as a link (any element via render prop is overkill: pass href for <a>). */
   href?: string;
   chevron?: boolean;
+  /** 2 = let a long title wrap onto a second line instead of truncating ("Ana brought Cara in"). Default 1. */
+  titleLines?: 1 | 2;
   className?: string;
 }
 
-export function ListItem({ leading, title, meta, trailing, trailingMeta, onClick, href, chevron, className }: ListItemProps) {
+export function ListItem({ leading, title, meta, trailing, trailingMeta, onClick, href, chevron, titleLines = 1, className }: ListItemProps) {
   const inner = (
     <>
       {leading ? <span className="shrink-0">{leading}</span> : null}
       <span className="min-w-0 flex-1 text-left">
-        <span className="block truncate text-body font-medium text-ink">{title}</span>
+        <span className={cn("block text-body font-medium text-ink", titleLines === 2 ? "line-clamp-2" : "truncate")}>{title}</span>
         {meta ? <span className="block truncate text-caption text-ink-3">{meta}</span> : null}
       </span>
       {trailing || trailingMeta ? (

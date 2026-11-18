@@ -3,7 +3,12 @@
  *
  * PROP CONTRACT (PaymentSuccessScreenProps)
  *   venueName                 string
- *   amount, cashback          bigint base units (cashback 0n → no green chip; repeat visit copy)
+ *   amount, cashback          bigint base units (cashback 0n → no green chip; copy picked by noReward)
+ *   noReward?                 why cashback is 0, same values as PayConfirm (QE-3-03 / MSG-100 #1):
+ *                             "repeat" → "Thanks for coming back." · "noRecommendation" → first-visit thanks + how money back works
+ *                             · "belowMinimum" → first-visit thanks + why there was none (needs minOrder) · undefined → neutral
+ *                             "Thanks for coming in." (never assumes a repeat visit)
+ *   minOrder?                 bigint, for the "belowMinimum" line
  *   status?                   "pending" (POST /payments 202 / payment.pending) | "settled" (default; payment.settled via Streams)
  *                             pending → quiet ring + gray receipt + "Arriving"; settled → green pop + receipt floods green.
  *                             Call navigator.vibrate?.(12) when it flips to settled.
@@ -16,11 +21,15 @@
 import { AmountDisplay, Button, DetailRow, Details, Screen, SplitBreakdown, SuccessMark, type SplitPart } from "@/components/ui";
 import { cn } from "@/design/cn";
 import { formatMoney } from "@/design/money";
+import type { NoRewardReason } from "./PayConfirm";
 
 export interface PaymentSuccessScreenProps {
   venueName: string;
   amount: bigint;
   cashback: bigint;
+  /** Why cashback is 0 (from the quote). Default: neutral thanks. */
+  noReward?: NoRewardReason;
+  minOrder?: bigint;
   status?: "pending" | "settled";
   split?: SplitPart[];
   /** Names of the people your purchase thanked ("Ana and Priya"). */
@@ -35,10 +44,29 @@ export function joinNames(names: string[]) {
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
+/** The line under the amount when there's no money back (QE-3-03). */
+export function noRewardThanks(reason: NoRewardReason | undefined, venueName: string, minOrder?: bigint): { title: string; body?: string } {
+  switch (reason) {
+    case "repeat":
+      return { title: "Thanks for coming back." };
+    case "noRecommendation":
+      return { title: `Thanks for coming in.`, body: "When a friend recommends a place to you, your first visit there gets money back." };
+    case "belowMinimum":
+      return {
+        title: `Thanks for coming in.`,
+        body: minOrder !== undefined ? `First visits from ${formatMoney(minOrder)} get money back at ${venueName}. This one was under that.` : `This order was under ${venueName}'s minimum for money back.`,
+      };
+    default:
+      return { title: "Thanks for coming in." };
+  }
+}
+
 export function PaymentSuccessScreen({
   venueName,
   amount,
   cashback,
+  noReward,
+  minOrder,
   status = "settled",
   split,
   thanked = [],
@@ -77,7 +105,15 @@ export function PaymentSuccessScreen({
             {pending ? " back, on its way" : " back to you"}
           </p>
         ) : (
-          <p className="mt-3 text-body-sm text-ink-2">Thanks for coming back.</p>
+          (() => {
+            const t = noRewardThanks(noReward, venueName, minOrder);
+            return (
+              <>
+                <p className="mt-3 text-body text-ink-2">{t.title}</p>
+                {t.body ? <p className="mt-1 max-w-[30ch] text-body-sm text-ink-3">{t.body}</p> : null}
+              </>
+            );
+          })()
         )}
         {thanked.length ? (
           <p className="mt-4 max-w-[30ch] text-body text-ink-2">

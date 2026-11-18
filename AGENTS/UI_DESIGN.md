@@ -1,5 +1,5 @@
 # UI_DESIGN
-_Last updated: 2026-11-16 by UI_DESIGN — Phase 1_
+_Last updated: 2026-11-18 by UI_DESIGN — Phase 3 gate fix pass (single instance, owns customer + venue)_
 
 ## Mission
 Owns the visual and interaction design: design tokens, typography, color, motion, core components, screen layouts, copy, and the money graph's visual design. Direction: clean fintech — calm, minimal, one restrained accent, tabular numerals, dollars only on primary screens. Does NOT wire screens to the chain or API (FRONTEND_INTEGRATION does).
@@ -11,7 +11,7 @@ Owns the visual and interaction design: design tokens, typography, color, motion
 - Presentational screen components under `apps/web/src/screens/` (props-only, no data fetching)
 
 ## Current status
-🟡 Design system v0 built and verified; **waiting for human approval of the direction** (MSG-007) before Phase 3 hi-fi.
+🟢 Phase 3 hi-fi built and wired. The QE gate and Orchestrator polish fixes are done (D-615). Direction was approved in D-017. No open requests in the inbox.
 
 ## Mental model (read this first)
 - **Direction (D-601):** warm "receipt paper" neutrals, ink-black primary buttons, ONE deep green accent reserved for money moving to a person (cashback, rewards, success). Spending is never red.
@@ -60,6 +60,7 @@ _UI-venue instance, 2026-11-18. Owns `screens/venue/**`, `screens/public/**`, an
   - Transparency: computes the exact base-unit split itself (`exactSplit`); v3 address, Blockscout links, six events, Streams.
 - **/design:** 25 venue/public ids in `_mocks/meta.venue.ts`, rendered by `_mocks/VenueMocks.tsx`. Seeded networks at 5/20/60 people are in `_mocks/venueFixtures.ts` (the last payment is always Ben's $12.00). The playground is at `/design/money-graph`. `ScreenMock.tsx` is now a dispatcher only.
 - **Evidence:** `node --no-warnings scripts/design-shots-venue.ts` (shared :3100) writes 45 PNGs + checks.json to `docs/evidence/phase-3/design/venue/`.
+- **Fix-pass evidence:** `FIX_PHASE=before|after node --no-warnings scripts/design-shots-fixes.ts` takes 390×844 *viewport* shots (not full-page, so sticky-footer overlaps stay visible) to `docs/evidence/phase-3/fixes/ui/`. `design-shots.ts` now picks up `who: V` venue ids, and both scripts accept `DESIGN_OUT` (absolute paths are fine), so checks can run into a scratch dir without churning the evidence.
 - **Gotcha:** an in-place scripted (python) rewrite of a source file was missed by the :3100 watcher. The result was a stale SSR bundle and a hydration mismatch. A normal editor save fixed it.
 
 ## Interfaces consumed / provided
@@ -67,19 +68,32 @@ _UI-venue instance, 2026-11-18. Owns `screens/venue/**`, `screens/public/**`, an
 - Provides `@/components/ui` + `src/screens/*` props contracts to FRONTEND_INTEGRATION (handoff MSG-006). MoneyGraph expects data derivable from `PaymentSettled` + `RewardPaid` (viaReferrer → L2 edge).
 
 ## Done (rolling, newest first)
+- 2026-11-18 — Phase 3 gate fix pass (D-615):
+  - **QE-3-02 / MSG-115:** Screen footer is opaque, with a fade + scroll-padding.
+  - **QE-3-01:** PayProblem `invalidLink`.
+  - **QE-3-03 / MSG-100:** success `noReward`/`minOrder`, the D-509 below-minimum warning, `PayBackdrop`.
+  - **MSG-096:** cashback shown once; demo note under the button; 2-line activity titles.
+  - **MSG-107:** badge pinned to the node; same-column arcs stay inside the card.
+  - **MSG-101:** sub-cent cost guard.
+  - **QE-3-04:** "verified first purchases".
+  - **QE-3-06:** 44px toast dismiss.
+  - **QE-3-07:** single TextField ring.
+  - **MSG-119:** dashboard `viewer: "visitor"`.
+  - **/design:** 10 new ids. 24 before/after shots in `docs/evidence/phase-3/fixes/ui/`.
+  - **Checks:** 57 screens, 0 banned words, 0 targets <44, 0 console errors, focus visible on every first Tab stop.
+  - **Messages:** replies MSG-123..127, fyi MSG-128.
 - venue: 2026-11-18 — MoneyGraph v1: cashback self-loop removed (MSG-008/044), arrival choreography, 5/20/60 playground. Venue dashboard hi-fi (phone + projector, live/reconnecting/offline/loading/empty). Onboarding (Face ID or fingerprint, ≥ $0.50 minimum). Counter entry + QR (processing/refreshing/expired/paid). Transparency (base units, rounding rule, v3 + Blockscout, events, Streams). 25 /design ids, 45 shots, 0 banned words, 0 console errors, reduced motion + focus pass. D-611..D-614, handoff MSG-098, fyi MSG-099.
 - customer: 2026-11-18 — Phase 3 hi-fi customer screens + all error/empty/loading states (28 ids), MSG-044 magnifier (D-607), pending→settled (D-609), recommend/intro/ambassador, design:shots phase-3 mode (0 banned words, 0 console errors, 0 targets <44px), D-607..D-610, handoff MSG-091, fyi MSG-092.
 - 2026-11-16 — Phase 1 design system v0: tokens (light+dark, AA verified), Instrument Sans, 25 components, 13 screen mocks at 390px + projector dashboard, money graph mock + scale notes, COPY.md, DESIGN_SYSTEM.md, 30 screenshots + checks.json, D-601..D-606, handoff MSG-006, approval question MSG-007.
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
+- [ ] Re-check on the deployed app: the opaque Screen footer on iOS Safari (safe area, keyboard open on /venue/new) and the `html:has()` scroll-padding (Safari ≥15.4)
+- [ ] If the projector shows dense networks often, consider a larger badge font in landscape (it's 13px at 1280 now)
 - [ ] venue: check the live dashboard on the projector against real hosted data (long display names, >5 recommenders, a "Guest N" fallback) once FRONTEND_INTEGRATION's wiring is deployed
 - [ ] venue: optional count-up on graph amounts; optional pause when the tab is hidden (the loops are already finite)
 - [ ] customer: phone pass on the deployed app (real Face ID prompt timing, sheet height on small phones ~667px, camera denied on iOS Safari)
 - [ ] customer: Sheet exit animation; success → recommend hand-off moment
-- [ ] Human sign-off on direction (MSG-007); apply any redirect to tokens first (everything else follows)
-- [ ] Phase 3 hi-fi: error/edge states (expired order, insufficient balance, relayer down, already rewarded, camera denied), loading skeletons per screen
-- [ ] Sheet exit animation; money graph live-arrival choreography + 20/60-node network view
 - [ ] Transparency page: real contract address once CONTRACTS deploys
 
 ## Struggles, open questions, known issues
