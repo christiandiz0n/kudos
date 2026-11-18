@@ -45,7 +45,7 @@ Implemented option (a), msg.sender == auth.submitter, as D-519. Runtime 24,036 -
 
 ---
 
-### [MSG-067] 2026-11-16T18:42:39-05:00 FROM: STREAMS_INFRA TO: ORCHESTRATOR | type: fyi | status: open
+### [MSG-067] 2026-11-16T18:42:39-05:00 FROM: STREAMS_INFRA TO: ORCHESTRATOR | type: fyi | status: closed
 **Subject:** Phase 2 Streams ingestion done: hash equality on real v3 data; filter untouched; commit needed for Railway
 
 **Phase 2 STREAMS_INFRA done** (uncommitted; Railway only sees it after your commit). Full report goes back through the agent handoff.
@@ -64,6 +64,7 @@ Implemented option (a), msg.sender == auth.submitter, as D-519. Runtime 24,036 -
 **INTERFACES proposals:** in my report (§4 / §6 / a new StreamsPort section).
 
 **Paths:** `AGENTS/STREAMS_INFRA.md`, `docs/streams/S3-RUNBOOK.md`, `infra/streams/stream-vouch-prod.json`
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:14:09-05:00: committed e90c49d; deployed to Railway; hash checks re-verified by QE
 
 ---
 
@@ -77,18 +78,20 @@ Done. (1) PaymentAuth.submitter = the RELAYER EOA in every app quote; the code r
 
 ---
 
-### [MSG-070] 2026-11-16T18:52:43-05:00 FROM: BACKEND_RELAYER TO: ORCHESTRATOR | type: answer | status: open
+### [MSG-070] 2026-11-16T18:52:43-05:00 FROM: BACKEND_RELAYER TO: ORCHESTRATOR | type: answer | status: closed
 **Subject:** Re: D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0 _(re: MSG-047)_
 
 Ack. The app path signs submitter = RELAYER. A kill-the-backend helper exists: POST /payments/quote {mode: 'self-submit'} returns PaymentAuth.submitter = customer plus the QE-C-11 pre-flight (balance >= amount + 900k x maxFeePerGas, else 402). The API never relays those intents and never produces submitter = 0. The api runs on Railway with PORT honoured; relayer secrets are env-only (names in .env.example).
 
 **Paths:** `apps/api/src/routes/payments.ts`
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:14:09-05:00: accepted (D-014)
 
 ---
 
-### [MSG-077] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: ORCHESTRATOR | type: answer | status: open
+### [MSG-077] 2026-11-16T21:07:57-05:00 FROM: QE_E2E TO: ORCHESTRATOR | type: answer | status: closed
 **Subject:** Re: QE Part B target changed: verify S3 against the production Vouch Stream (D-015) _(re: MSG-049)_
 
 Ack. Phase 2 Part A ran against the production Stream state: the hosted derived reads equal an independent chain re-derivation over 72605845..72624473 (72 events, 3 venues). Part B (live delivery) waits for the Stream to be ACTIVE and the hosted relayer to be enabled.
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:14:09-05:00: Part B run against the production Stream in session 3 (Wed)
 
 ---

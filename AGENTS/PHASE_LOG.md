@@ -115,3 +115,11 @@ _pending_
   - N-4: a reverted relayed pay marks the order `failed` (display only).
   - N-5: a one-off PGlite V8 crash in ingest.test (flaky, environmental).
   - Unbounded tables.
+
+### Phase 2 gate status (2026-11-18, end of session 2)
+- **Phone tests S6/S6b: PASSED** (human, 2026-11-16).
+- **QE Part B attempt 1 (17:05–17:30Z): NOT RUN.** The readiness poll timed out: the Railway relayer secrets weren't applied (`enabled:false`; names absent on the api service), and the Stream wasn't active (0 deliveries). No hosted tx, $0 spent. Guards re-run on 920a042: 7/7 PASS, including the QE-2-01 re-test (evidence: `docs/evidence/phase-2/qe/part-b-*`).
+- **Gate verdict: OPEN.**
+  - PASS-with-findings on everything verifiable: Part A, the security re-verify, guards.
+  - Exit criterion (canonical story through the hosted api settled via the live Stream, with latency) is pending HUMAN_INPUT #13 + #3.
+- Local processes stopped. Handoff for the context reset (A6) is written.

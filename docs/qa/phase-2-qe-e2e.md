@@ -148,3 +148,16 @@ PORT=4030 API_HOST=127.0.0.1 DATABASE_URL=pglite://<scratch>/db STREAMS_SPIKE_LO
 scripts/node_modules/.bin/tsx scripts/qa/api-contract.ts setup|noauth|main|guards|settled --api http://127.0.0.1:4030 --state <scratch>/qe-state.json
 pnpm --filter @vouch/scripts story:api -- --api http://127.0.0.1:4030 --fund-from-payout
 ```
+
+## Part B (hosted), attempt 1 (2026-11-18): **NOT RUN: readiness timed out**
+- **Target:** the deployed commit `920a042` (HEAD `cf547f3`, docs only). `TRUST_PROXY=2` (D-018).
+- **Readiness poll:** every 30 s, 17:05:22Z..17:30:10Z (50 polls, the full 25 min). Evidence: `part-b-readiness-poll.txt`.
+  - (a) `GET /relayer/status` showed `enabled:false, reachable:null, lowBalance:null` on every poll. The relayer secrets never reached the hosted api.
+  - (b) `railway logs … --filter "streams delivery"` showed 0 `verified:true` lines. The newest lines are QE's 401 probes from 2026-11-17. The Stream never delivered.
+- **Not done** (each needs both conditions): hosted `story:api --require-settled`, tap→settled latency, the delivery-log check, and the hosted vs chain re-compare. **No hosted transactions were sent, and there was no spend.** The 15-minute time box never started.
+- **Done meanwhile: `guards` on the deployed code** (local api on 127.0.0.1:4032, clean `920a042` code, `pglite://memory`). **7/7 PASS**. Evidence: `part-b-guards-local.txt`.
+  - The relayer key was the unfunded throwaway QE key X (`RELAYER_PRIVATE_KEY` set inline, overriding the env file), so nothing could ever be broadcast. X's nonce stayed 0, and the real relayer key was never loaded.
+  - Settings: `RELAYER_MAX_GAS_PAY=100000`, `RELAYER_RATE_PER_USER_PER_MIN=2`, `ORDER_MIN_USDC=0.01`.
+  - **QE-2-01 re-test PASS:** a concurrent duplicate `POST /payments` now gets `409 PAYMENT_ALREADY_USED` at the intent claim, and it uses no rate token.
+  - Max-gas guard: `422 GAS_TOO_HIGH` (gasLimit 303,102 > cap 100,000) twice. Then `429 RATE_LIMITED` with `retryAfterMs`. Nothing was sent.
+- **Ready to resume.** The wrapper `scripts/qa/story-latency.mjs` runs `story:api` against the hosted api and timestamps every line. Once `registerVenue` has mined, it opens the public SSE channel `/events/venue/:venue`. It records the `payment.settled` arrival time against the pay tx's block time, writing to `part-b-story-latency.ndjson`.

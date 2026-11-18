@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-17T02:30:00Z by QE_E2E — Phase 2 QE gate, Part A_
+_Last updated: 2026-11-18T17:32:00Z by QE_E2E — Phase 2 QE gate, Part B attempt 1 (readiness timed out)_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,7 +10,7 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟡 Phase 2 gate **Part A done: PASS-with-findings** (1 Medium QE-2-01, Lows; no blockers). Report `docs/qa/phase-2-qe-e2e.md`. **Part B waits** for (1) the hosted relayer enabled (Railway secrets) and (2) the production Stream ACTIVE. It runs `story:api` on hosted and measures tap→settled latency.
+🟡 Phase 2 gate: **Part A PASS-with-findings**. **Part B attempt 1 (2026-11-18 17:05–17:30Z) timed out on readiness**: the hosted relayer stayed `enabled:false` and the Stream made 0 verified deliveries. No hosted txs, no spend. `guards` on the deployed `920a042` passed 7/7 locally, including the QE-2-01 re-test. To resume: `node scripts/qa/story-latency.mjs --api https://api-production-902bc54c.up.railway.app --out docs/evidence/phase-2/qe/part-b-story-latency.ndjson -- --fund-from-payout --require-settled --settle-timeout 120`.
 
 ## Mental model (read this first)
 - Verify from the **written** docs only, and re-derive every claim with an independent tool (cast/curl/Blockscout v2 API) rather than the builder's script. Then also re-run the builder's script.
@@ -20,6 +20,8 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - Testnet spend so far: 0.01764372 USDC (one Hello deploy + ping).
 
 ## Phase 2 notes (read before Part B)
+- Guards without the real relayer key: start the local api with an inline `RELAYER_PRIVATE_KEY=<QE X key from qe-state.json>` (unfunded), `ORDER_MIN_USDC=0.01` (920a042 enforces a $0.50 minimum), `RELAYER_MAX_GAS_PAY=100000`, `RELAYER_RATE_PER_USER_PER_MIN=2`. The coordinator forbids a local api holding the real relayer key while the hosted relayer is live.
+- On 920a042, `/events/venue/:v` opens only for a venue known on chain or in Streams. `?token=` was removed (bearer-only).
 - **Other agents edit `apps/api` in this same checkout during the gate.** Check `git status` and file mtimes before starting a local api, and record which code each run used. Never stash their work.
 - Local api for tests: `PORT=4030 API_HOST=127.0.0.1 DATABASE_URL=pglite://<scratch>/db STREAMS_SPIKE_LOG=off pnpm --filter @vouch/api start`. Inline vars beat the env file. PGlite is single-process: stop the api before `streams:backfill --db-url pglite://<same dir>`. `pkill -f` on the DB path doesn't kill the tsx child; kill the pid from `lsof -tiTCP:<port> -sTCP:LISTEN`.
 - QE throwaway wallets (O owner, C customer, U unfunded, X bystander) live ONLY in `<scratch>/qe-state.json`. Fund C with `pnpm --filter @vouch/scripts topup -- --to <C> --target 0.20 --max-total 0.25`. QE venue `0xd5eab90441172616F87DfFc5b4A32e85DD159422` (payout = DEMO_LENA).
@@ -32,6 +34,7 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 | `docs/qa/phase-2-qe-e2e.md` | Phase 2 gate report (Part A; Part B to append) | findings QE-2-01..09 |
 | `scripts/qa/api-contract.ts` | Live API contract harness: `setup|noauth|main|guards|settled` | run with `scripts/node_modules/.bin/tsx`; `main` spends about $0.012 gas |
 | `scripts/qa/independent-derive.mjs` | Independent chain re-derivation: topic0s, invariants, receipt + USDC transfers, on-chain stats, hosted reads, PGlite rows | read-only; no api code |
+| `scripts/qa/story-latency.mjs` | Part B: wraps `story:api`, timestamps every line, subscribes to the public venue SSE, computes block time → `payment.settled` | never reads the env file |
 | `scripts/qa/webhook-probes.sh` | 11 negative webhook probes (§6) | safe on hosted (no load, no bomb) |
 | `docs/qa/phase-0-qe-gate.md` | Phase 0 gate report: per-spike tables + defect list QE-01..QE-15 | Part B to be appended |
 | `docs/evidence/phase-0/qe/s1-live.sh` | Independent S1 re-derivation (chain, RPCs, CORS, explorer, USDC, selectors, typehashes, 1e12, fees, getLogs cap, predeploys) | read-only; python urllib is 403'd by the RPC, so use curl |
@@ -65,7 +68,8 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - [ ] Re-check QE-01/02/03/05 fixes when owners report them.
 - [x] Phase 2 Part A: API contract tests + CLI story (local) + replay determinism + hosted == chain + webhook probes
 - [ ] Phase 2 Part B: hosted `story:api --require-settled`, tap→settled latency (relay receipt → `GET /payments/:id` settled + SSE `payment.settled`), `railway logs … "streams delivery"` (verified, `ingest.newEvents > 0`), `independent-derive.mjs --hosted --onchain`, re-run `api-contract guards` on the deployed commit, then ask for the Stream pause
-- [ ] Re-test QE-2-01 (and Lows) when BACKEND_RELAYER reports fixes
+- [x] Re-test QE-2-01: PASS on 920a042 (`part-b-guards-local.txt`)
+- [ ] Re-test the QE-2-03..09 Lows on 920a042
 - [ ] Phase 3: Playwright full story (two contexts) + real-phone checklist
 - [ ] Phase 5: full regression + demo rehearsal from written steps
 

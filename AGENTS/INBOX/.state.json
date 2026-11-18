@@ -721,9 +721,10 @@
    "from": "STREAMS_INFRA",
    "to": "ORCHESTRATOR",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Phase 2 Streams ingestion done: hash equality on real v3 data; filter untouched; commit needed for Railway",
-   "re": null
+   "re": null,
+   "resolution": "committed e90c49d; deployed to Railway; hash checks re-verified by QE"
   },
   "MSG-068": {
    "id": "MSG-068",
@@ -752,9 +753,10 @@
    "from": "BACKEND_RELAYER",
    "to": "ORCHESTRATOR",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: D-014 supersedes D-013(1): submitter is RELAYER (app) or the customer (self-submit); never 0",
-   "re": "MSG-047"
+   "re": "MSG-047",
+   "resolution": "accepted (D-014)"
   },
   "MSG-071": {
    "id": "MSG-071",
@@ -824,9 +826,10 @@
    "from": "QE_E2E",
    "to": "ORCHESTRATOR",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE Part B target changed: verify S3 against the production Vouch Stream (D-015)",
-   "re": "MSG-049"
+   "re": "MSG-049",
+   "resolution": "Part B run against the production Stream in session 3 (Wed)"
   },
   "MSG-078": {
    "id": "MSG-078",

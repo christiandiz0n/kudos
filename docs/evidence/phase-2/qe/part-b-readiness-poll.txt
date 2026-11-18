@@ -1,0 +1,60 @@
+# Part B readiness poll: GET /relayer/status every 30 s, 2026-11-18 17:05:22Z..17:30:10Z (50 polls), plus railway logs 'streams delivery'
+# result: TIMEOUT. enabled:false on every poll; 0 verified deliveries in the api logs
+17:05:26 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:05:57 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:06:27 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:06:57 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:07:27 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:07:57 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:08:28 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:08:58 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:09:28 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:09:58 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:10:29 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:10:59 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:11:29 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:11:59 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:12:30 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:13:00 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:13:30 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:14:00 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:14:31 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:15:01 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:15:31 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:16:01 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:16:32 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:17:02 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:17:32 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:18:02 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:18:33 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:19:03 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:19:33 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:20:04 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:20:34 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:21:05 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:21:35 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:22:05 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:22:36 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:23:06 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:23:36 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:24:06 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:24:37 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:25:07 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:25:37 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:26:08 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:26:38 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:27:08 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:27:38 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:28:09 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:28:39 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:29:09 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:29:39 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+17:30:10 {"enabled":false,"address":null,"queueDepth":0,"balance":null,"reachable":null,"lowBalance":null,"budget":{"hourly":{"limit":{"base
+# monitor (relayer + railway logs every 30 s):
+17:07:18 relayer "enabled":false "reachable":null "lowBalance":null
+17:07:24 deliveries verified=0 last: 
+
+[killed]
+# last 'streams delivery' lines at 2026-11-18T17:30:24Z:
+2026-11-17T02:31:32.128835071Z [INFO] streams delivery time=1794882685983 pid=1 hostname="2249d5e10bf6" reqId="req-10" delivery={"verified":false,"status":401,"reason":"missing-signature-headers","bytes":27}
+2026-11-17T02:31:32.128848431Z [INFO] streams delivery time=1794882686071 pid=1 hostname="2249d5e10bf6" reqId="req-11" delivery={"verified":false,"status":401,"reason":"bad-signature","bytes":27}

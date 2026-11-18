@@ -1,0 +1,15 @@
+[guards] http://127.0.0.1:4032 (expects RELAYER_MAX_GAS_PAY=100000, RELAYER_RATE_PER_USER_PER_MIN=2)
+  duplicate: 409 {"error":{"code":"PAYMENT_ALREADY_USED","message":"This payment was already used. Scan the code again.","retryable":false,"details":{"status":"in progress"}}}
+  ok   QE-2-01 re-test: concurrent duplicate POST /payments refused at the intent claim → 409 PAYMENT_ALREADY_USED
+  attempt 1: 422 {"error":{"code":"GAS_TOO_HIGH","message":"This one is unusually expensive to process, so we stopped it. Your money hasn't moved.","retryable":false,"details":{"kind":"pay","gasLimit":"303102","cap":"100000"}}}
+  attempt 2: 422 {"error":{"code":"GAS_TOO_HIGH","message":"This one is unusually expensive to process, so we stopped it. Your money hasn't moved.","retryable":false,"details":{"kind":"pay","gasLimit":"303148","cap":"100000"}}}
+  attempt 3: 429 {"error":{"code":"RATE_LIMITED","message":"Too many tries. Wait a moment and try again.","retryable":true,"details":{"scope":"user","retryAfterMs":58145}}}
+  ok   max-gas guard: pay estimate × 1.2 > RELAYER_MAX_GAS_PAY → 422 GAS_TOO_HIGH
+  ok     details {kind: pay, gasLimit, cap: 100000}
+  ok   max-gas guard again (2nd relay of this user this minute; the duplicate above used no token) → 422 GAS_TOO_HIGH
+  ok   per-user rate limit (3rd relay attempt in a minute, limit 2) → 429 RATE_LIMITED
+  ok     details.retryAfterMs > 0, retryable true
+  ok   nothing sent by any guard (relayer nonce unchanged)
+  note relayer/status after guards: recentFailures 2, queueDepth 0
+
+PASSED: 7 ok, 0 failed

@@ -477,3 +477,31 @@ _Where A5 conflicts with the handoff's "Next up" in `AGENTS/ORCHESTRATOR.md`, A5
 3. Stable webhook URL before the production Stream. Quick tunnels have died three times, and each death changes the URL, which would break the dashboard Stream. Before giving me the Stream checklist, deploy apps/api to a host with a fixed HTTPS URL (Railway, Render, or Fly, with persistent Postgres) and pull that part of Phase 5 forward. Tell me exactly which account to create and what to click. Secrets go in the host's environment settings, never in chat. Use quick tunnels only for phone tests.
 4. Design (MSG-007 answers; relay to UI_DESIGN and close MSG-007): (a) ink-black buttons, green only for money to a person: yes. (b) Instrument Sans: yes. (c) split-receipt magnifier: yes, but lightweight and projector-readable. (d) "Confirm with Face ID or fingerprint" instead of "passkey": yes. (e) Marco and Sofia: yes. (f) hide Next's dev badge: yes. Also fix the cashback self-loop under Ben in the money graph (MSG-008).
 5. Phone tests (S6/S6b): I'll run them. Start the web server and a fresh quick tunnel and give me the URL.
+
+### A6 — 2026-11-16 → 2026-11-18 (human instructions since A5; Phase 2; session 2 → context reset)
+_Where A6 conflicts with older text, A6 wins. This records the human's own instructions and answers since A5. Orchestrator-made decisions are in DECISIONS.md (D-018) and in the handoff._
+
+1. **Railway ("railway ready", 2026-11-16).** The Railway CLI was installed with `npm install -g @railway/cli` (not Homebrew), so it lives in `$(npm prefix -g)/bin`, and the human is logged in. Deploy `apps/api` + Postgres per `docs/deploy/RAILWAY.md`. **Env vars: give the human NAMES only; the human pastes values into Railway → Variables, never in chat.** Confirm `/health` reports Postgres and that unsigned webhook posts are rejected. **Skip Postgres public networking; use `railway logs`.**
+2. **Production Stream checklist:** v3 contract, start block 72605845, webhook = the Railway URL + `/webhooks/streams`.
+3. **"Go Phase 2 in parallel":**
+   - Run BACKEND_RELAYER (QE-C-10: "already settled" is terminal and the split is read from chain; QE-C-11: balance ≥ amount + fee for self-submit) and STREAMS_INFRA ingestion + backfill/replay. Do not wait for the Stream.
+   - **Run the Phase 2 QE gate at the end.**
+4. **Stream created** (human, new QuickNode account): `vouch-v3-production`, ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`; Arc Testnet, Logs, from 72605845, batch 1, webhook = Railway `/webhooks/streams`. `STREAMS_WEBHOOK_SECRET` is set in Railway Variables and `.env`. The stray Railway project "wholesome-achievement" was deleted by the human.
+   - The Orchestrator verifies 401s, then says exactly when to activate and when to pause.
+   - **Activation always uses "Continue where it left off".**
+5. **Phone-test tunnel:** when the tunnel dies, restart web :3100 plus a fresh quick tunnel, verify `/spike/qr` from outside, and give the URL.
+6. **Phone tests (S6 camera QR + S6b passkey): PASSED** (human, Monday 2026-11-16, on the `inclusive-pipe-filing-types` tunnel).
+7. **Railway secrets:** the human sets `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY` and `SESSION_SECRET` themself on the api service. The Orchestrator verifies by variable NAMES only (never print values) and `/relayer/status`.
+8. **Wednesday 2026-11-18 noon ET:**
+   - Run the Phase 2 live check (QE Part B) right away, and tell the human exactly when to activate the Stream ("Continue where it left off") and when to pause it. **Keep it under 15 minutes.**
+   - Then close the Phase 2 gate and do a full handoff for a context reset:
+     - update ORCHESTRATOR.md;
+     - add everything since A5 as Amendment A6 here;
+     - update HUMAN_INPUT, PHASE_LOG, AGENT_REGISTRY and INBOX/_INDEX;
+     - commit and push;
+     - reply "handoff complete" with the commit hash and the Phase 2 gate verdict.
+9. Standing rules, unchanged:
+   - never read `.env`, and never put secrets in chat or commits;
+   - don't touch port 3000;
+   - never make the repo public, submit, or spend real money without explicit approval;
+   - stop at every phase gate and wait for "go".

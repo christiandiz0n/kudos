@@ -453,13 +453,22 @@ async function guards() {
   for (let i = 0; i < 3; i++) {
     const o = await newOrder(tO, '10000');
     const q = await api('POST', '/payments/quote', tC, { venue: st.venue, orderId: o.order.orderId });
-    const p = await api('POST', '/payments', tC, { intentId: q.body.intentId, signature: await signTd(C, q.body.typedData) });
+    const sg = await signTd(C, q.body.typedData);
+    let p;
+    if (i === 0) {
+      // QE-2-01 re-test: a concurrent duplicate must be refused BEFORE the relayer (no rate token, no 2nd job)
+      const [a, b2] = await Promise.all([api('POST', '/payments', tC, { intentId: q.body.intentId, signature: sg }), api('POST', '/payments', tC, { intentId: q.body.intentId, signature: sg })]);
+      const dup = a.status === 422 ? b2 : a;
+      p = a.status === 422 ? a : b2;
+      console.log(`  duplicate: ${dup.status} ${JSON.stringify(dup.body).slice(0, 160)}`);
+      expectErr('QE-2-01 re-test: concurrent duplicate POST /payments refused at the intent claim', dup, 409, 'PAYMENT_ALREADY_USED');
+    } else p = await api('POST', '/payments', tC, { intentId: q.body.intentId, signature: sg });
     res.push(p);
     console.log(`  attempt ${i + 1}: ${p.status} ${JSON.stringify(p.body).slice(0, 220)}`);
   }
   expectErr('max-gas guard: pay estimate × 1.2 > RELAYER_MAX_GAS_PAY', res[0], 422, 'GAS_TOO_HIGH');
   check('  details {kind: pay, gasLimit, cap: 100000}', res[0].body?.error?.details?.cap === '100000' && res[0].body.error.details.kind === 'pay', res[0].body);
-  expectErr('max-gas guard again (2nd relay of this user this minute)', res[1], 422, 'GAS_TOO_HIGH');
+  expectErr('max-gas guard again (2nd relay of this user this minute; the duplicate above used no token)', res[1], 422, 'GAS_TOO_HIGH');
   expectErr('per-user rate limit (3rd relay attempt in a minute, limit 2)', res[2], 429, 'RATE_LIMITED');
   check('  details.retryAfterMs > 0, retryable true', res[2].body?.error?.retryable === true && res[2].body.error.details?.retryAfterMs > 0, res[2].body);
   check('nothing sent by any guard (relayer nonce unchanged)', (await relayerNonce()) === n0);
