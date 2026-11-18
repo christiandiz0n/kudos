@@ -1,14 +1,14 @@
 {
   "state": {
-    "venue": "0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796",
-    "venueRegMs": 17044,
-    "venueOwner": "0x2875601B5E7e5892A5523B2aaA61d28e83A7bcE1",
-    "qr": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x1fe03b482cf5b280314b226f68e1bda7c4ae1785c4aa8d2990e16693e8725210",
+    "venue": "0x47055f9b8f6ac6c02df864401EB0647ff7B03473",
+    "venueRegMs": 17254,
+    "venueOwner": "0xA75A8f1dc950C870ef7299ca63f96db6cD87a53b",
+    "qr": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x8f1aba53a9b72505f734d8ab735f69aa8861a5461e0516387c32cd6eca25bec9",
     "orders": {
-      "shortOrder": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0xe89b3b49bba5c25b6094d28b9b1b314b4bfea7c1ab347b9b314897d457b793ff",
-      "o1": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+      "shortOrder": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xbd79840440bf602e19531d678e80073ced34b4db0dc8f83bcaafadd1b7b773d7",
+      "o1": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
     },
-    "customer": "0x8717AC6c844CAbFF3C703e3393766C2a5d006699"
+    "customer": "0x504e55948C4a8Ba01f035090C0D207dF0D5492B0"
   },
   "results": [
     {
@@ -17,7 +17,7 @@
       "expect": "",
       "expectFound": null,
       "screen": "e01-venue-dashboard-new",
-      "url": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796",
+      "url": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473",
       "primaryCount": 1,
       "primaries": [
         "Take an order"
@@ -29,7 +29,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Live | QE errors café 18:41 | Cost per new customer | — | paid only when they buy | Typical ad cost | $ | You'll see this after your first new customer. | New customers | 0 | verified, via recommendations | Rewards paid | $0.00 | $ | 0 | . | 00 | to customers + the people who sent them | Where the money went | Latest | Everyone | No new customers yet | When a recommended customer pays, you'll see the money reach everyone who sent them, right here. | 1 | Show your code | Key in the order. The customer scans and pays. | 2 | They recommend you | Paying customers can send friends to you. | 3 | Pay only for results | When a friend buys, part of it thanks whoever sent them. | How payments split | Take an order",
+      "text": "Live | QE errors café 20:02 | Cost per new customer | — | paid only when they buy | Typical ad cost | $ | You'll see this after your first new customer. | New customers | 0 | verified first purchases | Rewards paid | $0.00 | $ | 0 | . | 00 | to customers + the people who sent them | Where the money went | Latest | Everyone | No new customers yet | When a recommended customer pays, you'll see the money reach everyone who sent them, right here. | 1 | Show your code | Key in the order. The customer scans and pays. | 2 | They recommend you | Paying customers can send friends to you. | 3 | Pay only for results | When a friend buys, part of it thanks whoever sent them. | How payments split | Take an order",
       "focus": {
         "ok": false,
         "el": "body (nothing focusable)"
@@ -42,7 +42,7 @@
       "expect": "",
       "expectFound": null,
       "screen": "e02-counter-empty",
-      "url": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+      "url": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
       "primaryCount": 1,
       "primaries": [
         "Show code (disabled)"
@@ -54,7 +54,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "QE errors café 18:41 | Counter | New order | $ | 0 | Type the total, then show the code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
+      "text": "QE errors café 20:02 | Counter | New order | $ | 0 | Type the total, then show the code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
       "focus": {
         "ok": true,
         "el": "button:Back to dashboard",
@@ -69,7 +69,7 @@
       "expect": "0\\.50",
       "expectFound": true,
       "screen": "e03-counter-below-min",
-      "url": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+      "url": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
       "primaryCount": 1,
       "primaries": [
         "Show code (disabled)"
@@ -81,7 +81,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "QE errors café 18:41 | Counter | New order | $ | 0.4 | Orders start at $0.50 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
+      "text": "QE errors café 20:02 | Counter | New order | $ | 0.4 | Orders start at $0.50 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
       "focus": {
         "ok": true,
         "el": "button:5",
@@ -96,7 +96,7 @@
       "expect": "",
       "expectFound": null,
       "screen": "e04-counter-050",
-      "url": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+      "url": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
       "primaryCount": 1,
       "primaries": [
         "Show code for $0.50"
@@ -108,7 +108,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "QE errors café 18:41 | Counter | New order | $ | 0.5 | Below | $1.00 | : no reward on this one | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code for $0.50",
+      "text": "QE errors café 20:02 | Counter | New order | $ | 0.5 | Below | $1.00 | : no reward on this one | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code for $0.50",
       "focus": {
         "ok": true,
         "el": "button:6",
@@ -123,7 +123,7 @@
       "expect": "",
       "expectFound": null,
       "screen": "e05-counter-qr",
-      "url": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+      "url": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
       "primaryCount": 0,
       "primaries": [],
       "accents": [],
@@ -133,7 +133,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "QE errors café 18:41 | Waiting | Order 1FE0 | $0.50 | Waiting for payment · scan with Vouch | Expires in | 1:59 | Cancel order",
+      "text": "QE errors café 20:02 | Waiting | Order 8F1A | $0.50 | Waiting for payment · scan with Vouch | Expires in | 1:58 | Cancel order",
       "focus": {
         "ok": true,
         "el": "button:Cancel order",
@@ -148,7 +148,7 @@
       "expect": "",
       "expectFound": null,
       "screen": "e10-pay-signed-out",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Continue with Face ID or fingerprint"
@@ -164,7 +164,7 @@
       "focus": {
         "ok": true,
         "el": "input:",
-        "outline": "solid 2px rgb(23, 105, 79)",
+        "outline": "none 0px rgb(27, 25, 21)",
         "boxShadow": "none"
       },
       "errs": []
@@ -175,7 +175,7 @@
       "expect": "Not enough money yet",
       "expectFound": true,
       "screen": "e11-pay-insufficient",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Top up (testnet demo)"
@@ -187,7 +187,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Not enough money yet | Your balance is $0.00. Add at least $0.50 to pay $0.50. | QE errors café 18:41 | · | $0.50 | Top up (testnet demo) | Adds simulated money for this demo. No card needed.",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Not enough money yet | Your balance is $0.00. Add at least $0.50 to pay $0.50. | QE errors café 20:02 | · | $0.50 | Top up (testnet demo) | Adds simulated money for this demo. No card needed.",
       "focus": {
         "ok": true,
         "el": "button:Top up (testnet demo)",
@@ -203,7 +203,7 @@
       "expect": "paused",
       "expectFound": true,
       "screen": "e12-pay-relayer-down",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Try again"
@@ -215,7 +215,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payments are paused for a moment | Our payment service is taking a short break. Nothing was charged. Try again in a minute. | Try again | Close",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Payments are paused for a moment | Our payment service is taking a short break. Nothing was charged. Try again in a minute. | Try again | Close",
       "focus": {
         "ok": true,
         "el": "button:Try again",
@@ -226,7 +226,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -236,7 +236,7 @@
       "expect": "paused",
       "expectFound": true,
       "screen": "e13-pay-budget-exhausted",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Try again"
@@ -248,7 +248,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payments are paused for a moment | Our payment service is taking a short break. Nothing was charged. Try again in a minute. | Try again | Close",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Payments are paused for a moment | Our payment service is taking a short break. Nothing was charged. Try again in a minute. | Try again | Close",
       "focus": {
         "ok": true,
         "el": "button:Try again",
@@ -259,7 +259,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -269,7 +269,7 @@
       "expect": "expired",
       "expectFound": true,
       "screen": "e14-pay-expired-forced",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Scan a new code"
@@ -281,7 +281,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "This code has expired | Codes only last a couple of minutes, so nobody pays for an old order. Nothing was charged. Ask for a new code and scan again. | Scan a new code | Close",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | This code has expired | Codes only last a couple of minutes, so nobody pays for an old order. Nothing was charged. Ask for a new code and scan again. | Scan a new code | Close",
       "focus": {
         "ok": true,
         "el": "button:Scan a new code",
@@ -292,7 +292,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 410 (Gone)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -302,10 +302,10 @@
       "expect": "Confirm with Face ID",
       "expectFound": true,
       "screen": "e15-pay-confirm-after-retry",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
-        "Pay $0.50 to QE errors café 18:41. Confirm with Face ID or f (disabled)"
+        "Pay $0.50 to QE errors café 20:02. Confirm with Face ID or f"
       ],
       "accents": [],
       "banned": [],
@@ -314,10 +314,10 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Confirm payment | QE | QE errors café 18:41 | Order 7005 | $0.50 | $ | 0 | . | 50 | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Confirm payment | QE | QE errors café 20:02 | Order B4D0 | $0.50 | $ | 0 | . | 50 | No one recommended this place to you yet, so this is a regular payment. | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
       "focus": {
         "ok": true,
-        "el": "button:Close",
+        "el": "button:Pay $0.50 to QE errors café 20:02. Confi",
         "outline": "solid 2px rgb(23, 105, 79)",
         "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
       },
@@ -325,7 +325,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -335,7 +335,7 @@
       "expect": "Nothing was charged",
       "expectFound": true,
       "screen": "e16-pay-failed",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Try again"
@@ -347,7 +347,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
       "focus": {
         "ok": true,
         "el": "button:Try again",
@@ -358,7 +358,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -368,7 +368,7 @@
       "expect": "Nothing was charged",
       "expectFound": true,
       "screen": "e17-pay-failed-after-relay",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Try again"
@@ -380,7 +380,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
       "focus": {
         "ok": true,
         "el": "button:Try again",
@@ -395,7 +395,7 @@
       "expect": "Not enough money",
       "expectFound": true,
       "screen": "e18-pay-insufficient-at-relay",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Top up (testnet demo)"
@@ -407,7 +407,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Not enough money yet | Add money to pay $0.50. | QE errors café 18:41 | · | $0.50 | Top up (testnet demo) | Adds simulated money for this demo. No card needed.",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Not enough money yet | Add money to pay $0.50. | QE errors café 20:02 | · | $0.50 | Top up (testnet demo) | Adds simulated money for this demo. No card needed.",
       "focus": {
         "ok": true,
         "el": "button:Top up (testnet demo)",
@@ -418,7 +418,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 402 (Payment Required)",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca"
         }
       ]
     },
@@ -428,7 +428,7 @@
       "expect": "cancelled",
       "expectFound": true,
       "screen": "e19-pay-faceid-cancelled",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
         "Try again"
@@ -440,34 +440,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payment not confirmed | Face ID or fingerprint was cancelled, so nothing was charged. Try again when you're ready. | Try again | Close",
-      "focus": {
-        "ok": true,
-        "el": "button:Try again",
-        "outline": "solid 2px rgb(23, 105, 79)",
-        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
-      },
-      "errs": []
-    },
-    {
-      "ctx": "customer",
-      "state": "offline at confirm (context offline)",
-      "expect": "offline",
-      "expectFound": false,
-      "screen": "e20-pay-offline",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
-      "primaryCount": 1,
-      "primaries": [
-        "Try again"
-      ],
-      "accents": [],
-      "banned": [],
-      "bannedA11y": [],
-      "moneyBad": [],
-      "rawUnits": [],
-      "smallTargets": [],
-      "smallPrimary": [],
-      "text": "Payment not confirmed | Face ID or fingerprint was cancelled, so nothing was charged. Try again when you're ready. | Try again | Close",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Payment not confirmed | Face ID or fingerprint was cancelled, so nothing was charged. Try again when you're ready. | Try again | Close",
       "focus": {
         "ok": true,
         "el": "button:Try again",
@@ -482,10 +455,10 @@
       "expect": "Welcome back",
       "expectFound": true,
       "screen": "e21-pay-repeat-visit",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
-        "Pay $0.50 to QE errors café 18:41. Confirm with Face ID or f"
+        "Pay $0.50 to QE errors café 20:02. Confirm with Face ID or f"
       ],
       "accents": [],
       "banned": [],
@@ -494,7 +467,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Confirm payment | QE | QE errors café 18:41 | Order 7005 | $0.50 | $ | 0 | . | 50 | Welcome back. Your first-visit thank-you at QE errors café 18:41 has already been paid, so this one is a regular payment. | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Confirm payment | QE | QE errors café 20:02 | Order B4D0 | $0.50 | $ | 0 | . | 50 | Welcome back. Your first-visit thank-you at QE errors café 20:02 has already been paid, so this one is a regular payment. | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
       "focus": {
         "ok": true,
         "el": "summary:Details",
@@ -509,10 +482,10 @@
       "expect": "",
       "expectFound": null,
       "screen": "e22-pay-first-visit-no-rec",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
       "primaryCount": 1,
       "primaries": [
-        "Pay $0.50 to QE errors café 18:41. Confirm with Face ID or f"
+        "Pay $0.50 to QE errors café 20:02. Confirm with Face ID or f"
       ],
       "accents": [],
       "banned": [],
@@ -521,7 +494,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Confirm payment | QE | QE errors café 18:41 | Order 7005 | $0.50 | $ | 0 | . | 50 | No one recommended this place to you yet, so this is a regular payment. | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | Confirm payment | QE | QE errors café 20:02 | Order B4D0 | $0.50 | $ | 0 | . | 50 | No one recommended this place to you yet, so this is a regular payment. | Confirm with Face ID or fingerprint | You pay | $0.50 | . No fees.",
       "focus": {
         "ok": true,
         "el": "summary:Details",
@@ -536,7 +509,7 @@
       "expect": "expired",
       "expectFound": true,
       "screen": "e23-pay-expired-real",
-      "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0xe89b3b49bba5c25b6094d28b9b1b314b4bfea7c1ab347b9b314897d457b793ff",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xbd79840440bf602e19531d678e80073ced34b4db0dc8f83bcaafadd1b7b773d7",
       "primaryCount": 1,
       "primaries": [
         "Scan a new code"
@@ -548,7 +521,7 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "This code has expired | Codes only last a couple of minutes, so nobody pays for an old order. Nothing was charged. Ask for a new code and scan again. | Scan a new code | Close",
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | This code has expired | Codes only last a couple of minutes, so nobody pays for an old order. Nothing was charged. Ask for a new code and scan again. | Scan a new code | Close",
       "focus": {
         "ok": true,
         "el": "button:Scan a new code",
@@ -559,7 +532,7 @@
         {
           "kind": "console",
           "text": "Failed to load resource: the server responded with a status of 410 ()",
-          "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0xe89b3b49bba5c25b6094d28b9b1b314b4bfea7c1ab347b9b314897d457b793ff"
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xbd79840440bf602e19531d678e80073ced34b4db0dc8f83bcaafadd1b7b773d7"
         }
       ]
     },
@@ -569,14 +542,14 @@
     },
     {
       "ctx": "customer",
-      "state": "malformed pay link",
-      "expect": "",
-      "expectFound": null,
+      "state": "malformed pay link /pay?v=0x123&o=nope…",
+      "expect": "This link doesn't look right",
+      "expectFound": true,
       "screen": "e24-pay-malformed",
       "url": "/pay?v=0x123&o=nope",
       "primaryCount": 1,
       "primaries": [
-        "Try again"
+        "Scan a new code"
       ],
       "accents": [],
       "banned": [],
@@ -585,41 +558,118 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
-      "focus": {
-        "ok": true,
-        "el": "button:Try again",
-        "outline": "solid 2px rgb(23, 105, 79)",
-        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
-      },
-      "errs": []
-    },
-    {
-      "ctx": "customer",
-      "state": "malformed pay link after pressing 'Try again'",
-      "expect": "",
-      "expectFound": null,
-      "screen": "e25-pay-malformed-after-try-again",
-      "url": "/pay?v=0x123&o=nope",
-      "primaryCount": 1,
-      "primaries": [
-        "Try again"
-      ],
-      "accents": [],
-      "banned": [],
-      "bannedA11y": [],
-      "moneyBad": [],
-      "rawUnits": [],
-      "smallTargets": [],
-      "smallPrimary": [],
-      "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+      "text": "This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
       "focus": {
         "ok": true,
         "el": "button:Scan a new code",
         "outline": "solid 2px rgb(23, 105, 79)",
         "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
       },
-      "errs": []
+      "errs": [],
+      "tryAgainButtons": 0
+    },
+    {
+      "ctx": "customer",
+      "state": "malformed pay link /pay?v=0x47055f9b8f6ac6c02df864401EB0647…",
+      "expect": "This link doesn't look right",
+      "expectFound": true,
+      "screen": "e25-pay-malformed-no-order",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan a new code"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
+      "focus": {
+        "ok": true,
+        "el": "button:Scan a new code",
+        "outline": "solid 2px rgb(23, 105, 79)",
+        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
+      },
+      "errs": [],
+      "tryAgainButtons": 0
+    },
+    {
+      "ctx": "customer",
+      "state": "malformed pay link /pay?v=0x47055f9b8f6ac6c02df864401EB0647…",
+      "expect": "This link doesn't look right",
+      "expectFound": true,
+      "screen": "e25b-pay-malformed-truncated-order",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc8",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan a new code"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
+      "focus": {
+        "ok": true,
+        "el": "button:Scan a new code",
+        "outline": "solid 2px rgb(23, 105, 79)",
+        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
+      },
+      "errs": [],
+      "tryAgainButtons": 0
+    },
+    {
+      "state": "malformed → Scan a new code navigates to",
+      "url": "http://localhost:3100/scan"
+    },
+    {
+      "ctx": "customer",
+      "state": "well-formed link, unknown order",
+      "expect": "This link doesn't look right",
+      "expectFound": true,
+      "screen": "e25c-pay-unknown-order",
+      "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xabababababababababababababababababababababababababababababababab",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan a new code"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QE | QE errors café 20:02 | Paying with Vouch | This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
+      "focus": {
+        "ok": true,
+        "el": "button:Scan a new code",
+        "outline": "solid 2px rgb(23, 105, 79)",
+        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
+      },
+      "errs": [
+        {
+          "kind": "console",
+          "text": "Failed to load resource: the server responded with a status of 404 ()",
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xabababababababababababababababababababababababababababababababab"
+        },
+        {
+          "kind": "console",
+          "text": "Failed to load resource: the server responded with a status of 404 ()",
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xabababababababababababababababababababababababababababababababab"
+        },
+        {
+          "kind": "console",
+          "text": "Failed to load resource: the server responded with a status of 404 ()",
+          "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xabababababababababababababababababababababababababababababababab"
+        }
+      ]
     },
     {
       "ctx": "customer",
@@ -637,11 +687,9 @@
       "bannedA11y": [],
       "moneyBad": [],
       "rawUnits": [],
-      "smallTargets": [
-        "button:Dismiss 40x40"
-      ],
+      "smallTargets": [],
       "smallPrimary": [],
-      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | You've already had your demo top-up on this account.",
+      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | You've already had your demo top-up on this account.",
       "focus": {
         "ok": true,
         "el": "button:Scan to pay",
@@ -672,11 +720,9 @@
       "bannedA11y": [],
       "moneyBad": [],
       "rawUnits": [],
-      "smallTargets": [
-        "button:Dismiss 40x40"
-      ],
+      "smallTargets": [],
       "smallPrimary": [],
-      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | Demo top-ups are used up for today. Ask the host to add money.",
+      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | Demo top-ups are used up for today. Ask the host to add money.",
       "focus": {
         "ok": true,
         "el": "button:Scan to pay",
@@ -707,11 +753,9 @@
       "bannedA11y": [],
       "moneyBad": [],
       "rawUnits": [],
-      "smallTargets": [
-        "button:Dismiss 40x40"
-      ],
+      "smallTargets": [],
       "smallPrimary": [],
-      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | Demo top-ups are switched off right now. Ask the host to add money.",
+      "text": "EV | Eve | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | Demo top-ups are switched off right now. Ask the host to add money.",
       "focus": {
         "ok": true,
         "el": "button:Scan to pay",
@@ -728,14 +772,14 @@
     },
     {
       "ctx": "customer",
-      "state": "non-owner presses Show code on another venue's counter",
-      "expect": "",
-      "expectFound": null,
-      "screen": "e29-counter-nonowner-show-code",
+      "state": "non-owner opens another venue's counter (read-only after the fix)",
+      "expect": "Only the owner",
+      "expectFound": true,
+      "screen": "e29-counter-nonowner",
       "url": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c/counter",
       "primaryCount": 1,
       "primaries": [
-        "Show code (disabled)"
+        "Go to your place"
       ],
       "accents": [],
       "banned": [],
@@ -744,18 +788,15 @@
       "rawUnits": [],
       "smallTargets": [],
       "smallPrimary": [],
-      "text": "Lena's café 18:20 | Counter | New order | $ | 1 | You can't do that from this account. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
+      "text": "Only the owner can take orders here | This counter belongs to another place. Orders can be taken from the account that set it up. | Go to your place | See this place's dashboard",
       "focus": {
-        "ok": false,
-        "el": "body (nothing focusable)"
+        "ok": true,
+        "el": "button:Go to your place",
+        "outline": "solid 2px rgb(23, 105, 79)",
+        "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
       },
-      "errs": [
-        {
-          "kind": "console",
-          "text": "Failed to load resource: the server responded with a status of 403 ()",
-          "url": "http://localhost:3100/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c/counter"
-        }
-      ]
+      "errs": [],
+      "keypadButtons": 0
     },
     {
       "ctx": "customer",
@@ -816,9 +857,6 @@
         "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
       },
       "errs": []
-    },
-    {
-      "fatal": "locator.waitFor: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Confirm with Face ID or fingerprint/ }) to be visible\u001b[22m\n\n    at /Users/christiandizon/Desktop/ubc-2026/e2e/phase3/check-errors.mjs:252:86"
     }
   ]
 }

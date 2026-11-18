@@ -20,7 +20,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -94,7 +94,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -168,7 +168,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -194,7 +194,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -220,7 +220,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -246,7 +246,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -287,8 +287,10 @@
     "http": 404,
     "screen": "s12-404",
     "url": "/does-not-exist",
-    "primaryCount": 0,
-    "primaries": [],
+    "primaryCount": 1,
+    "primaries": [
+      "Go to Vouch"
+    ],
     "accents": [],
     "banned": [],
     "bannedA11y": [],
@@ -296,10 +298,12 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "404 | This page could not be found.",
+    "text": "We can't find that page | The link may be mistyped or out of date. Nothing has changed in your account. | Go to Vouch | Scan a code",
     "focus": {
-      "ok": false,
-      "el": "body (nothing focusable)"
+      "ok": true,
+      "el": "a:Go to Vouch",
+      "outline": "solid 2px rgb(23, 105, 79)",
+      "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
     "errs": [
       {
@@ -326,7 +330,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "QU | Quinn | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay",
+    "text": "QU | Quinn | Balance | $0.00 | $ | 0 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay",
     "focus": {
       "ok": true,
       "el": "button:Top up (testnet demo)",
@@ -454,7 +458,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "This order is already paid | Someone has already paid with this code. If you still need to pay, ask for a new one. | Scan a new code | Close",
+    "text": "LC | Lena's café 18:20 | Paying with Vouch | This order is already paid | Someone has already paid with this code. If you still need to pay, ask for a new one. | Scan a new code | Close",
     "focus": {
       "ok": true,
       "el": "button:Scan a new code",
@@ -477,7 +481,7 @@
     "url": "/pay?v=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
     "primaryCount": 1,
     "primaries": [
-      "Try again"
+      "Scan a new code"
     ],
     "accents": [],
     "banned": [],
@@ -486,10 +490,10 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+    "text": "This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
     "focus": {
       "ok": true,
-      "el": "button:Try again",
+      "el": "button:Scan a new code",
       "outline": "solid 2px rgb(23, 105, 79)",
       "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
@@ -503,7 +507,7 @@
     "url": "/pay?v=0x123&o=nope",
     "primaryCount": 1,
     "primaries": [
-      "Try again"
+      "Scan a new code"
     ],
     "accents": [],
     "banned": [],
@@ -512,10 +516,10 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+    "text": "This link doesn't look right | Part of it may be missing or mistyped, so we can't find the order. Nothing was charged. Scan the code at the counter again, or ask for a new one. | Scan a new code | Close",
     "focus": {
       "ok": true,
-      "el": "button:Try again",
+      "el": "button:Scan a new code",
       "outline": "solid 2px rgb(23, 105, 79)",
       "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
@@ -527,10 +531,8 @@
     "http": 200,
     "screen": "s28-venue-dashboard-nonowner",
     "url": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
-    "primaryCount": 1,
-    "primaries": [
-      "Take an order"
-    ],
+    "primaryCount": 0,
+    "primaries": [],
     "accents": [],
     "banned": [],
     "bannedA11y": [],
@@ -538,11 +540,11 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. About 667× less. | New customers | 2 | verified, via recommendations | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 18 min | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 18 min | $0.44 | to you | BE | Ben paid $0.50 | First visit · 18 min | $0.50 | to you | How payments split | Take an order",
+    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to you | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to you | How payments split",
     "focus": {
       "ok": true,
       "el": "input:Typical ad cost per new customer, in dol",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -555,7 +557,7 @@
     "url": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c/counter",
     "primaryCount": 1,
     "primaries": [
-      "Show code (disabled)"
+      "Go to your place"
     ],
     "accents": [],
     "banned": [],
@@ -564,10 +566,10 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Lena's café 18:20 | Counter | New order | $ | 0 | Type the total, then show the code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | . | 0 | Note (optional) | Show code",
+    "text": "Only the owner can take orders here | This counter belongs to another place. Orders can be taken from the account that set it up. | Go to your place | See this place's dashboard",
     "focus": {
       "ok": true,
-      "el": "button:Back to dashboard",
+      "el": "button:Go to your place",
       "outline": "solid 2px rgb(23, 105, 79)",
       "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
@@ -594,7 +596,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": []
@@ -624,15 +626,98 @@
     "errs": []
   },
   {
+    "screen": "QE-3-02 geometry",
+    "initial": {
+      "label": {
+        "x": 20,
+        "y": 733.515625,
+        "width": 350,
+        "height": 20.296875,
+        "top": 733.515625,
+        "right": 370,
+        "bottom": 753.8125,
+        "left": 20
+      },
+      "input": {
+        "x": 47.734375,
+        "y": 759.8125,
+        "width": 308.265625,
+        "height": 48,
+        "top": 759.8125,
+        "right": 356,
+        "bottom": 807.8125,
+        "left": 47.734375
+      },
+      "footer": {
+        "x": 0,
+        "y": 730.453125,
+        "width": 390,
+        "height": 113.546875,
+        "top": 730.453125,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "footerBg": "rgb(246, 244, 239)",
+      "labelHit": "p:Start at 15% · change it any t",
+      "inputHit": "button:Confirm with Face ID or finger",
+      "vh": 844
+    },
+    "focused": {
+      "label": {
+        "x": 20,
+        "y": 557.515625,
+        "width": 350,
+        "height": 20.296875,
+        "top": 557.515625,
+        "right": 370,
+        "bottom": 577.8125,
+        "left": 20
+      },
+      "input": {
+        "x": 47.734375,
+        "y": 583.8125,
+        "width": 308.265625,
+        "height": 48,
+        "top": 583.8125,
+        "right": 356,
+        "bottom": 631.8125,
+        "left": 47.734375
+      },
+      "footer": {
+        "x": 0,
+        "y": 730.453125,
+        "width": 390,
+        "height": 113.546875,
+        "top": 730.453125,
+        "right": 390,
+        "bottom": 844,
+        "left": 0
+      },
+      "footerBg": "rgb(246, 244, 239)",
+      "labelHit": "label:Minimum first order for a rewa",
+      "inputHit": "input:",
+      "vh": 844
+    }
+  },
+  {
+    "screen": "QE-3-07 focus ring",
+    "ring": {
+      "tag": "INPUT",
+      "inputOutline": "none 0px",
+      "inputShadow": "none",
+      "wrapperShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(23, 105, 79) 0px 0px 0px 2px inset",
+      "wrapperOutline": "none 0px"
+    }
+  },
+  {
     "ctx": "reduced",
     "path": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
     "http": 200,
     "screen": "s40-dashboard-reduced-motion",
     "url": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
-    "primaryCount": 1,
-    "primaries": [
-      "Take an order"
-    ],
+    "primaryCount": 0,
+    "primaries": [],
     "accents": [],
     "banned": [],
     "bannedA11y": [],
@@ -640,11 +725,11 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. About 667× less. | New customers | 2 | verified, via recommendations | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 18 min | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 18 min | $0.44 | to you | BE | Ben paid $0.50 | First visit · 19 min | $0.50 | to you | How payments split | Take an order",
+    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to you | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to you | How payments split",
     "focus": {
       "ok": true,
       "el": "input:Typical ad cost per new customer, in dol",
-      "outline": "solid 2px rgb(23, 105, 79)",
+      "outline": "none 0px rgb(27, 25, 21)",
       "boxShadow": "none"
     },
     "errs": [],

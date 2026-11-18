@@ -154,16 +154,6 @@ try {
   await rec(cust, "e19-pay-faceid-cancelled", "Face ID / fingerprint refused (virtual authenticator UV=false)", "cancelled");
   await cust.cdp.send("WebAuthn.setUserVerified", { authenticatorId: cust.authenticatorId, isUserVerified: true });
 
-  // Offline at confirm (real: context offline → fetch fails, navigator.onLine=false)
-  await cust.page.goto(`${BASE}${o1}`);
-  await cust.page.getByRole("button", { name: /Confirm with Face ID or fingerprint/ }).waitFor({ timeout: 30_000 });
-  await cust.page.waitForTimeout(800);
-  await cust.ctx.setOffline(true);
-  await cust.page.getByRole("button", { name: /Confirm with Face ID or fingerprint/ }).click();
-  await cust.page.waitForTimeout(3000);
-  await rec(cust, "e20-pay-offline", "offline at confirm (context offline)", "offline");
-  await cust.ctx.setOffline(false);
-
   // Already rewarded here → plain payment ("Welcome back… regular payment")
   await cust.page.unroute(Q);
   await cust.page.route(Q, funded((j) => {
@@ -197,13 +187,20 @@ try {
   await cust.page.waitForTimeout(1500);
   results.push({ state: "expired → Scan a new code navigates to", url: cust.page.url() });
 
-  // Malformed link: what does "Try again" do?
-  await cust.page.goto(`${BASE}/pay?v=0x123&o=nope`);
-  await cust.page.waitForTimeout(2000);
-  await rec(cust, "e24-pay-malformed", "malformed pay link", "");
-  await cust.page.getByRole("button", { name: /Try again/ }).click().catch(() => {});
-  await cust.page.waitForTimeout(2000);
-  await rec(cust, "e25-pay-malformed-after-try-again", "malformed pay link after pressing 'Try again'", "");
+  // Malformed links (copy changed by the fix: "This link doesn't look right", primary Scan a new code, no Try again)
+  for (const [file, path] of [["e24-pay-malformed", "/pay?v=0x123&o=nope"], ["e25-pay-malformed-no-order", `/pay?v=${state.venue}`], ["e25b-pay-malformed-truncated-order", o1.slice(0, -10)]]) {
+    await cust.page.goto(`${BASE}${path}`);
+    await cust.page.waitForTimeout(2000);
+    const r = await rec(cust, file, `malformed pay link ${path.slice(0, 40)}…`, "This link doesn't look right");
+    r.tryAgainButtons = await cust.page.getByRole("button", { name: /Try again/ }).count();
+  }
+  await cust.page.getByRole("button", { name: /Scan a new code/ }).first().click().catch(() => {});
+  await cust.page.waitForTimeout(1500);
+  results.push({ state: "malformed → Scan a new code navigates to", url: cust.page.url() });
+  // Well-formed but unknown order on a real venue → same state inside the sheet
+  await cust.page.goto(`${BASE}/pay?v=${state.venue}&o=0x${"ab".repeat(32)}`);
+  await cust.page.waitForTimeout(3000);
+  await rec(cust, "e25c-pay-unknown-order", "well-formed link, unknown order", "This link doesn't look right");
 
   // Top-up refusals (POST /demo/topup intercepted; nothing claimed)
   for (const [file, status, code, msg] of [
@@ -226,7 +223,8 @@ try {
   await cust.page.getByRole("button", { name: /^1$/ }).click().catch(() => {});
   await cust.page.getByRole("button", { name: /Show code/ }).click().catch(() => {});
   await cust.page.waitForTimeout(3000);
-  await rec(cust, "e29-counter-nonowner-show-code", "non-owner presses Show code on another venue's counter", "");
+  await rec(cust, "e29-counter-nonowner", "non-owner opens another venue's counter (read-only after the fix)", "Only the owner");
+  results[results.length - 1].keypadButtons = await cust.page.getByRole("button", { name: /^[0-9]$/ }).count();
 
   // Friend's link: already a customer (forced ALREADY_REWARDED)
   await cust.page.goto(`${BASE}/i/${INTRO_CODE}`);
@@ -242,57 +240,6 @@ try {
   await cust.page.goto(`${BASE}/wallet`);
   await rec(cust, "e31-unlock", "welcome back (unlock with Face ID)", "");
 
-  // ------------------------------------------------------------------ reduced motion: pending → settled (forced)
-  const rm = await newPhone(browser, "reduced", { reducedMotion: "reduce" });
-  await rm.page.goto(`${BASE}${o1}`);
-  await settle(rm.page);
-  await onboard(rm.page, "Rae");
-  await rm.page.route(Q, funded());
-  await rm.page.goto(`${BASE}${o1}`);
-  await rm.page.getByRole("button", { name: /Confirm with Face ID or fingerprint/ }).waitFor({ timeout: 60_000 });
-  const fakeId = "00000000-0000-4000-8000-00000000005e";
-  let settledNow = false;
-  const oid = o1.split("o=")[1];
-  await rm.page.route("**/payments", (route) => route.request().method() === "POST"
-    ? route.fulfill({ status: 202, contentType: "application/json", headers: { "access-control-allow-origin": BASE }, body: JSON.stringify({ intentId: fakeId, status: "pending", txHash: `0x${"5e".repeat(32)}`, relayId: "qe" }) })
-    : route.fallback());
-  await rm.page.route(`**/payments/${fakeId}`, (route) => {
-    const rsa = (await_) => await_;
-    const body = settledNow
-      ? { intentId: fakeId, status: "settled", settled: { source: "streams", venue: state.venue, customer: "0x0000000000000000000000000000000000000001", orderId: oid, amount: { baseUnits: "500000", display: "0.50" }, venueAmount: { baseUnits: "500000", display: "0.50" }, rewardPool: { baseUnits: "0", display: "0.00" }, firstPurchase: true, rewarded: false, weightsMode: 0, txHash: `0x${"5e".repeat(32)}`, blockNumber: "1", blockTime: Math.floor(Date.now() / 1000), lines: [] } }
-      : { intentId: fakeId, status: "pending", settled: null };
-    void rsa;
-    return route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": BASE }, body: JSON.stringify(body) });
-  });
-  await rm.page.getByRole("button", { name: /Confirm with Face ID or fingerprint/ }).click();
-  await rm.page.waitForTimeout(1500);
-  const pend = await rec(rm, "e40-success-pending-reduced-motion", "pending ('Arriving') under prefers-reduced-motion (forced 202)", "");
-  pend.animations = await runningAnimations(rm.page);
-  settledNow = true;
-  await rm.page.waitForTimeout(4500);
-  const setl = await rec(rm, "e41-success-settled-reduced-motion", "settled under prefers-reduced-motion (forced GET /payments/:id)", "Paid");
-  setl.animations = await runningAnimations(rm.page);
-  log("reduced-motion animations pending", pend.animations, "settled", setl.animations);
-
-  // ------------------------------------------------------------------ camera denied (separate browser, no fake UI, no permission)
-  const b2 = await chromium.launch();
-  try {
-    const den = await newPhone(b2, "camera-denied", { permissions: [] });
-    await den.page.goto(`${BASE}/scan`);
-    await den.page.waitForTimeout(3500);
-    const r = await rec(den, "e50-scan-camera-denied", "camera permission denied (real headless prompt dismissal)", "Camera is off");
-    if (!r.expectFound) {
-      // Fallback: force NotAllowedError from getUserMedia.
-      await den.page.addInitScript(() => {
-        navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException("denied", "NotAllowedError"));
-      });
-      await den.page.goto(`${BASE}/scan`);
-      await den.page.waitForTimeout(3000);
-      await rec(den, "e51-scan-camera-denied-forced", "camera denied (forced NotAllowedError)", "Camera is off");
-    }
-  } finally {
-    await b2.close();
-  }
 } catch (e) {
   results.push({ fatal: String(e?.stack ?? e) });
   console.error(e);

@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-18T19:30:00Z by QE_E2E — Phase 3 QE gate (frontend): PASS-with-findings on static + error states; live story NOT RUN (Stream paused)_
+_Last updated: 2026-11-18T20:36:00Z by QE_E2E — Phase 3 re-verify of 3d381e0: QE-3-01..08 FIXED, new Low QE-3-09; live story still NOT RUN (Stream paused)_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,13 +10,18 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟡 **Phase 3 gate (frontend), 2026-11-18: PASS-with-findings on parts 1, 2, 4 and 5. Part 3 (live story) is NOT RUN, so the gate is OPEN.**
-- **Static and route checks:** 28 visits. 0 page errors, 0 banned words, all amounts have 2 decimals, primary buttons ≥ 44 px, ≤ 1 primary per screen, reduced motion gives 0 animations, first-Tab focus is visible. The QR decodes exactly, and the in-app scanner routes in 0.68 s.
-- **Error states:** all 15 pass except the malformed link (QE-3-01).
-- **Live story:** the QuickNode Stream was paused for the whole window (18:25Z → still paused at 19:23Z). `e2e/phase3/story.mjs` is ready to run (~3 min).
-- **Findings:** QE-3-01..08 (2 Medium, 6 Low), filed as MSG-116 (FRONTEND_INTEGRATION) and MSG-117 (UI_DESIGN).
-- **Reports:** `docs/qa/phase-3-qe-gate.md`, phone checklist `docs/qa/phase-3-phone-checklist.md`, screenshots `docs/evidence/phase-3/qe/screens/` (+ `index.json`).
-- Phase 2 gate: PASS-with-findings (QE-2-10 Info open, MSG-106).
+🟡 **Phase 3 gate (frontend): re-verify of `3d381e0` at 20:35Z. PASS-with-findings on parts 1, 2, 4 and 5. The live story is NOT RUN again (Stream paused), so the gate is OPEN.**
+- **Fixes:** QE-3-01..08 are all FIXED, each re-checked independently. MSG-116/117/121/123 are closed.
+- **New Low:** QE-3-09. The visitor dashboard still says "to you" and shows the ad-cost input, because `viewer` isn't passed. Filed as MSG-129 → FRONTEND_INTEGRATION.
+- **Whole app:** 65 screens. 0 banned words, 0 page errors, 0 controls <44 px, ≤1 primary per screen, reduced motion gives 0 animations.
+- **Stream:**
+  - The free probe was paused 19:57–20:30Z.
+  - The cursor-independent `stream-probe-live.mjs` (one fresh venue, about $0.0045) showed no `venue.registered` within 109 s at 20:33Z.
+  - `story.mjs` is ready (~3 min). It has a CLI top-up fallback if the demo top-up refuses.
+- **Reports:**
+  - Report `docs/qa/phase-3-qe-gate.md` (with a "Re-verify" section).
+  - Screenshots `docs/evidence/phase-3/qe/screens/` (run 1 in `run1/`).
+  - Phone checklist `docs/qa/phase-3-phone-checklist.md`.
 
 ## Mental model (read this first)
 - Verify from the **written** docs only, and re-derive every claim with an independent tool (cast/curl/Blockscout v2 API) rather than the builder's script. Then also re-run the builder's script.
@@ -51,7 +56,7 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 |---|---|---|
 | `docs/qa/phase-3-qe-gate.md` | Phase 3 (frontend) gate report | findings QE-3-01..08; §3 live story pending the Stream |
 | `docs/qa/phase-3-phone-checklist.md` | Real-phone checklist for `<WEB_URL>` (32 P/F steps) | for the human, Thursday |
-| `e2e/phase3/*.mjs` | Phase 3 Playwright checks (`lib`, `check-static`, `check-errors`, `check-errors2`, `check-scanner`, `story`) + `verify-chain`, `decode-qr`, `png-to-y4m`, `stream-poll.sh` | `QE_BASE` env overrides `:3100`; screenshots → `docs/evidence/phase-3/qe/screens/` |
+| `e2e/phase3/*.mjs` | Phase 3 Playwright checks (`lib`, `check-static`, `check-errors`, `check-errors2`, `check-scanner`, `story`, `stream-probe-live`) + `verify-chain`, `decode-qr`, `png-to-y4m`, `stream-poll.sh` | `QE_BASE` env overrides `:3100`; screenshots → `docs/evidence/phase-3/qe/screens/` |
 | `docs/qa/phase-2-qe-e2e.md` | Phase 2 gate report (Part A; Part B to append) | findings QE-2-01..09 |
 | `scripts/qa/api-contract.ts` | Live API contract harness: `setup|noauth|main|guards|settled` | run with `scripts/node_modules/.bin/tsx`; `main` spends about $0.012 gas |
 | `scripts/qa/independent-derive.mjs` | Independent chain re-derivation: topic0s, invariants, receipt + USDC transfers, on-chain stats, hosted reads, PGlite rows | read-only; no api code |
@@ -69,6 +74,10 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split topic0), §6 (HMAC, envelope), §7 (env names). Proposed INTERFACES change (via Orchestrator): §6 body field `eventName` → `event` (QE-01).
 
 ## Done (rolling, newest first)
+- 2026-11-18: **Phase 3 re-verify of `3d381e0`.**
+  - QE-3-01..08 all FIXED on fresh runs of check-static/errors/errors2/scanner (65 screens). New Low QE-3-09 (MSG-129).
+  - The Stream is still paused: 11 free polls plus a live venue probe at 20:33Z, so the story is not run.
+  - Spend: about $0.009 gas (2 venue registrations); 0 top-ups.
 - 2026-11-18: **Phase 3 QE gate (frontend): PASS-with-findings (parts 1/2/4/5); part 3 STREAM NOT ACTIVE.**
   - Independent Playwright checks are in `e2e/phase3/`: 28 route visits, 15 error states (real where cheap, intercepted otherwise), the scanner via a fake-camera Y4M of a real QR, and an independent QR decode.
   - 66 screenshots plus `index.json`; a 32-step real-phone checklist.
@@ -101,15 +110,16 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 ## Next up
 - [ ] **As soon as the Stream is active:**
   - run `node e2e/phase3/story.mjs`, then `node e2e/phase3/verify-chain.mjs <ben tx> 1000000`, and fill §3 of `docs/qa/phase-3-qe-gate.md` (latencies, txs, 1280×720 dashboard/graph shots).
-  - It uses 2 demo top-ups ($6 of the global $30/24h).
+  - It uses 2 demo top-ups ($6 of the global $30/24h); if the funder floor refuses, `story.mjs` falls back to `pnpm --filter @vouch/scripts topup` from DEPLOYER (target $1.10).
+  - Probe liveness with `node e2e/phase3/stream-probe-live.mjs` (cursor-independent, about $0.0045). The free `onchain` poll can't tell a Stream resumed at head after the probe venue from a paused one.
+- [ ] Re-test QE-3-09 (MSG-129) when FRONTEND_INTEGRATION answers.
 - [ ] **Thursday PM regression on the deployed Vercel app:**
   - `QE_BASE=<WEB_URL> node e2e/phase3/check-static.mjs`, then `check-errors.mjs`, `check-errors2.mjs`, `story.mjs`.
-  - Re-test QE-3-01..08 once MSG-116/117 are answered.
   - Re-test QE-2-03/04/06/09 (MSG-079).
 - [ ] Hand the human `docs/qa/phase-3-phone-checklist.md` with the Vercel URL filled in; collect the P/F and latency results.
 - [ ] Re-check QE-2-10 / SEC-2-10 when STREAMS_INFRA logs the timestamp unit (MSG-106).
 - [ ] Phase 0 gate Part B leftovers: QE-01/02/03/05 re-checks when owners report them.
-- [x] Phase 3 static + error-state checks (2026-11-18).
+- [x] Phase 3 static + error-state checks; re-verify of QE-3-01..08 FIXED (2026-11-18).
 - [ ] Phase 5: full regression + demo rehearsal from written steps.
 
 ## Struggles, open questions, known issues

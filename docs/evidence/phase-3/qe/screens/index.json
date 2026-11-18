@@ -1,133 +1,126 @@
 [
   {
     "file": "e01-venue-dashboard-new.png",
-    "route": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796",
+    "route": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473",
     "state": "new venue dashboard (empty state)",
-    "notes": "registration → dashboard 17044 ms",
+    "notes": "registration \u2192 dashboard 17254 ms; first-Tab probe ran right after the onboarding redirect in the same page (sequential-focus start point is kept), so its \"body\" result is a tooling artifact. The dashboard focus passes on a fresh load (s28/s40).",
     "viewport": "390x844"
   },
   {
     "file": "e02-counter-empty.png",
-    "route": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+    "route": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
     "state": "order entry (empty)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e03-counter-below-min.png",
-    "route": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+    "route": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
     "state": "order entry below $0.50 minimum",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e04-counter-050.png",
-    "route": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+    "route": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
     "state": "order entry $0.50",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e05-counter-qr.png",
-    "route": "/venue/0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796/counter",
+    "route": "/venue/0x47055f9b8f6ac6c02df864401EB0647ff7B03473/counter",
     "state": "QR shown (live countdown)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e10-pay-signed-out.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "scanned code opened signed out (onboarding with venue context)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e11-pay-insufficient.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "insufficient balance (real, $0) with top-up CTA",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e12-pay-relayer-down.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "RELAYER_DOWN (forced via interception)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e13-pay-budget-exhausted.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "RELAYER_BUDGET_EXHAUSTED (forced via interception)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e14-pay-expired-forced.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "ORDER_EXPIRED (forced via interception)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e15-pay-confirm-after-retry.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "pay sheet after 'Try again' (balance faked via interception)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e16-pay-failed.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "payment failed at relay (forced 502 TX_FAILED)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e17-pay-failed-after-relay.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "relayed, then reverted (forced GET /payments/:id failed)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e18-pay-insufficient-at-relay.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "402 INSUFFICIENT_BALANCE at POST /payments (forced)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e19-pay-faceid-cancelled.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "Face ID / fingerprint refused (virtual authenticator UV=false)",
     "notes": "",
     "viewport": "390x844"
   },
   {
-    "file": "e20-pay-offline.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
-    "state": "offline at confirm (context offline)",
-    "notes": "INVALID RUN: the virtual authenticator still refused UV from e19, so this shows the cancelled state. Valid offline check = e61.",
-    "viewport": "390x844"
-  },
-  {
     "file": "e21-pay-repeat-visit.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
-    "state": "already rewarded at this venue → plain payment (forced quote)",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
+    "state": "already rewarded at this venue \u2192 plain payment (forced quote)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e22-pay-first-visit-no-rec.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x7005ce27715350084cf8e567d7e6a4f6834f4bf2adb843c7e0bafb16df22691c",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc85a783258ca",
     "state": "first visit, no recommendation (balance faked)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e23-pay-expired-real.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0xe89b3b49bba5c25b6094d28b9b1b314b4bfea7c1ab347b9b314897d457b793ff",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xbd79840440bf602e19531d678e80073ced34b4db0dc8f83bcaafadd1b7b773d7",
     "state": "expired code (real, ttl 30 s)",
     "notes": "",
     "viewport": "390x844"
@@ -135,14 +128,28 @@
   {
     "file": "e24-pay-malformed.png",
     "route": "/pay?v=0x123&o=nope",
-    "state": "malformed pay link",
+    "state": "malformed pay link /pay?v=0x123&o=nope\u2026",
     "notes": "",
     "viewport": "390x844"
   },
   {
-    "file": "e25-pay-malformed-after-try-again.png",
-    "route": "/pay?v=0x123&o=nope",
-    "state": "malformed pay link after pressing 'Try again'",
+    "file": "e25-pay-malformed-no-order.png",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473",
+    "state": "malformed pay link /pay?v=0x47055f9b8f6ac6c02df864401EB0647\u2026",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e25b-pay-malformed-truncated-order.png",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xb4d07efa1b50bc992bb9a96c57bf650a25a2330804f0d3c7873bc8",
+    "state": "malformed pay link /pay?v=0x47055f9b8f6ac6c02df864401EB0647\u2026",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e25c-pay-unknown-order.png",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0xabababababababababababababababababababababababababababababababab",
+    "state": "well-formed link, unknown order",
     "notes": "",
     "viewport": "390x844"
   },
@@ -168,9 +175,9 @@
     "viewport": "390x844"
   },
   {
-    "file": "e29-counter-nonowner-show-code.png",
+    "file": "e29-counter-nonowner.png",
     "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c/counter",
-    "state": "non-owner presses Show code on another venue's counter",
+    "state": "non-owner opens another venue's counter (read-only after the fix)",
     "notes": "",
     "viewport": "390x844"
   },
@@ -190,14 +197,14 @@
   },
   {
     "file": "e40-success-pending-reduced-motion.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "state": "pending under prefers-reduced-motion (forced 202; nothing relayed)",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e41-success-settled-reduced-motion.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "state": "settled under prefers-reduced-motion (forced GET /payments/:id)",
     "notes": "",
     "viewport": "390x844"
@@ -206,7 +213,7 @@
     "file": "e50-scan-camera-denied.png",
     "route": "/scan",
     "state": "camera permission not granted (headless default)",
-    "notes": "headless with no camera device → \"No camera available\" (unavailable state); denied state forced in e51",
+    "notes": "headless with no camera device \u2192 \"No camera available\" (unavailable state); the denied state is forced in e51",
     "viewport": "390x844"
   },
   {
@@ -219,7 +226,7 @@
   {
     "file": "e52-scan-type-code.png",
     "route": "/scan",
-    "state": "camera denied → type the code",
+    "state": "camera denied \u2192 type the code",
     "notes": "",
     "viewport": "390x844"
   },
@@ -232,21 +239,21 @@
   },
   {
     "file": "e56-scan-routed-to-pay.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x1fe03b482cf5b280314b226f68e1bda7c4ae1785c4aa8d2990e16693e8725210",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x8f1aba53a9b72505f734d8ab735f69aa8861a5461e0516387c32cd6eca25bec9",
     "state": "scanner decoded the QR and opened the pay sheet",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e60-control-relay-failed.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "state": "control: signature OK, relay forced 502",
     "notes": "",
     "viewport": "390x844"
   },
   {
     "file": "e61-pay-offline-at-confirm.png",
-    "route": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "route": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "state": "offline at confirm (context offline; navigator.onLine=false)",
     "notes": "",
     "viewport": "390x844"
@@ -261,7 +268,7 @@
   {
     "file": "s01b-landing-focus-first-tab.png",
     "route": "/",
-    "state": "first Tab stop on landing (focus ring on the name field)",
+    "state": "first Tab stop on landing: name field focus ring",
     "notes": "",
     "viewport": "390x844"
   },
@@ -353,7 +360,7 @@
     "file": "s12-404.png",
     "route": "/does-not-exist",
     "state": "unknown route (404)",
-    "notes": "Next.js default 404 page",
+    "notes": "",
     "viewport": "390x844"
   },
   {
@@ -448,6 +455,20 @@
     "viewport": "390x844"
   },
   {
+    "file": "s32-venue-onboarding-initial.png",
+    "route": "/venue/new",
+    "state": "venue onboarding at 390\u00d7844 (initial scroll)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s33-venue-onboarding-focus-min.png",
+    "route": "/venue/new",
+    "state": "venue onboarding, minimum field focused (scroll-padding)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
     "file": "s40-dashboard-reduced-motion.png",
     "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
     "state": "dashboard + money graph, prefers-reduced-motion",
@@ -464,7 +485,7 @@
   {
     "file": "s50-transparency-1280.png",
     "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
-    "state": "transparency at 1280×720",
+    "state": "transparency at 1280\u00d7720",
     "notes": "desktop",
     "viewport": "1280x720"
   }

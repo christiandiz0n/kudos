@@ -65,6 +65,39 @@ try {
   await visit(cust, `/venue/${V0}/counter`, "s29-counter-nonowner", "counter of someone else's venue", { wait: 3000 });
   await visit(cust, "/venue", "s30-venue-entry-signed-in", "venue entry, signed in, no venue", { wait: 3000 });
   await visit(cust, "/transparency", "s31-transparency-signed-in", "transparency (signed in)", { primary: false });
+  // QE-3-02: the minimum field on venue onboarding must not sit under the footer (or its caption)
+  await cust.page.goto(`${BASE}/venue/new`);
+  await settle(cust.page, 1500);
+  const geom = async () => cust.page.evaluate(() => {
+    const lab = [...document.querySelectorAll("label")].find((l) => /Minimum first order/i.test(l.textContent));
+    const inp = lab && (document.getElementById(lab.htmlFor) || lab.parentElement.querySelector("input"));
+    const footer = document.querySelector("[data-vx-footer]");
+    const r = (e) => (e ? e.getBoundingClientRect().toJSON() : null);
+    const fr = r(footer);
+    const top = (x, y) => { const e = document.elementFromPoint(x, y); return e ? `${e.tagName.toLowerCase()}:${(e.textContent || "").trim().slice(0, 30)}` : null; };
+    const lr = r(lab), ir = r(inp);
+    return { label: lr, input: ir, footer: fr, footerBg: footer ? getComputedStyle(footer).backgroundColor : null,
+      labelHit: lr ? top(lr.x + 10, lr.y + lr.height / 2) : null, inputHit: ir ? top(ir.x + 20, ir.y + ir.height / 2) : null, vh: innerHeight };
+  });
+  const g0 = await geom();
+  await shot(cust.page, "s32-venue-onboarding-initial", "venue onboarding at 390×844 (initial scroll)");
+  await cust.page.getByLabel(/Minimum first order/i).focus();
+  await cust.page.waitForTimeout(800);
+  const g1 = await geom();
+  await shot(cust.page, "s33-venue-onboarding-focus-min", "venue onboarding, minimum field focused (scroll-padding)");
+  results.push({ screen: "QE-3-02 geometry", initial: g0, focused: g1 });
+  log("QE-3-02 focused", JSON.stringify({ labelHit: g1.labelHit, inputHit: g1.inputHit, inputBottom: g1.input?.bottom, footerTop: g1.footer?.top }));
+
+  // QE-3-07: one focus ring on a text field
+  await anon.page.goto(`${BASE}/`);
+  await settle(anon.page, 800);
+  await anon.page.keyboard.press("Tab");
+  await anon.page.waitForTimeout(300);
+  const ring = await anon.page.evaluate(() => { const el = document.activeElement; const s = getComputedStyle(el); const p = getComputedStyle(el.parentElement); return { tag: el.tagName, inputOutline: `${s.outlineStyle} ${s.outlineWidth}`, inputShadow: s.boxShadow, wrapperShadow: p.boxShadow, wrapperOutline: `${p.outlineStyle} ${p.outlineWidth}` }; });
+  await shot(anon.page, "s01b-landing-focus-first-tab", "first Tab stop on landing: name field focus ring");
+  results.push({ screen: "QE-3-07 focus ring", ring });
+  log("QE-3-07", JSON.stringify(ring));
+
 
   // ------------------------------------------------------------------ reduced motion: graph + transparency
   const rm = await newPhone(browser, "reduced", { reducedMotion: "reduce" });

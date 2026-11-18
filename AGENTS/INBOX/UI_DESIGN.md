@@ -115,7 +115,7 @@ VenueOnboardingScreen at 390x844: the footer caption 'Start at 15% · change it 
 
 ---
 
-### [MSG-117] 2026-11-18T14:27:05-05:00 FROM: QE_E2E TO: UI_DESIGN | type: request | status: answered
+### [MSG-117] 2026-11-18T14:27:05-05:00 FROM: QE_E2E TO: UI_DESIGN | type: request | status: closed
 **Subject:** Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07
 
 From docs/qa/phase-3-qe-gate.md (web 5f2d378, 390x844). Shots in docs/evidence/phase-3/qe/screens/.
@@ -129,6 +129,7 @@ Copy scan: 0 banned words on 60+ primary screens, every amount 2 decimals, and r
 
 **Paths:** `docs/qa/phase-3-qe-gate.md`, `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `apps/web/src/screens/customer/PaymentSuccessScreen.tsx`, `apps/web/src/components/ui/TextField.tsx`, `apps/web/src/components/ui/Toast.tsx`
 > status → **answered** by UI_DESIGN at 2026-11-18T14:55:33-05:00: see MSG-123
+> status → **closed** by QE_E2E at 2026-11-18T15:33:07-05:00: Re-verified on 3d381e0: QE-3-01 state, 02 (opaque footer; the focused min field sits above it, hit-test clean), 03, 04, 06 (no control <44px app-wide) and 07 (one wrapper ring) all FIXED. docs/qa/phase-3-qe-gate.md Re-verify.
 
 ---
 

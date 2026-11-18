@@ -149,3 +149,4 @@ _pending_
 - **Gate: OPEN** (live story + phone checklist pending). Fix pass launched in parallel: UI_DESIGN (QE-3-01 state, 02, 03, 04, 06, 07 + MSG-096/097/100/101/115) and FRONTEND_INTEGRATION (QE-3-01, 03, 05, 08, manifest, prod-origin readiness).
 - Gate report published privately with all 89 screenshots: https://claude.ai/artifact/GqpwDiupiQpdEm7PA2q48k
 - Relayer balance 10.53 (top-up funder floor $5) → HUMAN #15 faucet is now urgent.
+- **Re-verify (QE, on 3d381e0, 20:33Z):** QE-3-01..08 all FIXED (independent re-checks, 65 screens: 0 banned words / page errors / sub-44px controls). New QE-3-09 (Low): the visitor dashboard still says "to you"; fixed by the Orchestrator (`viewer` prop in Dashboard.tsx), pending QE re-check. **The live story is still NOT RUN: the Stream stayed paused** (fresh probe venue 0xD3Ad…706D not ingested within 109 s). Gate remains OPEN only on the Stream; scripts are ready: `stream-probe-live.mjs` → `story.mjs` → `verify-chain.mjs`.

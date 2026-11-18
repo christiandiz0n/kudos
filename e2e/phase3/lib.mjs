@@ -173,7 +173,9 @@ export async function firstFocus(page) {
     if (!el || el === document.body) return { ok: false, el: "body (nothing focusable)" };
     const s = getComputedStyle(el);
     const outline = s.outlineStyle !== "none" && parseFloat(s.outlineWidth) > 0;
-    const ring = s.boxShadow && s.boxShadow !== "none";
+    // A ring may be drawn by the element or by its wrapper (TextField draws it on the wrapper, D-615).
+    const visibleShadow = (bs) => !!bs && bs !== "none" && bs.split(/,(?![^(]*\))/).some((x) => !/rgba\(0, 0, 0, 0\)/.test(x) && /\b[1-9]\d*(\.\d+)?px/.test(x));
+    const ring = visibleShadow(s.boxShadow) || (el.parentElement && visibleShadow(getComputedStyle(el.parentElement).boxShadow));
     return { ok: outline || !!ring, el: `${el.tagName.toLowerCase()}:${(el.getAttribute("aria-label") || el.innerText || "").trim().slice(0, 40)}`, outline: `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}`, boxShadow: s.boxShadow?.slice(0, 80) };
   });
 }

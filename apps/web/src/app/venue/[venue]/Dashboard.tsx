@@ -161,6 +161,7 @@ function DashboardFlow({ venue, address }: { venue: string } & AccountCtx) {
       loading={loading}
       onNewOrder={owner ? () => router.push(`/venue/${venue}/counter`) : undefined}
       transparencyHref={`/transparency?venue=${venue}`}
+      viewer={owner ? "owner" : "visitor"}
     />
   );
 }

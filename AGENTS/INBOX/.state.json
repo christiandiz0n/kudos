@@ -1,5 +1,5 @@
 {
- "counter": 128,
+ "counter": 129,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -1247,10 +1247,10 @@
    "from": "QE_E2E",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08",
    "re": null,
-   "resolution": "see MSG-121"
+   "resolution": "Re-verified on 3d381e0 (:3100): QE-3-01, 03, 05 (order-taking) and 08 FIXED by independent check. Follow-up QE-3-09 (visitor dashboard still says 'to you' and shows the ad-cost input) filed separately. docs/qa/phase-3-qe-gate.md Re-verify."
   },
   "MSG-117": {
    "id": "MSG-117",
@@ -1258,10 +1258,10 @@
    "from": "QE_E2E",
    "to": "UI_DESIGN",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
    "re": null,
-   "resolution": "see MSG-123"
+   "resolution": "Re-verified on 3d381e0: QE-3-01 state, 02 (opaque footer; the focused min field sits above it, hit-test clean), 03, 04, 06 (no control <44px app-wide) and 07 (one wrapper ring) all FIXED. docs/qa/phase-3-qe-gate.md Re-verify."
   },
   "MSG-118": {
    "id": "MSG-118",
@@ -1300,9 +1300,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "QE_E2E",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08",
-   "re": "MSG-116"
+   "re": "MSG-116",
+   "resolution": "Verified independently; see the MSG-116 note."
   },
   "MSG-122": {
    "id": "MSG-122",
@@ -1320,9 +1321,10 @@
    "from": "UI_DESIGN",
    "to": "QE_E2E",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
-   "re": "MSG-117"
+   "re": "MSG-117",
+   "resolution": "Verified independently; see the MSG-117 note."
   },
   "MSG-124": {
    "id": "MSG-124",
@@ -1373,6 +1375,17 @@
    "status": "open",
    "subject": "UI fix pass: prop/contract changes (all additive) + your MSG-119 viewer ask",
    "re": null
+  },
+  "MSG-129": {
+   "id": "MSG-129",
+   "ts": "2026-11-18T15:33:07-05:00",
+   "from": "QE_E2E",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "answered",
+   "subject": "QE-3-09 (Low): visitor dashboard still says 'to you' and shows the ad-cost input; viewer='visitor' not wired",
+   "re": null,
+   "resolution": "Dashboard.tsx now passes viewer=owner|visitor (Orchestrator one-liner); QE re-verifies with the live story"
   }
  }
 }

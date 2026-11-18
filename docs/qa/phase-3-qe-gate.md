@@ -2,7 +2,12 @@
 
 _QE_E2E, session 3, Wed 2026-11-18, 18:30–19:25 UTC. Code under test: web `5f2d378` (`apps/web`, HEAD `9ee3171` is docs-only) on the shared dev server http://localhost:3100, against the hosted api https://api-production-902bc54c.up.railway.app._
 
-## Verdict: PASS-with-findings on parts 1, 2, 4 and 5; part 3 (live story): STREAM NOT ACTIVE, not run. The frontend gate stays OPEN until the live story passes.
+## Verdict (re-verify, 20:35Z): PASS-with-findings on parts 1, 2, 4 and 5; part 3 (live story) is STREAM NOT ACTIVE again. The gate stays OPEN.
+- **All 8 run-1 findings are fixed:** QE-3-01..08, each re-checked independently on `3d381e0`.
+- **One new Low:** QE-3-09, the visitor dashboard wording.
+- **Live story:** blocked only by the paused Stream; see the "Re-verify" section.
+
+### Run 1 verdict (18:30–19:31Z): PASS-with-findings on parts 1, 2, 4 and 5; part 3: STREAM NOT ACTIVE
 
 - **Static checks and every error state pass.** There is no Blocker or High finding: 2 Medium and 6 Low, all UX/copy, and nothing in money handling.
 - **The live canonical story was not run.** The QuickNode Stream was paused for the whole 45+ min window (18:33–19:23Z), so nothing could reach "settled". I did not spend the two demo top-ups on a story that couldn't settle.
@@ -94,12 +99,12 @@ Coverage: 28 route/state visits. That is every route in the FRONTEND_INTEGRATION
   - venue $0.84.
 
 ## 4. Screenshots
-`docs/evidence/phase-3/qe/screens/`: 66 PNGs plus `index.json` (`{file, route, state, notes, viewport}`).
+`docs/evidence/phase-3/qe/screens/`: 70 PNGs (re-verify run of `3d381e0`; run 1 is archived in `run1/screens/`) plus `index.json` (`{file, route, state, notes, viewport}`).
 - Phones are 390×844 @2x. The `-full` files are full-page captures.
 - Prefixes: `s*` static/routes, `e*` error states, `l*` live story.
 - Desktop: `s50-transparency-1280`. The 1280×720 live venue dashboard and money graph (`l04/l12/l26/l28/l29`) come from `story.mjs` and **were not captured**, because the Stream was not active.
 - The money graph at 390 on live data (an existing venue, viewed as a non-owner) is in `s28` and `s40` (reduced motion).
-- `e20` is marked invalid in the index: the authenticator state was carried over from e19. `e61` is the valid offline check.
+- Offline is `e61`, checked in an isolated context. Run 1's invalid `e20` has been dropped.
 
 ## 5. Real-phone checklist
 `docs/qa/phase-3-phone-checklist.md`: 32 pass/fail steps for `<WEB_URL>`, covering:
@@ -111,7 +116,50 @@ Coverage: 28 route/state visits. That is every route in the FRONTEND_INTEGRATION
 - airplane mode before confirm, during "Arriving", and on the venue dashboard;
 - copy, amounts and thumb reach.
 
-## Findings
+## Re-verify (2026-11-18, 19:57–20:35 UTC) of fix commit `3d381e0` on :3100
+_The owners' replies are MSG-121 (FRONTEND_INTEGRATION) and MSG-123/124 (UI_DESIGN). Each finding was re-checked with my own scripts against the live dev server; none was taken on the owners' word._
+
+**How:**
+- Re-ran `check-static.mjs` (30 visits), `check-errors.mjs` (30 states), `check-errors2.mjs` (7) and `check-scanner.mjs`, all on a fresh evidence set.
+- Run-1 evidence is archived in `docs/evidence/phase-3/qe/run1/`.
+- Expectations changed only where the fix intentionally changed copy: malformed link → "This link doesn't look right"; non-owner counter → "Only the owner can take orders here".
+- I also dropped run 1's invalid e20 (offline is checked in isolation by e61), and fixed my focus probe to accept a ring drawn by the focused element's wrapper (the QE-3-07 fix moved the ring there).
+
+**Whole-app result after the fix:**
+- 65 audited screens: 0 page errors, 0 banned words (visible text and accessible names), 0 bad money formats, 0 controls under 44 px, no screen with 2+ primaries.
+- Reduced motion: 0 running animations.
+- The only console errors are the expected API 404/409 resource lines.
+- An independent decode of the new counter QR equals its payload, and the in-app scanner routes in 691 ms.
+
+| ID | Verdict | Evidence (my check) |
+|---|---|---|
+| QE-3-01 | **FIXED** | All four links show "This link doesn't look right … Nothing was charged…" with one primary, **Scan a new code** (→ `/scan`, checked), and a ghost Close. There are 0 "Try again" buttons. Tested links: `/pay?v=0x123&o=nope`, `/pay?v=<venue>` (no `o`), a truncated `o`, and a well-formed unknown order on a real venue. Shots s26, s27, e24, e25, e25b, e25c. |
+| QE-3-02 | **FIXED** | The footer is opaque (`rgb(246,244,239)`). Focusing "Minimum first order" scrolls it above the footer: label top 557 px, input bottom 632 px, footer top 730 px. Hit-testing at their centres returns the label and the input themselves, no longer the caption or the button. Shots s32, s33. |
+| QE-3-03 | **FIXED** | The success screen after a first visit with no recommendation (forced settle) reads "Thanks for coming in. When a friend recommends a place to you, …" in both pending and settled (e40, e41). The repeat visit still says "Welcome back…" on the pay sheet (e21). |
+| QE-3-04 | **FIXED** | The caption now reads "verified first purchases" (s28). |
+| QE-3-05 | **FIXED** (order-taking) | A visitor's dashboard has no primary at all, so no "Take an order" (s28, s40). `/venue/<other>/counter` shows "Only the owner can take orders here", with 0 keypad keys and primary **Go to your place** (s29, e29). The owner still has Take an order (e01). **New Low QE-3-09** (below): the rest of the visitor view described in D-615 isn't wired. |
+| QE-3-06 | **FIXED** | The toasts show (e26–e28) and the audit finds no control under 44 px on any screen, so the Dismiss button is now at least 44×44. |
+| QE-3-07 | **FIXED** | First Tab on `/`: the input has `outline: none`, and the wrapper draws one 2-px inset green ring (s01b). |
+| QE-3-08 | **FIXED** | `/does-not-exist` returns HTTP 404 with a styled "We can't find that page · Nothing has changed in your account", one primary **Go to Vouch**, a secondary "Scan a code", and a visible first-Tab ring (s12). |
+
+**New finding:**
+| ID | Sev | Route | Repro | Expected | Actual | Owner |
+|---|---|---|---|---|---|---|
+| QE-3-09 | Low | `/venue/[venue]` as a visitor | Sign in as anyone, open another venue's dashboard (`0xC6CF…319c`) | The D-615/MSG-119 visitor mode: no ad-cost input; feed rows say "to the venue". | The feed rows say "**$0.44 to you**" / "$0.50 to you" to a non-owner, and the "Typical ad cost" input is still shown (read-only, but focusable; it is the first Tab stop). `Dashboard.tsx` never passes `viewer="visitor"` to `VenueDashboardScreen` (the prop exists; the owner flag is computed). | FRONTEND_INTEGRATION |
+
+**Live story:** **STREAM NOT ACTIVE: not run** (the story and the 1280×720 live dashboard/graph shots).
+- **Free `onchain` probe:** every 3 min, 19:57–20:27Z (11 polls), then at 20:30Z. It stayed `null` on the 18:29Z venue and on both QE venues (18:41Z, 20:02Z).
+- **Cursor-independent check:** a free probe can't tell a still-paused Stream from one resumed at head after the probe venue was mined. So `e2e/phase3/stream-probe-live.mjs` registered one fresh venue at 20:31Z (`0xD3Ad3B040F74B3F3dAe6B700dc85DC1A1637706D`, about $0.0045 gas). No `venue.registered` arrived within 108.8 s of the tap, and onboarding took the D-906 fallback (17.2 s).
+- Log: `docs/evidence/phase-3/qe/stream-poll-reverify.log`.
+- **Not used:** 0 top-ups; the CLI fallback for top-ups (now built into `story.mjs`) was not needed.
+- **What remains is unchanged:** once the Stream is live, run `node e2e/phase3/story.mjs` (about 3 min), then `node e2e/phase3/verify-chain.mjs <Ben's tx> 1000000`.
+
+**Spend (re-verify):**
+- Two more venue registrations, about $0.0045 each: the errors run, plus the live Stream probe at 20:31Z. The relayer's daily used went from 0.134185 to 0.138682 USDC before the probe.
+- 0 top-ups. No customer pay relayed.
+- Phase 3 QE total so far: about $0.013 of gas.
+
+## Findings (run 1, 18:30–19:31Z)
 | ID | Sev | Route | Repro | Expected | Actual | Owner |
 |---|---|---|---|---|---|---|
 | QE-3-01 | Medium | `/pay?v=<venue>` (no `o`), `/pay?v=0x123&o=nope` | Open a malformed or truncated pay link (a mistyped short link, or a cut-off QR URL). | "This link doesn't work / code not recognized", with **Scan a new code** as the one primary (as `/i/<bad>` does). | "Payment didn't go through · Nothing was charged. Try again…". No payment was attempted. The primary **Try again** re-renders the same state (dead-end loop). `PayFlow` maps `badLink` → `"failed"`, and PayProblem has no invalid-link state. Shots s26, s27, e24, e25. | FRONTEND_INTEGRATION (mapping) + UI_DESIGN (state copy) |
@@ -139,4 +187,5 @@ Info (no action):
   - MSG-116 → FRONTEND_INTEGRATION (request): QE-3-01 Medium, plus Lows QE-3-03/05/08.
   - MSG-117 → UI_DESIGN (request): QE-3-02 Medium, plus QE-3-01 state, QE-3-03/04/06/07.
 - **Inbox:** MSG-079 (BACKEND_RELAYER) stays open. QE-2-03/04/06/09 are still to be re-tested at Thursday's gate on the deployed app.
+- **Re-verify:** closed MSG-116, MSG-117, MSG-121 and MSG-123 (every finding fixed). Sent MSG-129 → FRONTEND_INTEGRATION (QE-3-09, Low).
 - **Not messaged:** the Stream pause. The Orchestrator has already asked the human to resume it (MSG-114). It is the only gate blocker.

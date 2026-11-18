@@ -5,7 +5,7 @@
     "expect": "didn't go through",
     "expectFound": true,
     "screen": "e60-control-relay-failed",
-    "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "primaryCount": 1,
     "primaries": [
       "Try again"
@@ -17,7 +17,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+    "text": "QE | QE errors café 20:02 | Paying with Vouch | Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
     "focus": {
       "ok": true,
       "el": "button:Try again",
@@ -28,7 +28,7 @@
       {
         "kind": "console",
         "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
-        "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe"
+        "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e"
       }
     ]
   },
@@ -38,7 +38,7 @@
     "expect": "offline",
     "expectFound": true,
     "screen": "e61-pay-offline-at-confirm",
-    "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "primaryCount": 1,
     "primaries": [
       "Try again"
@@ -50,7 +50,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "You're offline | Connect to Wi-Fi or mobile data to pay. Nothing was charged. | Try again | Close",
+    "text": "QE | QE errors café 20:02 | Paying with Vouch | You're offline | Connect to Wi-Fi or mobile data to pay. Nothing was charged. | Try again | Close",
     "focus": {
       "ok": true,
       "el": "button:Try again",
@@ -61,7 +61,7 @@
       {
         "kind": "console",
         "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
-        "url": "http://localhost:3100/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe"
+        "url": "http://localhost:3100/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e"
       }
     ],
     "navigatorOnLine": false
@@ -72,7 +72,7 @@
     "expect": "",
     "expectFound": null,
     "screen": "e40-success-pending-reduced-motion",
-    "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "primaryCount": 1,
     "primaries": [
       "Done"
@@ -84,7 +84,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Paying QE errors café 18:41… | $0.50 | $ | 0 | . | 50 | Thanks for coming back. | This takes a few seconds. | Done",
+    "text": "Paying QE errors café 20:02… | $0.50 | $ | 0 | . | 50 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | This takes a few seconds. | Done",
     "focus": {
       "ok": true,
       "el": "summary:Receipt details",
@@ -100,7 +100,7 @@
     "expect": "",
     "expectFound": null,
     "screen": "e41-success-settled-reduced-motion",
-    "url": "/pay?v=0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796&o=0x6a13a089ec857ff45c5840525e3bfef35f7c4bfa0e1eb140633119bbc43bedbe",
+    "url": "/pay?v=0x47055f9b8f6ac6c02df864401EB0647ff7B03473&o=0x4469cf858de00d02bef598ff4877eced15059a348a6511dd527dea099191200e",
     "primaryCount": 1,
     "primaries": [
       "Done"
@@ -112,7 +112,7 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Paid at QE errors café 18:41 | $0.50 | $ | 0 | . | 50 | Thanks for coming back. | Done | Recommend | QE errors café 18:41",
+    "text": "Paid at QE errors café 20:02 | $0.50 | $ | 0 | . | 50 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | Done | Recommend | QE errors café 20:02",
     "focus": {
       "ok": true,
       "el": "button:Done",
@@ -198,7 +198,7 @@
     "focus": {
       "ok": true,
       "el": "input:",
-      "outline": "solid 2px rgb(111, 211, 174)",
+      "outline": "none 0px rgb(244, 241, 235)",
       "boxShadow": "none"
     },
     "errs": []

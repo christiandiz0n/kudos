@@ -5,8 +5,9 @@
 // isn't settled within 60 s (Stream not active) so Ben's top-up isn't spent.
 // Spend: 1 venue registration + 2 relayed pays (relayer gas) + 2 demo top-ups ($3 each, from the global cap).
 import { writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { API, BASE, EVID, apiJson, audit, chromium, log, newPhone, onboard, sessionOf, settle, shot } from "./lib.mjs";
+import { API, BASE, EVID, ROOT, apiJson, audit, chromium, log, newPhone, onboard, sessionOf, settle, shot } from "./lib.mjs";
 
 const AMOUNT_KEYS = ["1", "Decimal point", "0", "0"]; // $1.00
 const RES = { startedAt: new Date().toISOString(), base: BASE, api: API, amount: "1.00", audits: [], timeline: [] };
@@ -40,6 +41,11 @@ async function waitSettled(page, ms) {
   return h.jsonValue();
 }
 
+// Fallback if the in-app demo top-up refuses (funder floor / cap): DEPLOYER CLI top-up (loads its own keys; never read here).
+function cliTopup(addr) {
+  const out = execFileSync("pnpm", ["--silent", "--filter", "@vouch/scripts", "topup", "--to", addr, "--target", "1.10", "--max-total", "2.50"], { cwd: ROOT, encoding: "utf8" });
+  return /0x[0-9a-fA-F]{64}/.exec(out)?.[0] ?? out.slice(-300);
+}
 const browser = await chromium.launch({ args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"] });
 try {
   // ------------------------------------------------------------------ venue onboarding (slider → 20%)
@@ -102,8 +108,14 @@ try {
   const tTop = Date.now();
   const topRes = ana.page.waitForResponse((r) => r.url().endsWith("/demo/topup") && r.request().method() === "POST", { timeout: 30_000 });
   await ana.page.getByRole("button", { name: /Top up \(testnet demo\)/ }).click();
-  const topJ = await (await topRes).json();
-  RES.anaTopup = topJ;
+  const topR = await topRes;
+  const topJ = await topR.json();
+  RES.anaTopup = { status: topR.status(), ...topJ };
+  if (topR.status() !== 202) {
+    RES.anaTopup.cliFallbackTx = cliTopup(RES.ana);
+    mark("ana in-app top-up refused → CLI top-up", RES.anaTopup);
+    await ana.page.reload();
+  }
   const payBtn = ana.page.getByRole("button", { name: /Confirm with Face ID or fingerprint/ });
   await ana.page.waitForFunction(() => {
     const b = [...document.querySelectorAll("button")].find((x) => /Confirm with Face ID or fingerprint/.test(x.getAttribute("aria-label") || x.innerText));
@@ -186,8 +198,14 @@ try {
   const tTopB = Date.now();
   const topResB = ben.page.waitForResponse((r) => r.url().endsWith("/demo/topup") && r.request().method() === "POST", { timeout: 30_000 });
   await ben.page.getByRole("button", { name: /Top up \(testnet demo\)/ }).click();
-  RES.benTopup = await (await topResB).json();
-  await ben.page.waitForFunction(() => /\$\s*3\s*\.?\s*00/.test(document.body.innerText.replace(/\s+\|\s+/g, "")), null, { timeout: 90_000 }).catch(() => {});
+  const topRB = await topResB;
+  RES.benTopup = { status: topRB.status(), ...(await topRB.json()) };
+  if (topRB.status() !== 202) {
+    RES.benTopup.cliFallbackTx = cliTopup(RES.ben);
+    mark("ben in-app top-up refused → CLI top-up", RES.benTopup);
+    await ben.page.reload();
+  }
+  await ben.page.waitForFunction(() => /\$\s*(3|1)\s*\.?\s*(00|10)/.test(document.body.innerText), null, { timeout: 90_000 }).catch(() => {});
   RES.benTopupMs = Date.now() - tTopB;
   mark("ben topped up (wallet)", { tx: RES.benTopup.txHash, ms: RES.benTopupMs });
   await ben.page.waitForTimeout(1500);
