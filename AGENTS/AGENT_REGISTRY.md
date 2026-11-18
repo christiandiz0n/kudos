@@ -26,4 +26,6 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | UI_DESIGN-customer (session 3) | `a86ee9ce0586cd91d` | 3 | Customer hi-fi screens + states, magnifier | ✅ | owns screens/customer, design/, non-venue components |
 | UI_DESIGN-venue (session 3) | `a84858c9dc21f4cb1` | 3 | Venue hi-fi, MoneyGraph v1 (no self-loop), dashboard, transparency | ✅ | owns screens/venue, screens/public, venue components |
 | FRONTEND_INTEGRATION (session 3) | `a5fc4ff087c40b30b` | 3 | Wire customer/venue/transparency to hosted api + SSE; phase3-shots | ✅ | milestone A (pay spine) first |
-| QE_E2E Phase 3 gate (session 3) | `a8079d2de53c43c45` | 3 | Independent gate: routes, copy, error states, live two-context story, fresh 390px shots, phone checklist | 🟢 | needs the Stream active for the live part |
+| QE_E2E Phase 3 gate (session 3) | `a8079d2de53c43c45` | 3 | Independent gate: routes, copy, error states, live two-context story, fresh 390px shots, phone checklist | ⏸ live story pending Stream | needs the Stream active for the live part |
+| UI_DESIGN fix pass (session 3) | `a837480c5cba003aa` | 3 | QE-3 UI findings + Orchestrator polish notes | 🟢 | all UI files |
+| FRONTEND_INTEGRATION fix pass (session 3) | `a91555c1c5783074b` | 3 | QE-3-01/03/05/08, manifest, prod origin | 🟢 | |

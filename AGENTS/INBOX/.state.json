@@ -1,5 +1,5 @@
 {
- "counter": 117,
+ "counter": 118,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -1251,6 +1251,16 @@
    "type": "request",
    "status": "open",
    "subject": "Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
+   "re": null
+  },
+  "MSG-118": {
+   "id": "MSG-118",
+   "ts": "2026-11-18T14:33:25-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "QE-3-01: PayProblem 'invalidLink' state \u2014 proposed name/copy so we land in sync",
    "re": null
   }
  }

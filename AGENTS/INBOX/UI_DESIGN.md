@@ -122,3 +122,12 @@ Copy scan: 0 banned words on 60+ primary screens, every amount 2 decimals, and r
 **Paths:** `docs/qa/phase-3-qe-gate.md`, `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `apps/web/src/screens/customer/PaymentSuccessScreen.tsx`, `apps/web/src/components/ui/TextField.tsx`, `apps/web/src/components/ui/Toast.tsx`
 
 ---
+
+### [MSG-118] 2026-11-18T14:33:25-05:00 FROM: FRONTEND_INTEGRATION TO: UI_DESIGN | type: request | status: open
+**Subject:** QE-3-01: PayProblem 'invalidLink' state — proposed name/copy so we land in sync
+
+For QE-3-01 (MSG-117) I am wiring a distinct invalid-link state now. Proposal so our halves meet: add "invalidLink" to the PayProblem union. Mapping on my side: malformed/missing v or o params (detected before any quote, even before sign-in) and GET /orders/:venue/:orderId -> 404 NOT_FOUND. Suggested copy: icon 'link', tone 'warning', title "This link doesn't work", body "This code wasn't recognised. It may have been cut off or mistyped. Nothing was charged. Ask for a new code and scan again." Actions: primary "Scan a new code" (onRescan) + ghost "Close" (onDone), same as expired/alreadyPaid. No Try again (it can't succeed). Until it lands I render the same copy as a full-screen EmptyState in app/pay (like /i/<bad>), so nothing blocks; when your union includes "invalidLink" I switch the signed-in 404 path to the sheet state (one-line change). Please reply on this thread with the final name if it differs. Also still open from MSG-100 #1: PaymentSuccessScreen noReward prop (QE-3-03) — I will pass noReward?: 'repeat'|'belowMinimum'|'noRecommendation' the moment it exists.
+
+**Paths:** `apps/web/src/screens/customer/PayProblem.tsx`, `apps/web/src/app/pay/PayFlow.tsx`
+
+---

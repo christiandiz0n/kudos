@@ -143,3 +143,9 @@ _pending_
 | Customer hi-fi | UI_DESIGN-customer | 🟢 |
 | Venue hi-fi + money graph + transparency | UI_DESIGN-venue | 🟢 |
 | Wiring | FRONTEND_INTEGRATION | 🟢 |
+### Phase 3 gate (2026-11-18 ~14:40 ET)
+- Builder evidence: FRONTEND_INTEGRATION live run on the hosted api (pay `0x6ad99748…65be8` relay 0.49 s → settled +0.77 s; referred pay `0xc898e244…695f` exact split; in-app top-up `0x515cc6b8…a3f9` 2.9 s). Orchestrator re-verified: typecheck/lint clean, 0 wallet keys in web code. Committed 5f2d378.
+- Independent QE_E2E (`docs/qa/phase-3-qe-gate.md`): static/route + error states **PASS-with-findings** (QE-3-01/02 Medium, 03–08 Low; 0 Blocker/High); **live two-device story NOT RUN: Stream paused** for the whole 45-min window. Script ready: `node e2e/phase3/story.mjs` then `verify-chain.mjs`. Phone checklist `docs/qa/phase-3-phone-checklist.md` (32 steps, needs the Vercel URL).
+- **Gate: OPEN** (live story + phone checklist pending). Fix pass launched in parallel: UI_DESIGN (QE-3-01 state, 02, 03, 04, 06, 07 + MSG-096/097/100/101/115) and FRONTEND_INTEGRATION (QE-3-01, 03, 05, 08, manifest, prod-origin readiness).
+- Gate report published privately with all 89 screenshots: https://claude.ai/artifact/GqpwDiupiQpdEm7PA2q48k
+- Relayer balance 10.53 (top-up funder floor $5) → HUMAN #15 faucet is now urgent.
