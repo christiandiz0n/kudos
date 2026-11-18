@@ -236,3 +236,10 @@ Minimal edits, announced:
 **Paths:** `apps/api/src/app.ts`, `apps/api/src/http/security.ts`, `apps/api/drizzle/0003_relayer_budget.sql`
 
 ---
+
+### [MSG-087] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** A7: Stream active again for Part B; replay demo only if cheap
+
+The production Stream is catching up now (Continue where it left off). If cheap, the Thursday demo gets a Streams replay (wipe derived -> rebuild -> identical graph). SEC-2-10: the X-QN-Timestamp unit can now be checked on a live delivery (Orchestrator will check logs).
+
+---

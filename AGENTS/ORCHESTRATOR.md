@@ -1,5 +1,13 @@
 # ORCHESTRATOR — HANDOFF
-_Last updated: 2026-11-18 17:35Z (end of session 2) by ORCHESTRATOR. Phase 2 is built and secured. Its gate is **OPEN**: the hosted live check (QE Part B) has not run yet._
+_Last updated: 2026-11-18 18:05Z (session 3, A7) by ORCHESTRATOR._
+
+> **Session 3 (A7, D-019) — read this block first; it supersedes "Current status"/"Next up" below.**
+> - Secrets applied ✅ (relayer enabled); Stream ACTIVE and catching up; QE_E2E Part B running (20-min box once at head) → then tell the human "PAUSE THE STREAM NOW".
+> - Phase 3 + visual Phase 4 running in parallel without a "go" (A7): UI_DESIGN-customer, UI_DESIGN-venue, FRONTEND_INTEGRATION, BACKEND_RELAYER (demo top-up + venue feed). IDs in AGENT_REGISTRY.
+> - Shared web dev server: `next dev -p 3100` from apps/web (Orchestrator background task; log in the session scratchpad). CORS on Railway allows only localhost:3100.
+> - After Part B: commit + deploy BACKEND_RELAYER's endpoints (clean HEAD export), set `DEMO_TOPUP_ENABLED=true` (non-secret), apply INTERFACES §5/§7.
+> - Schedule (A7): Thu AM Vercel deploy (HUMAN #14) + seed script (2–3 venues, ~10 personas, clean stage venue) + fixes; Thu PM QE gate on the deployed app + demo choreography; Thu night DOCS_SUBMISSION; Fri AM final checks, repo public with approval, human submits by 10:00 ET.
+> - Hand off and ask for a context reset at ~75% context.
 
 > **New orchestrator session: read in this order:**
 > 1. this file

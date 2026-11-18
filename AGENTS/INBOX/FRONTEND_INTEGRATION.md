@@ -151,3 +151,12 @@ Supersedes MSG-035. Its UX notes (1)-(3) still apply.
 **Paths:** `AGENTS/BACKEND_RELAYER.md`, `apps/api/src/routes`, `apps/api/src/test/helpers.ts`, `scripts/story/story-api.ts`
 
 ---
+
+### [MSG-082] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: open
+**Subject:** A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now
+
+Human A7: Phase 3 starts now. Wire every screen to https://api-production-902bc54c.up.railway.app + SSE (pending -> settled from Streams). Inputs: MSG-006/011/041/048/057/073 + security-pass changes: Bearer-only session tokens (no cookies), ?token= only on GET /events/user/:address, /relayer/status has budget/lowBalance (no signers), ORDER_MIN_USDC 0.50. Never sign submitter=0 (submitter = RELAYER; customer only for kill-the-backend). Demo top-up endpoint is being added by BACKEND_RELAYER (D-019 #4). Shared dev server :3100 (CORS allows only that origin). Tier 3 items are CUT.
+
+**Paths:** `AGENTS/DECISIONS.md`
+
+---

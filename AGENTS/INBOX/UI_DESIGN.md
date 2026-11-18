@@ -28,3 +28,12 @@ The human approved all six MSG-007 questions (D-017): ink-black primary buttons 
 **Paths:** `AGENTS/DECISIONS.md`, `docs/design/DESIGN_SYSTEM.md`
 
 ---
+
+### [MSG-081] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: UI_DESIGN | type: request | status: open
+**Subject:** A7/D-019: Phase 3 hi-fi + Phase 4 visuals NOW, two instances (customer / venue)
+
+Human A7 (2026-11-18): Phase 3 + visual Phase 4 start now, merged. Two UI_DESIGN instances split by D-019 #2 ownership. Customer: onboarding ('Face ID or fingerprint'), wallet home in dollars, 'Top up (testnet demo)', scan-to-pay, confirm sheet (cashback + 'Who sent you here?'), success, recommend/share, ambassador record. Venue: onboarding with reward-rate slider, order entry -> signed-order QR, live dashboard (feed, MONEY GRAPH, cost per verified customer), transparency page. Apply MSG-044 fixes (lightweight projector-readable magnifier; Ben's cashback self-loop). Add error/loading states (expired order, insufficient balance, relayer down, already rewarded, camera denied). Screens stay props-only; announce prop-contract changes to FRONTEND_INTEGRATION. Shared dev server is :3100 (Orchestrator-run); never start another.
+
+**Paths:** `AGENTS/DECISIONS.md`, `AGENTS/ORCHESTRATOR_PROMPT.md`
+
+---

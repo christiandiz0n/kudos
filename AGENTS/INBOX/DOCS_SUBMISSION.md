@@ -9,3 +9,10 @@ Draft README "QuickNode Streams" section: docs/streams/README-streams-draft.md. 
 **Paths:** `docs/streams/README-streams-draft.md`, `infra/streams/stream-vouch-prod.json`, `docs/streams/S3-RUNBOOK.md`
 
 ---
+
+### [MSG-086] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: DOCS_SUBMISSION | type: fyi | status: open
+**Subject:** A7: Thursday night deliverables
+
+README (Arc section with measured gas, Streams config with stream ID 6b792277-2c66-4c0c-a141-4d452cddfdf8, Mermaid architecture, contract addresses, invariants, honest limits), Devpost answers, a 2:30 video script + shot list, pitch outline + Q&A. Inputs: MSG-066 (Streams README draft). Brief arrives Thursday evening.
+
+---

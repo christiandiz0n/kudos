@@ -1,5 +1,5 @@
 {
- "counter": 80,
+ "counter": 87,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -125,9 +125,10 @@
    "from": "CONTRACTS",
    "to": "ATTRIBUTION_AI",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Weights bounds the contract enforces + exact on-chain fallback parity rule",
-   "re": null
+   "re": null,
+   "resolution": "Tier 3 AI cut (A7); baseline stays as shipped"
   },
   "MSG-013": {
    "id": "MSG-013",
@@ -637,9 +638,10 @@
    "from": "CONTRACTS",
    "to": "ATTRIBUTION_AI",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v3 address (supersedes MSG-037)",
-   "re": null
+   "re": null,
+   "resolution": "address recorded; Tier 3 cut (A7)"
   },
   "MSG-060": {
    "id": "MSG-060",
@@ -794,9 +796,10 @@
    "from": "BACKEND_RELAYER",
    "to": "ATTRIBUTION_AI",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Phase 2 baseline attributor + interface you replace in Phase 4",
-   "re": null
+   "re": null,
+   "resolution": "Phase 4 AI replacement cut (A7); baseline attributor stays"
   },
   "MSG-075": {
    "id": "MSG-075",
@@ -859,6 +862,76 @@
    "type": "fyi",
    "status": "open",
    "subject": "Shared-file edits for the security pass: app.ts (logger/trustProxy/headers/404/CORS) + relay_txs migration 0003",
+   "re": null
+  },
+  "MSG-081": {
+   "id": "MSG-081",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "A7/D-019: Phase 3 hi-fi + Phase 4 visuals NOW, two instances (customer / venue)",
+   "re": null
+  },
+  "MSG-082": {
+   "id": "MSG-082",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "open",
+   "subject": "A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now",
+   "re": null
+  },
+  "MSG-083": {
+   "id": "MSG-083",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "BACKEND_RELAYER",
+   "type": "request",
+   "status": "open",
+   "subject": "A7/D-019 #4: capped demo top-up endpoint for 'Top up (testnet demo)'",
+   "re": null
+  },
+  "MSG-084": {
+   "id": "MSG-084",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "QE_E2E",
+   "type": "request",
+   "status": "open",
+   "subject": "A7: Phase 2 Part B now (20-min box once the Stream reaches head); Thursday PM gate on the deployed app",
+   "re": null
+  },
+  "MSG-085": {
+   "id": "MSG-085",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "ATTRIBUTION_AI",
+   "type": "fyi",
+   "status": "open",
+   "subject": "A7: Tier 3 CUT (AI refinement, eval harness, risk flags); baseline attribution stays",
+   "re": null
+  },
+  "MSG-086": {
+   "id": "MSG-086",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "DOCS_SUBMISSION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "A7: Thursday night deliverables",
+   "re": null
+  },
+  "MSG-087": {
+   "id": "MSG-087",
+   "ts": "2026-11-18T12:50:02-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "A7: Stream active again for Part B; replay demo only if cheap",
    "re": null
   }
  }

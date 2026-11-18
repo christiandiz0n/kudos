@@ -38,3 +38,10 @@ Tests: src/test/security.test.ts.
 **Paths:** `apps/api/src/routes`, `AGENTS/DECISIONS.md`
 
 ---
+
+### [MSG-084] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: QE_E2E | type: request | status: open
+**Subject:** A7: Phase 2 Part B now (20-min box once the Stream reaches head); Thursday PM gate on the deployed app
+
+Secrets are applied (relayer enabled:true) and the Stream is active, catching up. Run Part B per ORCHESTRATOR.md Next up #3 within 20 minutes of the Stream reaching chain head. On failure record why; retry at the Thursday QE gate. Thursday PM: Playwright 390x844 with two contexts on the deployed app + a real-phone checklist for the human.
+
+---

@@ -123,3 +123,22 @@ _pending_
   - PASS-with-findings on everything verifiable: Part A, the security re-verify, guards.
   - Exit criterion (canonical story through the hosted api settled via the live Stream, with latency) is pending HUMAN_INPUT #13 + #3.
 - Local processes stopped. Handoff for the context reset (A6) is written.
+
+## Session 3 — 2026-11-18 ~13:00 ET — Amendment A7 (schedule triage, D-019)
+- **State at resume (Orchestrator-verified):** Railway secrets applied (names present; `/relayer/status` enabled:true, reachable:true, lowBalance:false, balance 19.67, budget unused; deployment ce50f9ff 12:43 ET). Stream ACTIVE, catching up (hosted cursor 72,625,258 vs head 72,887,135 at 17:47Z; ~150–170 blocks/s). Current deployment: 12/12 webhook deliveries HTTP 200, 0 non-200; older deployments' HTTP logs are gone, so the 2 dashboard errors are attributed by completeness (Part B independent-derive) rather than by log line.
+- **Phase 2 Part B:** fresh QE_E2E launched (20-min box from "Stream at head").
+
+## Phase 3 (+ visual Phase 4) — Frontend, merged (A7: started without a "go")
+### Plan
+- Parallel: UI_DESIGN-customer (customer hi-fi + states), UI_DESIGN-venue (venue hi-fi, MoneyGraph v1 w/o self-loop, dashboard + cost/verified customer, transparency), FRONTEND_INTEGRATION (wire to the hosted api + SSE; milestone A = customer pay spine end-to-end), BACKEND_RELAYER (capped `POST/GET /demo/topup`, `GET /venues/:venue/payments` feed; deployed after Part B).
+- Ownership split D-019 #2/#3; one shared dev server :3100 (CORS) run by the Orchestrator.
+- Targets: FE milestone A ~17:00 ET, B ~19:30, all ~22:00; UI 1–4 by ~19:00, all ~21:00. Phase 3 gate report with 390px screenshots of every screen.
+- CUT (A7): AI refinement, eval harness, risk flags, second frontend, friends feed.
+### Delegated
+| Task | Agent | Status |
+|---|---|---|
+| Phase 2 Part B | QE_E2E (session 3) | 🟢 |
+| Demo top-up + venue feed endpoints | BACKEND_RELAYER (session 3) | 🟢 |
+| Customer hi-fi | UI_DESIGN-customer | 🟢 |
+| Venue hi-fi + money graph + transparency | UI_DESIGN-venue | 🟢 |
+| Wiring | FRONTEND_INTEGRATION | 🟢 |

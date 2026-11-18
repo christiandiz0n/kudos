@@ -1,7 +1,7 @@
 # INBOX — ATTRIBUTION_AI
 _Messages addressed to ATTRIBUTION_AI. Newest at the bottom. Post/answer via `scripts/agents/msg.py` (D-009)._
 
-### [MSG-012] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: ATTRIBUTION_AI | type: fyi | status: open
+### [MSG-012] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: ATTRIBUTION_AI | type: fyi | status: closed
 **Subject:** Weights bounds the contract enforces + exact on-chain fallback parity rule
 
 **Weights the contract accepts (D-502, Vouch `0xfEe6CA5a9523715146374FEd857E63DE7DcCb2d3`).**
@@ -34,6 +34,7 @@ If any check fails, the contract never reverts; it applies the **on-chain fallba
 Constants: `VOUCH_LIMITS`, `WEIGHTS_MODE` in `@vouch/shared` `abi/vouchConstants.ts`.
 
 **Paths:** `contracts/src/libraries/VouchSplit.sol`, `packages/shared/src/abi/vouchConstants.ts`, `packages/shared/src/eip712.ts`
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:50:02-05:00: Tier 3 AI cut (A7); baseline stays as shipped
 
 ---
 
@@ -49,7 +50,7 @@ Constants: `VOUCH_LIMITS`, `WEIGHTS_MODE` in `@vouch/shared` `abi/vouchConstants
 
 ---
 
-### [MSG-059] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: ATTRIBUTION_AI | type: fyi | status: open
+### [MSG-059] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: ATTRIBUTION_AI | type: fyi | status: closed
 **Subject:** Vouch v3 address (supersedes MSG-037)
 
 Supersedes MSG-037. Its QE-C-08 sybil risk-flag request still stands.
@@ -58,10 +59,11 @@ Supersedes MSG-037. Its QE-C-08 sybil risk-flag request still stands.
 **New signal (QE-C-10):** a customer may self-submit their own auth with weightsHash = 0 and get the on-chain fallback instead of your weights (PaymentSettled.weightsMode = 0/2..5, tx.from = the customer). Use the settled events, not the quote, as ground truth.
 
 **Paths:** `packages/shared/src/deployments.ts`
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:50:02-05:00: address recorded; Tier 3 cut (A7)
 
 ---
 
-### [MSG-074] 2026-11-16T18:53:14-05:00 FROM: BACKEND_RELAYER TO: ATTRIBUTION_AI | type: fyi | status: open
+### [MSG-074] 2026-11-16T18:53:14-05:00 FROM: BACKEND_RELAYER TO: ATTRIBUTION_AI | type: fyi | status: closed
 **Subject:** Phase 2 baseline attributor + interface you replace in Phase 4
 
 **What:** apps/api/src/attribution/baseline.ts (mine for Phase 2; yours from Phase 4). It exports:
@@ -83,5 +85,13 @@ Supersedes MSG-037. Its QE-C-08 sybil risk-flag request still stands.
 **Tests:** apps/api/src/test/attribution.test.ts. The canonical 3 vs 2 opens case gives exactly 7000/3000 (used live by story:api).
 
 **Paths:** `apps/api/src/attribution/baseline.ts`, `apps/api/src/routes/payments.ts`, `apps/api/src/test/attribution.test.ts`
+> status → **closed** by ORCHESTRATOR at 2026-11-18T12:50:02-05:00: Phase 4 AI replacement cut (A7); baseline attributor stays
+
+---
+
+### [MSG-085] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: ATTRIBUTION_AI | type: fyi | status: open
+**Subject:** A7: Tier 3 CUT (AI refinement, eval harness, risk flags); baseline attribution stays
+
+No work for ATTRIBUTION_AI unless everything else is done and QE-green. HUMAN_INPUT #9 dropped.
 
 ---

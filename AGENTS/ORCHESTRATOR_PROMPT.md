@@ -505,3 +505,24 @@ _Where A6 conflicts with older text, A6 wins. This records the human's own instr
    - don't touch port 3000;
    - never make the repo public, submit, or spend real money without explicit approval;
    - stop at every phase gate and wait for "go".
+
+### A7 — 2026-11-18 ~13:00 ET (schedule triage; session 3 resume) — verbatim from the human
+_Where A7 conflicts with older text, A7 wins. Status reported by the human at the same time: Railway secrets APPLIED on the api service (/relayer/status enabled:true, reachable:true, lowBalance:false, balance ~19.67, budget unused); Stream vouch-v3-production (6b792277-2c66-4c0c-a141-4d452cddfdf8) ACTIVE with "Continue where it left off", catching up (block ~72,615,071 at 12:46 ET; 27 blocks sent; 2 errors, believed to be Monday's pre-token 503s)._
+
+## Amendment A7: schedule triage (append verbatim to ORCHESTRATOR_PROMPT.md and log in DECISIONS.md)
+It is Wednesday ~1pm ET. Hard deadline: Friday 1:00 PM ET. Target submission: Friday 10:00 AM ET. Phase 3 has not started, and it's what judges see, so it is now the top priority.
+- NOW, in parallel:
+  (a) Finish Phase 2 Part B (resume QE_E2E or start a fresh one per the handoff). Time box 20 minutes once the Stream has caught up to the chain head. Tell me "PAUSE THE STREAM NOW" when done. If it can't pass in the time box, record why, keep going, and retry at the Thursday QE gate. Confirm the 2 Stream errors are the old 503s.
+  (b) Launch PHASE 3 + the visual parts of Phase 4, merged, immediately. Don't wait for Part B or for my "go".
+    - Customer app: onboarding ("Face ID or fingerprint" wording), wallet home in dollars, testnet top-up labeled as a demo, scan-to-pay, confirm sheet with cashback + "Who sent you here?", success, recommend/share, ambassador record.
+    - Venue app: onboarding with reward-rate slider, order entry → signed-order QR, live dashboard with feed, MONEY GRAPH, cost per verified customer.
+    - Transparency page.
+    - Wire to the live Railway API + SSE.
+    - Agents: UI_DESIGN (customer), UI_DESIGN (venue), FRONTEND_INTEGRATION, in parallel. Use the approved design system, the MSG-044 fixes (magnifier, Ben's self-loop), the handoffs MSG-006/011/041/048/057/073, and the API changes from the security pass (Bearer-only tokens, ?token= only on GET /events/user/:address, ORDER_MIN_USDC 0.50).
+- Thu morning: deploy apps/web to a stable host (Vercel preferred). Tell me exactly which account and clicks are needed. Seed script: 2–3 venues, ~10 personas, plus a clean stage venue. Bug fixes.
+- Thu afternoon: QE gate on the deployed app (Playwright at 390×844 with two contexts, plus a real-phone checklist for me). Demo choreography: judges join via QR; the Streams replay demo and kill-the-backend (customer self-submit) only if cheap.
+- Thu night: DOCS_SUBMISSION writes the README (Arc section with measured gas, Streams config with stream ID 6b792277-2c66-4c0c-a141-4d452cddfdf8, architecture diagram, contract addresses, invariants, honest limits), Devpost answers, a 2:30 video script with shot list, and a pitch outline with Q&A. I record the video.
+- Fri morning: final checks, make the repo public with my approval, I submit.
+CUT (Tier 3): AI attribution refinement, eval harness, risk flags, second frontend, friends feed. The deterministic baseline attribution stays. Don't start any cut item unless everything above is done and QE-green.
+Quality rule: cut scope, not quality. A polished core flow on a real phone beats breadth. If any task runs more than 50% over its time, stop and propose a cut.
+Hand off and ask me to reset your context whenever you pass ~75% context usage.
