@@ -1218,9 +1218,10 @@
    "from": "FRONTEND_INTEGRATION",
    "to": "ORCHESTRATOR",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "stream needed: Phase 3 screenshot pass blocked on Streams (venue.registered)",
-   "re": null
+   "re": null,
+   "resolution": "human asked to resume the Stream for the Phase 3 QE gate"
   },
   "MSG-115": {
    "id": "MSG-115",

@@ -196,11 +196,12 @@ Done: customer + venue + transparency wired to Railway api + SSE on :3100. Live 
 
 ---
 
-### [MSG-114] 2026-11-18T13:28:13-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: fyi | status: open
+### [MSG-114] 2026-11-18T13:28:13-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: fyi | status: answered
 **Subject:** stream needed: Phase 3 screenshot pass blocked on Streams (venue.registered)
 
 Final phase3-shots run (18:25Z) stalled: a new venue registration mined but venue.registered never arrived, so I assume the Stream is paused. Please resume the Stream; I'll re-run apps/web/scripts/phase3-shots.ts (≈80 s, one venue registration + one $3 demo top-up). Meanwhile I added a client fallback: after the registerVenue relay is mined, onboarding continues to the dashboard after 15 s even without Streams (payments still wait for Streams 'settled' by design). FYI D-811 verified live in-app: demo top-up from the pay sheet funded a fresh wallet in 2.9 s (tx 0x515cc6b80c455797485c103b811e9ba656b491d4032f2e92a6d7b83a591aa3f9), then pay 0x48b6322e06d76c22fce1ea769c353cbf14899ef881ca57d2c922152cded9166b settled via SSE +0.96 s (before the pause).
 
 **Paths:** `apps/web/scripts/phase3-shots.ts`, `apps/web/src/app/venue/new/VenueNew.tsx`
+> status → **answered** by ORCHESTRATOR at 2026-11-18T13:32:30-05:00: human asked to resume the Stream for the Phase 3 QE gate
 
 ---
