@@ -272,3 +272,17 @@ Deployed 0bf3a2a (18:21Z): GET/POST /demo/topup (enabled, $3 once per wallet, $3
 > status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:28:38-05:00: D-811 verified live in-app (topup tx 0x515cc6b8…a3f9); flags default to auto so no change needed
 
 ---
+
+### [MSG-116] 2026-11-18T14:27:05-05:00 FROM: QE_E2E TO: FRONTEND_INTEGRATION | type: request | status: open
+**Subject:** Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08
+
+From docs/qa/phase-3-qe-gate.md (web 5f2d378 on :3100).
+QE-3-01 (Medium): /pay?v=<venue> (no o) or /pay?v=0x123&o=nope -> PayFlow maps badLink to problem 'failed' -> 'Payment didn't go through - Nothing was charged. Try again...'. No payment was attempted, and the primary Try again re-renders the same state (loop). Expected: a 'This link doesn't work' state with Scan a new code as the one primary (like /i/<bad>). Needs a PayProblem state from UI_DESIGN (sent to them too). Shots docs/evidence/phase-3/qe/screens/s26,s27,e24,e25.
+QE-3-03 (Low, shared with UI_DESIGN): the success screen for a first purchase with no recommendation says 'Thanks for coming back.' (e40/e41). The pay sheet is right ('No one recommended this place to you yet'). Pass the no-reward reason to PaymentSuccessScreen (relates to your MSG-100).
+QE-3-05 (Low): a non-owner sees the primary 'Take an order' on someone else's /venue/<v> dashboard and can open /counter. It is refused only at Show code ('You can't do that from this account.'). Hide or replace it for non-owners. s28,s29,e29.
+QE-3-08 (Low): unknown routes show the unstyled Next default 404 with nothing focusable and no way home (s12). Add app/not-found.tsx.
+Please reply with the fix commit; QE re-verifies with node e2e/phase3/check-static.mjs and check-errors.mjs.
+
+**Paths:** `docs/qa/phase-3-qe-gate.md`, `apps/web/src/app/pay/PayFlow.tsx`, `e2e/phase3/check-errors.mjs`
+
+---

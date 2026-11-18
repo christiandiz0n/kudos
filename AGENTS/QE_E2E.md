@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-18T18:22:00Z by QE_E2E — Phase 2 QE gate Part B attempt 2: PASS-with-findings_
+_Last updated: 2026-11-18T19:30:00Z by QE_E2E — Phase 3 QE gate (frontend): PASS-with-findings on static + error states; live story NOT RUN (Stream paused)_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,22 +10,27 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟢 **Phase 2 gate PASS-with-findings** (Part A 2026-11-17; Part B hosted 2026-11-18 18:08–18:17Z).
-- **Hosted story:** the canonical story ran through the hosted api (deployment `ce50f9ff`, code `920a042`).
-  - Pay `0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb` is exact on chain.
-  - It settled via the live Stream ~0.3 s after the relay receipt; SSE `payment.settled` came +0.81 s after block time.
-- **Hosted == chain:** 177/177 checks, 141 events. No events missing.
-- **Deliveries:** 28/28 verified.
-- **Open:** QE-2-10 (Info, MSG-106): the X-QN-Timestamp unit is not observable in the logs, so SEC-2-10 stays open.
-- **The Stream can be paused.**
-- **Next:** Thursday PM QE gate on the deployed web app.
+🟡 **Phase 3 gate (frontend), 2026-11-18: PASS-with-findings on parts 1, 2, 4 and 5. Part 3 (live story) is NOT RUN, so the gate is OPEN.**
+- **Static and route checks:** 28 visits. 0 page errors, 0 banned words, all amounts have 2 decimals, primary buttons ≥ 44 px, ≤ 1 primary per screen, reduced motion gives 0 animations, first-Tab focus is visible. The QR decodes exactly, and the in-app scanner routes in 0.68 s.
+- **Error states:** all 15 pass except the malformed link (QE-3-01).
+- **Live story:** the QuickNode Stream was paused for the whole window (18:25Z → still paused at 19:23Z). `e2e/phase3/story.mjs` is ready to run (~3 min).
+- **Findings:** QE-3-01..08 (2 Medium, 6 Low), filed as MSG-116 (FRONTEND_INTEGRATION) and MSG-117 (UI_DESIGN).
+- **Reports:** `docs/qa/phase-3-qe-gate.md`, phone checklist `docs/qa/phase-3-phone-checklist.md`, screenshots `docs/evidence/phase-3/qe/screens/` (+ `index.json`).
+- Phase 2 gate: PASS-with-findings (QE-2-10 Info open, MSG-106).
 
 ## Mental model (read this first)
 - Verify from the **written** docs only, and re-derive every claim with an independent tool (cast/curl/Blockscout v2 API) rather than the builder's script. Then also re-run the builder's script.
 - Never touch the root env file. Tools load it: `bash scripts/spikes/s2-deploy.sh` and `pnpm … streams*`/`api start` (`tsx --env-file-if-exists`). Inline env vars **override** the file (proven: an inline `STREAMS_WEBHOOK_SECRET` verified a signed delivery).
 - Run local servers on QE ports (4020), with `API_HOST=127.0.0.1 DATABASE_URL=pglite://memory STREAMS_SPIKE_LOG=<scratch>` so the shared DB and spike log aren't touched. Never use 3000/3100/4000.
 - Use real Arc logs for payload tests (`eth_getLogs` on a single block). The raw JSON for blocks 72567880 (Ping), 72567926 (Split + USDC + system logs) and 72567881 (no Hello) is kept in `docs/evidence/phase-0/qe/`.
-- Testnet spend so far: 0.01764372 USDC (one Hello deploy + ping).
+- Testnet spend so far: 0.0176 (Phase 0) + about 0.1 (Phase 2) + about 0.004 USDC (Phase 3, one venue registration). Demo top-ups used by QE: 0.
+- **Phase 3 web checks (`e2e/phase3/`):**
+  - Playwright comes from apps/web through `createRequire`; the virtual WebAuthn authenticator (PRF) is set up per context in `lib.mjs`.
+  - `audit()` does: banned words outside `[data-copy-scope=details]`, 2-decimal `$`, ≥6-digit or hex strings, ≥44 px targets, primary = class `bg-ink`.
+  - Never click to reset focus: a backdrop click closes the pay sheet and navigates to /wallet.
+  - Take screenshots before the focus probe.
+  - Toggling `WebAuthn.setUserVerified` can leave the next confirm cancelled; use a fresh context per auth-sensitive check.
+- **Free Stream-liveness probe:** a venue whose registerVenue was mined has `GET /venues/<v>` `onchain != null` only once Streams delivered `venue.registered`. Always use `curl -m`: an un-timed curl hung the poller.
 
 ## Phase 2 notes (read before Part B)
 - Guards without the real relayer key: start the local api with an inline `RELAYER_PRIVATE_KEY=<QE X key from qe-state.json>` (unfunded), `ORDER_MIN_USDC=0.01` (920a042 enforces a $0.50 minimum), `RELAYER_MAX_GAS_PAY=100000`, `RELAYER_RATE_PER_USER_PER_MIN=2`. The coordinator forbids a local api holding the real relayer key while the hosted relayer is live.
@@ -44,6 +49,9 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 ## Key files map
 | Path | What it does | Notes |
 |---|---|---|
+| `docs/qa/phase-3-qe-gate.md` | Phase 3 (frontend) gate report | findings QE-3-01..08; §3 live story pending the Stream |
+| `docs/qa/phase-3-phone-checklist.md` | Real-phone checklist for `<WEB_URL>` (32 P/F steps) | for the human, Thursday |
+| `e2e/phase3/*.mjs` | Phase 3 Playwright checks (`lib`, `check-static`, `check-errors`, `check-errors2`, `check-scanner`, `story`) + `verify-chain`, `decode-qr`, `png-to-y4m`, `stream-poll.sh` | `QE_BASE` env overrides `:3100`; screenshots → `docs/evidence/phase-3/qe/screens/` |
 | `docs/qa/phase-2-qe-e2e.md` | Phase 2 gate report (Part A; Part B to append) | findings QE-2-01..09 |
 | `scripts/qa/api-contract.ts` | Live API contract harness: `setup|noauth|main|guards|settled` | run with `scripts/node_modules/.bin/tsx`; `main` spends about $0.012 gas |
 | `scripts/qa/independent-derive.mjs` | Independent chain re-derivation: topic0s, invariants, receipt + USDC transfers, on-chain stats, hosted reads, PGlite rows | read-only; no api code |
@@ -61,6 +69,11 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split topic0), §6 (HMAC, envelope), §7 (env names). Proposed INTERFACES change (via Orchestrator): §6 body field `eventName` → `event` (QE-01).
 
 ## Done (rolling, newest first)
+- 2026-11-18: **Phase 3 QE gate (frontend): PASS-with-findings (parts 1/2/4/5); part 3 STREAM NOT ACTIVE.**
+  - Independent Playwright checks are in `e2e/phase3/`: 28 route visits, 15 error states (real where cheap, intercepted otherwise), the scanner via a fake-camera Y4M of a real QR, and an independent QR decode.
+  - 66 screenshots plus `index.json`; a 32-step real-phone checklist.
+  - Findings QE-3-01..08 → MSG-116/117.
+  - Spend about $0.004 gas; 0 top-ups.
 - 2026-11-18: Phase 2 QE gate Part B attempt 2 (hosted): **PASS-with-findings**.
   - Hosted story exact on chain (pay `0x40147554…ddfcb`, block 72890535) and settled via the live Stream: SSE +0.144 s and `GET /payments/:id` +0.296 s after the relay receipt.
   - 28/28 verified deliveries.
@@ -86,16 +99,17 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
-- [ ] **Thursday PM QE gate on the deployed web app:**
-  - Playwright at 390×844 with two browser contexts (venue + customer), running the full story against the deployed web + hosted api.
-  - A real-phone checklist for the human.
-  - Copy check: no crypto jargon on primary screens.
-- [ ] At Thursday's gate, re-test QE-2-03/04/06/09 on hosted (MSG-079).
+- [ ] **As soon as the Stream is active:**
+  - run `node e2e/phase3/story.mjs`, then `node e2e/phase3/verify-chain.mjs <ben tx> 1000000`, and fill §3 of `docs/qa/phase-3-qe-gate.md` (latencies, txs, 1280×720 dashboard/graph shots).
+  - It uses 2 demo top-ups ($6 of the global $30/24h).
+- [ ] **Thursday PM regression on the deployed Vercel app:**
+  - `QE_BASE=<WEB_URL> node e2e/phase3/check-static.mjs`, then `check-errors.mjs`, `check-errors2.mjs`, `story.mjs`.
+  - Re-test QE-3-01..08 once MSG-116/117 are answered.
+  - Re-test QE-2-03/04/06/09 (MSG-079).
+- [ ] Hand the human `docs/qa/phase-3-phone-checklist.md` with the Vercel URL filled in; collect the P/F and latency results.
 - [ ] Re-check QE-2-10 / SEC-2-10 when STREAMS_INFRA logs the timestamp unit (MSG-106).
 - [ ] Phase 0 gate Part B leftovers: QE-01/02/03/05 re-checks when owners report them.
-- [x] Phase 2 Part A: API contract tests, CLI story (local), replay determinism, hosted == chain, webhook probes.
-- [x] Phase 2 Part B: hosted story `--require-settled`, latency, delivery logs, hosted == chain (2026-11-18).
-- [x] Re-test QE-2-01: PASS on 920a042.
+- [x] Phase 3 static + error-state checks (2026-11-18).
 - [ ] Phase 5: full regression + demo rehearsal from written steps.
 
 ## Struggles, open questions, known issues

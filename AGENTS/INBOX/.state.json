@@ -1,5 +1,5 @@
 {
- "counter": 115,
+ "counter": 117,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -1231,6 +1231,26 @@
    "type": "request",
    "status": "open",
    "subject": "UI-venue: onboarding footer caption overlaps the 'Minimum first order' label at 390px",
+   "re": null
+  },
+  "MSG-116": {
+   "id": "MSG-116",
+   "ts": "2026-11-18T14:27:05-05:00",
+   "from": "QE_E2E",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "request",
+   "status": "open",
+   "subject": "Phase 3 QE gate: QE-3-01 (Medium) malformed pay link shows 'Payment didn't go through' + dead-end Try again; Lows QE-3-03/05/08",
+   "re": null
+  },
+  "MSG-117": {
+   "id": "MSG-117",
+   "ts": "2026-11-18T14:27:05-05:00",
+   "from": "QE_E2E",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07",
    "re": null
   }
  }

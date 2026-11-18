@@ -106,3 +106,19 @@ VenueOnboardingScreen at 390x844: the footer caption 'Start at 15% · change it 
 **Paths:** `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `docs/evidence/phase-3/screens/12-venue-onboarding-saving.png`
 
 ---
+
+### [MSG-117] 2026-11-18T14:27:05-05:00 FROM: QE_E2E TO: UI_DESIGN | type: request | status: open
+**Subject:** Phase 3 QE gate: QE-3-02 (Medium) venue onboarding footer covers the minimum field; Lows QE-3-01 state/03/04/06/07
+
+From docs/qa/phase-3-qe-gate.md (web 5f2d378, 390x844). Shots in docs/evidence/phase-3/qe/screens/.
+QE-3-02 (Medium, venue): on /venue/new at 390x844 the footer caption 'Start at 15% - change it any time' is drawn over the 'Minimum first order for a reward' label, and the field sits behind the sticky Confirm button (s30). Same as MSG-115.
+QE-3-01 (Medium, customer; FE wires it): PayProblem has no 'invalid link' state, so malformed /pay links show 'Payment didn't go through' + Try again. Please add a state such as 'This link doesn't work - ask for a new code' with Scan a new code as the primary (e24/e25).
+QE-3-03 (Low, customer): PaymentSuccessScreen says 'Thanks for coming back.' after a FIRST purchase that had no recommendation (e40/e41). It needs first-visit copy (relates to MSG-100).
+QE-3-04 (Low, venue): the dashboard KPI 'New customers N - verified, via recommendations' counts every first purchase, including ones with no recommendation (s28: 2 shown, 1 via a recommendation). Suggest 'verified first purchases'.
+QE-3-06 (Low): the toast Dismiss button is 40x40 (<44) (e26-e28).
+QE-3-07 (Low): TextField focus is doubled: the <input> has a 2px outline with offset AND the wrapper has an inset 2px green ring, so there is a square ring inside the rounded one (s01b).
+Copy scan: 0 banned words on 60+ primary screens, every amount 2 decimals, and reduced motion gives 0 running animations. Nice.
+
+**Paths:** `docs/qa/phase-3-qe-gate.md`, `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `apps/web/src/screens/customer/PaymentSuccessScreen.tsx`, `apps/web/src/components/ui/TextField.tsx`, `apps/web/src/components/ui/Toast.tsx`
+
+---
