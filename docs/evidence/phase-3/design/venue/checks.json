@@ -1,0 +1,138 @@
+{
+  "base": "http://localhost:3100",
+  "at": "2026-11-18T18:16:53.970Z",
+  "bannedWords": {},
+  "reducedMotion": {
+    "normal": {
+      "draw": "vx-mg-draw",
+      "runDisplay": "inline"
+    },
+    "reduce": {
+      "draw": "none",
+      "runDisplay": "none"
+    },
+    "pass": true
+  },
+  "focusVisible": [
+    {
+      "id": "venue-onboarding",
+      "tag": "INPUT",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "venue-onboarding",
+      "tag": "INPUT",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "venue-onboarding",
+      "tag": "INPUT",
+      "label": "",
+      "visible": true
+    },
+    {
+      "id": "venue-onboarding",
+      "tag": "BUTTON",
+      "label": "Confirm with Face ID or fingerprint",
+      "visible": true
+    },
+    {
+      "id": "order-entry",
+      "tag": "BUTTON",
+      "label": "Back to dashboard",
+      "visible": true
+    },
+    {
+      "id": "order-entry",
+      "tag": "BUTTON",
+      "label": "1",
+      "visible": true
+    },
+    {
+      "id": "order-entry",
+      "tag": "BUTTON",
+      "label": "2",
+      "visible": true
+    },
+    {
+      "id": "order-entry",
+      "tag": "BUTTON",
+      "label": "3",
+      "visible": true
+    },
+    {
+      "id": "venue-dashboard",
+      "tag": "INPUT",
+      "label": "Typical ad cost per new customer, in dol",
+      "visible": true
+    },
+    {
+      "id": "venue-dashboard",
+      "tag": "BUTTON",
+      "label": "Latest",
+      "visible": true
+    },
+    {
+      "id": "venue-dashboard",
+      "tag": "A",
+      "label": "How payments split",
+      "visible": true
+    },
+    {
+      "id": "venue-dashboard",
+      "tag": "BUTTON",
+      "label": "Take an order",
+      "visible": true
+    }
+  ],
+  "consoleErrors": [],
+  "screenshots": [
+    "390-venue-onboarding.png",
+    "390-venue-onboarding-error.png",
+    "390-venue-onboarding-confirming.png",
+    "390-order-entry.png",
+    "390-order-entry-empty.png",
+    "390-order-entry-error.png",
+    "390-order-qr.png",
+    "390-order-qr-low.png",
+    "390-order-qr-processing.png",
+    "390-order-qr-expired.png",
+    "390-order-qr-refreshing.png",
+    "390-order-qr-paid.png",
+    "390-venue-dashboard.png",
+    "390-venue-dashboard-network.png",
+    "390-venue-dashboard-reconnecting.png",
+    "390-venue-dashboard-offline.png",
+    "390-venue-dashboard-loading.png",
+    "390-venue-dashboard-empty.png",
+    "390-venue-dashboard-desktop.png",
+    "390-venue-dashboard-desktop-network.png",
+    "390-venue-dashboard-desktop-empty.png",
+    "390-money-graph-5.png",
+    "390-money-graph-20.png",
+    "390-money-graph-60.png",
+    "390-transparency.png",
+    "1280-venue-dashboard-desktop.png",
+    "1280-venue-dashboard-desktop-network.png",
+    "1280-venue-dashboard-desktop-empty.png",
+    "1280-money-graph-5.png",
+    "1280-money-graph-20.png",
+    "1280-money-graph-60.png",
+    "1440-money-graph-playground.png",
+    "playground-landscape-20.png",
+    "playground-portrait-20.png",
+    "playground-landscape-60.png",
+    "playground-portrait-60.png",
+    "dark-1280-venue-dashboard-desktop.png",
+    "dark-1280-money-graph-60.png",
+    "dark-390-venue-dashboard.png",
+    "dark-390-order-qr.png",
+    "dark-390-venue-onboarding.png",
+    "motion-arrival-450ms.png",
+    "motion-arrival-1100ms.png",
+    "motion-arrival-1900ms.png",
+    "390-focus-dashboard.png"
+  ]
+}

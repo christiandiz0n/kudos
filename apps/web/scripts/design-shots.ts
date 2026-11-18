@@ -5,35 +5,35 @@
  *   pnpm --filter web design:shots               # = node --no-warnings scripts/design-shots.ts
  *
  * Writes PNGs + checks.json to docs/evidence/phase-1/design/. Env: DESIGN_BASE_URL (default http://localhost:3200).
+ * Phase 3 (shared dev server on :3100, D-019):
+ *   DESIGN_BASE_URL=http://localhost:3100 DESIGN_WHO=Customer DESIGN_OUT=docs/evidence/phase-3/design/customer pnpm --filter web design:shots
+ *   DESIGN_WHO   comma list of Customer|Venue|Public: only those screens (+ their dark samples); skips the /design overview.
+ *   DESIGN_OUT   output dir relative to the repo root.
+ * The screen list is read from src/app/design/_mocks/meta*.ts (no more hand-kept copy).
  * Checks: no console/page errors, no banned words on primary-screen mocks (outside the Details drawer),
  * reduced motion stops the flow animation, keyboard focus is visible.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, type BrowserContext, type Page } from "playwright";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const OUT = resolve(here, "../../../docs/evidence/phase-1/design");
+const OUT = resolve(here, "../../..", process.env.DESIGN_OUT ?? "docs/evidence/phase-1/design");
 const BASE = process.env.DESIGN_BASE_URL ?? "http://localhost:3200";
+const WHO = process.env.DESIGN_WHO ? new Set(process.env.DESIGN_WHO.split(",").map((w) => w.trim())) : null;
 
-// Keep in sync with src/app/design/_mocks/meta.ts (not imported: this runs under plain node).
-const SCREENS: Array<{ id: string; technical?: boolean; desktop?: boolean }> = [
-  { id: "sign-in" },
-  { id: "intro" },
-  { id: "wallet" },
-  { id: "scan" },
-  { id: "pay-confirm" },
-  { id: "success" },
-  { id: "recommend" },
-  { id: "ambassador" },
-  { id: "venue-onboarding" },
-  { id: "order-entry" },
-  { id: "order-qr" },
-  { id: "venue-dashboard" },
-  { id: "transparency", technical: true },
-  { id: "venue-dashboard-desktop", desktop: true },
-];
+// Parsed from src/app/design/_mocks/meta*.ts (plain node can't resolve the app's extensionless imports).
+const MOCKS = resolve(here, "../src/app/design/_mocks");
+const ALL_SCREENS: Array<{ id: string; who: string; technical?: boolean; desktop?: boolean }> = [];
+for (const f of readdirSync(MOCKS).filter((n) => /^meta(\.[\w-]+)?\.ts$/.test(n)).sort()) {
+  for (const m of readFileSync(join(MOCKS, f), "utf8").matchAll(/\{\s*id:\s*"([^"]+)"[^}]*\}/g)) {
+    const who = /who:\s*"(\w+)"/.exec(m[0])?.[1] ?? "?";
+    ALL_SCREENS.push({ id: m[1], who, technical: /technical:\s*true/.test(m[0]), desktop: /desktop:\s*true/.test(m[0]) });
+  }
+}
+const SCREENS = ALL_SCREENS.filter((s) => !WHO || WHO.has(s.who));
+const DARK = ["wallet", "pay-confirm", "success", "venue-dashboard", "scan-denied", "intro", "recommend-link", "pay-expired"];
 
 /** Banned on primary screens (COPY.md). "Top up (testnet demo)" is the one allowed testnet label. */
 const BANNED =
@@ -88,8 +88,8 @@ async function main() {
     return join(OUT, name);
   };
 
-  // 1) /design sections at 390px
-  {
+  // 1) /design sections at 390px (full runs only)
+  if (!WHO) {
     const ctx = await mobile(browser);
     const page = await ctx.newPage();
     watch(page, "design@390");
@@ -127,6 +127,8 @@ async function main() {
 
   // 2) Each screen at 390×844 (light), full page + banned words check
   const banned: Record<string, string[]> = {};
+  const smallTargets: Record<string, string[]> = {};
+  const focusByScreen: Record<string, string> = {};
   {
     const ctx = await mobile(browser);
     const page = await ctx.newPage();
@@ -147,16 +149,39 @@ async function main() {
         const hits = (text.replace(/Top up \(testnet demo\)/g, "").match(BANNED) ?? []).map((h) => h.toLowerCase());
         if (hits.length) banned[s.id] = [...new Set(hits)];
       }
+      if (WHO) {
+        // Tap targets < 44px (info; inline text links are exempt under WCAG 2.5.8) + first Tab stop shows a ring.
+        const small = await page.evaluate(() =>
+          [...document.querySelectorAll<HTMLElement>('button, a[href], input, summary, [role="radio"]')]
+            .filter((e) => !e.closest("p, li > span"))
+            .map((e) => ({ e, r: e.getBoundingClientRect() }))
+            .filter(({ r }) => r.width > 0 && r.height > 0 && (r.height < 44 || r.width < 44))
+            .map(({ e, r }) => `${e.tagName.toLowerCase()} "${(e.getAttribute("aria-label") ?? e.textContent ?? "").trim().slice(0, 28)}" ${Math.round(r.width)}x${Math.round(r.height)}`),
+        );
+        if (small.length) smallTargets[s.id] = small;
+        await page.keyboard.press("Tab");
+        focusByScreen[s.id] = await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement | null;
+          if (!el || el === document.body) return "no focusable";
+          const cs = getComputedStyle(el);
+          const ok = (cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2) || cs.boxShadow !== "none";
+          return `${ok ? "visible" : "NOT VISIBLE"}: ${el.tagName.toLowerCase()} "${(el.getAttribute("aria-label") ?? el.textContent ?? "").trim().slice(0, 28)}"`;
+        });
+      }
     }
     await ctx.close();
   }
   results.bannedWords = banned;
+  if (WHO) {
+    results.smallTapTargets = smallTargets;
+    results.focusFirstTab = focusByScreen;
+  }
 
   // 3) Dark theme samples
   {
     const ctx = await mobile(browser, { dark: true });
     const page = await ctx.newPage();
-    for (const id of ["wallet", "pay-confirm", "success", "venue-dashboard"]) {
+    for (const id of DARK.filter((d) => SCREENS.some((s) => s.id === d))) {
       watch(page, `dark-${id}`);
       await ready(page, `/design/screens/${id}`);
       await fullHeight(page, async () => {
@@ -166,8 +191,8 @@ async function main() {
     await ctx.close();
   }
 
-  // 4) Desktop: projector dashboard + money graph + design overview
-  {
+  // 4) Desktop: projector dashboard + money graph + design overview (full runs only)
+  if (!WHO) {
     const ctx: BrowserContext = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, colorScheme: "light", reducedMotion: "reduce" });
     const page = await ctx.newPage();
     watch(page, "desktop");
@@ -186,10 +211,10 @@ async function main() {
     const probe = async (reduce: boolean) => {
       const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: reduce ? "reduce" : "no-preference" });
       const page = await ctx.newPage();
-      await ready(page, "/design/screens/venue-dashboard");
+      await ready(page, WHO && !WHO.has("Venue") ? "/design/screens/success" : "/design/screens/venue-dashboard");
       const r = await page.evaluate(() => {
-        const flow = document.querySelector(".vx-flow");
-        const pop = document.querySelector(".animate-vx-rise-in");
+        const flow = document.querySelector(".vx-flow, .vx-draw");
+        const pop = document.querySelector(".animate-vx-rise-in, .animate-vx-pop");
         return {
           flowAnimation: flow ? getComputedStyle(flow).animationName : null,
           riseDuration: pop ? getComputedStyle(pop).animationDuration : null,
@@ -205,7 +230,7 @@ async function main() {
   results.consoleErrors = errors;
   results.screenshots = shots;
   writeFileSync(join(OUT, "checks.json"), JSON.stringify(results, null, 2) + "\n");
-  console.log(JSON.stringify({ shots: shots.length, bannedWords: banned, consoleErrors: errors.length, reducedMotion: results.reducedMotion, focusVisible: results.focusVisible }, null, 2));
+  console.log(JSON.stringify({ shots: shots.length, bannedWords: banned, consoleErrors: errors.length, reducedMotion: results.reducedMotion, focusVisible: results.focusVisible, smallTapTargets: results.smallTapTargets, focusFirstTab: results.focusFirstTab }, null, 2));
   if (errors.length || Object.keys(banned).length) process.exit(1);
 }
 

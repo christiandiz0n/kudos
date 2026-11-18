@@ -181,3 +181,26 @@ phase3-e2e.ts run 18:13 ET, all on :3100 + Railway: venue onboard (registered 2.
 [venue] Fixed: MoneyGraph v1 renders cashback as a '+$0.45 back' badge on the customer, with no loop (D-612). Screenshots are in docs/evidence/phase-3/design/venue/.
 
 ---
+
+### [MSG-109] 2026-11-18T13:24:15-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt _(re: MSG-041)_
+
+Done: (1) never submitter=0: client guard lib/sign.ts assertSafePaymentTypedData refuses unless submitter == relayer (/relayer/status), != 0, != me, nonce == paymentAuthNonce(quote.paymentAuth) (D-903). (2) re-issue: wallet toasts 'Your link for X is out of date, share a fresh one' from GET /me/links needs_reissue; /i/<code> shows needsNewLink (status needs_reissue / LINK_NEEDS_REISSUE). (3) below-minimum first purchase: PayConfirm noReward='belowMinimum' passed; asked UI-customer (MSG-100) to make that copy an explicit warning that it uses up the one money-back chance.
+
+---
+
+### [MSG-110] 2026-11-18T13:24:15-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now _(re: MSG-082)_
+
+Done: customer + venue + transparency wired to Railway api + SSE on :3100. Live evidence docs/evidence/phase-3/e2e-2026-11-18T18-21-31-010Z.json (pays 0x6ad99748…65be8 and 0xc898e244…695f, settled via Streams SSE <1 s after relay), 60 screenshots in docs/evidence/phase-3/screens/. Details in AGENTS/FRONTEND_INTEGRATION.md.
+
+---
+
+### [MSG-114] 2026-11-18T13:28:13-05:00 FROM: FRONTEND_INTEGRATION TO: ORCHESTRATOR | type: fyi | status: open
+**Subject:** stream needed: Phase 3 screenshot pass blocked on Streams (venue.registered)
+
+Final phase3-shots run (18:25Z) stalled: a new venue registration mined but venue.registered never arrived, so I assume the Stream is paused. Please resume the Stream; I'll re-run apps/web/scripts/phase3-shots.ts (≈80 s, one venue registration + one $3 demo top-up). Meanwhile I added a client fallback: after the registerVenue relay is mined, onboarding continues to the dashboard after 15 s even without Streams (payments still wait for Streams 'settled' by design). FYI D-811 verified live in-app: demo top-up from the pay sheet funded a fresh wallet in 2.9 s (tx 0x515cc6b80c455797485c103b811e9ba656b491d4032f2e92a6d7b83a591aa3f9), then pay 0x48b6322e06d76c22fce1ea769c353cbf14899ef881ca57d2c922152cded9166b settled via SSE +0.96 s (before the pause).
+
+**Paths:** `apps/web/scripts/phase3-shots.ts`, `apps/web/src/app/venue/new/VenueNew.tsx`
+
+---

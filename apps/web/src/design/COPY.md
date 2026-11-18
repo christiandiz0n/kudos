@@ -52,3 +52,22 @@ Primary screens = everything a customer or venue staff sees in the normal flow. 
 
 ## Details drawer vocabulary (allowed there)
 Network fee (paid by Vouch) · Settles on Arc Testnet · Receipt ID `0x2de2…8214` (truncated middle) · Order ID · Public record. Hashes are mono, truncated, with copy + explorer link in Phase 3.
+
+## Phase 3 customer states (approved copy, D-608/D-609)
+| State | Title · body · action |
+|---|---|
+| Pay primary | **Confirm with Face ID or fingerprint** · "You pay $12.00. No fees." |
+| Who sent you | Who sent you here? _Optional_ · Ana · Priya · Someone else · Skip |
+| Repeat visit | "Welcome back. Your first-visit thank-you at Lena's café has already been paid, so this one is a regular payment." |
+| Code expired | This code has expired · "…Nothing was charged. Ask for a new code and scan again." · Scan a new code |
+| Already paid | This order is already paid · "Someone has already paid with this code…" · Scan a new code |
+| Not enough money | Not enough money yet · "Your balance is $3.20. Add at least $8.80 to pay $12.00." · Top up (testnet demo) |
+| Service down | Payments are paused for a moment · "…Nothing was charged. Try again in a minute." · Try again |
+| Failed | Payment didn't go through · "Nothing was charged. Try again, or ask for a new code." |
+| Prompt cancelled | Payment not confirmed · "Face ID or fingerprint was cancelled, so nothing was charged." |
+| Offline | You're offline · "Connect to Wi-Fi or mobile data to pay. Nothing was charged." |
+| Camera denied | Camera is off for Vouch · "That's fine, there are two other ways to pay:" camera app link · type the short link |
+| Settling | Paying Lena's café… · "$0.45 back, on its way" · "Thanking Ana and Priya for sending you…" · receipt tag "Arriving" |
+| Onboarding line | "Nothing to download, no password, nothing to write down. Your face or fingerprint keeps your account safe." |
+| Friend's link | Ana vouched for Lena's café · "Locked in on Nov 18. This reward stays as it is, even if Lena's café changes its rewards later." |
+| Locked recommend | Buy once to vouch · "…every recommendation on Vouch comes from a real customer, and friends can trust it." |

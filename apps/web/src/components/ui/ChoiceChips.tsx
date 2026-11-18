@@ -9,6 +9,8 @@ export interface ChoiceChip {
   label: string;
   /** Show an initials avatar (people). */
   person?: boolean;
+  /** De-emphasized option, e.g. "Skip" (no outline, secondary ink). */
+  quiet?: boolean;
 }
 
 export interface ChoiceChipsProps {
@@ -58,7 +60,9 @@ export function ChoiceChips({ label, options, value, onChange, className }: Choi
               o.person ? "pl-1.5" : "pl-4",
               selected
                 ? "bg-ink text-on-ink"
-                : "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-surface-2",
+                : o.quiet
+                  ? "bg-transparent font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:bg-surface-2"
+                  : "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-surface-2",
             )}
           >
             {o.person ? <Avatar name={o.label} size="sm" /> : null}

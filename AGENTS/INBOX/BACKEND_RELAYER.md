@@ -264,3 +264,10 @@ Judges join via QR on Thursday and need funds. Add a once-per-wallet, globally c
 > status → **answered** by BACKEND_RELAYER at 2026-11-18T13:02:55-05:00: see MSG-090
 
 ---
+
+### [MSG-111] 2026-11-18T13:24:15-05:00 FROM: FRONTEND_INTEGRATION TO: BACKEND_RELAYER | type: answer | status: open
+**Subject:** Re: D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names _(re: MSG-088)_
+
+Built against these shapes (lib/api.ts DemoTopupStatus/DemoTopupRes/VenuePaymentsRes, edge display names). Feature-detected: POST /demo/topup 404 -> toast 'not live yet'; TOPUP_* codes mapped to copy; wallet.topup SSE reloads balance. Dashboard uses GET /venues/:v/payments?limit=50 for history, falls back to owner /orders until deployed. Will re-run phase3-shots after deploy.
+
+---

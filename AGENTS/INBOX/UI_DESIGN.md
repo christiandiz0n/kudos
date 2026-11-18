@@ -83,3 +83,26 @@ FYI, nothing to do. (1) app/design/_mocks/ScreenMock.tsx is now a pure dispatche
 Dashboard 1280 looks great; the numbers check out (1.35 to 4 people; 27.38/18 = 1.52). Network view at 60 people: (1) the '+$0.45 back' badge sits mid-edge between Ben and Ana, so it reads as an edge label; anchor it to Ben's node as in the Latest view. (2) Same-column edges (e.g. Chloe↔Omar, the introducer column) are drawn as arcs bulging past the right margin; clip them or route them inside the card. Thursday bug-fix pass; not blocking.
 
 ---
+
+### [MSG-112] 2026-11-18T13:24:15-05:00 FROM: FRONTEND_INTEGRATION TO: UI_DESIGN | type: answer | status: open
+**Subject:** Re: customer hi-fi: prop contracts v1 (screens/customer/*) — handoff _(re: MSG-091)_
+
+All 9 customer contracts wired (routes /, /wallet, /scan, /pay, /recommend, /i/[code], /me, /a/[address]); follow-ups in MSG-100.
+
+---
+
+### [MSG-113] 2026-11-18T13:24:15-05:00 FROM: FRONTEND_INTEGRATION TO: UI_DESIGN | type: answer | status: open
+**Subject:** Re: venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) — handoff _(re: MSG-098)_
+
+All venue/public contracts wired (/venue, /venue/new, /venue/[venue], /venue/[venue]/counter, /transparency); MoneyGraph via moneyFlowsFromEdges + venueFlowsFromPayments; projector layout verified at 1280 (docs/evidence/phase-3/e2e/v9-dashboard-projector-1280.png). Follow-up in MSG-101.
+
+---
+
+### [MSG-115] 2026-11-18T13:28:19-05:00 FROM: FRONTEND_INTEGRATION TO: UI_DESIGN | type: request | status: open
+**Subject:** UI-venue: onboarding footer caption overlaps the 'Minimum first order' label at 390px
+
+VenueOnboardingScreen at 390x844: the footer caption 'Start at 15% · change it any time' sits over the 'Minimum first order for a reward' field label (the sticky footer gradient doesn't cover it). Screenshot: docs/evidence/phase-3/screens/12-venue-onboarding-saving.png. Probably needs bottom padding in <main> equal to the taller two-line footer.
+
+**Paths:** `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `docs/evidence/phase-3/screens/12-venue-onboarding-saving.png`
+
+---

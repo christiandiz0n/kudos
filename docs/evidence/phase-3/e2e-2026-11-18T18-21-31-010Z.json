@@ -1,0 +1,59 @@
+{
+  "base": "http://localhost:3100",
+  "amount": "0.50",
+  "startedAt": "2026-11-18T18:20:24.752Z",
+  "venue": "0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+  "venueRegisteredMs": 1934,
+  "qrPayload": "http://localhost:3100/pay?v=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c&o=0xf45b15cb831f6cbe20faf873e0faf5d287ba36668b75a5f2bbec42e8b9abd6f1",
+  "customer": "0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+  "fundTx": "0x8ac2e93713c743b2ab032aba145273f0133d468b9a35f0de0a5b42a62ae19375",
+  "pendingMs": 908,
+  "settledMs": 2214,
+  "timings": [
+    {
+      "at": "2026-11-18T18:20:46.195Z",
+      "orderId": "0xf45b15cb831f6cbe20faf873e0faf5d287ba36668b75a5f2bbec42e8b9abd6f1",
+      "intentId": "28be6da7-61f2-418b-bb5d-1e1983c89f78",
+      "txHash": "0x6ad99748364d3a7feb41823dbb37c58b1fdd3369b2de1b90b6913a0719f65be8",
+      "step": "pending",
+      "faceIdMs": 45,
+      "relayMs": 493
+    },
+    {
+      "at": "2026-11-18T18:20:46.961Z",
+      "orderId": "0xf45b15cb831f6cbe20faf873e0faf5d287ba36668b75a5f2bbec42e8b9abd6f1",
+      "intentId": "28be6da7-61f2-418b-bb5d-1e1983c89f78",
+      "txHash": "0x6ad99748364d3a7feb41823dbb37c58b1fdd3369b2de1b90b6913a0719f65be8",
+      "step": "settled",
+      "via": "sse",
+      "settleMs": 767
+    }
+  ],
+  "venuePaidMs": 3797,
+  "introLink": "http://localhost:3100/i/vG6xcBExH",
+  "acceptMs": 1857,
+  "cara": "0x6eF972e08bC1681d938ca70C70BC3Ac86c7369d2",
+  "caraFundTx": "0x8321858ae381eb405987967d67f282cb3c772b9523cfa74f1afa2c09ec2da83d",
+  "referredSettledMs": 1602,
+  "referredTimings": [
+    {
+      "at": "2026-11-18T18:21:13.222Z",
+      "orderId": "0x3cfddb8ac45b4ed96f50c58ba0c377060ea7780662269b188b7a0cfff16c8859",
+      "intentId": "90122fbb-64d4-4c8e-8250-522ac9515c83",
+      "txHash": "0xc898e244377b341b47fe126e0c6ebbbc2f5526915f58b51fb06342de8d86695f",
+      "step": "pending",
+      "faceIdMs": 55,
+      "relayMs": 616
+    },
+    {
+      "at": "2026-11-18T18:21:14.103Z",
+      "orderId": "0x3cfddb8ac45b4ed96f50c58ba0c377060ea7780662269b188b7a0cfff16c8859",
+      "intentId": "90122fbb-64d4-4c8e-8250-522ac9515c83",
+      "txHash": "0xc898e244377b341b47fe126e0c6ebbbc2f5526915f58b51fb06342de8d86695f",
+      "step": "settled",
+      "via": "sse",
+      "settleMs": 882
+    }
+  ],
+  "ok": true
+}

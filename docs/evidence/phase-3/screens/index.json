@@ -1,0 +1,308 @@
+{
+  "base": "http://localhost:3100",
+  "e2e": "e2e-2026-11-18T18-25-11-494Z.json",
+  "at": "2026-11-18T18:30:19.283Z",
+  "shots": [
+    {
+      "file": "01-landing-onboarding.png",
+      "route": "/",
+      "state": "signed out: onboarding + 'I run a venue'"
+    },
+    {
+      "file": "02-landing-name-required.png",
+      "route": "/",
+      "state": "name validation"
+    },
+    {
+      "file": "03-transparency.png",
+      "route": "/transparency",
+      "state": "public transparency page (default example)"
+    },
+    {
+      "file": "04-transparency-venue.png",
+      "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+      "state": "transparency for a live venue"
+    },
+    {
+      "file": "05-intro-signed-out.png",
+      "route": "/i/vG6xcBExH",
+      "state": "friend's link opened signed out (invite chip)"
+    },
+    {
+      "file": "06-intro-bad-link.png",
+      "route": "/i/NOPE0000",
+      "state": "unknown link"
+    },
+    {
+      "file": "07-record-public.png",
+      "route": "/a/0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+      "state": "public ambassador record"
+    },
+    {
+      "file": "08-scan-camera.png",
+      "route": "/scan",
+      "state": "scanner (fake camera)"
+    },
+    {
+      "file": "09-scan-manual.png",
+      "route": "/scan",
+      "state": "paste a code"
+    },
+    {
+      "file": "10-venue-signin.png",
+      "route": "/venue",
+      "state": "venue app entry (signed out)"
+    },
+    {
+      "file": "11-venue-onboarding.png",
+      "route": "/venue/new",
+      "state": "set up your place"
+    },
+    {
+      "file": "12-venue-onboarding-saving.png",
+      "route": "/venue/new",
+      "state": "saving (relayed, waiting for the record)"
+    },
+    {
+      "file": "13-venue-dashboard-empty.png",
+      "route": "/venue/0x30b2cf7286117DcEd20B30be64f6785fF31f8356",
+      "state": "new venue dashboard (empty state)"
+    },
+    {
+      "file": "14-counter-entry-empty.png",
+      "route": "/venue/0x30b2cf7286117DcEd20B30be64f6785fF31f8356/counter",
+      "state": "order entry"
+    },
+    {
+      "file": "15-counter-below-min.png",
+      "route": "/venue/0x30b2cf7286117DcEd20B30be64f6785fF31f8356/counter",
+      "state": "below $0.50 minimum"
+    },
+    {
+      "file": "16-counter-entry-12.png",
+      "route": "/venue/0x30b2cf7286117DcEd20B30be64f6785fF31f8356/counter",
+      "state": "order entry $12.00 with first-time cashback hint"
+    },
+    {
+      "file": "17-counter-qr-live.png",
+      "route": "/venue/0x30b2cf7286117DcEd20B30be64f6785fF31f8356/counter",
+      "state": "QR live with draining ring"
+    },
+    {
+      "file": "20-pay-signed-out.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "QR opened by the phone camera, not signed in"
+    },
+    {
+      "file": "21-pay-insufficient.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "insufficient balance (top-up offered)"
+    },
+    {
+      "file": "22-wallet-empty.png",
+      "route": "/wallet",
+      "state": "wallet, new account"
+    },
+    {
+      "file": "23-wallet-topup.png",
+      "route": "/wallet",
+      "state": "demo top-up (POST /demo/topup; toast 'not live yet' if the endpoint 404s)"
+    },
+    {
+      "file": "24-recommend-locked.png",
+      "route": "/recommend?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+      "state": "recommend before a first purchase (locked)"
+    },
+    {
+      "file": "25-record-empty.png",
+      "route": "/me",
+      "state": "own record, nothing yet"
+    },
+    {
+      "file": "26-pay-relayer-down.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "relayer down (503 RELAYER_DOWN)"
+    },
+    {
+      "file": "27-pay-budget-exhausted.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "relayer budget exhausted"
+    },
+    {
+      "file": "28-pay-already-paid.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "order already paid"
+    },
+    {
+      "file": "29-pay-confirm-first-visit.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "pay sheet, first visit, no recommendation"
+    },
+    {
+      "file": "30-pay-failed.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "payment failed (nothing charged)"
+    },
+    {
+      "file": "30b-pay-faceid-cancelled.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x723b9fcbbc8ac8ec7128f528303dac89c0b03c8b1ae4c657bad6a1619978ee6b",
+      "state": "Face ID / fingerprint dismissed"
+    },
+    {
+      "file": "31-pay-expired.png",
+      "route": "/pay?v=0x30b2cf7286117DcEd20B30be64f6785fF31f8356&o=0x243c492197154752373e19abcea0243c82866a2b0ce0050aca24e807146d9be3",
+      "state": "expired code"
+    },
+    {
+      "file": "32-pay-bad-link.png",
+      "route": "/pay?v=0x123&o=nope",
+      "state": "malformed pay link"
+    },
+    {
+      "file": "33-intro-landing.png",
+      "route": "/i/vG6xcBExH",
+      "state": "friend's link, signed in (ready)"
+    },
+    {
+      "file": "34-intro-already-customer.png",
+      "route": "/i/vG6xcBExH",
+      "state": "already rewarded at this venue"
+    },
+    {
+      "file": "35-intro-needs-new-link.png",
+      "route": "/i/vG6xcBExH",
+      "state": "outdated link (terms changed, D-516)"
+    },
+    {
+      "file": "36-unlock.png",
+      "route": "/wallet",
+      "state": "welcome back (unlock with Face ID)"
+    },
+    {
+      "file": "40-venue-dashboard-other.png",
+      "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+      "state": "dashboard of the e2e venue as a non-owner account"
+    },
+    {
+      "file": "41-transparency-desktop.png",
+      "route": "/transparency",
+      "state": "desktop 1440"
+    },
+    {
+      "file": "e2e-c1-pay-unfunded.png",
+      "route": "(live e2e)",
+      "state": "c1-pay-unfunded"
+    },
+    {
+      "file": "e2e-c2-pay-confirm.png",
+      "route": "(live e2e)",
+      "state": "c2-pay-confirm"
+    },
+    {
+      "file": "e2e-c3-pending.png",
+      "route": "(live e2e)",
+      "state": "c3-pending"
+    },
+    {
+      "file": "e2e-c4-settled.png",
+      "route": "(live e2e)",
+      "state": "c4-settled"
+    },
+    {
+      "file": "e2e-c5-wallet-after.png",
+      "route": "(live e2e)",
+      "state": "c5-wallet-after"
+    },
+    {
+      "file": "e2e-c6-pay-confirm-referred.png",
+      "route": "(live e2e)",
+      "state": "c6-pay-confirm-referred"
+    },
+    {
+      "file": "e2e-c7-settled-referred.png",
+      "route": "(live e2e)",
+      "state": "c7-settled-referred"
+    },
+    {
+      "file": "e2e-c8-ben-wallet-rewarded.png",
+      "route": "(live e2e)",
+      "state": "c8-ben-wallet-rewarded"
+    },
+    {
+      "file": "e2e-c9-ben-record.png",
+      "route": "(live e2e)",
+      "state": "c9-ben-record"
+    },
+    {
+      "file": "e2e-i1-intro-signed-out.png",
+      "route": "(live e2e)",
+      "state": "i1-intro-signed-out"
+    },
+    {
+      "file": "e2e-i2-intro-landing.png",
+      "route": "(live e2e)",
+      "state": "i2-intro-landing"
+    },
+    {
+      "file": "e2e-i3-intro-accepted.png",
+      "route": "(live e2e)",
+      "state": "i3-intro-accepted"
+    },
+    {
+      "file": "e2e-r1-recommend.png",
+      "route": "(live e2e)",
+      "state": "r1-recommend"
+    },
+    {
+      "file": "e2e-r2-recommend-link.png",
+      "route": "(live e2e)",
+      "state": "r2-recommend-link"
+    },
+    {
+      "file": "e2e-v1-onboarding.png",
+      "route": "(live e2e)",
+      "state": "v1-onboarding"
+    },
+    {
+      "file": "e2e-v2-dashboard-empty.png",
+      "route": "(live e2e)",
+      "state": "v2-dashboard-empty"
+    },
+    {
+      "file": "e2e-v3-order-entry.png",
+      "route": "(live e2e)",
+      "state": "v3-order-entry"
+    },
+    {
+      "file": "e2e-v4-order-qr.png",
+      "route": "(live e2e)",
+      "state": "v4-order-qr"
+    },
+    {
+      "file": "e2e-v5-order-paid.png",
+      "route": "(live e2e)",
+      "state": "v5-order-paid"
+    },
+    {
+      "file": "e2e-v6-dashboard-after.png",
+      "route": "(live e2e)",
+      "state": "v6-dashboard-after"
+    },
+    {
+      "file": "e2e-v7-order-paid-referred.png",
+      "route": "(live e2e)",
+      "state": "v7-order-paid-referred"
+    },
+    {
+      "file": "e2e-v8-dashboard-referred.png",
+      "route": "(live e2e)",
+      "state": "v8-dashboard-referred"
+    },
+    {
+      "file": "e2e-v9-dashboard-projector-1280.png",
+      "route": "(live e2e)",
+      "state": "v9-dashboard-projector-1280"
+    }
+  ],
+  "pageErrors": []
+}

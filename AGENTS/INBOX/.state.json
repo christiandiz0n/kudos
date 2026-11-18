@@ -1,5 +1,5 @@
 {
- "counter": 108,
+ "counter": 115,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -62,9 +62,10 @@
    "from": "UI_DESIGN",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Design system v0 handoff: components, screens, conventions (direction pending human approval)",
-   "re": null
+   "re": null,
+   "resolution": "Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3"
   },
   "MSG-007": {
    "id": "MSG-007",
@@ -116,9 +117,10 @@
    "from": "CONTRACTS",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "What users sign (Intro / IntroAcceptance / one USDC ReceiveWithAuthorization per payment)",
-   "re": null
+   "re": null,
+   "resolution": "Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3"
   },
   "MSG-012": {
    "id": "MSG-012",
@@ -445,9 +447,10 @@
    "from": "ORCHESTRATOR",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-109"
   },
   "MSG-042": {
    "id": "MSG-042",
@@ -521,9 +524,10 @@
    "from": "ORCHESTRATOR",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "D-014: kill-the-backend = customer self-submit; never sign submitter = 0",
-   "re": null
+   "re": null,
+   "resolution": "Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3"
   },
   "MSG-049": {
    "id": "MSG-049",
@@ -619,9 +623,10 @@
    "from": "CONTRACTS",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Vouch v3 deployed: new address; self-submit only for the kill-the-backend demo, with a balance >= amount + fee check (supersedes MSG-035)",
-   "re": null
+   "re": null,
+   "resolution": "Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3"
   },
   "MSG-058": {
    "id": "MSG-058",
@@ -788,9 +793,10 @@
    "from": "BACKEND_RELAYER",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "Phase 2 API ready: auth, venues, orders/QR, intros, quote+pay, reads, SSE (shapes + how to sign)",
-   "re": null
+   "re": null,
+   "resolution": "Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3"
   },
   "MSG-074": {
    "id": "MSG-074",
@@ -885,9 +891,10 @@
    "from": "ORCHESTRATOR",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-110"
   },
   "MSG-083": {
    "id": "MSG-083",
@@ -947,9 +954,10 @@
    "from": "BACKEND_RELAYER",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-111"
   },
   "MSG-089": {
    "id": "MSG-089",
@@ -977,9 +985,10 @@
    "from": "UI_DESIGN",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "customer hi-fi: prop contracts v1 (screens/customer/*) \u2014 handoff",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-112"
   },
   "MSG-092": {
    "id": "MSG-092",
@@ -1047,9 +1056,10 @@
    "from": "UI_DESIGN",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) \u2014 handoff",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-113"
   },
   "MSG-099": {
    "id": "MSG-099",
@@ -1147,8 +1157,79 @@
    "from": "ORCHESTRATOR",
    "to": "FRONTEND_INTEGRATION",
    "type": "fyi",
-   "status": "open",
+   "status": "closed",
    "subject": "D-811 endpoints LIVE on Railway; demo top-up enabled; Stream may be paused",
+   "re": null,
+   "resolution": "D-811 verified live in-app (topup tx 0x515cc6b8\u2026a3f9); flags default to auto so no change needed"
+  },
+  "MSG-109": {
+   "id": "MSG-109",
+   "ts": "2026-11-18T13:24:15-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt",
+   "re": "MSG-041"
+  },
+  "MSG-110": {
+   "id": "MSG-110",
+   "ts": "2026-11-18T13:24:15-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now",
+   "re": "MSG-082"
+  },
+  "MSG-111": {
+   "id": "MSG-111",
+   "ts": "2026-11-18T13:24:15-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "BACKEND_RELAYER",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names",
+   "re": "MSG-088"
+  },
+  "MSG-112": {
+   "id": "MSG-112",
+   "ts": "2026-11-18T13:24:15-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: customer hi-fi: prop contracts v1 (screens/customer/*) \u2014 handoff",
+   "re": "MSG-091"
+  },
+  "MSG-113": {
+   "id": "MSG-113",
+   "ts": "2026-11-18T13:24:15-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) \u2014 handoff",
+   "re": "MSG-098"
+  },
+  "MSG-114": {
+   "id": "MSG-114",
+   "ts": "2026-11-18T13:28:13-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "ORCHESTRATOR",
+   "type": "fyi",
+   "status": "open",
+   "subject": "stream needed: Phase 3 screenshot pass blocked on Streams (venue.registered)",
+   "re": null
+  },
+  "MSG-115": {
+   "id": "MSG-115",
+   "ts": "2026-11-18T13:28:19-05:00",
+   "from": "FRONTEND_INTEGRATION",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "UI-venue: onboarding footer caption overlaps the 'Minimum first order' label at 390px",
    "re": null
   }
  }

@@ -25,4 +25,4 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | BACKEND_RELAYER (session 3) | `a8bd2d888eaae5cee` | 3 | `POST/GET /demo/topup` (capped, once per wallet), `GET /venues/:venue/payments`, display names on edges | ✅ c6eafcb (not deployed) | no deploy/commit; Orchestrator deploys after Part B |
 | UI_DESIGN-customer (session 3) | `a86ee9ce0586cd91d` | 3 | Customer hi-fi screens + states, magnifier | ✅ | owns screens/customer, design/, non-venue components |
 | UI_DESIGN-venue (session 3) | `a84858c9dc21f4cb1` | 3 | Venue hi-fi, MoneyGraph v1 (no self-loop), dashboard, transparency | ✅ | owns screens/venue, screens/public, venue components |
-| FRONTEND_INTEGRATION (session 3) | `a5fc4ff087c40b30b` | 3 | Wire customer/venue/transparency to hosted api + SSE; phase3-shots | 🟢 | milestone A (pay spine) first |
+| FRONTEND_INTEGRATION (session 3) | `a5fc4ff087c40b30b` | 3 | Wire customer/venue/transparency to hosted api + SSE; phase3-shots | ✅ | milestone A (pay spine) first |

@@ -271,9 +271,10 @@ export default function DesignPage() {
         title="Money graph"
         intro={
           <p>
-            One payment, drawn as money leaving Ben&apos;s purchase: the thick neutral edge to the venue, green edges back up
-            the referral chain (Ben → Ana → Marco, Ben → Priya → Sofia), a cashback loop to Ben. Edge width ∝ √amount, so
-            $0.11 is still visible next to $10.20. Dashes flow toward the recipient; static under reduced motion.
+            v1 (Phase 3). One payment, drawn as money leaving Ben&apos;s purchase: the neutral stream to the venue on the left,
+            green streams up the recommendation chain on the right (Ben → Ana → Marco, Ben → Priya → Sofia). Cashback is a
+            &ldquo;+$0.45 back&rdquo; badge on Ben, never a loop. Edge width ∝ √amount. Seeded 5 / 20 / 60-person networks live in
+            the <a href="/design/money-graph" className="font-semibold text-accent-ink underline underline-offset-4">money graph playground</a>.
           </p>
         }
       >
@@ -286,28 +287,21 @@ export default function DesignPage() {
             <p className="px-2 pt-1 text-caption text-ink-3">Compact (phone card)</p>
           </div>
           <div className="space-y-4 text-body text-ink-2">
-            <h3 className="text-title-3 text-ink">Behavior at scale</h3>
+            <h3 className="text-title-3 text-ink">Behavior at scale (v1)</h3>
             <p>
-              <strong className="text-ink">5 nodes (one payment, the demo):</strong> the layout above. Fixed positions, no physics.
-              On a new payment the customer node drops in (rise 240ms), edges draw from the customer outward in payout order
-              (venue, cashback, recommenders, introducers, 120ms stagger), then dashes flow for 3 loops and settle. Amount labels
-              count up. A soft ring pulses once on each person who just got paid.
+              <strong className="text-ink">Layout:</strong> fixed columns, no physics: venue ← customers → recommenders →
+              introducers (rows top to bottom on a phone). People in the highlighted payment sit in the column of their role in it,
+              so the story always reads left to right; everyone else sits in the highest tier they were paid in.
             </p>
             <p>
-              <strong className="text-ink">20 nodes (a busy morning):</strong> switch to the network view. Venue fixed at
-              center, people on two concentric rings (inner: recommenders who have brought someone; outer: customers). Edges are
-              cumulative totals per pair; width ∝ √total. Only the latest payment&apos;s path is green and animated; history is
-              neutral at 40% opacity. Labels only on the top 5 earners plus the latest payment; others on hover/focus.
+              <strong className="text-ink">Arrival:</strong> the customer pops in, the venue stream draws, the cashback badge lands,
+              then recommenders and introducers in order (140ms stagger). Each person pings as money arrives; dashes run toward them
+              for about 3s, then settle. Replays on every new payment id. Reduced motion shows the final frame.
             </p>
             <p>
-              <strong className="text-ink">60 nodes (a week):</strong> people with one connection collapse into per-recommender
-              clusters (&ldquo;Ana + 9&rdquo;), shown as a single node sized by count. Max ~25 rendered nodes, ever. Rank sidebar
-              (top recommenders, verified customers brought, earned) carries the detail; the graph carries the shape. New payments
-              still animate their path, then fold back into their cluster. Canvas fallback is not needed below ~200 edges at SVG.
-            </p>
-            <p className="text-body-sm text-ink-3">
-              Projector rules: min label 20px at 1080p, 7:1 text contrast, no meaning by color alone (amount labels on every
-              animated edge), and the loop pauses when the tab is hidden.
+              <strong className="text-ink">20 / 60 people:</strong> network view, cumulative edges per pair, history in pale
+              green/grey, the latest payment in full colour. At most 7 per column on a projector (4 per row on a phone); the tail
+              folds into one &ldquo;N more&rdquo; node per column, and highlighted people are always kept.
             </p>
           </div>
         </div>

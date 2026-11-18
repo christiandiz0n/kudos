@@ -1,0 +1,43 @@
+{
+  "base": "http://localhost:3100",
+  "amount": "1.00",
+  "startedAt": "2026-11-18T18:08:54.635Z",
+  "venue": "0x4b4917358c7AB0b757F02023Ae6E160eFeF3d8f4",
+  "venueRegisteredMs": 2170,
+  "qrPayload": "http://localhost:3100/pay?v=0x4b4917358c7AB0b757F02023Ae6E160eFeF3d8f4&o=0x12f64719045c561428ac7b9bff63097dddadc2c9c43113a28e6a0e5e1c8374e2",
+  "customer": "0x7703945fb0e79cb9330605C2Fc069091E4caa47d",
+  "fundTx": "0x7151f3193ab13bb3bf0207f7f14a9365c0a07664776b6d8d754304a0c9f05939",
+  "pendingMs": 384,
+  "settledMs": 2447,
+  "timings": [
+    {
+      "at": "2026-11-18T18:09:17.808Z",
+      "orderId": "0x12f64719045c561428ac7b9bff63097dddadc2c9c43113a28e6a0e5e1c8374e2",
+      "intentId": "8d1e7482-b735-4804-bb86-0a0f4600dff1",
+      "txHash": "0xb72fedff3c7f30b241f7405654274da0774ba5e8adefcdfe7c475df6efea3594",
+      "step": "pending",
+      "faceIdMs": 68,
+      "relayMs": 800
+    },
+    {
+      "at": "2026-11-18T18:09:19.002Z",
+      "orderId": "0x12f64719045c561428ac7b9bff63097dddadc2c9c43113a28e6a0e5e1c8374e2",
+      "intentId": "8d1e7482-b735-4804-bb86-0a0f4600dff1",
+      "txHash": "0xb72fedff3c7f30b241f7405654274da0774ba5e8adefcdfe7c475df6efea3594",
+      "step": "settled",
+      "via": "sse",
+      "settleMs": 1194
+    },
+    {
+      "at": "2026-11-18T18:09:19.004Z",
+      "orderId": "0x12f64719045c561428ac7b9bff63097dddadc2c9c43113a28e6a0e5e1c8374e2",
+      "intentId": "8d1e7482-b735-4804-bb86-0a0f4600dff1",
+      "txHash": "0xb72fedff3c7f30b241f7405654274da0774ba5e8adefcdfe7c475df6efea3594",
+      "step": "settled",
+      "via": "sse",
+      "settleMs": 1196
+    }
+  ],
+  "venuePaidMs": 4030,
+  "ok": true
+}

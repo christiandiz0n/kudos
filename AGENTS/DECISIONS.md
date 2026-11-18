@@ -855,3 +855,57 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
   - Venue onboarding shows the worked example in big type ("+$1.80 in rewards → $0.45 back to the customer, $1.35 to the people who sent them, you keep $10.20"). A two-part keep/rewards bar replaces SplitBreakdown's loupe, per D-017's "lightweight, projector-readable".
   - The CTA is "Confirm with Face ID or fingerprint". The minimum order must be at least $0.50.
 - **Who:** UI_DESIGN (venue)
+
+## D-901 — Web: QR and share links use the page's own origin, not the API's PUBLIC_WEB_URL
+- **Date:** 2026-11-18
+- **Decision:** The counter encodes `${webOrigin()}/pay?v=<venue>&o=<orderId>`. This is the same shape as the API's `qrPayload`, but the host is the origin the counter page is served from (`NEXT_PUBLIC_WEB_URL` overrides it). Recommendation links are built the same way: `${webOrigin()}/i/<code>`. The in-app scanner (`lib/qr.ts`) accepts any host and routes to the same path on the current origin.
+- **Reason:** A phone's native camera then opens the pay sheet on whatever deployment the venue uses (localhost, tunnel or Vercel), with no API redeploy when the web host changes. The API's `PUBLIC_WEB_URL` still defaults to localhost:3100.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-902 — Web: D-104 wallet implementation details
+- **Date:** 2026-11-18
+- **Decision:**
+  - **Storage:** one account per browser profile, in IndexedDB (`vouch-wallet`).
+  - **Create:** WebAuthn `create` (UV required) with the PRF extension.
+    - If PRF output is available (at create, or via one extra assertion), the AES-GCM key is `HKDF-SHA256(PRF)`.
+    - Otherwise ("gated"), it is a non-extractable WebCrypto AES key stored in IndexedDB, and every unlock requires a UV assertion first.
+    - With no WebAuthn at all ("device"), the key is non-extractable and there is no gesture. This mode is never chosen when a passkey is possible.
+  - **Memory:** the decrypted key is held in memory for at most 5 min.
+  - **Fresh gesture:** payments, intro creation and acceptance always require a new gesture (`getSigner({fresh:true})`).
+  - **Session:** the Bearer token is kept in localStorage (`vouch.session.v1`) and dropped on 401 or when the device account changes.
+- **Reason:** This follows D-104 option B. PRF is what the human's phone passed in S6b, and the gated fallback keeps desktop browsers without PRF usable.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-903 — Web: client-side payment guard before the one signature
+- **Date:** 2026-11-18
+- **Decision:** Before signing the quote's `ReceiveWithAuthorization`, the app checks the following. Any mismatch → refuse to sign. The app never rebuilds the message.
+  - USDC domain, `from` = me, `to` = the Vouch v3 address, and `value` = `paymentAuth.amount`;
+  - venue and orderId equal the scanned ones;
+  - `submitter` ≠ 0, ≠ me, and = the relayer address from `/relayer/status`;
+  - `nonce == paymentAuthNonce(paymentAuth)`.
+- **Reason:** It enforces MSG-041/057 and D-014 on the client, so a compromised or buggy API can't get a self-submit or open-submitter authorization signed.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-904 — Web: "settled" only from Streams; SSE first, polling fallback
+- **Date:** 2026-11-18
+- **Decision:**
+  - **Customer:** the 202 from POST /payments shows "pending" (PaymentSuccessScreen `status="pending"`). "Settled" comes only from the user SSE `payment.settled` (matched by orderId) or `GET /payments/:id` status `settled` (polled every 1.5 s, or 3 s while SSE is live).
+  - **Venue counter:** `payment.pending` → processing, `payment.settled` → paid, with order polling every 2.5 s across every code issued for that sale.
+  - **Auto-renew:** codes last 120 s and auto-renew 4 s before expiry, up to 5 times.
+  - **Evidence:** timings go to `window.__vouchTimings` / sessionStorage for the demo evidence.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-905 — Web: routes are browser-only shells; viem added to apps/web
+- **Date:** 2026-11-18
+- **Decision:**
+  - **Routes:** every app route is `<Suspense><BrowserOnly>` (`use(browser())`, Next 16 + cacheComponents). The server renders a skeleton; the screen renders where the keys live.
+  - **Dependency:** `viem@2.57.18` was added to `apps/web` (already in the lockfile via `@vouch/shared`, same pin as D-206).
+  - **Feature detection:** the D-811 endpoints are detected at runtime (`NEXT_PUBLIC_FLAG_* = auto|on|off`; in auto, a 404 means not deployed).
+  - **Dashboard history fallback:** until the feed endpoint deploys, the dashboard falls back to the owner's `GET /venues/:v/orders` settled rows.
+- **Who:** FRONTEND_INTEGRATION
+
+## D-906 — Web: venue onboarding doesn't wait forever on Streams
+- **Date:** 2026-11-18
+- **Decision:** After `POST /venues`, the app waits for `venue.registered` (user SSE, from Streams) or `GET /venues/:v` status `registered`. If the registerVenue relay is mined and Streams hasn't confirmed within 15 s, the app goes to the dashboard anyway; the numbers fill in when Streams catches up. Payments are unchanged: "settled" still comes only from Streams (D-904).
+- **Reason:** The human may pause the Stream (MSG-108). A mined registerVenue already means the venue exists on chain, so onboarding shouldn't hang.
+- **Who:** FRONTEND_INTEGRATION

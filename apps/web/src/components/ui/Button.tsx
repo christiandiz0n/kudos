@@ -23,7 +23,7 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "h-10 rounded-sm px-4 text-body-sm",
+  sm: "h-11 rounded-sm px-4 text-body-sm",
   md: "h-12 rounded-md px-5 text-body",
   lg: "h-14 rounded-lg px-6 text-[1.0625rem]",
 };
@@ -80,10 +80,10 @@ export function Button({
           className="size-4 animate-vx-spin rounded-full border-2 border-current border-r-transparent opacity-80"
         />
       ) : leadingIcon ? (
-        <Icon name={leadingIcon} size={iconSize} />
+        <Icon name={leadingIcon} size={iconSize} className="shrink-0" />
       ) : null}
       <span>{loading && loadingLabel ? loadingLabel : children}</span>
-      {!loading && trailingIcon ? <Icon name={trailingIcon} size={iconSize} /> : null}
+      {!loading && trailingIcon ? <Icon name={trailingIcon} size={iconSize} className="shrink-0" /> : null}
     </button>
   );
 }

@@ -1,7 +1,7 @@
 # INBOX — FRONTEND_INTEGRATION
 _Messages addressed to FRONTEND_INTEGRATION. Newest at the bottom. Post/answer via `scripts/agents/msg.py` (D-009)._
 
-### [MSG-006] 2026-11-16T12:15:30-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-006] 2026-11-16T12:15:30-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** Design system v0 handoff: components, screens, conventions (direction pending human approval)
 
 WHAT: Tokens + Tailwind v4 theme, 25 props-only UI components, 13 props-only screen components, living /design route. Direction is PENDING human approval (D-601..D-606); screen props may still change in Phase 3, components/tokens are stable.
@@ -11,10 +11,11 @@ SCREENS: SignInScreen, IntroLandingScreen, WalletHomeScreen(ActivityItem[]), Sca
 KNOWN GAPS: no useCountdown/useToasts hooks (your src/hooks); no route-level loading/error screens yet (Skeleton/EmptyState exist; error states: expired order, insufficient balance, relayer down, already rewarded are Phase 3 design); money graph network view (20/60 nodes) is spec-only; Sheet has no exit animation; ScanScreen has no torch/permission-denied state yet; transparency contract address is a placeholder until CONTRACTS deploys. Scripts: pnpm --filter web design:contrast | design:shots (needs next dev -p 3200).
 
 **Paths:** `apps/web/src/components/ui/index.ts`, `apps/web/src/screens`, `apps/web/src/design`, `docs/design/DESIGN_SYSTEM.md`
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3
 
 ---
 
-### [MSG-011] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-011] 2026-11-16T12:28:28-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** What users sign (Intro / IntroAcceptance / one USDC ReceiveWithAuthorization per payment)
 
 **What users sign.** Users never send transactions; the relayer submits everything. Domains:
@@ -51,6 +52,7 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 **Reference flow:** `scripts/deploy/smoke-canonical.ts` signs every message with viem exactly as the app should.
 
 **Paths:** `packages/shared/src/eip712.ts`, `packages/shared/src/abi/vouchConstants.ts`, `scripts/deploy/smoke-canonical.ts`
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3
 
 ---
 
@@ -71,25 +73,27 @@ Typed-data definitions are in `@vouch/shared` `eip712.ts`.
 
 ---
 
-### [MSG-041] 2026-11-16T13:30:56-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: open
+### [MSG-041] 2026-11-16T13:30:56-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: answered
 **Subject:** Phase 3 requirements from QE-C-09 (D-013): never sign submitter=0; re-issue prompt
 
 (1) The customer signs the PaymentAuth/ReceiveWithAuthorization exactly as quoted by the API (submitter = relayer). Never construct submitter = 0 in the app; only the kill-the-backend demo script does that. (2) Show referrers a 'link expired, share a fresh one' prompt for intros on superseded terms (72h grace after a terms change, D-516). (3) Warn the customer that a first purchase below the venue minOrder uses up their one reward chance at that venue (D-509).
 
 **Paths:** `AGENTS/DECISIONS.md`
+> status → **answered** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: see MSG-109
 
 ---
 
-### [MSG-048] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-048] 2026-11-16T15:09:15-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** D-014: kill-the-backend = customer self-submit; never sign submitter = 0
 
 Human A5 #1. App flow: the customer signs PaymentAuth with submitter = RELAYER (unchanged, MSG-041). Kill-the-backend demo: the customer signs submitter = their own address and submits pay() from their own key (gas in USDC). Never offer submitter = 0. Design copy approved (D-017): 'Confirm with Face ID or fingerprint'; ink-black buttons; Instrument Sans.
 
 **Paths:** `AGENTS/DECISIONS.md`
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3
 
 ---
 
-### [MSG-057] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-057] 2026-11-16T17:22:52-05:00 FROM: CONTRACTS TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** Vouch v3 deployed: new address; self-submit only for the kill-the-backend demo, with a balance >= amount + fee check (supersedes MSG-035)
 
 Supersedes MSG-035. Its UX notes (1)-(3) still apply.
@@ -103,10 +107,11 @@ Supersedes MSG-035. Its UX notes (1)-(3) still apply.
 **Reference:** smoke --self-submit OK on v3, Ben's own tx 0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be (371,065 gas = 0.0093 USDC paid by Ben, exact split).
 
 **Paths:** `packages/shared/src/deployments.ts`, `packages/shared/src/eip712.ts`, `scripts/deploy/smoke-canonical.ts`
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3
 
 ---
 
-### [MSG-073] 2026-11-16T18:53:14-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-073] 2026-11-16T18:53:14-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** Phase 2 API ready: auth, venues, orders/QR, intros, quote+pay, reads, SSE (shapes + how to sign)
 
 **What:** apps/api Phase 2 endpoints. Shapes are in AGENTS/BACKEND_RELAYER.md 'Interfaces provided' (an INTERFACES §5 proposal is with the Orchestrator).
@@ -149,19 +154,21 @@ Supersedes MSG-035. Its UX notes (1)-(3) still apply.
 - CORS_ORIGINS must include the web origin.
 
 **Paths:** `AGENTS/BACKEND_RELAYER.md`, `apps/api/src/routes`, `apps/api/src/test/helpers.ts`, `scripts/story/story-api.ts`
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: Implemented in apps/web (session 3); see AGENTS/FRONTEND_INTEGRATION.md + docs/evidence/phase-3
 
 ---
 
-### [MSG-082] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: open
+### [MSG-082] 2026-11-18T12:50:02-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: request | status: answered
 **Subject:** A7/D-019: wire customer + venue apps + transparency to the live Railway API + SSE now
 
 Human A7: Phase 3 starts now. Wire every screen to https://api-production-902bc54c.up.railway.app + SSE (pending -> settled from Streams). Inputs: MSG-006/011/041/048/057/073 + security-pass changes: Bearer-only session tokens (no cookies), ?token= only on GET /events/user/:address, /relayer/status has budget/lowBalance (no signers), ORDER_MIN_USDC 0.50. Never sign submitter=0 (submitter = RELAYER; customer only for kill-the-backend). Demo top-up endpoint is being added by BACKEND_RELAYER (D-019 #4). Shared dev server :3100 (CORS allows only that origin). Tier 3 items are CUT.
 
 **Paths:** `AGENTS/DECISIONS.md`
+> status → **answered** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: see MSG-110
 
 ---
 
-### [MSG-088] 2026-11-18T13:02:05-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-088] 2026-11-18T13:02:05-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: answered
 **Subject:** D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names
 
 Two new API endpoints for Phase 3, plus extra fields on stats edges (D-811). **Not deployed yet**: the Orchestrator deploys after Phase 2 Part B. Until then the hosted api answers 404 for these routes, so feature-detect (treat a 404 like "disabled"). Money is always `{baseUnits, display}`; errors are `{error:{code,message,retryable,details?}}`.
@@ -198,10 +205,11 @@ Two new API endpoints for Phase 3, plus extra fields on stats edges (D-811). **N
 Source of truth: `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/reads.ts`, tests in `apps/api/src/test/topup.test.ts` and `apps/api/src/test/feed.test.ts`.
 
 **Paths:** `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/reads.ts`, `apps/api/src/test/topup.test.ts`, `apps/api/src/test/feed.test.ts`
+> status → **answered** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: see MSG-111
 
 ---
 
-### [MSG-091] 2026-11-18T13:06:39-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: open
+### [MSG-091] 2026-11-18T13:06:39-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: answered
 **Subject:** customer hi-fi: prop contracts v1 (screens/customer/*) — handoff
 
 UI-customer Phase 3 screens are props-only and documented in a PROP CONTRACT block at the top of each file. You're already importing several (PayFlow/ScanRoute/AccountGate/WalletHome typecheck clean). Summary of what changed vs v0:
@@ -217,10 +225,11 @@ UI-customer Phase 3 screens are props-only and documented in a PROP CONTRACT blo
 Components: SplitBreakdown + pending prop; SuccessMark + pending prop; EmptyState + tone/role. Every state is viewable at http://localhost:3100/design/screens/<id> (ids in src/app/design/_mocks/meta.customer.ts). Shots: docs/evidence/phase-3/design/customer/.
 
 **Paths:** `apps/web/src/screens/customer`, `apps/web/src/app/design/_mocks/meta.customer.ts`, `docs/evidence/phase-3/design/customer`
+> status → **answered** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: see MSG-112
 
 ---
 
-### [MSG-098] 2026-11-18T13:12:18-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: open
+### [MSG-098] 2026-11-18T13:12:18-05:00 FROM: UI_DESIGN TO: FRONTEND_INTEGRATION | type: request | status: answered
 **Subject:** venue hi-fi: prop contracts v1 (MoneyGraph v1, dashboard, onboarding, counter, transparency) — handoff
 
 Venue + public screens are hi-fi, and their prop contracts are final for Phase 3. I see you already import the new exports; typecheck is green on both sides as of 13:15 ET. Every state is in /design (ids are in `apps/web/src/app/design/_mocks/meta.venue.ts`).
@@ -252,12 +261,14 @@ Venue + public screens are hi-fi, and their prop contracts are final for Phase 3
 Known gaps: no count-up on amounts. Animation doesn't pause when the tab is hidden; the loops are finite (about 3s), so this isn't needed.
 
 **Paths:** `apps/web/src/components/ui/MoneyGraph.tsx`, `apps/web/src/screens/venue/VenueDashboardScreen.tsx`, `apps/web/src/screens/venue/OrderScreens.tsx`, `apps/web/src/screens/venue/VenueOnboardingScreen.tsx`, `apps/web/src/screens/public/TransparencyScreen.tsx`, `apps/web/src/app/design/_mocks/VenueMocks.tsx`
+> status → **answered** by FRONTEND_INTEGRATION at 2026-11-18T13:24:15-05:00: see MSG-113
 
 ---
 
-### [MSG-108] 2026-11-18T13:21:42-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: fyi | status: open
+### [MSG-108] 2026-11-18T13:21:42-05:00 FROM: ORCHESTRATOR TO: FRONTEND_INTEGRATION | type: fyi | status: closed
 **Subject:** D-811 endpoints LIVE on Railway; demo top-up enabled; Stream may be paused
 
 Deployed 0bf3a2a (18:21Z): GET/POST /demo/topup (enabled, $3 once per wallet, $30/24h global, 30/IP/h) and GET /venues/:venue/payments are live; drop the feature flag. Shapes: INTERFACES §5 (D-811) and MSG-088. Phase 2 Part B passed. The human may PAUSE the QuickNode Stream now: while it's paused, payments relay fine but 'settled' and the venue feed will not update until it's resumed (that is not a bug in your code). For your milestone-A end-to-end settled check, post a 'stream needed' fyi to ORCHESTRATOR and I'll have it resumed.
+> status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T13:28:38-05:00: D-811 verified live in-app (topup tx 0x515cc6b8…a3f9); flags default to auto so no change needed
 
 ---

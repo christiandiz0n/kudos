@@ -1,0 +1,7 @@
+{
+  "base": "http://localhost:3100",
+  "amount": "1.00",
+  "startedAt": "2026-11-18T18:07:58.321Z",
+  "ok": false,
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Get started' })\u001b[22m\n"
+}

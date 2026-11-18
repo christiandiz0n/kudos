@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { cn } from "@/design/cn";
 import { Icon } from "./Icon";
 
-export type QRFrameState = "live" | "expired" | "paid";
+/** live → (processing: customer confirmed, settling) → paid · live → expired → refreshing → live. */
+export type QRFrameState = "live" | "processing" | "refreshing" | "expired" | "paid";
 
 export interface QRFrameProps {
   /** The QR itself, usually <QrCode value={qrPayload}/>. */
@@ -13,6 +14,8 @@ export interface QRFrameProps {
   state?: QRFrameState;
   /** Shown on the expired overlay. */
   onRefresh?: () => void;
+  /** Expired codes are replaced automatically (caller re-creates the order): the caption says so. */
+  autoRefresh?: boolean;
   /** Frame edge in px (QR is inset). Default 300. */
   size?: number;
   className?: string;
@@ -44,10 +47,10 @@ function ringPath(S: number, i: number, r: number) {
  * Frames the venue's order QR with a countdown ring that drains until the signed order expires.
  * Green → amber in the last 20% → expired overlay with a refresh action. `paid` shows a check.
  */
-export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", onRefresh, size = 300, className }: QRFrameProps) {
-  const frac = state === "live" ? Math.max(0, Math.min(1, secondsLeft / totalSeconds)) : state === "paid" ? 1 : 0;
+export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", onRefresh, autoRefresh, size = 300, className }: QRFrameProps) {
+  const frac = state === "live" ? Math.max(0, Math.min(1, secondsLeft / totalSeconds)) : state === "paid" || state === "processing" ? 1 : 0;
   const low = state === "live" && frac <= 0.2;
-  const stroke = state === "paid" ? "var(--vx-accent)" : low ? "var(--vx-warning)" : "var(--vx-accent)";
+  const stroke = state === "processing" ? "var(--vx-ink-2)" : low ? "var(--vx-warning)" : "var(--vx-accent)";
   const d = ringPath(size, 3, 28);
 
   return (
@@ -67,7 +70,7 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
           />
         </svg>
         <div className="absolute inset-[14px] flex items-center justify-center overflow-hidden rounded-[18px] bg-white p-3">
-          <div className={cn("w-full transition-opacity duration-[var(--vx-dur-base)]", state !== "live" && "opacity-10")}>{children}</div>
+          <div className={cn("w-full transition-opacity duration-[var(--vx-dur-base)]", state !== "live" && "opacity-10 blur-[3px]")}>{children}</div>
           {state === "expired" ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
               <p className="text-title-3 text-[#1b1915]">Code expired</p>
@@ -80,6 +83,12 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
                   <Icon name="refresh" size={18} /> New code
                 </button>
               ) : null}
+            </div>
+          ) : null}
+          {state === "processing" || state === "refreshing" ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
+              <span aria-hidden className="size-12 animate-vx-spin rounded-full border-4 border-[#e2ddd3] border-t-[#1b1915]" />
+              <p className="text-title-3 text-[#1b1915]">{state === "processing" ? "Payment on its way…" : "Getting a new code…"}</p>
             </div>
           ) : null}
           {state === "paid" ? (
@@ -102,7 +111,11 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
             Expires in <span className="text-ink">{mmss(secondsLeft)}</span>
           </>
         ) : state === "expired" ? (
-          "Ask for a new code"
+          autoRefresh ? "A new code appears automatically" : "Tap New code, then show it again"
+        ) : state === "refreshing" ? (
+          "One moment"
+        ) : state === "processing" ? (
+          "Confirming the payment, usually 2–3 seconds"
         ) : (
           "Payment received"
         )}

@@ -1,38 +1,231 @@
-import type { ReactNode } from "react";
-import { AmountDisplay, AppBar, Avatar, Badge, Card, List, ListItem, MoneyGraph, Screen, SectionLabel, Stat, type MoneyGraphProps } from "@/components/ui";
+"use client";
 
-export interface FeedItem {
+import type { ReactNode } from "react";
+import { parseUsdc } from "@vouch/shared";
+import {
+  AmountDisplay,
+  AppBar,
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  List,
+  ListItem,
+  MoneyGraph,
+  Screen,
+  SectionLabel,
+  SegmentedControl,
+  Skeleton,
+  Stat,
+  type MoneyGraphData,
+} from "@/components/ui";
+import { cn } from "@/design/cn";
+import { formatMoney } from "@/design/money";
+
+/* ------------------------------------------------------------------ contract ------------------------------------- */
+
+/** Live-update connection to `GET /events/venue/:venue` (SSE). */
+export type LiveStatus = "live" | "connecting" | "reconnecting" | "offline";
+
+/** One settled payment at this venue (from `payment.settled` + its `reward.paid` lines). */
+export interface VenuePaymentItem {
+  /** orderId; the same id as the MoneyGraph `paymentId`. */
   id: string;
-  who: string;
-  title: string;
-  meta: string;
+  customerName: string;
+  /** What the customer paid. */
   amount: bigint;
-  /** "venue" amounts are plain, reward amounts are green. */
-  kind: "sale" | "reward" | "verified";
+  /** What the venue received (PaymentSettled.venueAmount). */
+  venueAmount: bigint;
+  /** Welcome cashback back to the customer. */
+  cashback: bigint;
+  /** Σ recommender + introducer rewards. */
+  thankedAmount: bigint;
+  /** Distinct people paid as recommender / introducer. */
+  thankedCount: number;
+  firstVisit: boolean;
+  /** Pre-formatted, e.g. "now", "2 min", "9:41". */
+  time: string;
+  /** Just arrived: animates in. */
   fresh?: boolean;
+}
+
+export interface VenueDashboardStats {
+  /** `verifiedCustomers` from /venues/:venue/stats. */
+  verifiedCustomers: number;
+  rewardsPaid: bigint;
+  /** `costPerVerifiedCustomer`; null before the first verified customer. */
+  costPerVerified: bigint | null;
+  /** Σ first-purchase amounts (optional). */
+  salesFromRecommendations?: bigint;
 }
 
 export interface VenueDashboardProps {
   venueName: string;
-  verifiedCustomers: number;
-  costPerVerified: bigint;
-  rewardsPaid: bigint;
-  salesFromRecommendations: bigint;
-  feed: FeedItem[];
-  /** The latest rewarded payment, drawn as a money graph. */
-  graph?: Omit<MoneyGraphProps, "size">;
+  status: LiveStatus;
+  stats: VenueDashboardStats;
+  /** The "typical ad cost per new customer" input, as typed (dollars, e.g. "20.00"). Caller stores it. */
+  typicalAdCost: string;
+  onTypicalAdCostChange?: (value: string) => void;
+  /** Newest first. Empty = brand-new venue (empty state). */
+  payments: VenuePaymentItem[];
+  /** Money graph input (see MoneyGraph). */
+  graph?: MoneyGraphData;
+  /** Usually the newest payment id; drives the arrival animation. */
+  highlightPaymentId?: string;
+  graphMode?: "payment" | "network";
+  onGraphModeChange?: (mode: "payment" | "network") => void;
+  /** First load: skeletons instead of numbers. */
+  loading?: boolean;
+  /** Phone footer action ("Take an order") and empty-state action. */
+  onNewOrder?: () => void;
+  /** Link to the public "how payments split" page. */
+  transparencyHref?: string;
+  /** `auto` = phone below 1024px, projector layout from 1024px. */
+  layout?: "auto" | "phone" | "wide";
 }
 
-function FeedList({ feed }: { feed: FeedItem[] }) {
+/* ------------------------------------------------------------------ helpers -------------------------------------- */
+
+function parseDollars(s: string): bigint | null {
+  try {
+    const v = parseUsdc(s.trim().replace(/^\$/, "").replace(/,/g, ""));
+    return v > 0n ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Plain-words comparison of what a new customer cost vs a typical ad. */
+export function adComparison(costPerVerified: bigint | null, typicalAdCost: string): string {
+  const ad = parseDollars(typicalAdCost);
+  if (costPerVerified === null) return "You'll see this after your first new customer.";
+  if (ad === null) return "Enter what an ad usually costs you per new customer to compare.";
+  if (costPerVerified < ad) {
+    const times = Number((ad * 10n) / (costPerVerified > 0n ? costPerVerified : 1n)) / 10;
+    const x = times >= 2 ? ` About ${times >= 10 ? Math.round(times) : times.toFixed(1)}× less.` : "";
+    return `${formatMoney(ad - costPerVerified)} less per new customer than a typical ad.${x}`;
+  }
+  return "About what an ad costs, but you only pay when they buy.";
+}
+
+export function paymentLine(p: VenuePaymentItem): string {
+  if (!p.firstVisit) return "Repeat visit, no reward";
+  if (p.thankedCount === 0) return p.cashback > 0n ? `First visit · ${formatMoney(p.cashback)} back to ${p.customerName}` : "First visit";
+  const people = p.thankedCount === 1 ? "1 person" : `${p.thankedCount} people`;
+  return `${formatMoney(p.thankedAmount)} to ${people} who sent ${p.customerName}`;
+}
+
+function LiveBadge({ status }: { status: LiveStatus }) {
+  if (status === "live")
+    return (
+      <span role="status" className="inline-flex h-7 items-center gap-2 rounded-full bg-accent-soft px-3 text-caption font-semibold text-accent-ink">
+        <span aria-hidden className="relative flex size-2">
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60" />
+          <span className="relative inline-flex size-2 rounded-full bg-accent" />
+        </span>
+        Live
+      </span>
+    );
+  if (status === "offline")
+    return (
+      <Badge tone="danger" className="h-7 px-3">
+        <span role="status" className="inline-flex items-center gap-1.5">
+          <Icon name="wifiOff" size={14} /> Offline
+        </span>
+      </Badge>
+    );
   return (
-    <List label="Live activity">
-      {feed.map((f) => (
+    <Badge tone={status === "reconnecting" ? "warning" : "neutral"} className="h-7 px-3">
+      <span role="status" className="inline-flex items-center gap-1.5">
+        <span aria-hidden className="size-3 animate-vx-spin rounded-full border-2 border-current border-r-transparent" />
+        {status === "reconnecting" ? "Reconnecting…" : "Connecting…"}
+      </span>
+    </Badge>
+  );
+}
+
+function StatusNote({ status }: { status: LiveStatus }) {
+  if (status !== "reconnecting" && status !== "offline") return null;
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-2 rounded-md px-3 py-2.5 text-body-sm",
+        status === "offline" ? "bg-danger-soft text-danger-ink" : "bg-warning-soft text-warning-ink",
+      )}
+    >
+      <Icon name={status === "offline" ? "wifiOff" : "clock"} size={18} className="mt-0.5 shrink-0" />
+      <p>
+        {status === "offline"
+          ? "Can't reach live updates. Payments still go through; numbers will catch up when you're back online."
+          : "Live updates paused for a moment. Numbers may be a few seconds behind."}
+      </p>
+    </div>
+  );
+}
+
+function CostCard({ p, wide }: { p: VenueDashboardProps; wide?: boolean }) {
+  const cpvc = p.stats.costPerVerified;
+  return (
+    <Card padding="lg" className="flex flex-col gap-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <span className="text-body-sm font-medium text-ink-2">Cost per new customer</span>
+          {p.loading ? (
+            <Skeleton className="h-10 w-28" />
+          ) : cpvc === null ? (
+            <span className="money text-title-1 text-ink-3">—</span>
+          ) : (
+            <AmountDisplay value={cpvc} size={wide ? "display" : "xl"} />
+          )}
+          <span className="text-caption text-ink-3">paid only when they buy</span>
+        </div>
+        <label className="flex w-[7.5rem] shrink-0 flex-col gap-1 text-right">
+          <span className="text-caption font-medium text-ink-3">Typical ad cost</span>
+          <span className="flex h-11 items-center gap-1 rounded-md bg-surface px-2.5 shadow-[inset_0_0_0_1px_var(--vx-line-strong)] focus-within:shadow-[inset_0_0_0_2px_var(--vx-focus)]">
+            <span className="text-body-sm text-ink-3">$</span>
+            <input
+              inputMode="decimal"
+              aria-label="Typical ad cost per new customer, in dollars"
+              value={p.typicalAdCost}
+              onChange={(e) => p.onTypicalAdCostChange?.(e.target.value)}
+              readOnly={!p.onTypicalAdCostChange}
+              className="money h-full w-full min-w-0 bg-transparent text-right text-body font-semibold text-ink outline-none"
+            />
+          </span>
+        </label>
+      </div>
+      <p aria-live="polite" className="border-t border-line pt-3 text-body-sm text-ink-2">
+        {p.loading ? <Skeleton className="h-4 w-48" /> : adComparison(cpvc, p.typicalAdCost)}
+      </p>
+    </Card>
+  );
+}
+
+function StatRow({ p }: { p: VenueDashboardProps }) {
+  const s = p.stats;
+  const v = (n: ReactNode) => (p.loading ? <Skeleton className="h-8 w-16" /> : n);
+  return (
+    <div className="grid grid-cols-2 gap-x-4">
+      <Stat label="New customers" value={v(s.verifiedCustomers)} caption="verified, via recommendations" />
+      <Stat label="Rewards paid" value={v(<AmountDisplay value={s.rewardsPaid} size="xl" />)} caption="to customers + the people who sent them" />
+    </div>
+  );
+}
+
+function Feed({ payments, max }: { payments: VenuePaymentItem[]; max?: number }) {
+  const list = max ? payments.slice(0, max) : payments;
+  return (
+    <List label="Payments, newest first">
+      {list.map((f) => (
         <li key={f.id} className={f.fresh ? "animate-vx-rise-in" : undefined}>
           <ListItem
-            leading={<Avatar name={f.who} />}
-            title={f.title}
-            meta={f.meta}
-            trailing={<AmountDisplay value={f.amount} variant={f.kind === "sale" ? "plain" : "positive"} />}
+            leading={<Avatar name={f.customerName} />}
+            title={`${f.customerName} paid ${formatMoney(f.amount)}`}
+            meta={`${paymentLine(f)} · ${f.time}`}
+            trailing={<AmountDisplay value={f.venueAmount} />}
+            trailingMeta="to you"
           />
         </li>
       ))}
@@ -40,70 +233,192 @@ function FeedList({ feed }: { feed: FeedItem[] }) {
   );
 }
 
-function Stats({ p, wide }: { p: VenueDashboardProps; wide?: boolean }): ReactNode {
+function GraphEmpty({ onNewOrder, compact }: { onNewOrder?: () => void; compact?: boolean }) {
   return (
-    <div className={wide ? "grid grid-cols-2 gap-x-6 gap-y-6" : "grid grid-cols-2 gap-x-4 gap-y-5"}>
-      <Stat label="Cost per new customer" value={<AmountDisplay value={p.costPerVerified} size="xl" />} caption="paid only when they buy" />
-      <Stat label="Verified new customers" value={p.verifiedCustomers} caption="via recommendations" />
-      <Stat label="Rewards paid" value={<AmountDisplay value={p.rewardsPaid} size="xl" />} caption="to customers + recommenders" />
-      <Stat label="Sales they brought" value={<AmountDisplay value={p.salesFromRecommendations} size="xl" />} caption="first purchases" />
+    <div className={cn("flex flex-col items-center text-center", compact ? "py-6" : "py-10")}>
+      <EmptyState
+        icon="users"
+        title="No new customers yet"
+        body="When a recommended customer pays, you'll see the money reach everyone who sent them, right here."
+        action={
+          onNewOrder ? (
+            <Button variant="secondary" leadingIcon="qr" onClick={onNewOrder}>
+              Take an order
+            </Button>
+          ) : undefined
+        }
+      />
+      <ol className="mt-2 grid max-w-[34rem] gap-3 text-left text-body-sm text-ink-2 sm:grid-cols-3">
+        {[
+          ["Show your code", "Key in the order. The customer scans and pays."],
+          ["They recommend you", "Paying customers can send friends to you."],
+          ["Pay only for results", "When a friend buys, part of it thanks whoever sent them."],
+        ].map(([t, b], i) => (
+          <li key={t} className="flex gap-2.5 rounded-md bg-surface-2 p-3">
+            <span className="money flex size-6 shrink-0 items-center justify-center rounded-full bg-ink text-caption font-semibold text-on-ink">{i + 1}</span>
+            <span>
+              <span className="block font-semibold text-ink">{t}</span>
+              {b}
+            </span>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
 
-/** Venue owner's phone view. */
-export function VenueDashboardScreen(p: VenueDashboardProps) {
+function GraphModeToggle({ p }: { p: VenueDashboardProps }) {
+  if (!p.onGraphModeChange) return null;
   return (
-    <Screen header={<AppBar title={p.venueName} large trailing={<Badge tone="accent" dot>Live</Badge>} />}>
-      <Card padding="lg">
-        <Stats p={p} />
+    <SegmentedControl
+      label="Money graph view"
+      value={p.graphMode ?? "payment"}
+      onChange={p.onGraphModeChange}
+      options={[
+        { value: "payment", label: "Latest" },
+        { value: "network", label: "Everyone" },
+      ]}
+    />
+  );
+}
+
+function latestCaption(p: VenueDashboardProps) {
+  const hl = p.payments.find((x) => x.id === p.highlightPaymentId) ?? p.payments[0];
+  return hl ? `${hl.customerName} · ${hl.time}` : null;
+}
+
+/* ------------------------------------------------------------------ layouts -------------------------------------- */
+
+function PhoneLayout(p: VenueDashboardProps) {
+  const empty = !p.loading && p.payments.length === 0;
+  return (
+    <Screen
+      header={<AppBar title={p.venueName} large trailing={<LiveBadge status={p.status} />} />}
+      footer={
+        p.onNewOrder ? (
+          <Button block size="lg" leadingIcon="qr" onClick={p.onNewOrder}>
+            Take an order
+          </Button>
+        ) : undefined
+      }
+    >
+      <div className="flex flex-col gap-4">
+        <StatusNote status={p.status} />
+        <CostCard p={p} />
+        <Card padding="lg">
+          <StatRow p={p} />
+        </Card>
+      </div>
+      <SectionLabel action={<GraphModeToggle p={p} />}>Where the money went</SectionLabel>
+      <Card padding="sm">
+        {p.loading ? (
+          <Skeleton className="h-[420px] w-full" />
+        ) : empty || !p.graph ? (
+          <GraphEmpty compact />
+        ) : (
+          <>
+            <MoneyGraph data={p.graph} highlightPaymentId={p.highlightPaymentId} mode={p.graphMode ?? "payment"} orientation="portrait" className="h-auto w-full" />
+            <p className="px-2 pb-1 text-caption text-ink-3">{latestCaption(p)}</p>
+          </>
+        )}
       </Card>
-      {p.graph ? (
+      {!empty ? (
         <>
-          <SectionLabel>Latest payment</SectionLabel>
-          <Card padding="sm">
-            <MoneyGraph {...p.graph} size="compact" className="h-auto w-full" />
-          </Card>
+          <SectionLabel>Payments</SectionLabel>
+          {p.loading ? (
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          ) : (
+            <Feed payments={p.payments} max={8} />
+          )}
         </>
       ) : null}
-      <SectionLabel>Live</SectionLabel>
-      <FeedList feed={p.feed} />
+      {p.transparencyHref ? (
+        <a href={p.transparencyHref} className="focus-ring mt-4 flex min-h-12 items-center justify-between rounded-md text-body-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
+          How payments split
+          <Icon name="chevronRight" size={18} />
+        </a>
+      ) : null}
     </Screen>
   );
 }
 
-/** Desktop / projector view: graph left at hero size, numbers + feed right. */
-export function VenueDashboardDesktop(p: VenueDashboardProps) {
+function WideLayout(p: VenueDashboardProps) {
+  const empty = !p.loading && p.payments.length === 0;
   return (
-    <div className="flex min-h-full flex-col bg-canvas px-10 py-8">
+    <div className="flex h-full min-h-dvh flex-col gap-5 bg-canvas px-8 py-6">
       <header className="flex items-center gap-4">
         <Avatar name={p.venueName} kind="venue" size="lg" />
-        <div className="flex-1">
-          <h1 className="text-title-1 text-ink">{p.venueName}</h1>
-          <p className="text-body-sm text-ink-3">Recommendations, live</p>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-title-1 text-ink">{p.venueName}</h1>
+          <p className="text-body-sm text-ink-3">New customers from recommendations, live</p>
         </div>
-        <Badge tone="accent" dot>
-          Live
-        </Badge>
+        <LiveBadge status={p.status} />
       </header>
-      <div className="mt-8 grid flex-1 grid-cols-[minmax(0,1fr)_380px] gap-8">
-        <Card padding="lg" className="flex flex-col">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-title-3 text-ink">Latest payment</h2>
-            <span className="text-body-sm text-ink-3">Ben · just now</span>
+      <StatusNote status={p.status} />
+      <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,380px)] gap-6">
+        <Card padding="lg" className="flex min-h-0 flex-col">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-title-3 text-ink">Where the money went</h2>
+              {!empty ? <p className="text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p> : null}
+            </div>
+            <GraphModeToggle p={p} />
           </div>
-          {p.graph ? <MoneyGraph {...p.graph} size="projector" className="mt-4 h-auto w-full flex-1" /> : null}
+          <div className="flex min-h-0 flex-1 items-center justify-center">
+            {p.loading ? (
+              <Skeleton className="aspect-video w-full" />
+            ) : empty || !p.graph ? (
+              <GraphEmpty onNewOrder={p.onNewOrder} />
+            ) : (
+              <MoneyGraph
+                data={p.graph}
+                highlightPaymentId={p.highlightPaymentId}
+                mode={p.graphMode ?? "payment"}
+                orientation="landscape"
+                className="h-auto max-h-full w-full"
+              />
+            )}
+          </div>
         </Card>
-        <div className="flex flex-col gap-6">
+        <div className="flex min-h-0 flex-col gap-4">
+          <CostCard p={p} wide />
           <Card padding="lg">
-            <Stats p={p} wide />
+            <StatRow p={p} />
           </Card>
-          <Card padding="md">
-            <h2 className="px-1 text-body-sm font-semibold text-ink-2">Live</h2>
-            <FeedList feed={p.feed} />
+          <Card padding="md" className="min-h-0 flex-1 overflow-hidden">
+            <h2 className="px-1 text-body-sm font-semibold text-ink-2">Payments</h2>
+            {empty ? <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p> : <Feed payments={p.payments} max={4} />}
           </Card>
         </div>
       </div>
     </div>
   );
+}
+
+/**
+ * Venue owner's dashboard. One component, two layouts: phone (<1024px) and projector (≥1024px, 1280×720 safe).
+ * Props-only; FRONTEND_INTEGRATION feeds it from `/venues/:venue/stats` + `GET /events/venue/:venue`.
+ */
+export function VenueDashboardScreen(p: VenueDashboardProps) {
+  const layout = p.layout ?? "auto";
+  if (layout === "phone") return <PhoneLayout {...p} />;
+  if (layout === "wide") return <WideLayout {...p} />;
+  return (
+    <>
+      <div className="flex min-h-full flex-1 flex-col lg:hidden">
+        <PhoneLayout {...p} />
+      </div>
+      <div className="hidden min-h-full flex-1 flex-col lg:flex">
+        <WideLayout {...p} />
+      </div>
+    </>
+  );
+}
+
+/** @deprecated v0 name: the projector layout. Use `<VenueDashboardScreen layout="wide"/>`. */
+export function VenueDashboardDesktop(p: VenueDashboardProps) {
+  return <VenueDashboardScreen {...p} layout="wide" />;
 }
