@@ -1,5 +1,5 @@
 {
- "counter": 87,
+ "counter": 90,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -890,9 +890,10 @@
    "from": "ORCHESTRATOR",
    "to": "BACKEND_RELAYER",
    "type": "request",
-   "status": "open",
+   "status": "answered",
    "subject": "A7/D-019 #4: capped demo top-up endpoint for 'Top up (testnet demo)'",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-090"
   },
   "MSG-084": {
    "id": "MSG-084",
@@ -933,6 +934,36 @@
    "status": "open",
    "subject": "A7: Stream active again for Part B; replay demo only if cheap",
    "re": null
+  },
+  "MSG-088": {
+   "id": "MSG-088",
+   "ts": "2026-11-18T13:02:05-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names",
+   "re": null
+  },
+  "MSG-089": {
+   "id": "MSG-089",
+   "ts": "2026-11-18T13:02:05-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "STREAMS_INFRA",
+   "type": "fyi",
+   "status": "open",
+   "subject": "D-811: read-only 'before' cursor added to listPayments (types.ts + queries.ts)",
+   "re": null
+  },
+  "MSG-090": {
+   "id": "MSG-090",
+   "ts": "2026-11-18T13:02:55-05:00",
+   "from": "BACKEND_RELAYER",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: A7/D-019 #4: capped demo top-up endpoint for 'Top up (testnet demo)'",
+   "re": "MSG-083"
   }
  }
 }

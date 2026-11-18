@@ -4,8 +4,8 @@
  * txs mine instantly. Signatures are NOT checked here (the API verifies them off-chain before relaying); everything
  * else mirrors the contract closely enough for endpoint contract tests and the canonical $12 split.
  */
-import { decodeFunctionData, getAddress, keccak256, toHex, zeroAddress, zeroHash, type Address, type Hex } from 'viem';
-import { VOUCH_ARC_TESTNET, computeVenueId, vouchAbi, type Weights } from '@vouch/shared';
+import { decodeFunctionData, erc20Abi, getAddress, keccak256, toHex, zeroAddress, zeroHash, type Address, type Hex } from 'viem';
+import { ARC_TESTNET_USDC_ADDRESS, VOUCH_ARC_TESTNET, computeVenueId, vouchAbi, type Weights } from '@vouch/shared';
 import type { ChainClient, CustomerView, Fees, LiveIntroView, QuoteView, ReceiptLite, Revert, SimResult, TermsView, TxRequest, VenueView } from '../chain/client';
 
 const k = (...xs: string[]) => xs.map((x) => x.toLowerCase()).join(':');
@@ -34,7 +34,7 @@ export class FakeChain implements ChainClient {
   receipts = new Map<Hex, ReceiptLite>();
   sent: (TxRequest & { fn: string; hash: Hex })[] = [];
   /** Live-measured gas per call (MSG-009/MSG-056); `gasOverride` forces a value. */
-  gasByFn: Record<string, bigint> = { registerVenue: 180_000n, setSeedAmbassador: 64_000n, updateTerms: 70_000n, setKeys: 70_000n, acceptIntro: 170_000n, pay: 410_000n };
+  gasByFn: Record<string, bigint> = { transfer: 50_000n, registerVenue: 180_000n, setSeedAmbassador: 64_000n, updateTerms: 70_000n, setKeys: 70_000n, acceptIntro: 170_000n, pay: 410_000n };
   gasOverride: bigint | null = null;
   feeQuote: Fees = { maxFeePerGas: 25_000_000_000n, maxPriorityFeePerGas: 1_000_000_000n };
   /** Force a revert on the next simulate of `fn` (e.g. to model a race). */
@@ -183,7 +183,10 @@ export class FakeChain implements ChainClient {
       this.forceRevert.delete(fn);
       return forced;
     }
-    if (fn === 'registerVenue') {
+    if (fn === 'transfer') {
+      // USDC ERC-20 transfer from the sender (the demo top-up). On Arc the native balance IS the USDC balance.
+      if (this.relayerNative < (args[1] as bigint) * 10n ** 12n) return { name: 'Error', reason: 'ERC20: transfer amount exceeds balance' };
+    } else if (fn === 'registerVenue') {
       const [owner, salt, , deadline] = args as [Address, Hex, unknown, bigint];
       if (this.venue(computeVenueId(owner, salt))) return { name: 'VenueAlreadyRegistered' };
       if (this.time > deadline) return { name: 'SignatureExpired' };
@@ -208,7 +211,11 @@ export class FakeChain implements ChainClient {
   }
 
   private async apply(fn: string, args: readonly unknown[]) {
-    if (fn === 'registerVenue') {
+    if (fn === 'transfer') {
+      const [to, amount] = args as [Address, bigint];
+      this.relayerNative -= amount * 10n ** 12n;
+      this.balances.set(to.toLowerCase(), (this.balances.get(to.toLowerCase()) ?? 0n) + amount);
+    } else if (fn === 'registerVenue') {
       const [owner, salt, cfg] = args as [Address, Hex, { payout: Address; signer: Address; attributor: Address; rewardBps: number; minOrder: bigint }];
       this.venues.set(computeVenueId(owner, salt).toLowerCase(), {
         owner: getAddress(owner),
@@ -263,7 +270,12 @@ export class FakeChain implements ChainClient {
   }
 
   // ------------------------------------------------------------------ relayer primitives
-  private decode(data: Hex) {
+  private decode(data: Hex, to?: Address) {
+    if (to && to.toLowerCase() === ARC_TESTNET_USDC_ADDRESS.toLowerCase()) {
+      const d = decodeFunctionData({ abi: erc20Abi, data });
+      return { fn: d.functionName as string, args: (d.args ?? []) as readonly unknown[] };
+    }
+    if (to && to.toLowerCase() !== this.vouch.toLowerCase()) throw new Error(`FakeChain: unexpected target ${to}`);
     const d = decodeFunctionData({ abi: vouchAbi, data });
     return { fn: d.functionName as string, args: (d.args ?? []) as readonly unknown[] };
   }
@@ -276,18 +288,18 @@ export class FakeChain implements ChainClient {
   async fees() {
     return this.feeQuote;
   }
-  async simulate(data: Hex): Promise<SimResult> {
-    const { fn, args } = this.decode(data);
+  async simulate(data: Hex, to?: Address): Promise<SimResult> {
+    const { fn, args } = this.decode(data, to);
     this.calls.push(`simulate:${fn}`);
     const r = this.check(fn, args, this.relayer!);
     return r ? { ok: false, revert: r } : { ok: true };
   }
-  async estimateGas(data: Hex) {
-    return this.gasOverride ?? this.gasByFn[this.decode(data).fn] ?? 200_000n;
+  async estimateGas(data: Hex, to?: Address) {
+    return this.gasOverride ?? this.gasByFn[this.decode(data, to).fn] ?? 200_000n;
   }
   async send(tx: TxRequest): Promise<Hex> {
     if (tx.nonce !== this.nonce) throw new Error(tx.nonce < this.nonce ? 'nonce too low' : 'nonce too high');
-    const { fn, args } = this.decode(tx.data);
+    const { fn, args } = this.decode(tx.data, tx.to);
     const hash = keccak256(toHex(`tx:${this.sent.length}:${tx.nonce}:${tx.data}`));
     this.sent.push({ ...tx, fn, hash });
     this.calls.push(`send:${fn}`);

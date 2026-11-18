@@ -18,7 +18,7 @@
  * here: it comes from Streams-derived state.
  */
 import { randomUUID } from 'node:crypto';
-import type { Hex } from 'viem';
+import type { Address, Hex } from 'viem';
 import { ARC_MIN_MAX_FEE_PER_GAS, nativeToUsdcBaseUnits } from '@vouch/shared';
 import type { RelayKind, RelayerLimits, SpendBudgetConfig } from '../config';
 import { ApiError } from '../http/errors';
@@ -30,8 +30,15 @@ import { RateLimiter } from './rate-limit';
 
 export interface RelayJob {
   kind: RelayKind;
-  /** Calldata for the Vouch contract. */
+  /** Calldata for the target (default the Vouch contract). */
   data: Hex;
+  /** Call target; default Vouch. The demo top-up sends an ERC-20 transfer to USDC (D-811). */
+  to?: Address;
+  /**
+   * Not charged to the spend budget (D-808) and not gated by it: the demo top-up has its own caps (D-811). The job
+   * still goes through this queue and nonce manager, rates, simulation, gas cap, fee cap and the balance floor.
+   */
+  budgetExempt?: boolean;
   /** Rate-limit / budget identity: the session address. */
   user: string;
   /** Venue the job belongs to (per-venue budget). */
@@ -195,7 +202,7 @@ export class Relayer {
     if (this.depth >= cap) throw new ApiError('RELAYER_BUSY', { details: { queueDepth: this.depth } });
     const venue = job.venue ?? null;
     // Budget gate first (no counters consumed if it is closed).
-    this.budget.assertOpen(job.user, venue);
+    if (!job.budgetExempt) this.budget.assertOpen(job.user, venue);
     const userKey = `u:${job.user.toLowerCase()}`;
     if (!this.perUser.take(userKey)) {
       throw new ApiError('RATE_LIMITED', { details: { scope: 'user', retryAfterMs: this.perUser.retryAfterMs(userKey) } });
@@ -330,7 +337,7 @@ export class Relayer {
     let broadcast = false;
     try {
       // 1. Simulate on top of the latest state (a revert is terminal: never retried, never paid for).
-      const sim = await this.rpc('simulate', () => this.chain.simulate(job.data));
+      const sim = await this.rpc('simulate', () => this.chain.simulate(job.data, job.to));
       if (!sim.ok) return this.fail(row, revertToApiError(sim.revert));
       // 2. Job pre-flight (e.g. QE-C-11 balance check).
       if (job.preflight) {
@@ -341,7 +348,7 @@ export class Relayer {
         }
       }
       // 3. Max-gas guard.
-      const est = await this.rpc('estimateGas', () => this.chain.estimateGas(job.data));
+      const est = await this.rpc('estimateGas', () => this.chain.estimateGas(job.data, job.to));
       const gasLimit = (est * 12n + 9n) / 10n;
       const cap = this.opts.maxGas[job.kind];
       if (gasLimit > cap) return this.fail(row, new ApiError('GAS_TOO_HIGH', { details: { kind: job.kind, gasLimit: gasLimit.toString(), cap: cap.toString() } }));
@@ -359,11 +366,15 @@ export class Relayer {
       }
       this.lowBalanceWarned = false;
       const reservation = SpendBudget.costOf(gasLimit, fees.maxFeePerGas);
-      try {
-        this.budget.reserve(row.id, reservation, job.user, row.venue);
-      } catch (e) {
-        return this.fail(row, e instanceof ApiError ? e : new ApiError('RELAYER_BUDGET_EXHAUSTED'));
+      if (!job.budgetExempt) {
+        try {
+          this.budget.reserve(row.id, reservation, job.user, row.venue);
+        } catch (e) {
+          return this.fail(row, e instanceof ApiError ? e : new ApiError('RELAYER_BUDGET_EXHAUSTED'));
+        }
       }
+      // Exempt jobs have no budget entry: growing their (absent) reservation is always allowed.
+      const adjust = (cost: bigint) => job.budgetExempt || this.budget.adjust(row.id, cost);
       await this.patch(row, { gasLimit, maxFeePerGas: fees.maxFeePerGas, feeUsdc: reservation });
 
       // 5. Nonce + send, with replacement on timeout.
@@ -372,7 +383,7 @@ export class Relayer {
       for (let attempt = 0; attempt < this.opts.maxSendAttempts; ) {
         let hash: Hex;
         try {
-          hash = await this.chain.send({ data: job.data, nonce, gas: gasLimit, ...fees });
+          hash = await this.chain.send({ data: job.data, ...(job.to ? { to: job.to } : {}), nonce, gas: gasLimit, ...fees });
         } catch (e) {
           const kind = classifySendError(e);
           this.opts.log?.('relayer send error', { kind, attempt, nonce, err: errText(e) });
@@ -388,7 +399,7 @@ export class Relayer {
           if (kind === 'underpriced' || kind === 'already_known') {
             attempt++;
             const next = this.bumped(fees);
-            if (!this.budget.adjust(row.id, SpendBudget.costOf(gasLimit, next.maxFeePerGas))) break;
+            if (!adjust(SpendBudget.costOf(gasLimit, next.maxFeePerGas))) break;
             fees = next;
             continue;
           }
@@ -420,7 +431,7 @@ export class Relayer {
         }
         // Re-simulate before paying for a replacement (SEC-2-12): if the state moved on (e.g. the order was settled by
         // another auth, QE-C-10), a replacement would only buy a revert. Terminal; the original may still land.
-        const again = await this.chain.simulate(job.data).catch(() => null);
+        const again = await this.chain.simulate(job.data, job.to).catch(() => null);
         if (again && !again.ok) {
           const last = await this.findReceipt(row.hashes);
           if (last) return this.finish(row, nonce, last.hash, last.receipt);
@@ -431,7 +442,7 @@ export class Relayer {
         const next = this.bumped(fees);
         if (next.maxFeePerGas > this.opts.maxFeePerGasCap) break;
         // Stop bumping when the larger worst case would exceed the spend budget (D-808).
-        if (!this.budget.adjust(row.id, SpendBudget.costOf(gasLimit, next.maxFeePerGas))) break;
+        if (!adjust(SpendBudget.costOf(gasLimit, next.maxFeePerGas))) break;
         fees = next;
       }
       // Gave up: leave the nonce to be recovered (gap fill) by the next job.

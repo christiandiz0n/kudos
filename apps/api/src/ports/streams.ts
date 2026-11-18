@@ -125,7 +125,8 @@ export interface StreamsCursor {
 export interface StreamsQueries {
   getPayment(venue: Address, orderId: Hex): Promise<SettledPayment | null>;
   getPaymentByTx(txHash: Hex): Promise<SettledPayment | null>;
-  listPayments(filter: { venue?: Address; customer?: Address; limit?: number }): Promise<SettledPayment[]>;
+  /** Newest first; `before` = keyset cursor (strictly older than (blockNumber, logIndex)). */
+  listPayments(filter: { venue?: Address; customer?: Address; limit?: number; before?: { blockNumber: bigint; logIndex: number } }): Promise<SettledPayment[]>;
   listRewardLines(filter: { recipient?: Address; venue?: Address; limit?: number }): Promise<RewardLine[]>;
   listIntrosAccepted(filter: { venue?: Address; customer?: Address; referrer?: Address; limit?: number }): Promise<IntroAcceptedRow[]>;
   getVenue(venue: Address): Promise<VenueOnchain | null>;
@@ -202,8 +203,11 @@ export function createStubStreamsPort(): StreamsPort & {
       return payments.find((p) => lc(p.txHash) === lc(txHash)) ?? null;
     },
     async listPayments(f) {
+      const older = (p: SettledPayment) =>
+        !f.before || p.blockNumber < f.before.blockNumber || (p.blockNumber === f.before.blockNumber && p.logIndex < f.before.logIndex);
       return payments
-        .filter((p) => (!f.venue || lc(p.venue) === lc(f.venue)) && (!f.customer || lc(p.customer) === lc(f.customer)))
+        .filter((p) => (!f.venue || lc(p.venue) === lc(f.venue)) && (!f.customer || lc(p.customer) === lc(f.customer)) && older(p))
+        .sort((a, b) => (b.blockNumber > a.blockNumber ? 1 : b.blockNumber < a.blockNumber ? -1 : b.logIndex - a.logIndex))
         .slice(0, f.limit ?? 50);
     },
     async listRewardLines(f) {

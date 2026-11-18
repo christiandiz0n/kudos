@@ -135,8 +135,8 @@ export interface StreamsCursor {
 export interface StreamsQueries {
   getPayment(venue: Address, orderId: Hex): Promise<SettledPayment | null>;
   getPaymentByTx(txHash: Hex): Promise<SettledPayment | null>;
-  /** Newest first. */
-  listPayments(filter: { venue?: Address; customer?: Address; limit?: number }): Promise<SettledPayment[]>;
+  /** Newest first. `before`: only payments strictly older than (blockNumber, logIndex) — keyset paging (BACKEND_RELAYER, D-811). */
+  listPayments(filter: { venue?: Address; customer?: Address; limit?: number; before?: { blockNumber: bigint; logIndex: number } }): Promise<SettledPayment[]>;
   /** Newest first. */
   listRewardLines(filter: { recipient?: Address; venue?: Address; limit?: number }): Promise<RewardLine[]>;
   listIntrosAccepted(filter: { venue?: Address; customer?: Address; referrer?: Address; limit?: number }): Promise<IntroAcceptedRow[]>;

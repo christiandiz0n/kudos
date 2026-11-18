@@ -160,3 +160,43 @@ Human A7: Phase 3 starts now. Wire every screen to https://api-production-902bc5
 **Paths:** `AGENTS/DECISIONS.md`
 
 ---
+
+### [MSG-088] 2026-11-18T13:02:05-05:00 FROM: BACKEND_RELAYER TO: FRONTEND_INTEGRATION | type: fyi | status: open
+**Subject:** D-811: demo top-up + venue feed endpoints (exact shapes); stats edges gain level + display names
+
+Two new API endpoints for Phase 3, plus extra fields on stats edges (D-811). **Not deployed yet**: the Orchestrator deploys after Phase 2 Part B. Until then the hosted api answers 404 for these routes, so feature-detect (treat a 404 like "disabled"). Money is always `{baseUnits, display}`; errors are `{error:{code,message,retryable,details?}}`.
+
+**1. Demo top-up** (button label "Top up (testnet demo)")
+- `GET /demo/topup`. Bearer is optional; send it when signed in, because eligibility depends on the address.
+  → 200 `{enabled, eligible, amount, dailyRemaining, reason?, topup}`
+  - `enabled`: the feature is on and the funder has money. If false, hide the button.
+  - `eligible`: true means show an active button.
+  - `reason` (only when `eligible` is false): `TOPUP_DISABLED` | `UNAUTHENTICATED` | `TOPUP_ALREADY_CLAIMED` | `TOPUP_DAILY_CAP_REACHED`
+  - `topup`: null, or this address's attempt `{status: claimed|pending|confirmed|failed|unknown, amount, txHash, relayId, errorCode, claimedAt}`. A `failed` attempt can be retried (`eligible` goes back to true).
+- `POST /demo/topup`. Needs Bearer and no body. It always tops up the session's own address.
+  → 202 `{status:"pending", amount:{baseUnits:"3000000",display:"3.00"}, txHash, relayId}`
+  - Errors:
+    - 401 `UNAUTHENTICATED`
+    - 503 `TOPUP_DISABLED` (retryable:false)
+    - 409 `TOPUP_ALREADY_CLAIMED` (`details.topup` = the existing attempt)
+    - 429 `TOPUP_DAILY_CAP_REACHED` (retryable:false)
+    - 429 `RATE_LIMITED` (`details.scope` = `topup_ip` or `spend`)
+    - the usual relayer codes (`RELAYER_BUSY`/`RELAYER_DOWN`/`RELAYER_UNDERFUNDED`/`TX_FAILED`, all retryable)
+  - Double taps are safe: one transfer per address, ever.
+- SSE `wallet.topup` on `GET /events/user/:address?token=`: `{address, status:"pending"|"confirmed"|"failed", amount, txHash, relayId, code?}`. After `confirmed`, re-read `GET /me/wallet` (the balance is read from chain).
+- Limits: $3.00 per address, $30.00 across all addresses per rolling 24 h, 5 grants per client IP per hour. All of these are env knobs. Venue Wi-Fi shares one IP, so tell the Orchestrator if more judges than that will top up from one network.
+
+**2. Venue feed:** `GET /venues/:venue/payments?limit=1..50&before=<cursor>` (public; default limit 20)
+→ 200 `{venue, payments:[…], nextBefore: string|null, source:"streams"}`, newest first. Each payment:
+`{orderId, txHash, blockNumber, settledAt (ISO|null), customer:{address, displayName|null}, amount, venueReceived, cashback, rewards:[{recipient:{address, displayName|null}, level:1|2, amount}], rewardsReturned, firstPurchase, rewarded}`
+- Paging: pass `nextBefore` (format `"<block>-<logIndex>"`) as `before`. A bare block number also works.
+- Errors: 404 `UNKNOWN_VENUE`; 400 `BAD_REQUEST` (`details.field` = `limit` | `before`).
+- Live rows: keep using SSE `payment.settled` on `/events/venue/:venue` and prepend. Fetch this endpoint once for the initial history.
+
+**3. `GET /venues/:venue/stats` edges** (money graph): each edge is still `{orderId, from, to, role, amount, txHash}`. It now also has `level` (= role: 0 cashback, which is a self-edge customer→customer; 1 referrer; 2 introducer, where `from` = the referrer), `fromDisplayName` and `toDisplayName` (null when unknown). Returned rewards are not edges. Edges are per payment line, so aggregate by (from,to) for the graph.
+
+Source of truth: `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/reads.ts`, tests in `apps/api/src/test/topup.test.ts` and `apps/api/src/test/feed.test.ts`.
+
+**Paths:** `apps/api/src/routes/demo.ts`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/reads.ts`, `apps/api/src/test/topup.test.ts`, `apps/api/src/test/feed.test.ts`
+
+---

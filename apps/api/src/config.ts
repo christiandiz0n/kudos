@@ -10,7 +10,8 @@ import type { Hex } from 'viem';
 import { ARC_TESTNET_RPC_URL, parseUsdc } from '@vouch/shared';
 import { realSecret } from './env';
 
-export type RelayKind = 'registerVenue' | 'updateTerms' | 'setKeys' | 'setSeedAmbassador' | 'acceptIntro' | 'pay';
+/** `topup` = the demo top-up USDC transfer (D-811); it is exempt from the relayer gas budget and has its own caps. */
+export type RelayKind = 'registerVenue' | 'updateTerms' | 'setKeys' | 'setSeedAmbassador' | 'acceptIntro' | 'pay' | 'topup';
 
 export interface RelayerLimits {
   /** Max relayed txs per user (session address) per minute. */
@@ -57,6 +58,25 @@ export interface SseLimits {
   maxBufferedBytes: number;
 }
 
+/**
+ * Demo top-up (D-811): a fixed testnet amount sent once per address ever, under a global rolling-24 h cap. Its money
+ * and gas never count against the relayer spend budget (D-808).
+ */
+export interface TopupConfig {
+  /** DEMO_TOPUP_ENABLED === "true" */
+  enabled: boolean;
+  /** Amount per address, USDC base units (DEMO_TOPUP_USDC, default 3.00). */
+  amount: bigint;
+  /** Global cap over a rolling 24 h, USDC base units (DEMO_TOPUP_DAILY_USDC, default 30.00). */
+  dailyCap: bigint;
+  /** Successful claims per client IP per hour (DEMO_TOPUP_PER_IP_PER_HOUR, default 5). */
+  perIpPerHour: number;
+  /** The funder must keep at least this after sending (DEMO_TOPUP_FUNDER_FLOOR_USDC, default 5.00). */
+  funderFloor: bigint;
+  /** Dedicated funder key (TOPUP_PRIVATE_KEY). Unset → the relayer key, through the relayer's own queue. */
+  key: Hex | undefined;
+}
+
 export interface ApiConfig {
   rpcUrl: string;
   relayerKey: Hex | undefined;
@@ -79,6 +99,8 @@ export interface ApiConfig {
   budget: SpendBudgetConfig;
   routeLimits: RouteLimits;
   sse: SseLimits;
+  /** Demo top-up (testnet only, D-811). */
+  topup: TopupConfig;
   /** Minimum amount for an order the API signs (base units), so the relayer isn't paying gas for dust payments. */
   minOrderAmount: bigint;
 }
@@ -114,6 +136,8 @@ export const DEFAULT_MAX_GAS: Record<RelayKind, bigint> = {
   setSeedAmbassador: 200_000n,
   acceptIntro: 350_000n,
   pay: 1_200_000n,
+  // An Arc USDC ERC-20 transfer is ~35-60k gas (scripts/setup/topup-demo.ts).
+  topup: 150_000n,
 };
 
 const HOUR = 3_600_000;
@@ -171,6 +195,14 @@ export function loadApiConfig(e: NodeJS.ProcessEnv = process.env, overrides: Par
       maxAgeMs: int(e.SSE_MAX_AGE_MS, 30 * 60_000),
       heartbeatMs: int(e.SSE_HEARTBEAT_MS, 15_000),
       maxBufferedBytes: int(e.SSE_MAX_BUFFERED_BYTES, 256 * 1024),
+    },
+    topup: {
+      enabled: e.DEMO_TOPUP_ENABLED === 'true',
+      amount: usd(e.DEMO_TOPUP_USDC, '3.00'),
+      dailyCap: usd(e.DEMO_TOPUP_DAILY_USDC, '30.00'),
+      perIpPerHour: int(e.DEMO_TOPUP_PER_IP_PER_HOUR, 5),
+      funderFloor: usd(e.DEMO_TOPUP_FUNDER_FLOOR_USDC, '5.00'),
+      key: key(e.TOPUP_PRIVATE_KEY),
     },
     minOrderAmount: usd(e.ORDER_MIN_USDC, '0.50'),
     ...overrides,

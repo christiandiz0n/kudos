@@ -7,6 +7,7 @@ import { keccak256, toHex, type Hex } from 'viem';
 import { privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts';
 import { buildApp } from '../app';
 import type { Attributor } from '../attribution/baseline';
+import type { RelayChain } from '../chain/client';
 import type { ApiConfig } from '../config';
 import type { StreamsPort } from '../ports/streams';
 import type { RelayerOptions } from '../relayer/relayer';
@@ -38,7 +39,7 @@ export interface TestApp {
 }
 
 export async function makeApp(
-  opts: { relayer?: boolean; cfg?: Partial<ApiConfig>; streams?: StreamsPort; attributor?: Attributor; relayerOptions?: Partial<RelayerOptions> } = {},
+  opts: { relayer?: boolean; cfg?: Partial<ApiConfig>; streams?: StreamsPort; attributor?: Attributor; relayerOptions?: Partial<RelayerOptions>; topupChain?: RelayChain } = {},
 ): Promise<TestApp> {
   const dir = await mkdtemp(path.join(tmpdir(), 'vouch-api-'));
   const chain = new FakeChain(opts.relayer === false ? null : P.relayer.address);
@@ -59,6 +60,7 @@ export async function makeApp(
         relayerOptions: { pollMs: 1, sleep: async () => {}, ...opts.relayerOptions },
         ...(opts.streams ? { streams: opts.streams } : {}),
         ...(opts.attributor ? { attributor: opts.attributor } : {}),
+        ...(opts.topupChain ? { topupChain: opts.topupChain } : {}),
       },
     },
   );

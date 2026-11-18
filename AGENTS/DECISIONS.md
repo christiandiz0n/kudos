@@ -741,3 +741,47 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
   3. **Screens stay props-only**; FRONTEND_INTEGRATION owns `src/app/**` (except `app/design/`), `src/lib/**`, `src/hooks/**`, `src/state/**` and wires against the hosted Railway API + SSE. Prop-contract changes are announced by inbox.
   4. **Demo top-up:** the v1 API dropped `POST /onboarding/topup`; judges joining via QR need funds, so BACKEND_RELAYER adds a capped, once-per-wallet demo top-up endpoint (labelled "testnet demo" in UI). Deployed only after Part B finishes so the hosted api is not redeployed mid-check.
 - **Who:** human (A7) + ORCHESTRATOR
+
+## D-811 — Demo top-up endpoint + venue payments feed + stats edge names (A7 / D-019 #4)
+- **Date:** 2026-11-18
+- **Decision (demo top-up):**
+  - **Endpoints:** `GET /demo/topup` (session optional) → `{enabled, eligible, amount, dailyRemaining, reason?, topup}`. `POST /demo/topup` (Bearer; the session's own address; no body) → 202 `{status:"pending", amount, txHash, relayId}`. The transfer is an ERC-20 `transfer(caller, amount)` on USDC `0x3600…0000` (6 dec). It is labelled "testnet demo" in the UI.
+  - **Once per address, ever:** table `demo_topups` (PK `address`, migration `0004_demo_topups`). The claim is one conditional upsert: `insert … on conflict (address) do update … where status = 'failed' returning`. Only a `failed` attempt (refused before broadcast, or reverted) may be claimed again. A broadcast tx with no receipt becomes `unknown` and is never re-claimable, so it can't be paid twice.
+  - **Global cap:** the sum of non-failed claims in a rolling 24 h must stay ≤ `DEMO_TOPUP_DAILY_USDC`. The check is inside the same INSERT statement, and claims are serialized in-process. That is sufficient for the one Railway instance; scaling out would need an advisory lock.
+  - **Per client IP:** `DEMO_TOPUP_PER_IP_PER_HOUR` grants. A refused claim or send is refunded. The route is also in the `spend` route class (20/min/IP).
+  - **Funder:**
+    - `TOPUP_PRIVATE_KEY` gets its own `Relayer` (its own serialized queue + nonce manager).
+    - Otherwise the relayer key is used through the existing relayer queue and nonce manager. Equal keys also reuse the relayer, so there is never a second sender on one key.
+    - Jobs are kind `topup`, gas cap 150k, `budgetExempt`. The amount and the gas never count against the D-808 relayer budget, are not gated by it, and are excluded from the boot re-seed. Rates, simulation, fee cap, the relayer's balance floor and the pay lane still apply.
+  - **Disabled:** `503 TOPUP_DISABLED` (retryable:false) when `DEMO_TOPUP_ENABLED` ≠ `"true"`, when the amount is 0, when there is no funder key, or when funder balance < amount + `DEMO_TOPUP_FUNDER_FLOOR_USDC`. The balance check is repeated inside the funder's lock right before sending. Falling below the floor logs one `ALERT` line per episode.
+  - **New error codes:**
+    - `TOPUP_DISABLED` (503, not retryable)
+    - `TOPUP_ALREADY_CLAIMED` (409, with `details.topup`)
+    - `TOPUP_DAILY_CAP_REACHED` (429, not retryable)
+    - `RATE_LIMITED` with `details.scope: "topup_ip"`
+  - **SSE:** `wallet.topup` `{address, status: pending|confirmed|failed, amount, txHash, relayId, code?}` on `user:<address>`.
+  - **Env (all optional; secret: `TOPUP_PRIVATE_KEY` only):**
+    - `DEMO_TOPUP_ENABLED` (default off)
+    - `DEMO_TOPUP_USDC` (3.00)
+    - `DEMO_TOPUP_DAILY_USDC` (30.00)
+    - `DEMO_TOPUP_PER_IP_PER_HOUR` (5)
+    - `DEMO_TOPUP_FUNDER_FLOOR_USDC` (5.00)
+    - `TOPUP_PRIVATE_KEY` (unset → the relayer key)
+- **Decision (venue feed):** `GET /venues/:venue/payments?limit=1..50&before=` (public; default 20). It returns recent settled payments from `ev_payments` / `ev_rewards` only (D-803), newest first by (block, logIndex).
+  - **Response:** `{venue, payments, nextBefore, source:"streams"}`.
+  - **Item:** `{orderId, txHash, blockNumber, settledAt (ISO from block time, or null), customer:{address, displayName|null}, amount, venueReceived (= venueAmount), cashback, rewards:[{recipient:{address, displayName|null}, level:1|2, amount}], rewardsReturned, firstPurchase, rewarded}`.
+  - **Rewards:** paid lines only; returned lines are summed in `rewardsReturned`.
+  - **Paging:** keyset. `nextBefore` = `"<block>-<logIndex>"`; a bare block number is accepted too.
+  - **Errors:** 404 `UNKNOWN_VENUE` (same rule as `/stats`, QE-2-08); 400 for a bad `limit` / `before`.
+  - **STREAMS_INFRA area:** `listPayments` gained an optional `before` filter (read-only, MSG-089).
+- **Decision (stats edges):** `GET /venues/:venue/stats` edges keep `{orderId, from, to, role, amount, txHash}` and add `level` (= role), `fromDisplayName` and `toDisplayName` (from `users`, null when unknown).
+- **Proposed INTERFACES §5 additions:**
+  - **Demo:** `GET /demo/topup` → `{enabled, eligible, amount, dailyRemaining, reason?: TOPUP_DISABLED|UNAUTHENTICATED|TOPUP_ALREADY_CLAIMED|TOPUP_DAILY_CAP_REACHED, topup: null|{status, amount, txHash, relayId, errorCode, claimedAt}}`; `POST /demo/topup` (Bearer) → 202 `{status:"pending", amount, txHash, relayId}` (testnet demo; once per address; capped, D-811).
+  - **Reads:** `GET /venues/:venue/payments?limit≤50&before=` → `{venue, payments:[…], nextBefore}`; `/venues/:venue/stats` edges + `level`, `fromDisplayName`, `toDisplayName`.
+  - **SSE:** + `wallet.topup`.
+  - **Errors:** + `TOPUP_DISABLED` (503), `TOPUP_ALREADY_CLAIMED` (409), `TOPUP_DAILY_CAP_REACHED` (429).
+  - Replace "Dropped from the v0 draft: `POST /onboarding/topup`" with "replaced by the capped `POST /demo/topup` (D-811)".
+- **Proposed INTERFACES §7 addition:** "**Phase 3 demo top-up (D-811, optional):** `DEMO_TOPUP_ENABLED` (`true` to enable; default off), `DEMO_TOPUP_USDC` (3.00), `DEMO_TOPUP_DAILY_USDC` (30.00, rolling 24 h, global), `DEMO_TOPUP_PER_IP_PER_HOUR` (5), `DEMO_TOPUP_FUNDER_FLOOR_USDC` (5.00, the funder keeps at least this), `TOPUP_PRIVATE_KEY` (**secret**, optional dedicated funder; unset → the relayer key through the relayer queue)."
+- **Reason:** judges join with a fresh $0 wallet (D-019 #4). Free identities make once-per-address weak, so the global cap is the real bound ($30/day by default). Keeping the top-up outside the gas budget means a burst of top-ups can't pause payments.
+- **Not done:** N-1 (reserve part of the relayer budget for `pay`). It didn't fall out of this work and is still on the backlog.
+- **Who:** BACKEND_RELAYER

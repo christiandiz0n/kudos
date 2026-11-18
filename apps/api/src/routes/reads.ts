@@ -8,7 +8,8 @@ import { getAddress, zeroAddress, type Address } from 'viem';
 import { formatNativeAsUsdc } from '@vouch/shared';
 import { introLinks, paymentIntents, relayTxs, users, venuesMeta } from '../db/schema';
 import { ApiError } from '../http/errors';
-import { addr, money, sameAddr } from '../http/json';
+import { addr, int, money, sameAddr } from '../http/json';
+import type { SettledPayment } from '../ports/streams';
 import { send, type Ctx } from './common';
 import { lineView, settledView } from './views';
 
@@ -16,6 +17,23 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
   const { deps } = ctx;
   const db = deps.handle.db;
   const s = deps.streams;
+
+  /** Display names from our users table (lowercased address → name); unknown addresses are simply absent. */
+  async function namesOf(addresses: string[]): Promise<Map<string, string>> {
+    const uniq = [...new Set(addresses.map((a) => a.toLowerCase()))];
+    if (uniq.length === 0) return new Map();
+    const rows = await db
+      .select({ address: users.address, displayName: users.displayName })
+      .from(users)
+      .where(inArray(users.address, uniq.map((a) => getAddress(a))));
+    return new Map(rows.filter((r) => r.displayName).map((r) => [r.address.toLowerCase(), r.displayName!]));
+  }
+  const person = (names: Map<string, string>, a: string) => ({ address: a, displayName: names.get(a.toLowerCase()) ?? null });
+
+  async function assertKnownVenue(venue: Address) {
+    // QE-2-08: unknown venue → 404 (same as GET /venues/:venue).
+    if (!(await s.getVenue(venue)) && (await deps.chain.getVenue(venue)).owner === zeroAddress) throw new ApiError('UNKNOWN_VENUE');
+  }
 
   app.get('/me/wallet', async (req, reply) => {
     const c = await ctx.auth(req);
@@ -81,8 +99,7 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
 
   app.get('/venues/:venue/stats', async (req, reply) => {
     const venue = addr((req.params as { venue: string }).venue, 'venue');
-    // QE-2-08: unknown venue → 404 (same as GET /venues/:venue).
-    if (!(await s.getVenue(venue)) && (await deps.chain.getVenue(venue)).owner === zeroAddress) throw new ApiError('UNKNOWN_VENUE');
+    await assertKnownVenue(venue);
     const st = (await s.getVenueStats(venue)) as Awaited<ReturnType<typeof s.getVenueStats>> & {
       venueReceived?: bigint;
       cashbackPaid?: bigint;
@@ -91,6 +108,7 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
       rewardedCustomers?: number;
     };
     const cpvc = st.verifiedCustomers > 0 ? st.rewardsPaid / BigInt(st.verifiedCustomers) : null;
+    const edgeNames = await namesOf(st.edges.flatMap((e) => [e.from, e.to]));
     return send(reply, 200, {
       venue,
       verifiedCustomers: st.verifiedCustomers,
@@ -102,10 +120,64 @@ export function registerReadRoutes(app: FastifyInstance, ctx: Ctx) {
       costPerVerifiedCustomer: cpvc === null ? null : money(cpvc),
       ...(st.venueReceived !== undefined ? { venueReceived: money(st.venueReceived) } : {}),
       ...(st.cashbackPaid !== undefined ? { byRole: { cashback: money(st.cashbackPaid), referrer: money(st.l1Paid ?? 0n), introducer: money(st.l2Paid ?? 0n) } } : {}),
-      edges: st.edges.map((e) => ({ ...e, amount: money(e.amount) })),
+      // `level` = role (0 cashback, 1 referrer, 2 introducer); display names are added when known (D-811).
+      edges: st.edges.map((e) => ({
+        ...e,
+        level: e.role,
+        amount: money(e.amount),
+        fromDisplayName: edgeNames.get(e.from.toLowerCase()) ?? null,
+        toDisplayName: edgeNames.get(e.to.toLowerCase()) ?? null,
+      })),
       source: 'streams',
     });
   });
+
+  /**
+   * Venue feed (D-811): recent settled payments, newest first, from Streams-derived rows only (D-803).
+   * `?limit` 1..50 (default 20); `?before` = the previous page's `nextBefore` ("<blockNumber>-<logIndex>") or a block
+   * number (strictly older payments only).
+   */
+  app.get('/venues/:venue/payments', async (req, reply) => {
+    const venue = addr((req.params as { venue: string }).venue, 'venue');
+    const q = req.query as { limit?: string; before?: string };
+    const limit = q.limit === undefined ? 20 : int(q.limit, 'limit', 1, 50);
+    let before: { blockNumber: bigint; logIndex: number } | undefined;
+    if (q.before !== undefined && q.before !== '') {
+      const m = /^(\d{1,19})(?:-(\d{1,9}))?$/.exec(q.before);
+      if (!m) throw new ApiError('BAD_REQUEST', { message: 'before: expected "<blockNumber>-<logIndex>" or a block number', details: { field: 'before' } });
+      before = { blockNumber: BigInt(m[1]!), logIndex: m[2] === undefined ? 0 : Number(m[2]) };
+    }
+    await assertKnownVenue(venue);
+    const rows = await s.listPayments({ venue, limit: limit + 1, ...(before ? { before } : {}) });
+    const page = rows.slice(0, limit);
+    const names = await namesOf(page.flatMap((p) => [p.customer, ...p.lines.map((l) => l.recipient)]));
+    const last = page.at(-1);
+    return send(reply, 200, {
+      venue,
+      payments: page.map((p) => feedItem(p, names)),
+      nextBefore: rows.length > limit && last ? `${last.blockNumber}-${last.logIndex}` : null,
+      source: 'streams',
+    });
+  });
+
+  function feedItem(p: SettledPayment, names: Map<string, string>) {
+    const paid = p.lines.filter((l) => !l.returned);
+    const sum = (ls: typeof paid) => ls.reduce((a, l) => a + l.amount, 0n);
+    return {
+      orderId: p.orderId,
+      txHash: p.txHash,
+      blockNumber: p.blockNumber,
+      settledAt: p.blockTime === null ? null : new Date(p.blockTime * 1000).toISOString(),
+      customer: person(names, p.customer),
+      amount: money(p.amount),
+      venueReceived: money(p.venueAmount),
+      cashback: money(sum(paid.filter((l) => l.role === 0))),
+      rewards: paid.filter((l) => l.role !== 0).map((l) => ({ recipient: person(names, l.recipient), level: l.role as 1 | 2, amount: money(l.amount) })),
+      rewardsReturned: money(sum(p.lines.filter((l) => l.returned))),
+      firstPurchase: p.firstPurchase,
+      rewarded: p.rewarded,
+    };
+  }
 
   app.get('/relay/:id', async (req, reply) => {
     const c = await ctx.auth(req);

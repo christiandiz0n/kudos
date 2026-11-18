@@ -40,6 +40,9 @@ export type ErrorCode =
   | 'SIGNATURE_EXPIRED'
   | 'UNAUTHORIZED_SUBMITTER'
   | 'TX_FAILED'
+  | 'TOPUP_DISABLED'
+  | 'TOPUP_ALREADY_CLAIMED'
+  | 'TOPUP_DAILY_CAP_REACHED'
   | 'INTERNAL';
 
 const DEFAULTS: Record<ErrorCode, { status: number; message: string; retryable: boolean }> = {
@@ -79,6 +82,9 @@ const DEFAULTS: Record<ErrorCode, { status: number; message: string; retryable: 
   SIGNATURE_EXPIRED: { status: 410, message: 'That confirmation expired. Please confirm again.', retryable: false },
   UNAUTHORIZED_SUBMITTER: { status: 400, message: "We couldn't process this payment. Scan the code again.", retryable: false },
   TX_FAILED: { status: 502, message: "That didn't go through. Your money hasn't moved.", retryable: true },
+  TOPUP_DISABLED: { status: 503, message: "Demo top-ups aren't available right now.", retryable: false },
+  TOPUP_ALREADY_CLAIMED: { status: 409, message: 'This wallet already got its demo top-up.', retryable: false },
+  TOPUP_DAILY_CAP_REACHED: { status: 429, message: "Today's demo top-ups are all used up. Try again tomorrow.", retryable: false },
   INTERNAL: { status: 500, message: 'Something went wrong on our side.', retryable: true },
 };
 

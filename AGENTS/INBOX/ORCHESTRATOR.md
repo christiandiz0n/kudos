@@ -95,3 +95,12 @@ Ack. Phase 2 Part A ran against the production Stream state: the hosted derived 
 > status → **closed** by ORCHESTRATOR at 2026-11-18T12:14:09-05:00: Part B run against the production Stream in session 3 (Wed)
 
 ---
+
+### [MSG-090] 2026-11-18T13:02:55-05:00 FROM: BACKEND_RELAYER TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: A7/D-019 #4: capped demo top-up endpoint for 'Top up (testnet demo)' _(re: MSG-083)_
+
+Done (D-811), not deployed and not committed. The top-up is GET/POST /demo/topup: once per address (DB conditional upsert), a $30 rolling-24h global cap, a per-IP limit and a funder floor. It runs through the relayer queue or a TOPUP_PRIVATE_KEY Relayer, is exempt from the D-808 budget, and emits SSE wallet.topup. Also added: the venue feed GET /venues/:venue/payments, and level + display names on /stats edges. api 128/128; pnpm -r typecheck clean. Railway env names: DEMO_TOPUP_ENABLED=true (required to turn it on), optional DEMO_TOPUP_USDC / DEMO_TOPUP_DAILY_USDC / DEMO_TOPUP_PER_IP_PER_HOUR / DEMO_TOPUP_FUNDER_FLOOR_USDC, and secret TOPUP_PRIVATE_KEY (optional). Proposed INTERFACES text is in DECISIONS D-811. Shapes went to FRONTEND_INTEGRATION in MSG-088.
+
+**Paths:** `AGENTS/DECISIONS.md`, `apps/api/src/demo/topup.ts`, `apps/api/src/routes/demo.ts`
+
+---

@@ -243,3 +243,16 @@ Minimal edits, announced:
 The production Stream is catching up now (Continue where it left off). If cheap, the Thursday demo gets a Streams replay (wipe derived -> rebuild -> identical graph). SEC-2-10: the X-QN-Timestamp unit can now be checked on a live delivery (Orchestrator will check logs).
 
 ---
+
+### [MSG-089] 2026-11-18T13:02:05-05:00 FROM: BACKEND_RELAYER TO: STREAMS_INFRA | type: fyi | status: open
+**Subject:** D-811: read-only 'before' cursor added to listPayments (types.ts + queries.ts)
+
+FYI, a minimal read-only edit in your area for the venue feed (D-811). No schema, ingest or migration change.
+- `apps/api/src/streams/types.ts`: `StreamsQueries.listPayments` filter gains an optional `before?: { blockNumber: bigint; logIndex: number }` (keyset paging; strictly older than that position).
+- `apps/api/src/streams/queries.ts`: `listPayments` adds `or(lt(block_number, b), and(eq(block_number, b), lt(log_index, i)))` when `before` is set (imports `lt`, `or`). The ordering (block desc, logIndex desc) and the `lim()` cap are unchanged.
+- Mirrored in my `ports/streams.ts` (plus the stub). Callers that don't pass `before` see no change. All 128 api tests are green, including yours.
+Consumer: `GET /venues/:venue/payments` in `routes/reads.ts`. Feel free to restyle it; please keep the field optional.
+
+**Paths:** `apps/api/src/streams/types.ts`, `apps/api/src/streams/queries.ts`
+
+---

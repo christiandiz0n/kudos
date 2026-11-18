@@ -2,15 +2,16 @@
  * Dependency container for the BACKEND_RELAYER routes. `buildApp` creates it once; tests inject a fake chain and
  * fixed config through `ApiDepsOverrides`.
  */
-import { and, eq, gt, isNotNull } from 'drizzle-orm';
+import { and, eq, gt, isNotNull, ne } from 'drizzle-orm';
 import type { Address, Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { ARC_TESTNET_CHAIN_ID, ORDER_TYPES, VOUCH_ARC_TESTNET, WEIGHTS_TYPES, vouchDomain, type Order, type Weights } from '@vouch/shared';
 import { baselineAttributor, type Attributor } from './attribution/baseline';
 import { Sessions } from './auth/session';
-import { createViemChainClient, type ChainClient } from './chain/client';
+import { createViemChainClient, type ChainClient, type RelayChain } from './chain/client';
 import { loadApiConfig, type ApiConfig } from './config';
 import type { DbHandle } from './db/index';
+import { DemoTopup } from './demo/topup';
 import { relayTxs } from './db/schema';
 import { ApiError } from './http/errors';
 import type { StreamsPort } from './ports/streams';
@@ -34,6 +35,8 @@ export interface ApiDeps {
   attributor: Attributor;
   sse: SseHub;
   streams: StreamsPort;
+  /** Demo top-up (D-811). */
+  topup: DemoTopup;
   log: (msg: string, extra?: Record<string, unknown>) => void;
 }
 
@@ -44,6 +47,8 @@ export interface ApiDepsOverrides {
   relayerOptions?: Partial<RelayerOptions>;
   /** Tests: replace STREAMS_INFRA's port (e.g. with createStubStreamsPort()). */
   streams?: StreamsPort;
+  /** Tests: the chain client for a dedicated TOPUP_PRIVATE_KEY funder (used only when `cfg.topup.key` is set). */
+  topupChain?: RelayChain;
 }
 
 export function createSigners(cfg: ApiConfig, vouch: Address = VOUCH_ARC_TESTNET.address): Signers {
@@ -126,6 +131,7 @@ export function createApiDeps(
     cfg,
     chain,
     relayer,
+    topup: new DemoTopup(handle, cfg.topup, topupFunder(cfg, relayer, handle, log, overrides), sse, log),
     sessions: new Sessions(handle, cfg.sessionSecret, cfg.sessionTtlSeconds, cfg.publicWebUrl),
     signers: createSigners(cfg, chain.vouch),
     attributor: overrides.attributor ?? baselineAttributor,
@@ -135,13 +141,37 @@ export function createApiDeps(
   };
 }
 
+/**
+ * The demo top-up funder (D-811). TOPUP_PRIVATE_KEY gets its own Relayer (own serialized queue + nonce manager, no
+ * spend budget). Without it, or when it is the relayer key itself, the main relayer sends through its own queue, so
+ * there is never a second unsynchronized sender on one key.
+ */
+function topupFunder(cfg: ApiConfig, relayer: Relayer, handle: DbHandle, log: ApiDeps['log'], overrides: ApiDepsOverrides): Relayer | null {
+  const key = cfg.topup.key;
+  if (!key || (cfg.relayerKey && key.toLowerCase() === cfg.relayerKey.toLowerCase())) return relayer.address ? relayer : null;
+  const chain = overrides.topupChain ?? createViemChainClient({ rpcUrl: cfg.rpcUrl, relayerKey: key });
+  if (relayer.address && chain.relayer && chain.relayer.toLowerCase() === relayer.address.toLowerCase()) return relayer;
+  return new Relayer(chain, {
+    maxGas: cfg.maxGas,
+    maxFeePerGasCap: cfg.maxFeePerGasCap,
+    receiptTimeoutMs: cfg.receiptTimeoutMs,
+    maxSendAttempts: cfg.maxSendAttempts,
+    limits: { perUserPerMinute: cfg.limits.perUserPerMinute, globalPerMinute: cfg.limits.globalPerMinute, maxQueue: cfg.limits.maxQueue },
+    store: dbRelayStore(handle),
+    log,
+    ...(overrides.relayerOptions?.pollMs !== undefined ? { pollMs: overrides.relayerOptions.pollMs } : {}),
+    ...(overrides.relayerOptions?.sleep ? { sleep: overrides.relayerOptions.sleep } : {}),
+  });
+}
+
 /** Restore the last 24 h of relayer spend into the budget (so a restart does not reset it, D-808). */
 export async function seedRelayerBudget(deps: ApiDeps): Promise<number> {
   const since = new Date(Date.now() - 24 * 3_600_000);
   const rows = await deps.handle.db
     .select({ id: relayTxs.id, createdAt: relayTxs.createdAt, fee: relayTxs.feeUsdc, user: relayTxs.userAddress, venue: relayTxs.venue })
     .from(relayTxs)
-    .where(and(gt(relayTxs.createdAt, since), isNotNull(relayTxs.feeUsdc)));
+    // Demo top-ups are outside the relayer budget (D-811).
+    .where(and(gt(relayTxs.createdAt, since), isNotNull(relayTxs.feeUsdc), ne(relayTxs.kind, 'topup')));
   deps.relayer.budget.seed(rows.map((r) => ({ id: r.id, at: r.createdAt.getTime(), cost: r.fee!, user: r.user, venue: r.venue })));
   return rows.length;
 }

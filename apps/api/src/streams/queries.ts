@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, lt, or, type SQL } from 'drizzle-orm';
 import type { PgliteDatabase } from 'drizzle-orm/pglite';
 import { getAddress, type Address, type Hex } from 'viem';
 import type { DbHandle } from '../db/index';
@@ -124,6 +124,10 @@ export function createQueries(handle: DbHandle): StreamsQueries {
       const conds: SQL[] = [];
       if (f.venue) conds.push(eq(evPayments.venue, addr(f.venue)));
       if (f.customer) conds.push(eq(evPayments.customer, addr(f.customer)));
+      if (f.before) {
+        const b = Number(f.before.blockNumber);
+        conds.push(or(lt(evPayments.blockNumber, b), and(eq(evPayments.blockNumber, b), lt(evPayments.logIndex, f.before.logIndex)))!);
+      }
       const rows = await db()
         .select()
         .from(evPayments)

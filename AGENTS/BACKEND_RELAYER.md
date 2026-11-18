@@ -1,5 +1,5 @@
 # BACKEND_RELAYER
-_Last updated: 2026-11-17 by BACKEND_RELAYER (Phase 2 + security/QE fix pass)_
+_Last updated: 2026-11-18 by BACKEND_RELAYER (Phase 3 session 3: demo top-up + venue feed, D-811)_
 
 ## Mission
 Owns the API service: DB schema, auth/session, venue/order/intro/payment endpoints, venue order signing, payment quotes (baseline attribution + attributor signature), the relayer wallet (nonce mgmt, retries, rate limits, max-gas guard, friendly error mapping) and SSE fan-out. Does NOT own contract logic, the Streams webhook/derived-state ingestion (STREAMS_INFRA), or attribution scoring internals (ATTRIBUTION_AI, from Phase 4).
@@ -11,6 +11,12 @@ Owns the API service: DB schema, auth/session, venue/order/intro/payment endpoin
 - Shared and minimal: `apps/api/src/app.ts` (route registration), `apps/api/src/db/schema.ts` (my tables, below `stream_deliveries`)
 
 ## Current status
+🟢 **Phase 3 API additions code-complete (D-811), not deployed yet.** The Orchestrator deploys after Phase 2 Part B.
+- `POST/GET /demo/topup`: a capped, once-per-address testnet top-up. It is off unless `DEMO_TOPUP_ENABLED=true`.
+- `GET /venues/:venue/payments`: the venue feed.
+- `/stats` edges gain `level` + display names.
+- api tests 128/128.
+
 🟢 **Phase 2 code complete.**
 - `story:api` ran the canonical story on Arc testnet through the API: 9 relayed txs, exact $12 split, relayer gas $0.048.
 - The local run reported "settled" as "waiting on Streams", because a local instance gets no webhook deliveries. Reading the same DB after STREAMS_INFRA's chain backfill showed `settled` with the exact split.
@@ -63,6 +69,8 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 | `apps/api/src/relayer/relayer.ts` | `Relayer` (queue, `NonceManager`, simulate / pre-flight / gas guard / fees / replacement), `clampFees` | D-801 |
 | `apps/api/src/relayer/preflight.ts` | QE-C-11 balance checks (relayed; self-submit amount + fee) | |
 | `apps/api/src/relayer/rate-limit.ts` | sliding-window `RateLimiter` | in-memory |
+| `apps/api/src/demo/topup.ts` | `DemoTopup`: eligibility, atomic claim (`demo_topups` conditional upsert + rolling-24 h cap in one statement, in-process serialized), per-IP limiter, funder floor, `budgetExempt` relay job (ERC-20 transfer on USDC), SSE `wallet.topup` | D-811; funder = `TOPUP_PRIVATE_KEY` Relayer or the main relayer (`services.ts` `topupFunder`) |
+| `apps/api/src/routes/demo.ts` | `GET/POST /demo/topup` | POST is `spend` route class |
 | `apps/api/src/relayer/budget.ts` | `SpendBudget`: hourly/daily windows (global, per user, per venue); reserve → adjust → settle/release; `seed` at boot | D-808; `relay_txs.fee_usdc` |
 | `apps/api/src/http/security.ts` | `fastifyOptions` (redacting log serializers, `trustProxy` = 100.64.0.0/10), `applySecurity` (headers + 404 shape), `corsOptions` | D-809; used by `app.ts` |
 | `apps/api/src/http/redact.ts` | `scrub` (URLs → `<url>`, tokens), `redactUrl` (`token=[redacted]`) | SEC-2-03/07 |
@@ -71,8 +79,8 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 | `apps/api/src/ports/streams.ts` | StreamsPort types + `createStubStreamsPort` (tests) + `createLocalBus` | Mirrors `streams/types.ts` |
 | `apps/api/src/routes/*.ts` | `api.ts` (plugin, per-IP route-class limiter `routeClass()`, scoped error handler, budget seeding), auth, venues, orders, intros, payments, reads, events (SSE + bus fan-out), views, common | |
 | `apps/api/src/sse/hub.ts` | channels `user:<addr>` / `venue:<addr>`; caps (global / per IP / per channel), max age, drops slow consumers, 15 s heartbeat | Hijacked replies set CORS + security headers themselves |
-| `apps/api/src/db/schema.ts` + `drizzle/0002_relayer_core.sql` | my 10 tables | `pnpm --filter @vouch/api exec drizzle-kit generate --name …` |
-| `apps/api/src/test/*.test.ts` | api (endpoint contract + canonical story on FakeChain), relayer, auth, attribution, sse, errors | `fake-chain.ts` = in-memory Vouch rules; `helpers.ts` = personas / sign-in / signTd |
+| `apps/api/src/db/schema.ts` + `drizzle/0002_relayer_core.sql` (+ `0003`, `0004_demo_topups`) | my 11 tables (`demo_topups` added, D-811) | `pnpm --filter @vouch/api exec drizzle-kit generate --name …` |
+| `apps/api/src/test/*.test.ts` | api (endpoint contract + canonical story on FakeChain), relayer, auth, attribution, sse, errors, topup, feed | `fake-chain.ts` = in-memory Vouch rules; `helpers.ts` = personas / sign-in / signTd |
 | `scripts/story/story-api.ts` | Phase 2 exit driver: canonical story on Arc through the API; `--check-intent <id>` re-checks settled | `pnpm --filter @vouch/scripts story:api` |
 
 ## Interfaces consumed / provided
@@ -119,16 +127,30 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
     - `GET /me/wallet`
     - `GET /me/activity`
     - `GET /ambassadors/:address`
-    - `GET /venues/:venue/stats`
+    - `GET /venues/:venue/stats` (edges + `level`, `fromDisplayName`, `toDisplayName`, D-811)
+    - `GET /venues/:venue/payments?limit≤50&before=` → `{venue, payments, nextBefore}` (D-811)
+  - **Demo (D-811):**
+    - `GET /demo/topup` → `{enabled, eligible, amount, dailyRemaining, reason?, topup}`
+    - `POST /demo/topup` (Bearer) → 202 `{status:"pending", amount, txHash, relayId}`; SSE `wallet.topup`
     - `GET /relay/:id`
     - `GET /relayer/status`
   - **SSE:**
     - `GET /events/user/:address?token=` (own address only)
     - `GET /events/venue/:venue` (public)
     - Events: `payment.pending`, `payment.failed`, `payment.settled`, `reward.paid`, `intro.pending`, `intro.failed`, `intro.accepted`, `intro.dropped`, `customer.verified`, `venue.pending`, `venue.failed`, `venue.registered`, `venue.action.pending`, `venue.action.failed`, `terms.updated`, `venue.keys`, `seed.set`.
-  - **Dropped from the v0 draft:** `POST /onboarding/topup` (the CLI exists).
+  - **Dropped from the v0 draft:** `POST /onboarding/topup`. It is replaced by the capped `POST /demo/topup` (D-811).
 
 ## Done (rolling, newest first)
+- 2026-11-18 — **Phase 3 API additions (D-811, MSG-083).**
+  - **Demo top-up:**
+    - `GET/POST /demo/topup`: once per address (PK + conditional upsert; only a `failed` attempt can re-claim), a global rolling-24 h cap, a per-IP grant limit, and a funder floor.
+    - The funder is `TOPUP_PRIVATE_KEY` (its own Relayer) or the relayer key through the relayer queue.
+    - Top-ups are budget-exempt from D-808, and SSE sends `wallet.topup`.
+    - Relayer jobs can now target another contract (`job.to`). The `ChainClient` `simulate`/`estimateGas`/`send` take an optional `to`.
+  - **Venue feed:** `GET /venues/:venue/payments` (keyset paging; display names). STREAMS_INFRA's `listPayments` gained an optional `before` (read-only, MSG-089).
+  - **Stats:** `/stats` edges gain `level`, `fromDisplayName` and `toDisplayName`.
+  - **Tests:** api 128/128 (+12 topup, +4 feed); `pnpm -r typecheck` clean (incl. apps/web at the time).
+  - **Curl check:** a key-less local run (scrubbed env, PGlite memory, :4011) confirmed the disabled / 401 / 400 / 404 paths.
 - 2026-11-17 — **Security + QE fix pass** (SEC-2-02..13, QE-2-01..09; D-807..D-810).
   - **Spend controls:**
     - spend budget (global / user / venue, hourly + daily; reverts count; persisted via `relay_txs.fee_usdc`; shown in `/relayer/status`);
@@ -167,6 +189,8 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
+- [ ] After the Orchestrator deploys D-811: set `DEMO_TOPUP_ENABLED=true` on Railway (optionally `TOPUP_PRIVATE_KEY` + fund it). Then run a hosted check: `GET /demo/topup` → `enabled:true`, plus one real top-up to a fresh wallet.
+- [ ] N-1: reserve part of the relayer budget for `pay` (cap non-pay kinds at ~50% of the global windows).
 - [ ] On Railway: set `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY`, `SESSION_SECRET` and `PUBLIC_WEB_URL`. Then run `story:api -- --api https://<railway> --require-settled` (the exit criterion with the live Stream).
 - [ ] After deploy: check in the hosted logs that `remoteAddress` is the client (not 100.64.x). If Railway's edge appends its own hop, set `TRUST_PROXY` to a hop count (D-809, UNVERIFIED).
 - [ ] Phase 3: TTL cleanup for unbounded tables (link_opens, sessions, relay_txs, payment_intents, orders, owner_actions, intro_links; auth_challenges and stale prepared venues are already pruned).
@@ -180,6 +204,11 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 - **Who verifies signatures:** the FakeChain does not verify signatures. Signature correctness is proven by the off-chain verification in the API plus the live story run.
 - **Mixed-clock order status:** `GET /venues/:venue/orders/:orderId` decides "expired" with server time; quotes and pays use chain time.
 - **`/me/activity` scope:** it also shows a persona's payments from earlier smoke venues (they are real Streams rows).
+- **Demo top-up limits:**
+  - **One instance:** the cap is serialized in-process. Two api instances could overshoot the daily cap by one top-up per race; adding an advisory lock would fix that.
+  - **Shared IP:** venue Wi-Fi shares one IP, so 5 grants per IP per hour may be too low for a judge table. Raise `DEMO_TOPUP_PER_IP_PER_HOUR` for the demo.
+  - **Fake identities:** they are free, so the daily cap ($30) is the real bound.
+- **Feed `settledAt`:** null while Streams logs lack `blockTimestamp` (UNVERIFIED live).
 
 ## How to run / test this area
 ```bash

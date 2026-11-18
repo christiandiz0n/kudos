@@ -252,3 +252,27 @@ export const relayTxs = pgTable(
   },
   (t) => [index('relay_txs_ref_idx').on(t.ref), index('relay_txs_status_idx').on(t.status), index('relay_txs_created_idx').on(t.createdAt)],
 );
+
+/**
+ * Demo top-ups (D-811): at most one non-failed row per address, ever. The primary key plus the conditional upsert
+ * (`… on conflict (address) do update … where status = 'failed'`) is the atomic claim; a failed attempt (nothing sent,
+ * or reverted) may be claimed again. `amount` of non-failed rows in the last 24 h is the global daily cap.
+ */
+export const demoTopups = pgTable(
+  'demo_topups',
+  {
+    address: text('address').primaryKey(),
+    amount: bigint('amount', { mode: 'bigint' }).notNull(),
+    /** claimed → pending (broadcast) → confirmed | failed */
+    status: text('status').notNull(),
+    funder: text('funder'),
+    relayTxId: text('relay_tx_id'),
+    txHash: text('tx_hash'),
+    errorCode: text('error_code'),
+    ipHash: text('ip_hash'),
+    attempts: integer('attempts').notNull().default(1),
+    claimedAt: timestamp('claimed_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('demo_topups_claimed_idx').on(t.claimedAt)],
+);

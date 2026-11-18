@@ -51,6 +51,8 @@ export interface ReceiptLite {
 
 export interface TxRequest {
   data: Hex;
+  /** Call target; default the Vouch contract. The demo top-up targets USDC (D-811). */
+  to?: Address;
   nonce: number;
   gas: bigint;
   maxFeePerGas: bigint;
@@ -64,9 +66,9 @@ export interface RelayChain {
   pendingNonce(): Promise<number>;
   latestNonce(): Promise<number>;
   fees(): Promise<Fees>;
-  /** eth_call `to = Vouch, from = RELAYER`. Transport failures THROW; reverts resolve `{ ok: false }`. */
-  simulate(data: Hex): Promise<SimResult>;
-  estimateGas(data: Hex): Promise<bigint>;
+  /** eth_call `to` (default Vouch), `from = RELAYER`. Transport failures THROW; reverts resolve `{ ok: false }`. */
+  simulate(data: Hex, to?: Address): Promise<SimResult>;
+  estimateGas(data: Hex, to?: Address): Promise<bigint>;
   /** Sign with the relayer key and broadcast. Throws the node's error (nonce too low, underpriced, …). */
   send(tx: TxRequest): Promise<Hex>;
   receipt(hash: Hex): Promise<ReceiptLite | null>;
@@ -244,9 +246,9 @@ export function createViemChainClient(opts: { rpcUrl: string; relayerKey?: Hex |
       const maxPriorityFeePerGas = est.maxPriorityFeePerGas > maxFeePerGas ? maxFeePerGas : est.maxPriorityFeePerGas;
       return { maxFeePerGas, maxPriorityFeePerGas };
     },
-    async simulate(data) {
+    async simulate(data, to) {
       try {
-        await pub.call({ account: need().account.address, to: vouch, data });
+        await pub.call({ account: need().account.address, to: to ?? vouch, data });
         return { ok: true };
       } catch (e) {
         const r = decodeRevert(e);
@@ -254,15 +256,15 @@ export function createViemChainClient(opts: { rpcUrl: string; relayerKey?: Hex |
         throw e;
       }
     },
-    async estimateGas(data) {
-      return pub.estimateGas({ account: need().account.address, to: vouch, data });
+    async estimateGas(data, to) {
+      return pub.estimateGas({ account: need().account.address, to: to ?? vouch, data });
     },
     async send(tx) {
       const { account, wallet } = need();
       return wallet.sendTransaction({
         account,
         chain: arcTestnet,
-        to: vouch,
+        to: tx.to ?? vouch,
         data: tx.data,
         nonce: tx.nonce,
         gas: tx.gas,

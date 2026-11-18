@@ -18,6 +18,7 @@ import { RateLimiter } from '../relayer/rate-limit';
 import { seedRelayerBudget, type ApiDeps } from '../services';
 import { registerAuthRoutes } from './auth';
 import { createCtx } from './common';
+import { registerDemoRoutes } from './demo';
 import { registerEventRoutes } from './events';
 import { registerIntroRoutes } from './intros';
 import { registerOrderRoutes } from './orders';
@@ -39,6 +40,7 @@ const SPEND_ROUTES = new Set([
   'POST /venues/:venue/actions/:id',
   'POST /intros/:code/accept',
   'POST /payments',
+  'POST /demo/topup',
 ]);
 
 export function routeClass(method: string, route: string | undefined): RouteClass {
@@ -96,4 +98,5 @@ export const apiRoutes: FastifyPluginAsync<ApiRoutesOptions> = async (app: Fasti
   registerPaymentRoutes(app, ctx);
   registerReadRoutes(app, ctx);
   registerEventRoutes(app, ctx, opts.corsOrigins);
+  registerDemoRoutes(app, ctx);
 };

@@ -29,6 +29,13 @@
       "when": 1794881158431,
       "tag": "0003_relayer_budget",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795024528833,
+      "tag": "0004_demo_topups",
+      "breakpoints": true
     }
   ]
 }

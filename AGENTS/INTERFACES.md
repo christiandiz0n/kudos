@@ -233,8 +233,9 @@ Semantics:
 - **SSE:**
   - `GET /events/user/:address?token=` (own address only)
   - `GET /events/venue/:venue` (public)
-  - Events: `payment.pending`, `payment.failed`, `payment.settled`, `reward.paid`, `intro.pending`, `intro.failed`, `intro.accepted`, `intro.dropped`, `customer.verified`, `venue.pending`, `venue.failed`, `venue.registered`, `venue.action.pending`, `venue.action.failed`, `terms.updated`, `venue.keys`, `seed.set`.
-- **Dropped from the v0 draft:** `POST /onboarding/topup` (the CLI exists).
+  - Events: `payment.pending`, `payment.failed`, `payment.settled`, `reward.paid`, `intro.pending`, `intro.failed`, `intro.accepted`, `intro.dropped`, `customer.verified`, `venue.pending`, `venue.failed`, `venue.registered`, `venue.action.pending`, `venue.action.failed`, `terms.updated`, `venue.keys`, `seed.set`, `wallet.topup` (D-811).
+- **Demo top-up (D-811, testnet demo):** `GET /demo/topup` (session optional) → `{enabled, eligible, amount, dailyRemaining, reason?: TOPUP_DISABLED|UNAUTHENTICATED|TOPUP_ALREADY_CLAIMED|TOPUP_DAILY_CAP_REACHED, topup: null|{status, amount, txHash, relayId, errorCode, claimedAt}}`. `POST /demo/topup` (Bearer, own address, no body) → 202 `{status:"pending", amount, txHash, relayId}`; once per address ever; rolling-24h global cap; per-IP limit. Errors `TOPUP_DISABLED` 503, `TOPUP_ALREADY_CLAIMED` 409, `TOPUP_DAILY_CAP_REACHED` 429, `RATE_LIMITED` (scope `topup_ip`). Replaces the v0 `POST /onboarding/topup`.
+- **Venue feed (D-811):** `GET /venues/:venue/payments?limit=1..50&before=<block>-<logIndex>|<block>` (public, Streams-derived, newest first) → `{venue, payments:[{orderId, txHash, blockNumber, settledAt|null, customer:{address,displayName}, amount, venueReceived, cashback, rewards:[{recipient:{address,displayName}, level:1|2, amount}], rewardsReturned, firstPurchase, rewarded}], nextBefore, source}`; 404 `UNKNOWN_VENUE`, 400 bad limit/before. `GET /venues/:venue/stats` `edges[]` also carry `level`, `fromDisplayName`, `toDisplayName`.
 - **Also:** `GET /health`; `POST /webhooks/streams` (§6).
 
 ## 6. Webhook (QuickNode Streams → api)
@@ -274,6 +275,9 @@ _Updated 2026-11-16 by ORCHESTRATOR from STREAMS_INFRA (D-301..D-303). Live-only
 | `PORT` | api | Injected by the host (Railway; pinned 8080); wins over `API_PORT` (D-305) |
 | `NODE_ENV` | api | `production` on Railway (turns the NDJSON spike log off) |
 | `API_PORT` · `API_HOST` · `CORS_ORIGINS` | api | Local listen fallback (`PORT` wins); comma-separated allowed origins (Railway starts with `http://localhost:3100`; add the web origin when web deploys) |
+| `DEMO_TOPUP_ENABLED` · `DEMO_TOPUP_USDC` · `DEMO_TOPUP_DAILY_USDC` · `DEMO_TOPUP_PER_IP_PER_HOUR` · `DEMO_TOPUP_FUNDER_FLOOR_USDC` | api | D-811 demo top-up: `true` to enable (default off); $ per wallet (3.00); global rolling-24h $ cap (30.00); granted top-ups per IP per hour (5); funder keeps ≥ this (5.00) |
+| `TOPUP_PRIVATE_KEY` | api | **secret**, optional dedicated top-up funder; unset → the relayer key via the relayer queue (D-811) |
+| `NEXT_PUBLIC_API_URL` | web | Public api base URL (default the Railway URL) |
 | `SESSION_SECRET` | api | Session signing (**secret**) |
 | `PUBLIC_API_URL` · `NEXT_PUBLIC_API_URL` | web | API base URL (server-side / browser) |
 | `LLM_PROVIDER` · `LLM_API_KEY` | api (Tier 3) | Optional AI attribution refinement (`none` disables) |
