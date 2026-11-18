@@ -1,5 +1,5 @@
 {
- "counter": 107,
+ "counter": 108,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -1139,6 +1139,16 @@
    "type": "request",
    "status": "open",
    "subject": "[venue] Orchestrator review of projector shots: 2 polish items (Thursday)",
+   "re": null
+  },
+  "MSG-108": {
+   "id": "MSG-108",
+   "ts": "2026-11-18T13:21:42-05:00",
+   "from": "ORCHESTRATOR",
+   "to": "FRONTEND_INTEGRATION",
+   "type": "fyi",
+   "status": "open",
+   "subject": "D-811 endpoints LIVE on Railway; demo top-up enabled; Stream may be paused",
    "re": null
   }
  }

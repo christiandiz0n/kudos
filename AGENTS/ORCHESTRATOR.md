@@ -2,10 +2,10 @@
 _Last updated: 2026-11-18 18:05Z (session 3, A7) by ORCHESTRATOR._
 
 > **Session 3 (A7, D-019) — read this block first; it supersedes "Current status"/"Next up" below.**
-> - Secrets applied ✅ (relayer enabled); Stream ACTIVE and catching up; QE_E2E Part B running (20-min box once at head) → then tell the human "PAUSE THE STREAM NOW".
+> - Secrets applied ✅. **Phase 2 gate PASS-with-findings** (Part B 18:16Z, pay 0x40147554…ddfcb, 202→SSE settled ≈1.0 s, hosted==chain 177/177). Human told "PAUSE THE STREAM NOW"; resume (Continue where it left off) when FRONTEND_INTEGRATION needs live settlement.
 > - Phase 3 + visual Phase 4 running in parallel without a "go" (A7): UI_DESIGN-customer, UI_DESIGN-venue, FRONTEND_INTEGRATION, BACKEND_RELAYER (demo top-up + venue feed). IDs in AGENT_REGISTRY.
 > - Shared web dev server: `next dev -p 3100` from apps/web (Orchestrator background task; log in the session scratchpad). CORS on Railway allows only localhost:3100.
-> - After Part B: commit + deploy BACKEND_RELAYER's endpoints (clean HEAD export), set `DEMO_TOPUP_ENABLED=true` (non-secret), apply INTERFACES §5/§7.
+> - D-811 deployed (0bf3a2a, 18:21Z): `/demo/topup` enabled (`DEMO_TOPUP_ENABLED=true`, `DEMO_TOPUP_PER_IP_PER_HOUR=30`, both non-secret, set by the Orchestrator), `/venues/:venue/payments` live. Railway CLI under zsh: pass flags literally (an unquoted `$P` does not word-split).
 > - Schedule (A7): Thu AM Vercel deploy (HUMAN #14) + seed script (2–3 venues, ~10 personas, clean stage venue) + fixes; Thu PM QE gate on the deployed app + demo choreography; Thu night DOCS_SUBMISSION; Fri AM final checks, repo public with approval, human submits by 10:00 ET.
 > - Hand off and ask for a context reset at ~75% context.
 
