@@ -6,13 +6,31 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const require = createRequire(join(ROOT, "apps/web/package.json"));
-export const { chromium } = require("playwright");
 
-export const BASE = process.env.QE_BASE ?? "http://localhost:3100";
-export const API = "https://api-production-902bc54c.up.railway.app";
-export const SHOTS = join(ROOT, "docs/evidence/phase-3/qe/screens");
-export const EVID = join(ROOT, "docs/evidence/phase-3/qe");
+// Parameters: CLI flags win over env vars, env vars over defaults.
+//   --base <web origin> | QE_BASE   (default http://localhost:3100)
+//   --api <api origin>  | QE_API    (default the hosted Railway api)
+//   --out <dir>         | QE_OUT    (evidence dir, relative to the repo root; screenshots go to <dir>/screens)
+//   --engine webkit     | QE_ENGINE (default chromium; webkit uses the iPhone 14 profile and has no WebAuthn)
+const argv = process.argv.slice(2);
+const flag = (name) => {
+  const i = argv.indexOf(`--${name}`);
+  return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
+};
+export const BASE = (flag("base") ?? process.env.QE_BASE ?? "http://localhost:3100").replace(/\/$/, "");
+export const API = (flag("api") ?? process.env.QE_API ?? "https://api-production-902bc54c.up.railway.app").replace(/\/$/, "");
+export const ENGINE = flag("engine") ?? process.env.QE_ENGINE ?? "chromium";
+export const WEBKIT = ENGINE === "webkit";
+// WebKit was installed under node_modules only (PLAYWRIGHT_BROWSERS_PATH=0); the registry path is read at require time.
+if (WEBKIT) process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
+const require = createRequire(join(ROOT, "apps/web/package.json"));
+const pw = require("playwright");
+const OUT = flag("out") ?? process.env.QE_OUT;
+export const EVID = OUT ? resolve(ROOT, OUT) : join(ROOT, "docs/evidence/phase-3/qe");
+export const SHOTS = join(EVID, "screens");
+/** The selected engine. Named `chromium` so the Phase 3 scripts run unchanged; chromium-only launch args are dropped on webkit. */
+export const chromium = WEBKIT ? { launch: (opts = {}) => pw.webkit.launch({ ...opts, args: [] }) } : pw.chromium;
+export const devices = pw.devices;
 export const SCRATCH = process.env.QE_SCRATCH ?? "/private/tmp/claude-501/-Users-christiandizon-Desktop-ubc-2026/ae4cd97a-99ad-4771-bb22-b82f35ada2d7/scratchpad/qe3";
 mkdirSync(SHOTS, { recursive: true });
 mkdirSync(SCRATCH, { recursive: true });
@@ -48,13 +66,24 @@ export async function shot(page, file, state, notes = "", { fullPage = false } =
 // ------------------------------------------------------------------ phones
 /** A phone-sized context with a CDP virtual WebAuthn authenticator (platform, UV, resident keys, PRF). */
 export async function newPhone(browser, label, { reducedMotion = "no-preference", permissions = ["camera"], viewport = { width: 390, height: 844 } } = {}) {
-  const ctx = await browser.newContext({ viewport, deviceScaleFactor: viewport.width < 800 ? 2 : 1, isMobile: viewport.width < 800, hasTouch: viewport.width < 800, permissions, reducedMotion });
+  const phone = WEBKIT && viewport.width < 800;
+  const ctx = phone
+    ? await browser.newContext({ ...pw.devices["iPhone 14"], reducedMotion })
+    : await browser.newContext({ viewport, deviceScaleFactor: viewport.width < 800 ? 2 : 1, isMobile: !WEBKIT && viewport.width < 800, hasTouch: viewport.width < 800, ...(WEBKIT ? {} : { permissions }), reducedMotion });
   const page = await ctx.newPage();
   const errs = [];
   page.on("pageerror", (e) => errs.push({ kind: "pageerror", text: e.message, url: page.url() }));
   page.on("console", (m) => {
     if (m.type() === "error") errs.push({ kind: "console", text: m.text().slice(0, 400), url: page.url() });
   });
+  // API requests that fail at the network layer (CORS refusals show up here as well as on the console).
+  page.on("requestfailed", (r) => {
+    // ERR_ABORTED / "cancelled" = the page navigated away mid-request (SSE streams, in-flight reads): not a failure.
+    const why = r.failure()?.errorText ?? "";
+    if (r.url().startsWith(API) && !/ERR_ABORTED|cancelled|Load request cancelled/i.test(why))
+      errs.push({ kind: "requestfailed", text: `${r.method()} ${r.url().replace(API, "").replace(/token=[^&]+/, "token=<redacted>")} ${why}`, url: page.url() });
+  });
+  if (WEBKIT) return { label, ctx, page, cdp: null, authenticatorId: null, errs, takeErrs: () => errs.splice(0, errs.length) };
   const cdp = await ctx.newCDPSession(page);
   await cdp.send("WebAuthn.enable", { enableUI: false });
   const { authenticatorId } = await cdp.send("WebAuthn.addVirtualAuthenticator", {

@@ -1,0 +1,1889 @@
+{
+  "base": "https://vouch-ubc.vercel.app",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "at": "2026-11-19T04:07:26.413Z",
+  "venues": [
+    {
+      "vp": "390",
+      "venue": "Lena's café",
+      "address": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "expect": {
+        "venueName": "Lena's café",
+        "payments": "7",
+        "verified": "6",
+        "gross": "$28.00",
+        "rewardsPaid": "$3.71",
+        "costPerNew": "$0.62"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Maya",
+          "amount": "$1.90",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Diego",
+          "amount": "$3.60",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Chloe",
+          "amount": "$3.10",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$2.20",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$12.00",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Priya",
+          "amount": "$2.40",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ana",
+          "amount": "$2.80",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 493
+        },
+        "labels": [
+          "LC",
+          "Lena's café",
+          "$1.62",
+          "MA",
+          "Maya",
+          "paid $1.90",
+          "+$0.07 back",
+          "CH",
+          "Chloe",
+          "+$0.16",
+          "BE",
+          "Ben",
+          "+$0.06"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ben",
+          "Chloe",
+          "Maya"
+        ],
+        "namesMissing": [
+          "Ana",
+          "Marco",
+          "Priya",
+          "Sofia",
+          "Diego"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 443
+        },
+        "labels": [
+          "LC",
+          "Lena's café",
+          "$24.29",
+          "DI",
+          "Diego",
+          "paid $3.60",
+          "MA",
+          "Maya",
+          "paid $1.90",
+          "+$0.07 back",
+          "PR",
+          "Priya",
+          "+$0.41",
+          "CH",
+          "Chloe",
+          "+$0.16",
+          "AN",
+          "Ana",
+          "+$0.97",
+          "MA",
+          "Marco",
+          "+$0.55",
+          "SO",
+          "Sofia",
+          "+$0.35",
+          "BE",
+          "Ben",
+          "+$0.31"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ana",
+          "Marco",
+          "Priya",
+          "Sofia",
+          "Ben",
+          "Chloe",
+          "Diego",
+          "Maya"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": []
+    },
+    {
+      "vp": "390",
+      "venue": "Kiln Bakery",
+      "address": "0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "url": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "expect": {
+        "venueName": "Kiln Bakery",
+        "payments": "5",
+        "verified": "5",
+        "gross": "$17.10",
+        "rewardsPaid": "$1.63",
+        "costPerNew": "$0.33"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Sofia",
+          "amount": "$3.10",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Lena",
+          "amount": "$3.20",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Priya",
+          "amount": "$2.40",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Yuki",
+          "amount": "$3.60",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Omar",
+          "amount": "$4.80",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 493
+        },
+        "labels": [
+          "KB",
+          "Kiln Bakery",
+          "$2.73",
+          "SO",
+          "Sofia",
+          "paid $3.10",
+          "+$0.09 back",
+          "LE",
+          "Lena",
+          "+$0.20",
+          "YU",
+          "Yuki",
+          "+$0.07"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Yuki",
+          "Lena",
+          "Sofia"
+        ],
+        "namesMissing": [
+          "Omar",
+          "Hana"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 493
+        },
+        "labels": [
+          "KB",
+          "Kiln Bakery",
+          "$15.47",
+          "SO",
+          "Sofia",
+          "paid $3.10",
+          "+$0.09 back",
+          "PR",
+          "Priya",
+          "paid $2.40",
+          "LE",
+          "Lena",
+          "+$0.20",
+          "HA",
+          "Hana",
+          "+$0.44",
+          "YU",
+          "Yuki",
+          "+$0.29",
+          "OM",
+          "Omar",
+          "+$0.26"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Omar",
+          "Hana",
+          "Yuki",
+          "Lena",
+          "Sofia"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": [
+        {
+          "kind": "requestfailed",
+          "text": "GET /events/venue/0x9a40c2b1da073fea51a63b92f868a78969c56289 net::ERR_ABORTED",
+          "url": "https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289"
+        }
+      ]
+    },
+    {
+      "vp": "390",
+      "venue": "Pressed",
+      "address": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "url": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "expect": {
+        "venueName": "Pressed",
+        "payments": "4",
+        "verified": "4",
+        "gross": "$14.60",
+        "rewardsPaid": "$2.70",
+        "costPerNew": "$0.67"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Tomás",
+          "amount": "$2.90",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ana",
+          "amount": "$3.40",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$3.80",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Chloe",
+          "amount": "$4.50",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 493
+        },
+        "labels": [
+          "PR",
+          "Pressed",
+          "$2.32",
+          "TO",
+          "Tomás",
+          "paid $2.90",
+          "+$0.15 back",
+          "AN",
+          "Ana",
+          "+$0.32",
+          "BE",
+          "Ben",
+          "+$0.12"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ben",
+          "Ana",
+          "Tomás"
+        ],
+        "namesMissing": [
+          "Chloe",
+          "Diego"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 326,
+          "h": 493
+        },
+        "labels": [
+          "PR",
+          "Pressed",
+          "$11.90",
+          "TO",
+          "Tomás",
+          "paid $2.90",
+          "+$0.15 back",
+          "AN",
+          "Ana",
+          "+$0.32",
+          "DI",
+          "Diego",
+          "+$0.72",
+          "BE",
+          "Ben",
+          "+$0.49",
+          "CH",
+          "Chloe",
+          "+$0.43"
+        ],
+        "minPx": 14,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Chloe",
+          "Diego",
+          "Ben",
+          "Ana",
+          "Tomás"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": [
+        {
+          "kind": "requestfailed",
+          "text": "GET /events/venue/0xdbf2ffc4fdd279c4d32e99b03b6c6abc2d1fa494 net::ERR_ABORTED",
+          "url": "https://vouch-ubc.vercel.app/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494"
+        }
+      ]
+    },
+    {
+      "vp": "1280",
+      "venue": "Lena's café",
+      "address": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "expect": {
+        "venueName": "Lena's café",
+        "payments": "7",
+        "verified": "6",
+        "gross": "$28.00",
+        "rewardsPaid": "$3.71",
+        "costPerNew": "$0.62"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Maya",
+          "amount": "$1.90",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Diego",
+          "amount": "$3.60",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Chloe",
+          "amount": "$3.10",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$2.20",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$12.00",
+          "nameOnScreen": true,
+          "amountOnScreen": false
+        },
+        {
+          "name": "Priya",
+          "amount": "$2.40",
+          "nameOnScreen": false,
+          "amountOnScreen": false
+        },
+        {
+          "name": "Ana",
+          "amount": "$2.80",
+          "nameOnScreen": false,
+          "amountOnScreen": false
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "LC",
+          "Lena's café",
+          "$1.62",
+          "MA",
+          "Maya",
+          "paid $1.90",
+          "+$0.07 back",
+          "CH",
+          "Chloe",
+          "+$0.16",
+          "BE",
+          "Ben",
+          "+$0.06"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ben",
+          "Chloe",
+          "Maya"
+        ],
+        "namesMissing": [
+          "Ana",
+          "Marco",
+          "Priya",
+          "Sofia",
+          "Diego"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "LC",
+          "Lena's café",
+          "$24.29",
+          "DI",
+          "Diego",
+          "paid $3.60",
+          "MA",
+          "Maya",
+          "paid $1.90",
+          "+$0.07 back",
+          "PR",
+          "Priya",
+          "+$0.41",
+          "CH",
+          "Chloe",
+          "+$0.16",
+          "AN",
+          "Ana",
+          "+$0.97",
+          "MA",
+          "Marco",
+          "+$0.55",
+          "SO",
+          "Sofia",
+          "+$0.35",
+          "BE",
+          "Ben",
+          "+$0.31"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ana",
+          "Marco",
+          "Priya",
+          "Sofia",
+          "Ben",
+          "Chloe",
+          "Diego",
+          "Maya"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": []
+    },
+    {
+      "vp": "1280",
+      "venue": "Kiln Bakery",
+      "address": "0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "url": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "expect": {
+        "venueName": "Kiln Bakery",
+        "payments": "5",
+        "verified": "5",
+        "gross": "$17.10",
+        "rewardsPaid": "$1.63",
+        "costPerNew": "$0.33"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Sofia",
+          "amount": "$3.10",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Lena",
+          "amount": "$3.20",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Priya",
+          "amount": "$2.40",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Yuki",
+          "amount": "$3.60",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Omar",
+          "amount": "$4.80",
+          "nameOnScreen": false,
+          "amountOnScreen": false
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "KB",
+          "Kiln Bakery",
+          "$2.73",
+          "SO",
+          "Sofia",
+          "paid $3.10",
+          "+$0.09 back",
+          "LE",
+          "Lena",
+          "+$0.20",
+          "YU",
+          "Yuki",
+          "+$0.07"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Yuki",
+          "Lena",
+          "Sofia"
+        ],
+        "namesMissing": [
+          "Omar",
+          "Hana"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "KB",
+          "Kiln Bakery",
+          "$15.47",
+          "SO",
+          "Sofia",
+          "paid $3.10",
+          "+$0.09 back",
+          "PR",
+          "Priya",
+          "paid $2.40",
+          "LE",
+          "Lena",
+          "+$0.20",
+          "HA",
+          "Hana",
+          "+$0.44",
+          "YU",
+          "Yuki",
+          "+$0.29",
+          "OM",
+          "Omar",
+          "+$0.26"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Omar",
+          "Hana",
+          "Yuki",
+          "Lena",
+          "Sofia"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": [
+        {
+          "kind": "requestfailed",
+          "text": "GET /events/venue/0x9a40c2b1da073fea51a63b92f868a78969c56289 net::ERR_ABORTED",
+          "url": "https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289"
+        }
+      ]
+    },
+    {
+      "vp": "1280",
+      "venue": "Pressed",
+      "address": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "url": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "expect": {
+        "venueName": "Pressed",
+        "payments": "4",
+        "verified": "4",
+        "gross": "$14.60",
+        "rewardsPaid": "$2.70",
+        "costPerNew": "$0.67"
+      },
+      "statHits": {
+        "venueName": true,
+        "payments": true,
+        "verified": true,
+        "gross": false,
+        "rewardsPaid": true,
+        "costPerNew": true
+      },
+      "feedRows": [
+        {
+          "name": "Tomás",
+          "amount": "$2.90",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ana",
+          "amount": "$3.40",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Ben",
+          "amount": "$3.80",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        },
+        {
+          "name": "Chloe",
+          "amount": "$4.50",
+          "nameOnScreen": true,
+          "amountOnScreen": true
+        }
+      ],
+      "latest": {
+        "mode": "payment",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "PR",
+          "Pressed",
+          "$2.32",
+          "TO",
+          "Tomás",
+          "paid $2.90",
+          "+$0.15 back",
+          "AN",
+          "Ana",
+          "+$0.32",
+          "BE",
+          "Ben",
+          "+$0.12"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "latestCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Ben",
+          "Ana",
+          "Tomás"
+        ],
+        "namesMissing": [
+          "Chloe",
+          "Diego"
+        ]
+      },
+      "network": {
+        "mode": "network",
+        "orientation": "portrait",
+        "box": {
+          "w": 0,
+          "h": 0
+        },
+        "labels": [
+          "PR",
+          "Pressed",
+          "$11.90",
+          "TO",
+          "Tomás",
+          "paid $2.90",
+          "+$0.15 back",
+          "AN",
+          "Ana",
+          "+$0.32",
+          "DI",
+          "Diego",
+          "+$0.72",
+          "BE",
+          "Ben",
+          "+$0.49",
+          "CH",
+          "Chloe",
+          "+$0.43"
+        ],
+        "minPx": 0,
+        "overlaps": []
+      },
+      "networkCheck": {
+        "hex": [],
+        "guest": [],
+        "namesShown": [
+          "Chloe",
+          "Diego",
+          "Ben",
+          "Ana",
+          "Tomás"
+        ],
+        "namesMissing": []
+      },
+      "audit": {
+        "primaryCount": 0,
+        "primaries": [],
+        "banned": [],
+        "bannedA11y": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "guestInText": [],
+      "hexInText": [],
+      "errs": [
+        {
+          "kind": "requestfailed",
+          "text": "GET /events/venue/0xdbf2ffc4fdd279c4d32e99b03b6c6abc2d1fa494 net::ERR_ABORTED",
+          "url": "https://vouch-ubc.vercel.app/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "vp": "390",
+      "person": "Ana",
+      "address": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+      "api": {
+        "address": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+        "displayName": "Ana",
+        "customersCredited": 3,
+        "venues": [
+          {
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "name": "Pressed"
+          },
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "1194773",
+            "display": "1.194773"
+          },
+          "introducer": {
+            "baseUnits": "93000",
+            "display": "0.093"
+          },
+          "cashback": {
+            "baseUnits": "275000",
+            "display": "0.275"
+          },
+          "total": {
+            "baseUnits": "1287773",
+            "display": "1.287773"
+          }
+        },
+        "linksShared": 3,
+        "recent": [
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "319000",
+              "display": "0.319"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x95074e02200435ab6f1832de1a2d29e227f9c924a36f7c729165a10b3f52f73e",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC",
+            "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+            "blockNumber": "72958377",
+            "blockTime": 1795060852
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "170000",
+              "display": "0.17"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xd64d72e2e44f762b80ddaa1c82f20ce95fe5af929b2a82cfb78aa42a5c048ad8",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+            "blockNumber": "72958358",
+            "blockTime": 1795060838
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "182773",
+              "display": "0.182773"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xcdfdfee4b781261e57590bd2fb568201a37f8060f4fe517349fd66667eedefff",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xe4d0Bc409544495975F7c419bB7e30D8616Cb34E",
+            "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+            "blockNumber": "72958195",
+            "blockTime": 1795060721
+          },
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "93000",
+              "display": "0.093"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x7b34c22eea2b3c2f16ce5538151e48766c847c180321599d33d30b8f034f14b6",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+            "blockNumber": "72958177",
+            "blockTime": 1795060712
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "693000",
+              "display": "0.693"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "105000",
+              "display": "0.105"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x0678177e9ba953943e88c1e2c8fe95ce851f9695525b5b66b777f96b9ac4f8d2",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x55da2af6f0aa2d51c7ec379379184d36a099b1207d9db6081e198f7bfa81a01e",
+            "blockNumber": "72958097",
+            "blockTime": 1795060656
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Ana's record AN Ana Ambassador 3 new customers across 2 venues Earned from recommendations +$1.29 Every number here comes from a real first purchase someone made after Ana's recommendation. Venues LC Lena's café 2 new customers · First visits you sent +$0.97 PR Pressed 1 new customer · First visits you sent +$0.32 Details",
+      "errs": []
+    },
+    {
+      "vp": "390",
+      "person": "Priya",
+      "address": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+      "api": {
+        "address": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+        "displayName": "Priya",
+        "customersCredited": 2,
+        "venues": [
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "411226",
+            "display": "0.411226"
+          },
+          "introducer": {
+            "baseUnits": "0",
+            "display": "0.00"
+          },
+          "cashback": {
+            "baseUnits": "90000",
+            "display": "0.09"
+          },
+          "total": {
+            "baseUnits": "411226",
+            "display": "0.411226"
+          }
+        },
+        "linksShared": 1,
+        "recent": [
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "114226",
+              "display": "0.114226"
+            },
+            "viaReferrer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xcdfdfee4b781261e57590bd2fb568201a37f8060f4fe517349fd66667eedefff",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xe4d0Bc409544495975F7c419bB7e30D8616Cb34E",
+            "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+            "blockNumber": "72958195",
+            "blockTime": 1795060721
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "297000",
+              "display": "0.297"
+            },
+            "viaReferrer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "90000",
+              "display": "0.09"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x6068937f8d13a54c05f931f2ff2a6b820ca6750509eef00157f45a38accbd309",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "txHash": "0xa6691f9f80d964c40b6e826d910ba0b5fb805bb3cc6c75bd81539852de6af0a7",
+            "blockNumber": "72958108",
+            "blockTime": 1795060661
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Priya's record PR Priya Ambassador 2 new customers across 1 venue Earned from recommendations +$0.41 Every number here comes from a real first purchase someone made after Priya's recommendation. Venues LC Lena's café 2 new customers · First visits you sent +$0.41 Details",
+      "errs": []
+    },
+    {
+      "vp": "390",
+      "person": "Ben",
+      "address": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+      "api": {
+        "address": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+        "displayName": "Ben",
+        "customersCredited": 2,
+        "venues": [
+          {
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "name": "Pressed"
+          },
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "629750",
+            "display": "0.62975"
+          },
+          "introducer": {
+            "baseUnits": "173000",
+            "display": "0.173"
+          },
+          "cashback": {
+            "baseUnits": "640000",
+            "display": "0.64"
+          },
+          "total": {
+            "baseUnits": "802750",
+            "display": "0.80275"
+          }
+        },
+        "linksShared": 2,
+        "recent": [
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "57000",
+              "display": "0.057"
+            },
+            "viaReferrer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xb1b29ab8e7d31b10f694f4b35a90bdac0845c689ee35e1c682f0a1dceceb3a4d",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x0e75C354303737ac72277E7b9c1567423aB53bDC",
+            "txHash": "0xf9c79894048cb3aaa0bf65bfb6bec8f0f54f851c23d5f3e490bc50cd136f708b",
+            "blockNumber": "72958388",
+            "blockTime": 1795060858
+          },
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "116000",
+              "display": "0.116"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x95074e02200435ab6f1832de1a2d29e227f9c924a36f7c729165a10b3f52f73e",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC",
+            "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+            "blockNumber": "72958377",
+            "blockTime": 1795060852
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "374000",
+              "display": "0.374"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xd64d72e2e44f762b80ddaa1c82f20ce95fe5af929b2a82cfb78aa42a5c048ad8",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+            "blockNumber": "72958358",
+            "blockTime": 1795060838
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "190000",
+              "display": "0.19"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xc167f23a2cc9b4280cb53052f42af31635e66118795ffcb13ec6dccfaf8265f4",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x0997c294e53cb59ee27065478106efcd9d1f02aaa69765c49cf971af42521dad",
+            "blockNumber": "72958345",
+            "blockTime": 1795060828
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "255750",
+              "display": "0.25575"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x7b34c22eea2b3c2f16ce5538151e48766c847c180321599d33d30b8f034f14b6",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+            "blockNumber": "72958177",
+            "blockTime": 1795060712
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "450000",
+              "display": "0.45"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Ben's record BE Ben Ambassador 2 new customers across 2 venues Earned from recommendations +$0.80 Every number here comes from a real first purchase someone made after Ben's recommendation. Venues PR Pressed 1 new customer · First visits you sent +$0.49 LC Lena's café 1 new customer · First visits you sent +$0.31 Details",
+      "errs": []
+    },
+    {
+      "vp": "1280",
+      "person": "Ana",
+      "address": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+      "api": {
+        "address": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+        "displayName": "Ana",
+        "customersCredited": 3,
+        "venues": [
+          {
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "name": "Pressed"
+          },
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "1194773",
+            "display": "1.194773"
+          },
+          "introducer": {
+            "baseUnits": "93000",
+            "display": "0.093"
+          },
+          "cashback": {
+            "baseUnits": "275000",
+            "display": "0.275"
+          },
+          "total": {
+            "baseUnits": "1287773",
+            "display": "1.287773"
+          }
+        },
+        "linksShared": 3,
+        "recent": [
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "319000",
+              "display": "0.319"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x95074e02200435ab6f1832de1a2d29e227f9c924a36f7c729165a10b3f52f73e",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC",
+            "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+            "blockNumber": "72958377",
+            "blockTime": 1795060852
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "170000",
+              "display": "0.17"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xd64d72e2e44f762b80ddaa1c82f20ce95fe5af929b2a82cfb78aa42a5c048ad8",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+            "blockNumber": "72958358",
+            "blockTime": 1795060838
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "182773",
+              "display": "0.182773"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xcdfdfee4b781261e57590bd2fb568201a37f8060f4fe517349fd66667eedefff",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xe4d0Bc409544495975F7c419bB7e30D8616Cb34E",
+            "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+            "blockNumber": "72958195",
+            "blockTime": 1795060721
+          },
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "93000",
+              "display": "0.093"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x7b34c22eea2b3c2f16ce5538151e48766c847c180321599d33d30b8f034f14b6",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+            "blockNumber": "72958177",
+            "blockTime": 1795060712
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "693000",
+              "display": "0.693"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "amount": {
+              "baseUnits": "105000",
+              "display": "0.105"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x0678177e9ba953943e88c1e2c8fe95ce851f9695525b5b66b777f96b9ac4f8d2",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x55da2af6f0aa2d51c7ec379379184d36a099b1207d9db6081e198f7bfa81a01e",
+            "blockNumber": "72958097",
+            "blockTime": 1795060656
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Ana's record AN Ana Ambassador 3 new customers across 2 venues Earned from recommendations +$1.29 Every number here comes from a real first purchase someone made after Ana's recommendation. Venues LC Lena's café 2 new customers · First visits you sent +$0.97 PR Pressed 1 new customer · First visits you sent +$0.32 Details",
+      "errs": []
+    },
+    {
+      "vp": "1280",
+      "person": "Priya",
+      "address": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+      "api": {
+        "address": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+        "displayName": "Priya",
+        "customersCredited": 2,
+        "venues": [
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "411226",
+            "display": "0.411226"
+          },
+          "introducer": {
+            "baseUnits": "0",
+            "display": "0.00"
+          },
+          "cashback": {
+            "baseUnits": "90000",
+            "display": "0.09"
+          },
+          "total": {
+            "baseUnits": "411226",
+            "display": "0.411226"
+          }
+        },
+        "linksShared": 1,
+        "recent": [
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "114226",
+              "display": "0.114226"
+            },
+            "viaReferrer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xcdfdfee4b781261e57590bd2fb568201a37f8060f4fe517349fd66667eedefff",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xe4d0Bc409544495975F7c419bB7e30D8616Cb34E",
+            "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+            "blockNumber": "72958195",
+            "blockTime": 1795060721
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "297000",
+              "display": "0.297"
+            },
+            "viaReferrer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "amount": {
+              "baseUnits": "90000",
+              "display": "0.09"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x6068937f8d13a54c05f931f2ff2a6b820ca6750509eef00157f45a38accbd309",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+            "txHash": "0xa6691f9f80d964c40b6e826d910ba0b5fb805bb3cc6c75bd81539852de6af0a7",
+            "blockNumber": "72958108",
+            "blockTime": 1795060661
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Priya's record PR Priya Ambassador 2 new customers across 1 venue Earned from recommendations +$0.41 Every number here comes from a real first purchase someone made after Priya's recommendation. Venues LC Lena's café 2 new customers · First visits you sent +$0.41 Details",
+      "errs": []
+    },
+    {
+      "vp": "1280",
+      "person": "Ben",
+      "address": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+      "api": {
+        "address": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+        "displayName": "Ben",
+        "customersCredited": 2,
+        "venues": [
+          {
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "name": "Pressed"
+          },
+          {
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "name": "Lena's café"
+          }
+        ],
+        "earned": {
+          "referrer": {
+            "baseUnits": "629750",
+            "display": "0.62975"
+          },
+          "introducer": {
+            "baseUnits": "173000",
+            "display": "0.173"
+          },
+          "cashback": {
+            "baseUnits": "640000",
+            "display": "0.64"
+          },
+          "total": {
+            "baseUnits": "802750",
+            "display": "0.80275"
+          }
+        },
+        "linksShared": 2,
+        "recent": [
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "57000",
+              "display": "0.057"
+            },
+            "viaReferrer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xb1b29ab8e7d31b10f694f4b35a90bdac0845c689ee35e1c682f0a1dceceb3a4d",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x0e75C354303737ac72277E7b9c1567423aB53bDC",
+            "txHash": "0xf9c79894048cb3aaa0bf65bfb6bec8f0f54f851c23d5f3e490bc50cd136f708b",
+            "blockNumber": "72958388",
+            "blockTime": 1795060858
+          },
+          {
+            "role": "introducer",
+            "roleId": 2,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "116000",
+              "display": "0.116"
+            },
+            "viaReferrer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x95074e02200435ab6f1832de1a2d29e227f9c924a36f7c729165a10b3f52f73e",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC",
+            "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+            "blockNumber": "72958377",
+            "blockTime": 1795060852
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "374000",
+              "display": "0.374"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xd64d72e2e44f762b80ddaa1c82f20ce95fe5af929b2a82cfb78aa42a5c048ad8",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+            "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+            "blockNumber": "72958358",
+            "blockTime": 1795060838
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "190000",
+              "display": "0.19"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xc167f23a2cc9b4280cb53052f42af31635e66118795ffcb13ec6dccfaf8265f4",
+            "venue": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x0997c294e53cb59ee27065478106efcd9d1f02aaa69765c49cf971af42521dad",
+            "blockNumber": "72958345",
+            "blockTime": 1795060828
+          },
+          {
+            "role": "referrer",
+            "roleId": 1,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "255750",
+              "display": "0.25575"
+            },
+            "viaReferrer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0x7b34c22eea2b3c2f16ce5538151e48766c847c180321599d33d30b8f034f14b6",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+            "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+            "blockNumber": "72958177",
+            "blockTime": 1795060712
+          },
+          {
+            "role": "cashback",
+            "roleId": 0,
+            "recipient": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "amount": {
+              "baseUnits": "450000",
+              "display": "0.45"
+            },
+            "viaReferrer": "0x0000000000000000000000000000000000000000",
+            "returned": false,
+            "returnReason": null,
+            "orderId": "0xdeb2983e6c14252548c0516bbf6cce68f62021a7f0c5762efd0b6592db1dfc60",
+            "venue": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+            "customer": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+            "blockNumber": "72958157",
+            "blockTime": 1795060698
+          }
+        ],
+        "source": "streams"
+      },
+      "nameOnScreen": true,
+      "hexInText": [],
+      "guestInText": [],
+      "audit": {
+        "primaryCount": 0,
+        "banned": [],
+        "moneyBad": [],
+        "rawUnits": [],
+        "smallTargets": []
+      },
+      "text": "Ben's record BE Ben Ambassador 2 new customers across 2 venues Earned from recommendations +$0.80 Every number here comes from a real first purchase someone made after Ben's recommendation. Venues PR Pressed 1 new customer · First visits you sent +$0.49 LC Lena's café 1 new customer · First visits you sent +$0.31 Details",
+      "errs": []
+    }
+  ],
+  "problems": [
+    {
+      "where": "p-lena-dashboard-390",
+      "what": "stat gross \"$28.00\" not on screen"
+    },
+    {
+      "where": "p-kiln-dashboard-390",
+      "what": "stat gross \"$17.10\" not on screen"
+    },
+    {
+      "where": "p-kiln-dashboard-390",
+      "what": "console/page errors: GET /events/venue/0x9a40c2b1da073fea51a63b92f868a78969c56289 net::ERR_ABORTED"
+    },
+    {
+      "where": "p-pressed-dashboard-390",
+      "what": "stat gross \"$14.60\" not on screen"
+    },
+    {
+      "where": "p-pressed-dashboard-390",
+      "what": "console/page errors: GET /events/venue/0xdbf2ffc4fdd279c4d32e99b03b6c6abc2d1fa494 net::ERR_ABORTED"
+    },
+    {
+      "where": "p-lena-dashboard-1280",
+      "what": "stat gross \"$28.00\" not on screen"
+    },
+    {
+      "where": "p-lena-dashboard-1280",
+      "what": "feed row Ben $12.00 not on screen (name true, amount false)"
+    },
+    {
+      "where": "p-lena-dashboard-1280",
+      "what": "feed row Priya $2.40 not on screen (name false, amount false)"
+    },
+    {
+      "where": "p-lena-dashboard-1280",
+      "what": "feed row Ana $2.80 not on screen (name false, amount false)"
+    },
+    {
+      "where": "p-lena-dashboard-1280",
+      "what": "Everyone label min height 0.0px at 1280"
+    },
+    {
+      "where": "p-kiln-dashboard-1280",
+      "what": "stat gross \"$17.10\" not on screen"
+    },
+    {
+      "where": "p-kiln-dashboard-1280",
+      "what": "feed row Omar $4.80 not on screen (name false, amount false)"
+    },
+    {
+      "where": "p-kiln-dashboard-1280",
+      "what": "Everyone label min height 0.0px at 1280"
+    },
+    {
+      "where": "p-kiln-dashboard-1280",
+      "what": "console/page errors: GET /events/venue/0x9a40c2b1da073fea51a63b92f868a78969c56289 net::ERR_ABORTED"
+    },
+    {
+      "where": "p-pressed-dashboard-1280",
+      "what": "stat gross \"$14.60\" not on screen"
+    },
+    {
+      "where": "p-pressed-dashboard-1280",
+      "what": "Everyone label min height 0.0px at 1280"
+    },
+    {
+      "where": "p-pressed-dashboard-1280",
+      "what": "console/page errors: GET /events/venue/0xdbf2ffc4fdd279c4d32e99b03b6c6abc2d1fa494 net::ERR_ABORTED"
+    }
+  ]
+}

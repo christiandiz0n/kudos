@@ -1,0 +1,114 @@
+[
+  {
+    "file": "s01-landing-signed-out.png",
+    "route": "/",
+    "state": "landing / onboarding (signed out)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s01b-landing-focus-first-tab.png",
+    "route": "/",
+    "state": "first Tab stop on landing: name field focus ring",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s02-transparency-full.png",
+    "route": "/transparency",
+    "state": "public transparency (default example) (full page)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s02-transparency.png",
+    "route": "/transparency",
+    "state": "public transparency (default example)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s03-transparency-venue-full.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency for a live venue (full page)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s03-transparency-venue.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency for a live venue",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s04-intro-signed-out.png",
+    "route": "/i/vG6xcBExH",
+    "state": "friend's link opened signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s05-record-public.png",
+    "route": "/a/0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+    "state": "public ambassador record (visitor)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s06-scan-signed-out.png",
+    "route": "/scan",
+    "state": "scanner, signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s07-venue-signed-out.png",
+    "route": "/venue",
+    "state": "venue app entry, signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s08-venue-dashboard-signed-out.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "venue dashboard URL, signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s09-wallet-signed-out.png",
+    "route": "/wallet",
+    "state": "wallet URL, signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s10-me-signed-out.png",
+    "route": "/me",
+    "state": "own record URL, signed out",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s11-intro-unknown.png",
+    "route": "/i/NOPE0000",
+    "state": "unknown friend's link",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s12-404.png",
+    "route": "/does-not-exist",
+    "state": "unknown route (404)",
+    "notes": "",
+    "viewport": "390x664"
+  },
+  {
+    "file": "s50-transparency-1280.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency at 1280×720",
+    "notes": "desktop",
+    "viewport": "1280x720"
+  }
+]

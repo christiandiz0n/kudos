@@ -46,6 +46,21 @@ function cliTopup(addr) {
   const out = execFileSync("pnpm", ["--silent", "--filter", "@vouch/scripts", "topup", "--to", addr, "--target", "1.10", "--max-total", "2.50"], { cwd: ROOT, encoding: "utf8" });
   return /0x[0-9a-fA-F]{64}/.exec(out)?.[0] ?? out.slice(-300);
 }
+// Free Stream preflight (Phase 5): with --probe-venue <addr> (or QE_PROBE_VENUE), refuse to spend unless that
+// already-mined venue has been ingested by Streams (GET /venues/<v>.onchain != null). Nothing is sent if it hasn't.
+{
+  const i = process.argv.indexOf("--probe-venue");
+  const pv = (i > 0 ? process.argv[i + 1] : undefined) ?? process.env.QE_PROBE_VENUE;
+  if (pv) {
+    const r = await apiJson(`/venues/${pv}`);
+    if (!r.json?.onchain) {
+      log("PREFLIGHT: Stream has not ingested", pv, "→ STREAM_NOT_ACTIVE; nothing spent");
+      process.exit(3);
+    }
+    log("PREFLIGHT: Stream ingested", pv, "→ OK to run");
+  }
+}
+log("story base", BASE, "api", API, "out", EVID);
 const browser = await chromium.launch({ args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"] });
 try {
   // ------------------------------------------------------------------ venue onboarding (slider → 20%)
@@ -78,6 +93,20 @@ try {
   RES.venueTerms = vInfo.json.terms;
   RES.venueOnchainAtDashboard = vInfo.json.onchain != null;
   mark("venue registered", { vaddr, ms: RES.venueRegisteredMs, onchain: RES.venueOnchainAtDashboard, rewardBps: vInfo.json.terms?.rewardBps });
+  // Phase 5 self-probe: the venue registration doubles as the Stream probe. If Streams hasn't ingested it within
+  // QE_STREAM_WAIT_S (default 90 s), stop BEFORE any top-up or payment (spend so far: this one registration).
+  if (!RES.venueOnchainAtDashboard) {
+    const waitS = Number(process.env.QE_STREAM_WAIT_S ?? 90);
+    const tw = Date.now();
+    let seen = false;
+    while (Date.now() - tw < waitS * 1000) {
+      if ((await apiJson(`/venues/${vaddr}`)).json?.onchain) { seen = true; break; }
+      await new Promise((r) => setTimeout(r, 3000));
+    }
+    RES.streamProbeMs = seen ? Date.now() - tReg : null;
+    mark(seen ? "STREAM_ACTIVE (venue ingested)" : "STREAM_NOT_ACTIVE (venue not ingested) → stopping before any top-up", { ms: Date.now() - tReg });
+    if (!seen) throw new Error("STREAM_NOT_ACTIVE");
+  }
   await settle(venue.page, 1500);
   await A(venue, "l03-venue-dashboard-empty", "new venue dashboard (live, empty)");
 

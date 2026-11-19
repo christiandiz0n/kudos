@@ -2,7 +2,7 @@
 //   node e2e/phase3/check-static.mjs
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { BASE, EVID, audit, chromium, firstFocus, log, newPhone, onboard, runningAnimations, settle, shot, sink } from "./lib.mjs";
+import { BASE, EVID, WEBKIT, audit, chromium, firstFocus, log, newPhone, onboard, runningAnimations, settle, shot, sink } from "./lib.mjs";
 
 // Existing live data (FRONTEND_INTEGRATION's 18:20 run; public reads only).
 const V0 = "0xC6CF2be7Ef591D0DB16206796eeb003e891E319c";
@@ -47,7 +47,8 @@ try {
   await visit(anon, "/i/NOPE0000", "s11-intro-unknown", "unknown friend's link", { wait: 2500 });
   await visit(anon, "/does-not-exist", "s12-404", "unknown route (404)");
 
-  // ------------------------------------------------------------------ fresh customer (signs in only)
+  // ------------------------------------------------------------------ fresh customer (signs in only; Chromium only: needs the virtual authenticator)
+  if (!WEBKIT) {
   const cust = await newPhone(browser, "customer");
   await cust.page.goto(`${BASE}/`);
   await settle(cust.page);
@@ -88,6 +89,8 @@ try {
   results.push({ screen: "QE-3-02 geometry", initial: g0, focused: g1 });
   log("QE-3-02 focused", JSON.stringify({ labelHit: g1.labelHit, inputHit: g1.inputHit, inputBottom: g1.input?.bottom, footerTop: g1.footer?.top }));
 
+  }
+
   // QE-3-07: one focus ring on a text field
   await anon.page.goto(`${BASE}/`);
   await settle(anon.page, 800);
@@ -99,7 +102,8 @@ try {
   log("QE-3-07", JSON.stringify(ring));
 
 
-  // ------------------------------------------------------------------ reduced motion: graph + transparency
+  // ------------------------------------------------------------------ reduced motion: graph + transparency (signed in → Chromium only)
+  if (!WEBKIT) {
   const rm = await newPhone(browser, "reduced", { reducedMotion: "reduce" });
   await rm.page.goto(`${BASE}/`);
   await settle(rm.page);
@@ -119,6 +123,8 @@ try {
   const motionAnims = await runningAnimations(nm.page);
   results.push({ screen: "motion-baseline", animations: motionAnims });
   log("anims reduced", r1.animations.length, "vs normal", motionAnims.length);
+
+  }
 
   // ------------------------------------------------------------------ projector 1280×720 (non-owner, live data)
   const wide = await browser.newContext({ viewport: { width: 1280, height: 720 } });

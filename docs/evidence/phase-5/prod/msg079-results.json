@@ -1,0 +1,191 @@
+{
+  "base": "https://vouch-ubc.vercel.app",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "venue": "0x3F502804f5C1002113Bf712e2A1eb76D24beB8cC",
+  "at": "2026-11-19T04:12:51.102Z",
+  "checks": [
+    {
+      "id": "QE-2-03",
+      "name": "/venues/prepare payout=zero → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-03",
+      "name": "/venues/prepare payout=Vouch → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-03",
+      "name": "/venues/prepare payout=USDC → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-03",
+      "name": "setKeys prepare payout=Vouch → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-03",
+      "name": "setKeys prepare payout=USDC → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-03",
+      "name": "setKeys prepare payout=zero → 400 INVALID_PAYOUT",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "INVALID_PAYOUT"
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "setSeedAmbassador allowed=\"true\" → 400",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "details": {
+          "field": "allowed"
+        }
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "setSeedAmbassador allowed=\"false\" → 400",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "details": {
+          "field": "allowed"
+        }
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "setSeedAmbassador allowed=1 → 400",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "details": {
+          "field": "allowed"
+        }
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "setSeedAmbassador allowed=0 → 400",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "details": {
+          "field": "allowed"
+        }
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "setSeedAmbassador allowed=null → 400",
+      "ok": true,
+      "detail": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "details": {
+          "field": "allowed"
+        }
+      }
+    },
+    {
+      "id": "QE-2-04",
+      "name": "control allowed=true → 200, typed message allowed === true",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "allowed": true
+      }
+    },
+    {
+      "id": "QE-2-09",
+      "name": "refused POST /payments (unfunded) → 402, nothing sent",
+      "ok": true,
+      "detail": {
+        "status": 402,
+        "code": "INSUFFICIENT_BALANCE",
+        "at": 1795061574722
+      }
+    },
+    {
+      "id": "QE-2-09",
+      "name": "order stays payable after the refusal (status pending, relayStatus pending, no tx)",
+      "ok": true,
+      "detail": {
+        "status": "pending",
+        "relayStatus": "pending",
+        "txHash": null
+      }
+    },
+    {
+      "id": "QE-2-09",
+      "name": "a new quote on the same order still succeeds",
+      "ok": true,
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "id": "QE-2-06",
+      "name": "POST /payments after the order expired → 410 ORDER_EXPIRED",
+      "ok": true,
+      "detail": {
+        "status": 410,
+        "code": "ORDER_EXPIRED",
+        "at": 1795061614083
+      }
+    },
+    {
+      "id": "QE-2-06",
+      "name": "quote after expiry → 410 ORDER_EXPIRED (same code)",
+      "ok": true,
+      "detail": {
+        "status": 410,
+        "code": "ORDER_EXPIRED"
+      }
+    },
+    {
+      "id": "QE-2-06",
+      "name": "public order status reads expired",
+      "ok": true,
+      "detail": {
+        "status": "expired",
+        "relayStatus": "pending"
+      }
+    }
+  ],
+  "customer": "0xb1282f8Efc4D5DD63E710D61e1A433188C6931d6",
+  "ui06": "QE QE errors café 04:08 Paying with Vouch This code has expired Codes only last a couple of minutes, so nobody pays for an old order. Nothing was charged. Ask for a new code and scan again. Scan a new code Close",
+  "pass": 18,
+  "fail": 0
+}

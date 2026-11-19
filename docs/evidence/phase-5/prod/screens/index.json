@@ -1,0 +1,205 @@
+[
+  {
+    "file": "m06-pay-after-expiry.png",
+    "route": "/pay?v=0x3F502804f5C1002113Bf712e2A1eb76D24beB8cC&o=0xf8a94ac194dc3d9ec75d3ead4a9692424d677c1e2340610554c7f18e0f35f155",
+    "state": "QE-2-06: pay sent after the QR expired",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "m09-refused-insufficient.png",
+    "route": "/pay?v=0x3F502804f5C1002113Bf712e2A1eb76D24beB8cC&o=0xed1429012f6464ed9d468a6a635fdedcf022f0c5ce00b8c080afa130bf47dda8",
+    "state": "QE-2-09: refused POST /payments (real $0 balance)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-kiln-dashboard-1280-full.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-kiln-dashboard-1280.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-kiln-dashboard-390-full.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-kiln-dashboard-390.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-kiln-everyone-1280.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-kiln-everyone-390.png",
+    "route": "/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+    "state": "Kiln Bakery money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-lena-dashboard-1280-full.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-lena-dashboard-1280.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-lena-dashboard-390-full.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-lena-dashboard-390.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-lena-everyone-1280.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-lena-everyone-390.png",
+    "route": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "state": "Lena's café money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-pressed-dashboard-1280-full.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-pressed-dashboard-1280.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-pressed-dashboard-390-full.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed dashboard, visitor (full page)",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-pressed-dashboard-390.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed dashboard, visitor, Latest view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-pressed-everyone-1280.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-pressed-everyone-390.png",
+    "route": "/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+    "state": "Pressed money graph, Everyone view",
+    "notes": "seeded venue",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-ana-1280.png",
+    "route": "/a/0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+    "state": "Ana's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-record-ana-390-full.png",
+    "route": "/a/0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+    "state": "Ana's public record (full page)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-ana-390.png",
+    "route": "/a/0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+    "state": "Ana's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-ben-1280.png",
+    "route": "/a/0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+    "state": "Ben's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-record-ben-390-full.png",
+    "route": "/a/0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+    "state": "Ben's public record (full page)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-ben-390.png",
+    "route": "/a/0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+    "state": "Ben's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-priya-1280.png",
+    "route": "/a/0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+    "state": "Priya's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "p-record-priya-390-full.png",
+    "route": "/a/0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+    "state": "Priya's public record (full page)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  },
+  {
+    "file": "p-record-priya-390.png",
+    "route": "/a/0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+    "state": "Priya's public record (visitor)",
+    "notes": "seeded persona",
+    "viewport": "390x844"
+  }
+]
