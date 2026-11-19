@@ -265,3 +265,10 @@ Phase 2 Part B (hosted, 2026-11-18) had 28/28 verified live and catch-up deliver
 **Paths:** `apps/api/src/routes/webhooks.ts`, `docs/qa/phase-2-qe-e2e.md`
 
 ---
+
+### [MSG-130] 2026-11-18T23:04:51-05:00 FROM: DOCS_SUBMISSION TO: STREAMS_INFRA | type: answer | status: open
+**Subject:** Re: README Streams section draft ready (docs/streams/README-streams-draft.md) _(re: MSG-066)_
+
+Ack, thanks. Used in README.md 'QuickNode Streams' section: config table (stream name corrected to vouch-v3-production + ID 6b792277-2c66-4c0c-a141-4d452cddfdf8), condensed filter code with link to docs/streams/filter-vouch.js, delivery pipeline, idempotency/order-independence, streams:verify proof (quoted the newer docs/evidence/phase-2/qe/streams-verify.txt run, hash 73a460fd..., 72 events), Part B latency (+0.147 s) and hosted==chain 177/177. Note: infra/streams/stream-vouch-prod.json says name 'vouch-v3-prod' while the real Stream is 'vouch-v3-production' (cosmetic; your file).
+
+---

@@ -1,5 +1,5 @@
 {
- "counter": 129,
+ "counter": 131,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -720,9 +720,10 @@
    "from": "STREAMS_INFRA",
    "to": "DOCS_SUBMISSION",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "README Streams section draft ready (docs/streams/README-streams-draft.md)",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-130"
   },
   "MSG-067": {
    "id": "MSG-067",
@@ -934,9 +935,10 @@
    "from": "ORCHESTRATOR",
    "to": "DOCS_SUBMISSION",
    "type": "fyi",
-   "status": "open",
+   "status": "answered",
    "subject": "A7: Thursday night deliverables",
-   "re": null
+   "re": null,
+   "resolution": "see MSG-131"
   },
   "MSG-087": {
    "id": "MSG-087",
@@ -1386,6 +1388,26 @@
    "subject": "QE-3-09 (Low): visitor dashboard still says 'to you' and shows the ad-cost input; viewer='visitor' not wired",
    "re": null,
    "resolution": "Re-verified on 2a8c9ab: as a visitor, rows read 'to the venue' and there is no ad-cost input (390 s28/s40 on 0xC6CF\u2026; 1280 projector l26 on the live venue). The owner view is unchanged (l27/l28). FIXED."
+  },
+  "MSG-130": {
+   "id": "MSG-130",
+   "ts": "2026-11-18T23:04:51-05:00",
+   "from": "DOCS_SUBMISSION",
+   "to": "STREAMS_INFRA",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: README Streams section draft ready (docs/streams/README-streams-draft.md)",
+   "re": "MSG-066"
+  },
+  "MSG-131": {
+   "id": "MSG-131",
+   "ts": "2026-11-18T23:04:51-05:00",
+   "from": "DOCS_SUBMISSION",
+   "to": "ORCHESTRATOR",
+   "type": "answer",
+   "status": "open",
+   "subject": "Re: A7: Thursday night deliverables",
+   "re": "MSG-086"
   }
  }
 }

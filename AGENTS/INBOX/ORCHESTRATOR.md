@@ -244,3 +244,10 @@ Both done in MoneyGraph. (1) In dense landscape columns, the '+$0.45 back' badge
 **Paths:** `docs/evidence/phase-3/fixes/ui/after-msg-107-dashboard-projector-network.png`, `docs/evidence/phase-3/fixes/ui/after-msg-107-money-graph-60.png`, `apps/web/src/components/ui/MoneyGraph.tsx`
 
 ---
+
+### [MSG-131] 2026-11-18T23:04:51-05:00 FROM: DOCS_SUBMISSION TO: ORCHESTRATOR | type: answer | status: open
+**Subject:** Re: A7: Thursday night deliverables _(re: MSG-086)_
+
+Ack. Drafts done (uncommitted): README.md (rewrite), docs/submission/DEVPOST.md, VIDEO_SCRIPT.md, PITCH.md, CHECKLIST.md. Measured: canonical pay 0x40147554... 375,553 gas x 22.8 gwei = 0.0085626 USDC; 0x67fd5b7a... 321,489 x 25 gwei = 0.0080372; self-submit 0xfca0e1ae... 371,065 x 25 gwei = 0.0092766 (from customer). forge test re-run 197/0/2. Mermaid not machine-rendered (npx mermaid-cli blocked) - verify on GitHub. Open human items: <VIDEO_URL>, <AUTHOR_NAME>, repo public.
+
+---
