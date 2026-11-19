@@ -1,13 +1,16 @@
 # ORCHESTRATOR — HANDOFF
-_Last updated: 2026-11-18 18:05Z (session 3, A7) by ORCHESTRATOR._
+_Last updated: 2026-11-19 04:00Z (session 3, A7) by ORCHESTRATOR._
 
-> **Session 3 (A7, D-019) — read this block first; it supersedes "Current status"/"Next up" below.**
-> - Secrets applied ✅. **Phase 2 gate PASS-with-findings** (Part B 18:16Z, pay 0x40147554…ddfcb, 202→SSE settled ≈1.0 s, hosted==chain 177/177). Human told "PAUSE THE STREAM NOW"; resume (Continue where it left off) when FRONTEND_INTEGRATION needs live settlement.
-> - Phase 3 + visual Phase 4 running in parallel without a "go" (A7): UI_DESIGN-customer, UI_DESIGN-venue, FRONTEND_INTEGRATION, BACKEND_RELAYER (demo top-up + venue feed). IDs in AGENT_REGISTRY.
-> - Shared web dev server: `next dev -p 3100` from apps/web (Orchestrator background task; log in the session scratchpad). CORS on Railway allows only localhost:3100.
-> - D-811 deployed (0bf3a2a, 18:21Z): `/demo/topup` enabled (`DEMO_TOPUP_ENABLED=true`, `DEMO_TOPUP_PER_IP_PER_HOUR=30`, both non-secret, set by the Orchestrator), `/venues/:venue/payments` live. Railway CLI under zsh: pass flags literally (an unquoted `$P` does not word-split).
-> - Schedule (A7): Thu AM Vercel deploy (HUMAN #14) + seed script (2–3 venues, ~10 personas, clean stage venue) + fixes; Thu PM QE gate on the deployed app + demo choreography; Thu night DOCS_SUBMISSION; Fri AM final checks, repo public with approval, human submits by 10:00 ET.
-> - Hand off and ask for a context reset at ~75% context.
+> **Session 3 (A7 D-019; updated 2026-11-19 ~04:00Z = Wed 23:00 ET) — read this block first; it supersedes "Current status"/"Next up" below.**
+> - **Gates:** Phase 2 PASS-with-findings (Part B). **Phase 3 PASS** (independent QE, live two-device story exact on chain, 9/9 findings fixed). Phase 4 visuals (money graph, cost/verified, transparency) shipped inside Phase 3. Tier 3 CUT.
+> - **Deployed:** web **https://vouch-ubc.vercel.app** (D-020, Vercel project `vouch`; the ONLY URL to share/rehearse; omega domain unused). api Railway (D-811 live: /demo/topup enabled, /venues/:v/payments). `CORS_ORIGINS` = localhost:3100 + vouch-ubc. Deploy commands: Railway §Hosted infra; Vercel in D-020.
+> - **Running agents:** BACKEND_RELAYER seed (`scripts/seed/demo-seed.ts`, 3 venues incl. canonical Lena's café, ~10 personas; keys in gitignored `scripts/seed/.state/`) and DOCS_SUBMISSION (README, docs/submission/*). On return: verify (tests/typecheck/secret scan, spot-check numbers on chain), commit, push.
+> - **Stream:** ACTIVE (human resumed ~20:45Z). The seed needs it. Tell the human "PAUSE THE STREAM NOW" after the seed settles; they must RESUME it first thing Thursday before the phone rehearsal.
+> - **Next (no human needed):** (1) QE_E2E regression on the deployed Vercel app (Playwright 390×844, two contexts, seeded venues visible, CORS from vouch-ubc) — A7 Thu PM gate; (2) demo choreography doc `docs/demo/RUNBOOK.md` (judges join via QR → stage venue; fallbacks); (3) kill-the-backend self-submit script + Streams replay demo only if cheap (scripts exist: CONTRACTS self-submit smoke, `streams:verify`); (4) re-test QE-2-03/04/06/09 (MSG-079); (5) DOCS review vs code/chain.
+> - **Human (Thu AM):** resume Stream; run the 32-step phone checklist https://claude.ai/artifact/4oWhxvJuPmLU9Ag2D8SJgA on vouch-ubc; create the clean stage venue on prod with their own Face ID; record the video from docs/submission/VIDEO_SCRIPT.md; Fri AM approve making the repo public + submit.
+> - Artifacts: Phase 3 gate report https://claude.ai/artifact/GqpwDiupiQpdEm7PA2q48k ; phone checklist above.
+> - Shared web dev server `next dev -p 3100` (Orchestrator background task) — dies with the session; restart: `cd apps/web && node ./node_modules/next/dist/bin/next dev -p 3100`.
+> - Hand off / ask for a context reset at ~75% context.
 
 > **New orchestrator session: read in this order:**
 > 1. this file

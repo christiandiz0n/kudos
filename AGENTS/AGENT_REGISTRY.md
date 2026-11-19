@@ -29,3 +29,5 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | QE_E2E Phase 3 gate (session 3) | `a8079d2de53c43c45` | 3 | Independent gate: routes, copy, error states, live two-context story, fresh 390px shots, phone checklist | ✅ PASS (live story 03:47Z) | needs the Stream active for the live part |
 | UI_DESIGN fix pass (session 3) | `a837480c5cba003aa` | 3 | QE-3 UI findings + Orchestrator polish notes | ✅ | all UI files |
 | FRONTEND_INTEGRATION fix pass (session 3) | `a91555c1c5783074b` | 3 | QE-3-01/03/05/08, manifest, prod origin | ✅ | |
+| DOCS_SUBMISSION (session 3) | `afe23a4ae4682c5bc` | 6 | README, Devpost, video script, pitch + Q&A, checklist | 🟢 | pulled forward to Wed night |
+| BACKEND_RELAYER seed (session 3) | `a0f716e0d3312af49` | 5 | scripts/seed/demo-seed.ts: 3 venues, ~10 personas, canonical story | 🟢 | hosted api; needs Stream active |
