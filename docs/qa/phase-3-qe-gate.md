@@ -2,10 +2,11 @@
 
 _QE_E2E, session 3, Wed 2026-11-18, 18:30–19:25 UTC. Code under test: web `5f2d378` (`apps/web`, HEAD `9ee3171` is docs-only) on the shared dev server http://localhost:3100, against the hosted api https://api-production-902bc54c.up.railway.app._
 
-## Verdict (re-verify, 20:35Z): PASS-with-findings on parts 1, 2, 4 and 5; part 3 (live story) is STREAM NOT ACTIVE again. The gate stays OPEN.
-- **All 8 run-1 findings are fixed:** QE-3-01..08, each re-checked independently on `3d381e0`.
-- **One new Low:** QE-3-09, the visitor dashboard wording.
-- **Live story:** blocked only by the paused Stream; see the "Re-verify" section.
+## Final verdict (2026-11-19 03:50Z): **PASS**
+The Phase 3 frontend gate passes.
+- **Live story:** it ran end-to-end on the live Stream. Both payments settled in under 1.5 s from the tap, the venue saw "Paid" in under 1.8 s, and the referred payment's split is exact on chain.
+- **Findings:** all nine are fixed and independently re-verified (QE-3-01..08 on `3d381e0`, QE-3-09 on `2a8c9ab`). None are open.
+- **Info only:** while a "Who sent you here?" chip is selected, it uses the ink fill, so my primary counter sees 2 ink elements on l21. That is a selected radio's state, not a second action, so it is not a finding.
 
 ### Run 1 verdict (18:30–19:31Z): PASS-with-findings on parts 1, 2, 4 and 5; part 3: STREAM NOT ACTIVE
 
@@ -72,39 +73,64 @@ Coverage: 28 route/state visits. That is every route in the FRONTEND_INTEGRATION
 | Non-owner at another venue's counter | **real** | Refused cleanly ("You can't do that from this account."). The venue dashboard still offers **Take an order** to non-owners (QE-3-05). | s28, s29, e29 |
 | Session gone | **real**: token removed | PASS: "Welcome back, Eve · Confirm it's you" | e31 |
 
-## 3. Live canonical story
-**STREAM NOT ACTIVE: not run.**
+## 3. Live canonical story: **PASS** (2026-11-19 03:47:56–03:50:19Z, web `2a8c9ab` on :3100, hosted api, live Stream)
+**Stream state:** the human resumed it at about 20:45Z ("continue where it left off"). My cursor-independent probe (`stream-probe-live.mjs`) first got `venue.registered` 63.9 s after the tap, because the Stream was still catching up. One minute later the next probe got it in 1.55 s, so the Stream was at head before the story ran.
 
-- **Liveness probe.** It is free and spends nothing. It watches `GET /venues/<v>` → `onchain`, which is filled only from Streams (`venue.registered`), for a venue whose registerVenue was mined at about 18:29Z (`0x30b2…8356`, "Shots café 18:29"). The probe ran every 3 min from 18:33Z: 13 polls, plus a manual check at 19:23Z. `onchain` stayed `null` throughout (`docs/evidence/phase-3/qe/stream-poll.log`).
-- **Corroborating evidence:**
-  - My own error-run venue `0xdAb6d0E70Ae9a11d757a9467cA9Df109Df533796` (registered 18:41Z) also never got `onchain`.
-  - Its onboarding reached the dashboard only through the D-906 15-s fallback (17.0 s, versus 1.5–1.9 s in the builder's runs before the pause).
-  - FRONTEND_INTEGRATION saw the same pause at 18:25Z (MSG-114).
-  - The relayer was healthy the whole time: `enabled:true`, `reachable:true`, balance 10.53, queue 0.
-- **Why it wasn't attempted:** a payment would relay but stay "Arriving". Spending two of the remaining demo top-ups on a story that can't settle wasn't justified, so I didn't attempt one. As a result no tap→settled or venue-sees-paid latency, and no on-chain split, was measured by QE this session.
-- **Ready to run:** `e2e/phase3/story.mjs`. It covers:
-  - venue onboarding with the slider at 20% and a $0.50 minimum;
-  - a $1.00 order → QR;
-  - Ana: fresh account, in-app $3 demo top-up from the pay sheet → pay → pending → settled; counter flips to Paid; a 1280×720 projector context watches the dashboard update live;
-  - Ana recommends → Ben opens the link signed out, saves it, tops up from the wallet, and pays a new $1.00 order picking "Ana";
-  - Ana's live "just arrived" toast; owner and projector dashboards + money graph at 390 and 1280×720; records; transparency; a reduced-motion pass on the live graph.
+**Run:** `node e2e/phase3/story.mjs` → `docs/evidence/phase-3/qe/story-2026-11-19T03-47-56-871Z.json`. Accounts are fresh, each phone is its own context with a virtual passkey, and there are no interceptions.
 
-  It records tap→pending, tap→settled, venue-sees-paid, projector-feed and reward-toast latencies, and the app's own `__vouchTimings`. It aborts after Ana if her payment isn't settled within 60 s, so Ben's top-up isn't wasted. Afterwards, check the split with `node e2e/phase3/verify-chain.mjs <tx> 1000000`.
-- **verify-chain.mjs has been validated** on the builder's referred pay `0xc898e244…695f`: USDC in = out = 500000 (venue 440000, L1 41250, cashback 18750), exact. That was a pre-pause tx, used only to validate the tool.
-- **Expected split for the $1.00 referred story at 20%:**
-  - pool $0.20;
-  - Ben's cashback $0.05;
-  - Ana (L1) $0.11;
-  - L2 $0.04, returned to the venue because Ana has no introducer;
-  - venue $0.84.
+| Step | Result |
+|---|---|
+| Venue onboarding | "QE Lena's café 03:48". The slider was moved to **20%** (`rewardBps` 2000 on chain) and the minimum set to $0.50. Venue `0xCbf3256eDC0091f80BF0FB6ECB01e153631E5F7d`; payout = owner `0x731206ee70243122F0504fCb997607e9e46511Cd`. Confirm → dashboard took 2.57 s, and `venue.registered` had already arrived from Streams (`onchain` set). |
+| Order → QR | $1.00 order, QR on the counter (l05) |
+| Ana (fresh) | Opened the QR link signed out (l06) → Face ID onboarding in place → "Not enough money yet" (l07) → **Top up (testnet demo)** in the pay sheet: $3.00 in **3.78 s** (tx `0x7fcf42dcb15c67dc338e694dbd8369927af5073dbd8f169ff9f04d4d19a8fbd7`) → confirm (l08). There was no "Who sent you here?", correctly, because she has no money back. Then pending (l09) → **settled** (l10). |
+| Ana's pay | `0xe32df06912886374e8abf0b57747688f642869ee00759a74bf927e94fab5e8c3`, block 72,957,342, from the relayer. On chain: $1.00 → venue payout (first purchase without a recommendation, so no reward). Exact. |
+| Venue + projector | The counter flipped to **Paid** (l11). A separate 1280×720 visitor account on the dashboard showed "Ana paid $1.00" **without a reload** (l12). |
+| Ana recommends | Recommend unlocked after her purchase (l14) → **Make my link** → `/i/cicDxT3sb` (l15) |
+| Ben (fresh) | Opened Ana's link signed out (l16) → onboarded → "Save Ana's recommendation" (l17) → saved in **2.36 s** (l18) → wallet **Top up (testnet demo)**: $3.00 in 1.28 s (tx `0x1594ee29513eebb851a6687b55e2380f0be7cdc2dd355d432079f8099de76ac3`, l19) |
+| Ben pays | New $1.00 order. The pay sheet showed "You'll get $0.05 back" and **Who sent you here?** with chips Ana · Someone else · Skip (l20). He picked **Ana** (l21) → confirm → pending (l22) → **settled**: "+$0.05 back to you · Ana was just thanked for sending you" with the split receipt (l23). |
+| Ben's pay | `0x67fd5b7a51b4d67ca7a82245817bc3d377242ddfd1ccc7a43ecbccce8ccedfd7`, block 72,957,389 (03:49:17Z), from the relayer `0x3eAF…8daD`; gas 321,489, fee $0.0080 |
+| Ana is rewarded | Her wallet's "just arrived" toast appeared live (l25). Her record and wallet are in l30 and l31. |
+| Dashboards | Owner at 390 (l27, l27b full page) and at 1280×720 (l28, l29). The visitor projector at 1280×720 shows the money graph Ben → Ana with the "+$0.05 back" badge (l26). KPIs on all of them: cost per new customer $0.08, 2 verified first purchases, rewards paid $0.16. The visitor rows read "to the venue". |
+| Reduced motion | The live dashboard + graph under `prefers-reduced-motion` ran 0 animations (l34). |
+| Copy audit | Ran on every live screen: 0 banned words, 0 bad money formats, 0 small targets, 0 page errors. |
+
+**On-chain split of Ben's pay** (`verify-chain.mjs`, Arc public RPC, USDC `Transfer` logs in the receipt; `docs/evidence/phase-3/qe/chain-ben.json`). The $1.00 order at 20% gives a pool of $0.20.
+
+| Recipient | Role | Base units | $ |
+|---|---|---|---|
+| Ben `0xC28C…f2C9` | cashback, 25% of the pool | 50,000 | 0.05 |
+| Ana `0x18c9…3158` | recommender (L1), 55% of the pool | 110,000 | 0.11 |
+| Venue payout `0x7312…11Cd` | remainder $0.80 + Ana's L2 share $0.04 returned (she has no introducer) | 840,000 | 0.84 |
+| **Sum** | | **1,000,000** = into Vouch 1,000,000 | **exact** |
+
+**Latencies** (wall clock in the test, plus the app's own `__vouchTimings`):
+| | Ana (first visit) | Ben (referred) |
+|---|---|---|
+| Face ID (virtual) → signed | 36 ms | 52 ms |
+| Relay (POST /payments → 202) | 496 ms | 525 ms |
+| **Tap → pending** | 581 ms | 618 ms |
+| 202 → settled (user SSE `payment.settled`, Streams) | 771 ms | 823 ms |
+| **Tap → settled** | **1.35 s** | **1.45 s** |
+| **Tap → venue counter shows Paid** | **1.79 s** | **1.78 s** |
+| Tap → projector dashboard feed updates | 1.37 s | 1.47 s |
+| Tap → Ana's "just arrived" toast | — | 1.47 s |
+
+Ben's block time was 03:49:17Z and the SSE settle arrived at 03:49:18.327Z.
+
+Note: `GET /payments/:intentId` needs a session (401 without one), so the cross-check above uses the chain and the app's SSE, not that endpoint.
 
 ## 4. Screenshots
-`docs/evidence/phase-3/qe/screens/`: 70 PNGs (re-verify run of `3d381e0`; run 1 is archived in `run1/screens/`) plus `index.json` (`{file, route, state, notes, viewport}`).
+`docs/evidence/phase-3/qe/screens/`: 104 PNGs plus `index.json` (`{file, route, state, notes, viewport}`). Run 1 is archived in `docs/evidence/phase-3/qe/run1/screens/`.
 - Phones are 390×844 @2x. The `-full` files are full-page captures.
-- Prefixes: `s*` static/routes, `e*` error states, `l*` live story.
-- Desktop: `s50-transparency-1280`. The 1280×720 live venue dashboard and money graph (`l04/l12/l26/l28/l29`) come from `story.mjs` and **were not captured**, because the Stream was not active.
-- The money graph at 390 on live data (an existing venue, viewed as a non-owner) is in `s28` and `s40` (reduced motion).
-- Offline is `e61`, checked in an isolated context. Run 1's invalid `e20` has been dropped.
+- Prefixes: `s*` static/routes (re-run on `2a8c9ab`), `e*` error states (re-verify on `3d381e0`), `l*` the live story on `2a8c9ab`.
+- **1280×720 live:**
+  - `l04-projector-dashboard-empty-1280`
+  - `l12-projector-after-ana-1280`
+  - `l26-projector-money-graph-1280` (visitor, money graph Ben → Ana)
+  - `l28-venue-dashboard-owner-1280`
+  - `l29-money-graph-everyone-1280` (owner; still "Latest", because the script's toggle click didn't register)
+  - also `s50-transparency-1280`
+- Offline is `e61`, checked in an isolated context.
 
 ## 5. Real-phone checklist
 `docs/qa/phase-3-phone-checklist.md`: 32 pass/fail steps for `<WEB_URL>`, covering:
@@ -147,7 +173,9 @@ _The owners' replies are MSG-121 (FRONTEND_INTEGRATION) and MSG-123/124 (UI_DESI
 |---|---|---|---|---|---|---|
 | QE-3-09 | Low | `/venue/[venue]` as a visitor | Sign in as anyone, open another venue's dashboard (`0xC6CF…319c`) | The D-615/MSG-119 visitor mode: no ad-cost input; feed rows say "to the venue". | The feed rows say "**$0.44 to you**" / "$0.50 to you" to a non-owner, and the "Typical ad cost" input is still shown (read-only, but focusable; it is the first Tab stop). `Dashboard.tsx` never passes `viewer="visitor"` to `VenueDashboardScreen` (the prop exists; the owner flag is computed). | FRONTEND_INTEGRATION |
 
-**Live story:** **STREAM NOT ACTIVE: not run** (the story and the 1280×720 live dashboard/graph shots).
+**QE-3-09 re-check (`2a8c9ab`): FIXED.** As a visitor on `0xC6CF…319c` at 390, rows read "$0.44 / $0.50 **to the venue**", there is no ad-cost input, the first Tab lands on "Latest" with a visible ring, and there is no primary (s28, s40). The same holds on the live story venue's 1280×720 projector (l26). The owner still sees "to you", the ad-cost input and Take an order (l27/l28). MSG-129 is closed.
+
+**Live story at the time of the re-verify:** **STREAM NOT ACTIVE: not run** (it ran later; see §3) (the story and the 1280×720 live dashboard/graph shots).
 - **Free `onchain` probe:** every 3 min, 19:57–20:27Z (11 polls), then at 20:30Z. It stayed `null` on the 18:29Z venue and on both QE venues (18:41Z, 20:02Z).
 - **Cursor-independent check:** a free probe can't tell a still-paused Stream from one resumed at head after the probe venue was mined. So `e2e/phase3/stream-probe-live.mjs` registered one fresh venue at 20:31Z (`0xD3Ad3B040F74B3F3dAe6B700dc85DC1A1637706D`, about $0.0045 gas). No `venue.registered` arrived within 108.8 s of the tap, and onboarding took the D-906 fallback (17.2 s).
 - Log: `docs/evidence/phase-3/qe/stream-poll-reverify.log`.
@@ -158,6 +186,12 @@ _The owners' replies are MSG-121 (FRONTEND_INTEGRATION) and MSG-123/124 (UI_DESI
 - Two more venue registrations, about $0.0045 each: the errors run, plus the live Stream probe at 20:31Z. The relayer's daily used went from 0.134185 to 0.138682 USDC before the probe.
 - 0 top-ups. No customer pay relayed.
 - Phase 3 QE total so far: about $0.013 of gas.
+
+**Spend (live run):**
+- Relayer gas: two Stream probes plus one venue registration (about $0.0045 each) and two pays ($0.0060 + $0.0080). About $0.03 in total, including the probes.
+- Demo top-ups: **2** ($6 of the global cap). The CLI fallback was not needed.
+- Customer money: $2.00 moved to the venue, $0.16 of it back to Ben/Ana.
+- **Phase 3 QE total:** about $0.045 of gas, well under $2.
 
 ## Findings (run 1, 18:30–19:31Z)
 | ID | Sev | Route | Repro | Expected | Actual | Owner |
@@ -188,4 +222,5 @@ Info (no action):
   - MSG-117 → UI_DESIGN (request): QE-3-02 Medium, plus QE-3-01 state, QE-3-03/04/06/07.
 - **Inbox:** MSG-079 (BACKEND_RELAYER) stays open. QE-2-03/04/06/09 are still to be re-tested at Thursday's gate on the deployed app.
 - **Re-verify:** closed MSG-116, MSG-117, MSG-121 and MSG-123 (every finding fixed). Sent MSG-129 → FRONTEND_INTEGRATION (QE-3-09, Low).
-- **Not messaged:** the Stream pause. The Orchestrator has already asked the human to resume it (MSG-114). It is the only gate blocker.
+- **Live run:** closed MSG-129 (QE-3-09 fixed in `2a8c9ab`).
+- **Not messaged (historical, resolved):** the Stream pause. The Orchestrator has already asked the human to resume it (MSG-114). It is the only gate blocker.

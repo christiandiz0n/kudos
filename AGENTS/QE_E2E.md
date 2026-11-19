@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-18T20:36:00Z by QE_E2E — Phase 3 re-verify of 3d381e0: QE-3-01..08 FIXED, new Low QE-3-09; live story still NOT RUN (Stream paused)_
+_Last updated: 2026-11-19T03:55:00Z by QE_E2E — Phase 3 QE gate (frontend): PASS (live story on the live Stream; QE-3-01..09 fixed)_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,17 +10,15 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟡 **Phase 3 gate (frontend): re-verify of `3d381e0` at 20:35Z. PASS-with-findings on parts 1, 2, 4 and 5. The live story is NOT RUN again (Stream paused), so the gate is OPEN.**
-- **Fixes:** QE-3-01..08 are all FIXED, each re-checked independently. MSG-116/117/121/123 are closed.
-- **New Low:** QE-3-09. The visitor dashboard still says "to you" and shows the ad-cost input, because `viewer` isn't passed. Filed as MSG-129 → FRONTEND_INTEGRATION.
-- **Whole app:** 65 screens. 0 banned words, 0 page errors, 0 controls <44 px, ≤1 primary per screen, reduced motion gives 0 animations.
-- **Stream:**
-  - The free probe was paused 19:57–20:30Z.
-  - The cursor-independent `stream-probe-live.mjs` (one fresh venue, about $0.0045) showed no `venue.registered` within 109 s at 20:33Z.
-  - `story.mjs` is ready (~3 min). It has a CLI top-up fallback if the demo top-up refuses.
+🟢 **Phase 3 gate (frontend): PASS** (2026-11-19 03:50Z, web `2a8c9ab`, hosted api, live Stream).
+- **Live story on the live Stream**, with fresh accounts and no interceptions:
+  - venue onboarding with the slider at 20%; Ana tops up in-app and pays $1.00; Ana recommends; Ben saves her link, tops up and pays $1.00 picking Ana.
+  - Tap → settled 1.35 s / 1.45 s; tap → venue "Paid" 1.79 s / 1.78 s.
+  - Ben's pay `0x67fd5b7a…dfd7` is exact on chain: venue 0.84 / Ben 0.05 / Ana 0.11.
+- **Findings:** QE-3-01..09 all FIXED and re-verified. MSG-116/117/121/123/129 are closed. None are open.
 - **Reports:**
-  - Report `docs/qa/phase-3-qe-gate.md` (with a "Re-verify" section).
-  - Screenshots `docs/evidence/phase-3/qe/screens/` (run 1 in `run1/`).
+  - Report `docs/qa/phase-3-qe-gate.md`.
+  - Screenshots `docs/evidence/phase-3/qe/screens/` (104 entries, incl. 1280×720 live `l26/l28/l29`).
   - Phone checklist `docs/qa/phase-3-phone-checklist.md`.
 
 ## Mental model (read this first)
@@ -35,6 +33,8 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
   - Never click to reset focus: a backdrop click closes the pay sheet and navigates to /wallet.
   - Take screenshots before the focus probe.
   - Toggling `WebAuthn.setUserVerified` can leave the next confirm cancelled; use a fresh context per auth-sensitive check.
+- **Live probe:** `stream-probe-live.mjs` is cursor-independent and costs about $0.0045. Right after a resume it can take about 60 s (catch-up); the next probe a minute later was 1.5 s.
+- **`GET /payments/:intentId`** needs a session (401 without one). Cross-check pays with `verify-chain.mjs` plus the app's `__vouchTimings`.
 - **Free Stream-liveness probe:** a venue whose registerVenue was mined has `GET /venues/<v>` `onchain != null` only once Streams delivered `venue.registered`. Always use `curl -m`: an un-timed curl hung the poller.
 
 ## Phase 2 notes (read before Part B)
@@ -74,6 +74,12 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split topic0), §6 (HMAC, envelope), §7 (env names). Proposed INTERFACES change (via Orchestrator): §6 body field `eventName` → `event` (QE-01).
 
 ## Done (rolling, newest first)
+- 2026-11-19: **Phase 3 gate PASS: live story on `2a8c9ab`.**
+  - Stream probe: 63.9 s while it caught up, then 1.55 s.
+  - Pays: Ana `0xe32df069…e8c3`, Ben `0x67fd5b7a…dfd7`. Top-ups `0x7fcf42dc…fbd7` and `0x1594ee29…6ac3`.
+  - Split exact. Latencies in the report §3.
+  - QE-3-09 fixed (MSG-129 closed).
+  - Spend about $0.03 gas plus 2 top-ups; Phase 3 total about $0.045.
 - 2026-11-18: **Phase 3 re-verify of `3d381e0`.**
   - QE-3-01..08 all FIXED on fresh runs of check-static/errors/errors2/scanner (65 screens). New Low QE-3-09 (MSG-129).
   - The Stream is still paused: 11 free polls plus a live venue probe at 20:33Z, so the story is not run.
@@ -108,18 +114,14 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
-- [ ] **As soon as the Stream is active:**
-  - run `node e2e/phase3/story.mjs`, then `node e2e/phase3/verify-chain.mjs <ben tx> 1000000`, and fill §3 of `docs/qa/phase-3-qe-gate.md` (latencies, txs, 1280×720 dashboard/graph shots).
-  - It uses 2 demo top-ups ($6 of the global $30/24h); if the funder floor refuses, `story.mjs` falls back to `pnpm --filter @vouch/scripts topup` from DEPLOYER (target $1.10).
-  - Probe liveness with `node e2e/phase3/stream-probe-live.mjs` (cursor-independent, about $0.0045). The free `onchain` poll can't tell a Stream resumed at head after the probe venue from a paused one.
-- [ ] Re-test QE-3-09 (MSG-129) when FRONTEND_INTEGRATION answers.
 - [ ] **Thursday PM regression on the deployed Vercel app:**
-  - `QE_BASE=<WEB_URL> node e2e/phase3/check-static.mjs`, then `check-errors.mjs`, `check-errors2.mjs`, `story.mjs`.
+  - `QE_BASE=<WEB_URL> node e2e/phase3/check-static.mjs`, then `check-errors.mjs`, `check-errors2.mjs`, `check-scanner.mjs`; then `stream-probe-live.mjs` and `story.mjs` (2 top-ups).
+  - The api must allow the Vercel origin in CORS.
   - Re-test QE-2-03/04/06/09 (MSG-079).
 - [ ] Hand the human `docs/qa/phase-3-phone-checklist.md` with the Vercel URL filled in; collect the P/F and latency results.
 - [ ] Re-check QE-2-10 / SEC-2-10 when STREAMS_INFRA logs the timestamp unit (MSG-106).
 - [ ] Phase 0 gate Part B leftovers: QE-01/02/03/05 re-checks when owners report them.
-- [x] Phase 3 static + error-state checks; re-verify of QE-3-01..08 FIXED (2026-11-18).
+- [x] Phase 3 gate: static + error states + re-verify + live story (2026-11-18/19).
 - [ ] Phase 5: full regression + demo rehearsal from written steps.
 
 ## Struggles, open questions, known issues

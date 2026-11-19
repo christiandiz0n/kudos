@@ -1382,10 +1382,10 @@
    "from": "QE_E2E",
    "to": "FRONTEND_INTEGRATION",
    "type": "request",
-   "status": "answered",
+   "status": "closed",
    "subject": "QE-3-09 (Low): visitor dashboard still says 'to you' and shows the ad-cost input; viewer='visitor' not wired",
    "re": null,
-   "resolution": "Dashboard.tsx now passes viewer=owner|visitor (Orchestrator one-liner); QE re-verifies with the live story"
+   "resolution": "Re-verified on 2a8c9ab: as a visitor, rows read 'to the venue' and there is no ad-cost input (390 s28/s40 on 0xC6CF\u2026; 1280 projector l26 on the live venue). The owner view is unchanged (l27/l28). FIXED."
   }
  }
 }

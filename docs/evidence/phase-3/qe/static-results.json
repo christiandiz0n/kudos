@@ -540,12 +540,12 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to you | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to you | How payments split",
+    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | What Lena's café 18:20 has paid in rewards, on average, for each new customer. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to the venue | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to the venue | How payments split",
     "focus": {
       "ok": true,
-      "el": "input:Typical ad cost per new customer, in dol",
-      "outline": "none 0px rgb(27, 25, 21)",
-      "boxShadow": "none"
+      "el": "button:Latest",
+      "outline": "solid 2px rgb(23, 105, 79)",
+      "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
     "errs": []
   },
@@ -725,12 +725,12 @@
     "rawUnits": [],
     "smallTargets": [],
     "smallPrimary": [],
-    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | Typical ad cost | $ | $19.97 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to you | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to you | How payments split",
+    "text": "Live | Lena's café 18:20 | Cost per new customer | $0.03 | $ | 0 | . | 03 | paid only when they buy | What Lena's café 18:20 has paid in rewards, on average, for each new customer. | New customers | 2 | verified first purchases | Rewards paid | $0.06 | $ | 0 | . | 06 | to customers + the people who sent them | Where the money went | Latest | Everyone | LC | Lena's café 18:20 | $0.44 | CA | Cara | paid $0.50 | +$0.02 back | BE | Ben | +$0.04 | Cara · 1:21 PM | Payments | CA | Cara paid $0.50 | First visit · $0.02 back to Cara · 1:21 PM | $0.44 | to the venue | BE | Ben paid $0.50 | First visit · 1:20 PM | $0.50 | to the venue | How payments split",
     "focus": {
       "ok": true,
-      "el": "input:Typical ad cost per new customer, in dol",
-      "outline": "none 0px rgb(27, 25, 21)",
-      "boxShadow": "none"
+      "el": "button:Latest",
+      "outline": "solid 2px rgb(23, 105, 79)",
+      "boxShadow": "rgba(23, 105, 79, 0.22) 0px 0px 0px 6px"
     },
     "errs": [],
     "animations": []

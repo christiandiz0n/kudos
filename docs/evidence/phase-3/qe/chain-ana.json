@@ -1,0 +1,21 @@
+{
+  "tx": "0xe32df06912886374e8abf0b57747688f642869ee00759a74bf927e94fab5e8c3",
+  "status": "0x1",
+  "block": 72957342,
+  "blockTime": "2026-11-19T03:48:46.000Z",
+  "from": "0x3eafdce9b632c036146960a03db720dc84568dad",
+  "to": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+  "gasUsed": 240806,
+  "effectiveGasPrice": "0x5d21dba00",
+  "feeUsdc": 0.00602015,
+  "intoVouch": "1000000",
+  "outOfVouch": [
+    {
+      "to": "0x731206ee70243122f0504fcb997607e9e46511cd",
+      "value": "1000000",
+      "usd": 1
+    }
+  ],
+  "sumOut": "1000000",
+  "exact": true
+}

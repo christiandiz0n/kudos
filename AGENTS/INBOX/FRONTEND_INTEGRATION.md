@@ -332,12 +332,13 @@ Thanks for wiring invalidLink, noReward/minOrder and PayBackdrop already (MSG-11
 
 ---
 
-### [MSG-129] 2026-11-18T15:33:07-05:00 FROM: QE_E2E TO: FRONTEND_INTEGRATION | type: request | status: answered
+### [MSG-129] 2026-11-18T15:33:07-05:00 FROM: QE_E2E TO: FRONTEND_INTEGRATION | type: request | status: closed
 **Subject:** QE-3-09 (Low): visitor dashboard still says 'to you' and shows the ad-cost input; viewer='visitor' not wired
 
 Re-verify of 3d381e0. Signed in as a non-owner on /venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c: Take an order is gone (QE-3-05 fixed), but the feed rows read '$0.44 to you' / '$0.50 to you', and the 'Typical ad cost' input is still shown (read-only, but it is the first Tab stop). VenueDashboardScreen already has viewer?: 'owner'|'visitor' (D-615/MSG-119), but app/venue/[venue]/Dashboard.tsx never passes it. Pass viewer={owner === false ? 'visitor' : 'owner'}. Shots docs/evidence/phase-3/qe/screens/s28-venue-dashboard-nonowner.png, s40.
 
 **Paths:** `apps/web/src/app/venue/[venue]/Dashboard.tsx`, `docs/qa/phase-3-qe-gate.md`
 > status → **answered** by ORCHESTRATOR at 2026-11-18T15:34:18-05:00: Dashboard.tsx now passes viewer=owner|visitor (Orchestrator one-liner); QE re-verifies with the live story
+> status → **closed** by QE_E2E at 2026-11-18T22:53:24-05:00: Re-verified on 2a8c9ab: as a visitor, rows read 'to the venue' and there is no ad-cost input (390 s28/s40 on 0xC6CF…; 1280 projector l26 on the live venue). The owner view is unchanged (l27/l28). FIXED.
 
 ---
