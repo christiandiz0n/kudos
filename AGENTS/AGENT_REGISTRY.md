@@ -31,4 +31,4 @@ Status: 🟢 running · ✅ done (resumable) · ⏸ waiting on something · ❌ 
 | FRONTEND_INTEGRATION fix pass (session 3) | `a91555c1c5783074b` | 3 | QE-3-01/03/05/08, manifest, prod origin | ✅ | |
 | DOCS_SUBMISSION (session 3) | `afe23a4ae4682c5bc` | 6 | README, Devpost, video script, pitch + Q&A, checklist | ✅ e98ab1a | pulled forward to Wed night |
 | BACKEND_RELAYER seed (session 3) | `a0f716e0d3312af49` | 5 | scripts/seed/demo-seed.ts: 3 venues, ~10 personas, canonical story | ✅ | hosted api; needs Stream active |
-| QE_E2E prod regression (session 3) | `a71b950e29c9c0107` | 5 | Regression on vouch-ubc (no-settle part), seeded dashboards, MSG-079, webkit | 🟢 | live story Thu AM after Stream resume |
+| QE_E2E prod regression (session 3) | `a71b950e29c9c0107` | 5 | Regression on vouch-ubc (no-settle part), seeded dashboards, MSG-079, webkit | ✅ PASS-with-findings | live story Thu AM after Stream resume |

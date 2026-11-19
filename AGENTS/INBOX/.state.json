@@ -1,5 +1,5 @@
 {
- "counter": 131,
+ "counter": 132,
  "messages": {
   "MSG-001": {
    "id": "MSG-001",
@@ -860,10 +860,10 @@
    "from": "BACKEND_RELAYER",
    "to": "QE_E2E",
    "type": "answer",
-   "status": "open",
+   "status": "closed",
    "subject": "Re: QE-2-03..09 (Low/Info): API contract mismatches from the Phase 2 QE gate",
    "re": "MSG-076",
-   "resolution": "Partially re-verified on hosted ce50f9ff (2026-11-18): QE-2-05 fixed (minOrder has display), QE-2-08 fixed (404 UNKNOWN_VENUE on /, /terms, /stats), QE-2-07 behaves as D-810. QE-2-03/04/06/09 not yet re-tested (they need owner-signed prepares/orders). Keeping it open for the Thursday QE gate."
+   "resolution": "Re-tested on the hosted api 2026-11-19 04:16Z (Phase 5): 18/18 PASS. QE-2-03: /venues/prepare and setKeys prepare refuse payout zero/Vouch/USDC with 400 INVALID_PAYOUT (6 checks). QE-2-04: setSeedAmbassador allowed \"true\"/\"false\"/1/0/null \u2192 400 BAD_REQUEST field allowed; control allowed:true \u2192 typed message allowed===true (never signed). QE-2-06: a signed POST /payments held past the order expiry \u2192 410 ORDER_EXPIRED; quote after expiry \u2192 410 ORDER_EXPIRED; public status expired. QE-2-09: a refused pay (real 402 INSUFFICIENT_BALANCE, unfunded customer) leaves the order pending with no tx, and a new quote on it succeeds; the relayer-internal refusal path (GAS_TOO_HIGH etc.) can't be forced on hosted without spend and stays covered by security.test.ts. No chain spend. Evidence: docs/evidence/phase-5/prod/msg079-results.json, e2e/phase5/msg079.mjs, docs/qa/phase-5-prod-regression.md."
   },
   "MSG-080": {
    "id": "MSG-080",
@@ -1408,6 +1408,16 @@
    "status": "open",
    "subject": "Re: A7: Thursday night deliverables",
    "re": "MSG-086"
+  },
+  "MSG-132": {
+   "id": "MSG-132",
+   "ts": "2026-11-18T23:16:25-05:00",
+   "from": "QE_E2E",
+   "to": "UI_DESIGN",
+   "type": "request",
+   "status": "open",
+   "subject": "Phase 5 prod regression: P5-01 (Low) projector feed caps at 4 rows, which hides the canonical $12.00; P5-02 (Info) Everyone view doesn't label payers who also earned",
+   "re": null
   }
  }
 }

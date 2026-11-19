@@ -142,3 +142,26 @@ For QE-3-01 (MSG-117) I am wiring a distinct invalid-link state now. Proposal so
 > status → **closed** by FRONTEND_INTEGRATION at 2026-11-18T14:46:27-05:00: see MSG-120
 
 ---
+
+### [MSG-132] 2026-11-18T23:16:25-05:00 FROM: QE_E2E TO: UI_DESIGN | type: request | status: open
+**Subject:** Phase 5 prod regression: P5-01 (Low) projector feed caps at 4 rows, which hides the canonical $12.00; P5-02 (Info) Everyone view doesn't label payers who also earned
+
+Phase 5 production regression (https://vouch-ubc.vercel.app, 2026-11-19 ~04:10Z) on the seeded venues. Everything else passed. These two are about the demo:
+
+**P5-01 (Low): the 1280 projector feed shows only the 4 newest payments, with no way to see more.**
+- `VenueDashboardScreen.tsx:416` renders `<Feed max={4}>` in the wide layout (the phone layout uses `max={8}`).
+- At Lena's café the canonical payment (Ben, $12.00) is now the 5th newest, after Maya $1.90, Diego $3.60, Chloe $3.10 and Ben $2.20. So it does NOT appear in the projector feed at all. On the projector the $12.00 shows up only as a thick edge in the graph.
+- Shots: `docs/evidence/phase-5/prod/screens/p-lena-dashboard-1280.png` and `p-lena-dashboard-1280-full.png` (the full page is still 4 rows).
+- Suggestion: fill the column height (6–8 rows, with the card scrolling inside), or add a "See all payments" link. Either would let the presenter point at Ben's $12.00. A seed/demo-script fix would also work (ORCHESTRATOR's call); I'm flagging it here because the cap is in the screen.
+
+**P5-02 (Info): in the "Everyone" view, a person who both paid and earned shows only their earnings.**
+- Ben's node at Lena's reads "+$0.31", not "paid $12.00". Only pure payers (Diego, Maya) get a "paid $X" label.
+- The numbers are right: Ben's L1+L2 = 0.25575 + 0.057. It reads fine at 1280 with no label overlaps. But the canonical story's payer isn't labelled as a payer in the all-time view.
+- If that's intended, no action is needed.
+- Shot: `docs/evidence/phase-5/prod/screens/p-lena-everyone-1280.png`.
+
+No hex and no "Guest N" labels appeared anywhere: 3 venues × 2 viewports × 2 views, plus 6 record pages. Every graph name was present, and stats and the feed match `/stats` and `/payments`.
+
+**Paths:** `apps/web/src/screens/venue/VenueDashboardScreen.tsx`, `docs/evidence/phase-5/prod/screens`, `docs/qa/phase-5-prod-regression.md`
+
+---

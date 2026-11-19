@@ -1,5 +1,5 @@
 # QE_E2E
-_Last updated: 2026-11-19T03:55:00Z by QE_E2E — Phase 3 QE gate (frontend): PASS (live story on the live Stream; QE-3-01..09 fixed)_
+_Last updated: 2026-11-19T04:30:00Z by QE_E2E — Phase 5 prod regression (overnight): PASS-with-findings; MSG-079 closed; live story queued for Thursday AM_
 
 ## Mission
 Owns test plans and end-to-end verification: scripted testnet flows, API contract tests against INTERFACES.md, Playwright tests at 390×844 with venue + customer contexts, real-phone checklists for the human, copy checks (no crypto jargon on primary screens), and bug reports. Does NOT fix the code it tests — files bugs to owners.
@@ -10,16 +10,18 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 - `docs/evidence/phase-*/` (evidence it captures)
 
 ## Current status
-🟢 **Phase 3 gate (frontend): PASS** (2026-11-19 03:50Z, web `2a8c9ab`, hosted api, live Stream).
-- **Live story on the live Stream**, with fresh accounts and no interceptions:
-  - venue onboarding with the slider at 20%; Ana tops up in-app and pays $1.00; Ana recommends; Ben saves her link, tops up and pays $1.00 picking Ana.
-  - Tap → settled 1.35 s / 1.45 s; tap → venue "Paid" 1.79 s / 1.78 s.
-  - Ben's pay `0x67fd5b7a…dfd7` is exact on chain: venue 0.84 / Ben 0.05 / Ana 0.11.
-- **Findings:** QE-3-01..09 all FIXED and re-verified. MSG-116/117/121/123/129 are closed. None are open.
-- **Reports:**
-  - Report `docs/qa/phase-3-qe-gate.md`.
-  - Screenshots `docs/evidence/phase-3/qe/screens/` (104 entries, incl. 1280×720 live `l26/l28/l29`).
-  - Phone checklist `docs/qa/phase-3-phone-checklist.md`.
+🟢 **Phase 5 prod regression (overnight 2026-11-19 04:04–04:25Z): PASS-with-findings** on https://vouch-ubc.vercel.app + hosted api.
+- check-static / check-errors / check-errors2 / scanner / 404 at 390×844 on production: all PASS. CORS from the real origin is OK (0 CORS errors).
+- Seeded venues (Lena's / Kiln / Pressed) at 390 and 1280: the stats and feed match `/stats` and `/payments`, the graphs show names only (no hex, no Guest), and the Everyone view is readable.
+- Records for Ana, Priya and Ben match `/ambassadors`.
+- WebKit (iPhone 14) signed-out static: PASS.
+- **MSG-079 closed** (QE-2-03/04/06/09: 18/18).
+- Findings P5-01 (Low) and P5-02 (Info) → UI_DESIGN, MSG-132.
+- Spend: 1 venue registration (~$0.0045).
+- Report `docs/qa/phase-5-prod-regression.md`; evidence `docs/evidence/phase-5/prod/`.
+- **Left for Thursday AM:** `story.mjs --base https://vouch-ubc.vercel.app --out docs/evidence/phase-5/prod/story` (self-stops before any top-up if the Stream is down). The Stream was still ACTIVE at 04:09Z, but the story was not run (no pays/top-ups allowed tonight).
+
+Phase 3 gate (frontend): PASS (2026-11-19 03:50Z, web `2a8c9ab`); QE-3-01..09 fixed; report `docs/qa/phase-3-qe-gate.md`.
 
 ## Mental model (read this first)
 - Verify from the **written** docs only, and re-derive every claim with an independent tool (cast/curl/Blockscout v2 API) rather than the builder's script. Then also re-run the builder's script.
@@ -35,6 +37,8 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
   - Toggling `WebAuthn.setUserVerified` can leave the next confirm cancelled; use a fresh context per auth-sensitive check.
 - **Live probe:** `stream-probe-live.mjs` is cursor-independent and costs about $0.0045. Right after a resume it can take about 60 s (catch-up); the next probe a minute later was 1.5 s.
 - **`GET /payments/:intentId`** needs a session (401 without one). Cross-check pays with `verify-chain.mjs` plus the app's `__vouchTimings`.
+- **Parametrized checks (Phase 5):** `--base/--api/--out/--engine` flags (or `QE_BASE/QE_API/QE_OUT/QE_ENGINE`) in `e2e/phase3/lib.mjs`. **zsh does not word-split an unquoted `$O`**, so write the flags out literally. Otherwise the scripts silently default to `localhost:3100` (another agent's dev server) and overwrite Phase 3 evidence. This happened once; it was restored with `git checkout`.
+- **WebKit:** installed under `node_modules` (`PLAYWRIGHT_BROWSERS_PATH=0`, set by lib when `--engine webkit`); iPhone 14 profile; no WebAuthn, so signed-out only. Safari's default Tab skips buttons/links; use Option+Tab.
 - **Free Stream-liveness probe:** a venue whose registerVenue was mined has `GET /venues/<v>` `onchain != null` only once Streams delivered `venue.registered`. Always use `curl -m`: an un-timed curl hung the poller.
 
 ## Phase 2 notes (read before Part B)
@@ -54,6 +58,10 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 ## Key files map
 | Path | What it does | Notes |
 |---|---|---|
+| `docs/qa/phase-5-prod-regression.md` | Phase 5 production regression report (overnight) | morning steps in §5 |
+| `e2e/phase5/check-seed.mjs` | Seeded venues + records vs `/stats`, `/payments`, `/ambassadors` at 390 + 1280; README/video shots | read-only (sign-in only) |
+| `e2e/phase5/msg079.mjs` | QE-2-03/04/06/09 re-test on hosted (holds a signed pay past order expiry) | needs `<scratch>/errors-venue.json` from check-errors |
+| `e2e/phase5/stream-probe-free.sh` | Free probe: `onchain` of a mined venue | only meaningful for a venue mined while the Stream was paused |
 | `docs/qa/phase-3-qe-gate.md` | Phase 3 (frontend) gate report | findings QE-3-01..08; §3 live story pending the Stream |
 | `docs/qa/phase-3-phone-checklist.md` | Real-phone checklist for `<WEB_URL>` (32 P/F steps) | for the human, Thursday |
 | `e2e/phase3/*.mjs` | Phase 3 Playwright checks (`lib`, `check-static`, `check-errors`, `check-errors2`, `check-scanner`, `story`, `stream-probe-live`) + `verify-chain`, `decode-qr`, `png-to-y4m`, `stream-poll.sh` | `QE_BASE` env overrides `:3100`; screenshots → `docs/evidence/phase-3/qe/screens/` |
@@ -74,6 +82,10 @@ Owns test plans and end-to-end verification: scripted testnet flows, API contrac
 Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split topic0), §6 (HMAC, envelope), §7 (env names). Proposed INTERFACES change (via Orchestrator): §6 body field `eventName` → `event` (QE-01).
 
 ## Done (rolling, newest first)
+- 2026-11-19: **Phase 5 production regression (overnight): PASS-with-findings.**
+  - All Phase 3 checks ran on production at 390×844, plus WebKit iPhone 14 (signed out), seeded venues at 390/1280 and records.
+  - MSG-079 re-test: 18/18, closed. P5-01/P5-02 → MSG-132.
+  - Spend: about $0.0045 (one venue registration, `0x3F502804f5C1002113Bf712e2A1eb76D24beB8cC`, which was also the Stream probe: ACTIVE at 04:09Z).
 - 2026-11-19: **Phase 3 gate PASS: live story on `2a8c9ab`.**
   - Stream probe: 63.9 s while it caught up, then 1.55 s.
   - Pays: Ana `0xe32df069…e8c3`, Ben `0x67fd5b7a…dfd7`. Top-ups `0x7fcf42dc…fbd7` and `0x1594ee29…6ac3`.
@@ -114,10 +126,11 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
-- [ ] **Thursday PM regression on the deployed Vercel app:**
-  - `QE_BASE=<WEB_URL> node e2e/phase3/check-static.mjs`, then `check-errors.mjs`, `check-errors2.mjs`, `check-scanner.mjs`; then `stream-probe-live.mjs` and `story.mjs` (2 top-ups).
-  - The api must allow the Vercel origin in CORS.
-  - Re-test QE-2-03/04/06/09 (MSG-079).
+- [ ] **Thursday AM (Stream resumed): live story on production.**
+  - Run `node e2e/phase3/story.mjs --base https://vouch-ubc.vercel.app --out docs/evidence/phase-5/prod/story` (2 top-ups + 2 $1.00 pays; it self-stops before spending if the Stream is down).
+  - Then run `verify-chain.mjs` on Ben's pay and re-run `e2e/phase5/check-seed.mjs` for fresh shots.
+- [ ] Re-verify P5-01/P5-02 when UI_DESIGN answers MSG-132.
+- [x] Prod regression on the deployed Vercel app + the MSG-079 re-test (2026-11-19 overnight).
 - [ ] Hand the human `docs/qa/phase-3-phone-checklist.md` with the Vercel URL filled in; collect the P/F and latency results.
 - [ ] Re-check QE-2-10 / SEC-2-10 when STREAMS_INFRA logs the timestamp unit (MSG-106).
 - [ ] Phase 0 gate Part B leftovers: QE-01/02/03/05 re-checks when owners report them.
@@ -128,7 +141,7 @@ Consumes INTERFACES §1 (all live rows re-derived), §2 (Hello), §4 (Ping/Split
 - The Bash guard also blocks commands that merely name `.env.example`. Use the Read tool for that file if needed.
 - The `rtk` hook rewrites some compound commands (`grep`, `cat`, `for … set --`). Put multi-step logic in a script file under `docs/evidence/phase-0/qe/` and run it with `bash`.
 - Arc public RPC rate-limits bursts (`-32005`). Add `sleep 1–3` between heavy `eth_getLogs` calls.
-- Open defects: Phase 0 `docs/qa/phase-0-qe-gate.md` (QE-01, QE-02 major); Phase 2 `docs/qa/phase-2-qe-e2e.md` (QE-2-03/04/06/09 not re-tested; QE-2-10 Info, MSG-106). QE-2-01 is closed.
+- Open defects: Phase 0 `docs/qa/phase-0-qe-gate.md` (QE-01, QE-02 major); Phase 2 `docs/qa/phase-2-qe-e2e.md` (QE-2-03/04/06/09 re-tested and closed 2026-11-19; QE-2-10 Info, MSG-106); Phase 5 `docs/qa/phase-5-prod-regression.md` (P5-01 Low, P5-02 Info, MSG-132). QE-2-01 is closed.
 - Proposed INTERFACES change (QE-2-02): delete the stale second "Full typehashes" block in §3 (PaymentAuth `0x83204ea1…` is pre-D-012).
 
 ## How to run / test this area
