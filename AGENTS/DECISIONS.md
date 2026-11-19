@@ -941,3 +941,9 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
   - **Toast (QE-3-06):** the dismiss button is 44px.
 - **Reason:** These are the QE gate and Orchestrator polish findings. Every prop change is additive and optional, so existing callers keep working.
 - **Who:** UI_DESIGN
+
+### D-020 — 2026-11-18 — Web hosting: Vercel project `vouch`, final production URL https://vouch-ubc.vercel.app (Orchestrator)
+- Human A7 + "vercel ready" (HUMAN #14). The Vercel project is `vouch` on the human's personal scope (`cmd514-8495s-projects`), with root directory `apps/web` and framework nextjs. It is deployed from a clean `git archive HEAD` export (no `.env*` uploaded), the same pattern as Railway.
+- Vercel assigned `vouch-omega-six.vercel.app`. The Orchestrator added **`vouch-ubc.vercel.app`** as the project's production domain, and that is the ONLY URL to share or rehearse on. Passkeys are bound to it (D-104, D-907). Railway `CORS_ORIGINS` = `http://localhost:3100,https://vouch-ubc.vercel.app` (non-secret, set by the Orchestrator like D-018). The omega domain is deliberately not allowed, so nobody creates accounts there.
+- `NEXT_PUBLIC_API_URL` is left at its code default (the Railway URL). `NEXT_PUBLIC_WEB_URL` is unset, so links use the page origin.
+- Deploy command: `git archive HEAD | tar -x -C <scratch>/vercel-head && cd <scratch>/vercel-head && vercel link --yes --project vouch && vercel deploy --prod --yes`. CLI via `$(npm prefix -g)/bin`.
