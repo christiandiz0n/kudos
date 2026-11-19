@@ -1,0 +1,1560 @@
+{
+  "generatedAt": "2026-11-19T04:01:36.246Z",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "webUrl": "https://vouch-ubc.vercel.app",
+  "chain": {
+    "id": 5042002,
+    "vouch": "0xF4B641dc628de05336aa983B07D5d181254ff08e",
+    "usdc": "0x3600000000000000000000000000000000000000"
+  },
+  "complete": true,
+  "venues": [
+    {
+      "key": "cafe",
+      "name": "Lena's café",
+      "address": "0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "owner": {
+        "name": "Lena",
+        "address": "0x7e86848d2C83dadb6FcFCf109151F7d494d0c4A7"
+      },
+      "rewardBps": 1500,
+      "minOrder": "1.00",
+      "dashboardUrl": "https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "registerTx": "0x73dcb0f14ad6fbceb876cc0e2360d9753fe70212ac73ee9e7f7751cdeb025140",
+      "seeds": [
+        "Marco",
+        "Sofia"
+      ],
+      "stats": {
+        "verifiedCustomers": 6,
+        "rewardedPurchases": 6,
+        "payments": 7,
+        "gross": "28.00",
+        "rewardsPaid": "3.713998",
+        "rewardsReturned": "0.156",
+        "venueReceived": "24.286002",
+        "byRole": {
+          "cashback": "0.9675",
+          "referrer": "2.128499",
+          "introducer": "0.617999"
+        },
+        "costPerVerifiedCustomer": "0.618999",
+        "edges": 20,
+        "edgesSample": [
+          "L0 Ana→Ana 0.105",
+          "L1 Ana→Marco 0.231",
+          "L0 Priya→Priya 0.09",
+          "L1 Priya→Sofia 0.198",
+          "L0 Ben→Ben 0.45",
+          "L1 Ben→Ana 0.693",
+          "L1 Ben→Priya 0.297",
+          "L2 Ana→Marco 0.252",
+          "L2 Priya→Sofia 0.108",
+          "L0 Chloe→Chloe 0.11625",
+          "L1 Chloe→Ben 0.25575",
+          "L2 Ben→Ana 0.093",
+          "L0 Diego→Diego 0.135",
+          "L1 Diego→Priya 0.114226",
+          "L1 Diego→Ana 0.182773",
+          "L2 Priya→Sofia 0.041536",
+          "L2 Ana→Marco 0.066463",
+          "L0 Maya→Maya 0.07125",
+          "L1 Maya→Chloe 0.15675",
+          "L2 Chloe→Ben 0.057"
+        ]
+      },
+      "feed": {
+        "count": 7,
+        "seedPaymentsSettled": 7,
+        "seedPaymentsPlanned": 7,
+        "items": [
+          {
+            "customer": "Maya",
+            "amount": "1.90",
+            "venueReceived": "1.615",
+            "cashback": "0.07125",
+            "rewards": [
+              "L1 Chloe 0.15675",
+              "L2 Ben 0.057"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T04:00:58.000Z",
+            "txHash": "0xf9c79894048cb3aaa0bf65bfb6bec8f0f54f851c23d5f3e490bc50cd136f708b"
+          },
+          {
+            "customer": "Diego",
+            "amount": "3.60",
+            "venueReceived": "3.060002",
+            "cashback": "0.135",
+            "rewards": [
+              "L1 Priya 0.114226",
+              "L1 Ana 0.182773",
+              "L2 Sofia 0.041536",
+              "L2 Marco 0.066463"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:58:41.000Z",
+            "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f"
+          },
+          {
+            "customer": "Chloe",
+            "amount": "3.10",
+            "venueReceived": "2.635",
+            "cashback": "0.11625",
+            "rewards": [
+              "L1 Ben 0.25575",
+              "L2 Ana 0.093"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:58:32.000Z",
+            "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213"
+          },
+          {
+            "customer": "Ben",
+            "amount": "2.20",
+            "venueReceived": "2.20",
+            "cashback": "0.00",
+            "rewards": [],
+            "rewardsReturned": "0.00",
+            "firstPurchase": false,
+            "rewarded": false,
+            "settledAt": "2026-11-19T03:58:21.000Z",
+            "txHash": "0xcee85f7d8458e9ed54ead355c7632db2b581d1ef34b6e8aefc6c16ae0817f7dd"
+          },
+          {
+            "customer": "Ben",
+            "amount": "12.00",
+            "venueReceived": "10.20",
+            "cashback": "0.45",
+            "rewards": [
+              "L1 Ana 0.693",
+              "L1 Priya 0.297",
+              "L2 Marco 0.252",
+              "L2 Sofia 0.108"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:58:18.000Z",
+            "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980"
+          },
+          {
+            "customer": "Priya",
+            "amount": "2.40",
+            "venueReceived": "2.112",
+            "cashback": "0.09",
+            "rewards": [
+              "L1 Sofia 0.198"
+            ],
+            "rewardsReturned": "0.072",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:57:41.000Z",
+            "txHash": "0xa6691f9f80d964c40b6e826d910ba0b5fb805bb3cc6c75bd81539852de6af0a7"
+          },
+          {
+            "customer": "Ana",
+            "amount": "2.80",
+            "venueReceived": "2.464",
+            "cashback": "0.105",
+            "rewards": [
+              "L1 Marco 0.231"
+            ],
+            "rewardsReturned": "0.084",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:57:36.000Z",
+            "txHash": "0x55da2af6f0aa2d51c7ec379379184d36a099b1207d9db6081e198f7bfa81a01e"
+          }
+        ]
+      }
+    },
+    {
+      "key": "kiln",
+      "name": "Kiln Bakery",
+      "address": "0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "owner": {
+        "name": "Tomás",
+        "address": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC"
+      },
+      "rewardBps": 1200,
+      "minOrder": "3.00",
+      "dashboardUrl": "https://vouch-ubc.vercel.app/venue/0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494",
+      "registerTx": "0x3cf21f042eb9dbdf718fcfd065fcdbfaf7ea9682491cf8df2699f8179d59ff8f",
+      "seeds": [
+        "Hana"
+      ],
+      "stats": {
+        "verifiedCustomers": 5,
+        "rewardedPurchases": 4,
+        "payments": 5,
+        "gross": "17.10",
+        "rewardsPaid": "1.6272",
+        "rewardsReturned": "0.1368",
+        "venueReceived": "15.4728",
+        "byRole": {
+          "cashback": "0.441",
+          "referrer": "0.9702",
+          "introducer": "0.216"
+        },
+        "costPerVerifiedCustomer": "0.32544",
+        "edges": 12,
+        "edgesSample": [
+          "L0 Omar→Omar 0.144",
+          "L1 Omar→Hana 0.3168",
+          "L0 Yuki→Yuki 0.108",
+          "L1 Yuki→Hana 0.0594",
+          "L1 Yuki→Omar 0.1782",
+          "L2 Omar→Hana 0.0648",
+          "L0 Lena→Lena 0.096",
+          "L1 Lena→Yuki 0.2112",
+          "L2 Yuki→Omar 0.0768",
+          "L0 Sofia→Sofia 0.093",
+          "L1 Sofia→Lena 0.2046",
+          "L2 Lena→Yuki 0.0744"
+        ]
+      },
+      "feed": {
+        "count": 5,
+        "seedPaymentsSettled": 5,
+        "seedPaymentsPlanned": 5,
+        "items": [
+          {
+            "customer": "Sofia",
+            "amount": "3.10",
+            "venueReceived": "2.728",
+            "cashback": "0.093",
+            "rewards": [
+              "L1 Lena 0.2046",
+              "L2 Yuki 0.0744"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:59:48.000Z",
+            "txHash": "0xae6bdf1e911100138c94055e54a5f02e55e5a77de1e627d027bf2d6d75789cea"
+          },
+          {
+            "customer": "Lena",
+            "amount": "3.20",
+            "venueReceived": "2.816",
+            "cashback": "0.096",
+            "rewards": [
+              "L1 Yuki 0.2112",
+              "L2 Omar 0.0768"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:59:34.000Z",
+            "txHash": "0x61be6cfacb5c2afe5fac642b3c9f704146ba6c4d91d6869799686de207e0889d"
+          },
+          {
+            "customer": "Priya",
+            "amount": "2.40",
+            "venueReceived": "2.40",
+            "cashback": "0.00",
+            "rewards": [],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": false,
+            "settledAt": "2026-11-19T03:59:28.000Z",
+            "txHash": "0x18ba81814ec565b5bed6543d2cc73505d476d7094ae73d12ee7d2a1c03565fa0"
+          },
+          {
+            "customer": "Yuki",
+            "amount": "3.60",
+            "venueReceived": "3.1896",
+            "cashback": "0.108",
+            "rewards": [
+              "L1 Hana 0.0594",
+              "L1 Omar 0.1782",
+              "L2 Hana 0.0648"
+            ],
+            "rewardsReturned": "0.0216",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:59:10.000Z",
+            "txHash": "0xa547bb1cee82456bf2688f52173f3109a19bfc43f02054c8c8116009aa827d4f"
+          },
+          {
+            "customer": "Omar",
+            "amount": "4.80",
+            "venueReceived": "4.3392",
+            "cashback": "0.144",
+            "rewards": [
+              "L1 Hana 0.3168"
+            ],
+            "rewardsReturned": "0.1152",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T03:59:00.000Z",
+            "txHash": "0x57313dd6be10ba6ad455642d6a46913f60424fa72817c0552d9ee1a72756b2e9"
+          }
+        ]
+      }
+    },
+    {
+      "key": "pressed",
+      "name": "Pressed",
+      "address": "0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "owner": {
+        "name": "Maya",
+        "address": "0x0e75C354303737ac72277E7b9c1567423aB53bDC"
+      },
+      "rewardBps": 2000,
+      "minOrder": "1.00",
+      "dashboardUrl": "https://vouch-ubc.vercel.app/venue/0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c",
+      "registerTx": "0x5343d9ffa33f6f6afd56cc1231b64c63d34bde08a34c4ba459327353c8d09cc1",
+      "seeds": [
+        "Diego"
+      ],
+      "stats": {
+        "verifiedCustomers": 4,
+        "rewardedPurchases": 4,
+        "payments": 4,
+        "gross": "14.60",
+        "rewardsPaid": "2.696572",
+        "rewardsReturned": "0.223426",
+        "venueReceived": "11.903428",
+        "byRole": {
+          "cashback": "0.73",
+          "referrer": "1.605999",
+          "introducer": "0.360573"
+        },
+        "costPerVerifiedCustomer": "0.674143",
+        "edges": 12,
+        "edgesSample": [
+          "L0 Chloe→Chloe 0.225",
+          "L1 Chloe→Diego 0.495",
+          "L0 Ben→Ben 0.19",
+          "L1 Ben→Diego 0.119422",
+          "L1 Ben→Chloe 0.298577",
+          "L2 Chloe→Diego 0.108573",
+          "L0 Ana→Ana 0.17",
+          "L1 Ana→Ben 0.374",
+          "L2 Ben→Chloe 0.136",
+          "L0 Tomás→Tomás 0.145",
+          "L1 Tomás→Ana 0.319",
+          "L2 Ana→Ben 0.116"
+        ]
+      },
+      "feed": {
+        "count": 4,
+        "seedPaymentsSettled": 4,
+        "seedPaymentsPlanned": 4,
+        "items": [
+          {
+            "customer": "Tomás",
+            "amount": "2.90",
+            "venueReceived": "2.32",
+            "cashback": "0.145",
+            "rewards": [
+              "L1 Ana 0.319",
+              "L2 Ben 0.116"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T04:00:52.000Z",
+            "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e"
+          },
+          {
+            "customer": "Ana",
+            "amount": "3.40",
+            "venueReceived": "2.72",
+            "cashback": "0.17",
+            "rewards": [
+              "L1 Ben 0.374",
+              "L2 Chloe 0.136"
+            ],
+            "rewardsReturned": "0.00",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T04:00:38.000Z",
+            "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5"
+          },
+          {
+            "customer": "Ben",
+            "amount": "3.80",
+            "venueReceived": "3.083428",
+            "cashback": "0.19",
+            "rewards": [
+              "L1 Diego 0.119422",
+              "L1 Chloe 0.298577",
+              "L2 Diego 0.108573"
+            ],
+            "rewardsReturned": "0.043426",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T04:00:28.000Z",
+            "txHash": "0x0997c294e53cb59ee27065478106efcd9d1f02aaa69765c49cf971af42521dad"
+          },
+          {
+            "customer": "Chloe",
+            "amount": "4.50",
+            "venueReceived": "3.78",
+            "cashback": "0.225",
+            "rewards": [
+              "L1 Diego 0.495"
+            ],
+            "rewardsReturned": "0.18",
+            "firstPurchase": true,
+            "rewarded": true,
+            "settledAt": "2026-11-19T04:00:13.000Z",
+            "txHash": "0xdf281287ce73f7d88ee3c46b39c18453e6cb01c4601b202d0afa29e6f9fdcd2f"
+          }
+        ]
+      }
+    }
+  ],
+  "personas": [
+    {
+      "key": "lena",
+      "name": "Lena",
+      "address": "0x7e86848d2C83dadb6FcFCf109151F7d494d0c4A7",
+      "role": "owns Lena's café",
+      "balance": "1.663777"
+    },
+    {
+      "key": "tomas",
+      "name": "Tomás",
+      "address": "0x986d5563926198EC4F91Fa2C613230A1C0501eAC",
+      "role": "owns Kiln Bakery",
+      "balance": "0.145"
+    },
+    {
+      "key": "maya",
+      "name": "Maya",
+      "address": "0x0e75C354303737ac72277E7b9c1567423aB53bDC",
+      "role": "owns Pressed",
+      "balance": "6.066135"
+    },
+    {
+      "key": "marco",
+      "name": "Marco",
+      "address": "0x09b9d2183E61E5a358b0Afbec5168EFD05C0CE82",
+      "role": "café regular, seed ambassador at Lena's",
+      "balance": "0.549463"
+    },
+    {
+      "key": "sofia",
+      "name": "Sofia",
+      "address": "0x9d6B03aA6cf604844ff2b5a3b81e2d30B3a19e7a",
+      "role": "runs the book club, seed ambassador at Lena's",
+      "balance": "0.093"
+    },
+    {
+      "key": "ana",
+      "name": "Ana",
+      "address": "0x995bb0a8f8dC85b3A1DAEadd0E2f5Ece5bb4d26F",
+      "role": "brought Ben in (canonical)",
+      "balance": "0.489"
+    },
+    {
+      "key": "priya",
+      "name": "Priya",
+      "address": "0xF0667B5fDC2aDA4082D51fbA8Eaab7BA32e80434",
+      "role": "Ben's coworker, group-chat link (canonical)",
+      "balance": "0.00"
+    },
+    {
+      "key": "ben",
+      "name": "Ben",
+      "address": "0x5d7195ffbF93303E8f1fb213433D658a89d3D794",
+      "role": "pays $12.00 (canonical)",
+      "balance": "0.737"
+    },
+    {
+      "key": "chloe",
+      "name": "Chloe",
+      "address": "0x8800448618CE1F7700b80858b25Ed7AeD9152c63",
+      "role": "Ben's flatmate",
+      "balance": "0.816327"
+    },
+    {
+      "key": "diego",
+      "name": "Diego",
+      "address": "0xe4d0Bc409544495975F7c419bB7e30D8616Cb34E",
+      "role": "runs the Saturday run club, seed ambassador at Pressed",
+      "balance": "0.857995"
+    },
+    {
+      "key": "hana",
+      "name": "Hana",
+      "address": "0x39295eFcB9b82FDB0D4B1e9a7fC3Fdab1DBe9A6D",
+      "role": "neighbourhood board, seed ambassador at Kiln",
+      "balance": "0.441"
+    },
+    {
+      "key": "omar",
+      "name": "Omar",
+      "address": "0x24c9F01AfE4942D70Aeb44f9073B1f4a1933AfEC",
+      "role": "Kiln regular",
+      "balance": "0.399"
+    },
+    {
+      "key": "yuki",
+      "name": "Yuki",
+      "address": "0xaA22EA30846d4807E11bf6C0264C755466aEE30E",
+      "role": "Omar's neighbour",
+      "balance": "0.3936"
+    }
+  ],
+  "canonical": {
+    "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+    "blockNumber": "72958157",
+    "ok": true,
+    "transfers": [
+      {
+        "from": "Ben",
+        "to": "Vouch",
+        "value": "12000000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Ben",
+        "value": "450000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Ana",
+        "value": "693000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Priya",
+        "value": "297000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Marco",
+        "value": "252000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Sofia",
+        "value": "108000"
+      },
+      {
+        "from": "Vouch",
+        "to": "Lena",
+        "value": "10200000"
+      }
+    ],
+    "checks": {
+      "sentByRelayer": true,
+      "status": "success",
+      "pullBenToVouch12": true,
+      "transfersOutExact": true,
+      "sumOutEqualsAmount": true,
+      "paymentSettledVenueAmount": true,
+      "weightsModeAttributor": true,
+      "rewardPaid": [
+        "C:Ben:450000",
+        "L1:Ana:693000",
+        "L1:Priya:297000",
+        "L2:Marco:252000",
+        "L2:Sofia:108000"
+      ]
+    }
+  },
+  "payments": [
+    {
+      "id": "pay:cafe:ana:1",
+      "venue": "Lena's café",
+      "customer": "Ana",
+      "amount": "2.80",
+      "label": "Flat white + almond croissant",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x55da2af6f0aa2d51c7ec379379184d36a099b1207d9db6081e198f7bfa81a01e",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Marco"
+        ],
+        "venueAmount": "2464000",
+        "cashback": "105000",
+        "rewards": [
+          "cashback:—:105000",
+          "referrer:Marco:231000",
+          "introducer:—:84000"
+        ],
+        "warnings": [],
+        "matchesPlan": false
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958097",
+        "venueAmount": "2464000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Ana:105000",
+          "referrer:Marco:231000",
+          "introducer:0x0000000000000000000000000000000000000000:84000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:priya:1",
+      "venue": "Lena's café",
+      "customer": "Priya",
+      "amount": "2.40",
+      "label": "Chai latte",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xa6691f9f80d964c40b6e826d910ba0b5fb805bb3cc6c75bd81539852de6af0a7",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Sofia"
+        ],
+        "venueAmount": "2112000",
+        "cashback": "90000",
+        "rewards": [
+          "cashback:—:90000",
+          "referrer:Sofia:198000",
+          "introducer:—:72000"
+        ],
+        "warnings": [],
+        "matchesPlan": false
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958108",
+        "venueAmount": "2112000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Priya:90000",
+          "referrer:Sofia:198000",
+          "introducer:0x0000000000000000000000000000000000000000:72000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:ben:1",
+      "venue": "Lena's café",
+      "customer": "Ben",
+      "amount": "12.00",
+      "label": "Lunch: soup, sandwich, cortado",
+      "expect": "rewarded",
+      "canonical": true,
+      "txHash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+      "quote": {
+        "bps": [
+          7000,
+          3000
+        ],
+        "referrers": [
+          "Ana",
+          "Priya"
+        ],
+        "venueAmount": "10200000",
+        "cashback": "450000",
+        "rewards": [
+          "referrer:Ana:693000",
+          "referrer:Priya:297000",
+          "introducer:Marco:252000",
+          "introducer:Sofia:108000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958157",
+        "venueAmount": "10200000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Ben:450000",
+          "referrer:Ana:693000",
+          "referrer:Priya:297000",
+          "introducer:Marco:252000",
+          "introducer:Sofia:108000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:ben:2",
+      "venue": "Lena's café",
+      "customer": "Ben",
+      "amount": "2.20",
+      "label": "Espresso to go",
+      "expect": "repeat",
+      "canonical": false,
+      "txHash": "0xcee85f7d8458e9ed54ead355c7632db2b581d1ef34b6e8aefc6c16ae0817f7dd",
+      "quote": {
+        "bps": [],
+        "referrers": [],
+        "venueAmount": "2200000",
+        "cashback": "0",
+        "rewards": [],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958164",
+        "venueAmount": "2200000",
+        "weightsMode": 0,
+        "lines": []
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:chloe:1",
+      "venue": "Lena's café",
+      "customer": "Chloe",
+      "amount": "3.10",
+      "label": "Oat cappuccino",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Ben"
+        ],
+        "venueAmount": "2635000",
+        "cashback": "116250",
+        "rewards": [
+          "referrer:Ben:255750",
+          "introducer:Ana:93000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958177",
+        "venueAmount": "2635000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Chloe:116250",
+          "referrer:Ben:255750",
+          "introducer:Ana:93000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:diego:1",
+      "venue": "Lena's café",
+      "customer": "Diego",
+      "amount": "3.60",
+      "label": "Iced latte + banana bread",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+      "quote": {
+        "bps": [
+          3846,
+          6154
+        ],
+        "referrers": [
+          "Priya",
+          "Ana"
+        ],
+        "venueAmount": "3060002",
+        "cashback": "135000",
+        "rewards": [
+          "referrer:Priya:114226",
+          "referrer:Ana:182773",
+          "introducer:Sofia:41536",
+          "introducer:Marco:66463"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 1,
+        "blockNumber": "72958195",
+        "venueAmount": "3060002",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Diego:135000",
+          "referrer:Priya:114226",
+          "referrer:Ana:182773",
+          "introducer:Sofia:41536",
+          "introducer:Marco:66463"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:kiln:omar:1",
+      "venue": "Kiln Bakery",
+      "customer": "Omar",
+      "amount": "4.80",
+      "label": "Sourdough loaf + morning bun",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x57313dd6be10ba6ad455642d6a46913f60424fa72817c0552d9ee1a72756b2e9",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Hana"
+        ],
+        "venueAmount": "4339200",
+        "cashback": "144000",
+        "rewards": [
+          "referrer:Hana:316800"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958217",
+        "venueAmount": "4339200",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Omar:144000",
+          "referrer:Hana:316800",
+          "introducer:0x0000000000000000000000000000000000000000:115200"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:kiln:yuki:1",
+      "venue": "Kiln Bakery",
+      "customer": "Yuki",
+      "amount": "3.60",
+      "label": "Seeded rye",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xa547bb1cee82456bf2688f52173f3109a19bfc43f02054c8c8116009aa827d4f",
+      "quote": {
+        "bps": [
+          2500,
+          7500
+        ],
+        "referrers": [
+          "Hana",
+          "Omar"
+        ],
+        "venueAmount": "3189600",
+        "cashback": "108000",
+        "rewards": [
+          "referrer:Hana:59400",
+          "referrer:Omar:178200",
+          "introducer:Hana:64800"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958236",
+        "venueAmount": "3189600",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Yuki:108000",
+          "referrer:Hana:59400",
+          "referrer:Omar:178200",
+          "introducer:0x0000000000000000000000000000000000000000:21600",
+          "introducer:Hana:64800"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:kiln:priya:1",
+      "venue": "Kiln Bakery",
+      "customer": "Priya",
+      "amount": "2.40",
+      "label": "Cinnamon bun (under the $3 minimum)",
+      "expect": "below_min",
+      "canonical": false,
+      "txHash": "0x18ba81814ec565b5bed6543d2cc73505d476d7094ae73d12ee7d2a1c03565fa0",
+      "quote": {
+        "bps": [],
+        "referrers": [],
+        "venueAmount": "2400000",
+        "cashback": "0",
+        "rewards": [],
+        "warnings": [
+          "no_eligible_recommendation",
+          "first_purchase_not_rewarded"
+        ],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 1.1,
+        "blockNumber": "72958257",
+        "venueAmount": "2400000",
+        "weightsMode": 0,
+        "lines": []
+      },
+      "done": true
+    },
+    {
+      "id": "pay:kiln:lena:1",
+      "venue": "Kiln Bakery",
+      "customer": "Lena",
+      "amount": "3.20",
+      "label": "Baguettes for the café",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x61be6cfacb5c2afe5fac642b3c9f704146ba6c4d91d6869799686de207e0889d",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Yuki"
+        ],
+        "venueAmount": "2816000",
+        "cashback": "96000",
+        "rewards": [
+          "referrer:Yuki:211200",
+          "introducer:Omar:76800"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 1,
+        "blockNumber": "72958270",
+        "venueAmount": "2816000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Lena:96000",
+          "referrer:Yuki:211200",
+          "introducer:Omar:76800"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:kiln:sofia:1",
+      "venue": "Kiln Bakery",
+      "customer": "Sofia",
+      "amount": "3.10",
+      "label": "Focaccia slab",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xae6bdf1e911100138c94055e54a5f02e55e5a77de1e627d027bf2d6d75789cea",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Lena"
+        ],
+        "venueAmount": "2728000",
+        "cashback": "93000",
+        "rewards": [
+          "referrer:Lena:204600",
+          "introducer:Yuki:74400"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958289",
+        "venueAmount": "2728000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Sofia:93000",
+          "referrer:Lena:204600",
+          "introducer:Yuki:74400"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:pressed:chloe:1",
+      "venue": "Pressed",
+      "customer": "Chloe",
+      "amount": "4.50",
+      "label": "Green juice + acai bowl",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xdf281287ce73f7d88ee3c46b39c18453e6cb01c4601b202d0afa29e6f9fdcd2f",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Diego"
+        ],
+        "venueAmount": "3780000",
+        "cashback": "225000",
+        "rewards": [
+          "referrer:Diego:495000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 1.1,
+        "blockNumber": "72958323",
+        "venueAmount": "3780000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Chloe:225000",
+          "referrer:Diego:495000",
+          "introducer:0x0000000000000000000000000000000000000000:180000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:pressed:ben:1",
+      "venue": "Pressed",
+      "customer": "Ben",
+      "amount": "3.80",
+      "label": "Mango smoothie",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x0997c294e53cb59ee27065478106efcd9d1f02aaa69765c49cf971af42521dad",
+      "quote": {
+        "bps": [
+          2857,
+          7143
+        ],
+        "referrers": [
+          "Diego",
+          "Chloe"
+        ],
+        "venueAmount": "3083428",
+        "cashback": "190000",
+        "rewards": [
+          "referrer:Diego:119422",
+          "referrer:Chloe:298577",
+          "introducer:Diego:108573"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958345",
+        "venueAmount": "3083428",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Ben:190000",
+          "referrer:Diego:119422",
+          "referrer:Chloe:298577",
+          "introducer:0x0000000000000000000000000000000000000000:43426",
+          "introducer:Diego:108573"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:pressed:ana:1",
+      "venue": "Pressed",
+      "customer": "Ana",
+      "amount": "3.40",
+      "label": "Beet + ginger shot pack",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Ben"
+        ],
+        "venueAmount": "2720000",
+        "cashback": "170000",
+        "rewards": [
+          "referrer:Ben:374000",
+          "introducer:Chloe:136000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958358",
+        "venueAmount": "2720000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Ana:170000",
+          "referrer:Ben:374000",
+          "introducer:Chloe:136000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:pressed:tomas:1",
+      "venue": "Pressed",
+      "customer": "Tomás",
+      "amount": "2.90",
+      "label": "Carrot-orange juice",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Ana"
+        ],
+        "venueAmount": "2320000",
+        "cashback": "145000",
+        "rewards": [
+          "referrer:Ana:319000",
+          "introducer:Ben:116000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958377",
+        "venueAmount": "2320000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Tomás:145000",
+          "referrer:Ana:319000",
+          "introducer:Ben:116000"
+        ]
+      },
+      "done": true
+    },
+    {
+      "id": "pay:cafe:maya:1",
+      "venue": "Lena's café",
+      "customer": "Maya",
+      "amount": "1.90",
+      "label": "Drip coffee",
+      "expect": "rewarded",
+      "canonical": false,
+      "txHash": "0xf9c79894048cb3aaa0bf65bfb6bec8f0f54f851c23d5f3e490bc50cd136f708b",
+      "quote": {
+        "bps": [
+          10000
+        ],
+        "referrers": [
+          "Chloe"
+        ],
+        "venueAmount": "1615000",
+        "cashback": "71250",
+        "rewards": [
+          "referrer:Chloe:156750",
+          "introducer:Ben:57000"
+        ],
+        "warnings": [],
+        "matchesPlan": true
+      },
+      "settled": {
+        "afterSeconds": 0,
+        "blockNumber": "72958388",
+        "venueAmount": "1615000",
+        "weightsMode": 1,
+        "lines": [
+          "cashback:Maya:71250",
+          "referrer:Chloe:156750",
+          "introducer:Ben:57000"
+        ]
+      },
+      "done": true
+    }
+  ],
+  "transactions": [
+    {
+      "label": "registerVenue Lena's café",
+      "kind": "registerVenue",
+      "hash": "0x73dcb0f14ad6fbceb876cc0e2360d9753fe70212ac73ee9e7f7751cdeb025140",
+      "fee": "0.004484225"
+    },
+    {
+      "label": "setSeedAmbassador Marco @ Lena's café",
+      "kind": "setSeedAmbassador",
+      "hash": "0x0604ca367f0a44a16df39ef0df5e5b344ed2d7d62c52b380eb39094dddf767a5",
+      "fee": "0.001588625"
+    },
+    {
+      "label": "setSeedAmbassador Sofia @ Lena's café",
+      "kind": "setSeedAmbassador",
+      "hash": "0xceda087baae6d9f2def7bd3f61926b7f090684f9238119b5f394fa0b012b44f5",
+      "fee": "0.001588625"
+    },
+    {
+      "label": "acceptIntro Marco→Ana @ Lena's café (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xada2a4cd19e65922161744d34151f31cc2bdbc623e37ca7bdd6f0a468c8fb144",
+      "fee": "0.0043265"
+    },
+    {
+      "label": "pay Ana $2.80 @ Lena's café",
+      "kind": "pay",
+      "hash": "0x55da2af6f0aa2d51c7ec379379184d36a099b1207d9db6081e198f7bfa81a01e",
+      "fee": "0.010341325"
+    },
+    {
+      "label": "acceptIntro Sofia→Priya @ Lena's café (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x089f7564e358393e2d63c5792dc1cc5e89fb1a4be91132bf09831cd810669303",
+      "fee": "0.0043265"
+    },
+    {
+      "label": "pay Priya $2.40 @ Lena's café",
+      "kind": "pay",
+      "hash": "0xa6691f9f80d964c40b6e826d910ba0b5fb805bb3cc6c75bd81539852de6af0a7",
+      "fee": "0.008860325"
+    },
+    {
+      "label": "acceptIntro Ana→Ben @ Lena's café (personal, 3 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x7773fd82a294c7cad78f5e6f9e5e43834d15d60e1a787cacd1d4d96f5a926c43",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "acceptIntro Priya→Ben @ Lena's café (broadcast, 2 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xc836988a3c5096fca4ccd32adfec2b25dd6c905e067963082ab6ad95154b0971",
+      "fee": "0.0039609"
+    },
+    {
+      "label": "pay Ben $12.00 @ Lena's café (CANONICAL)",
+      "kind": "pay",
+      "hash": "0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980",
+      "fee": "0.012357825"
+    },
+    {
+      "label": "pay Ben $2.20 @ Lena's café (repeat)",
+      "kind": "pay",
+      "hash": "0xcee85f7d8458e9ed54ead355c7632db2b581d1ef34b6e8aefc6c16ae0817f7dd",
+      "fee": "0.00433135"
+    },
+    {
+      "label": "acceptIntro Ben→Chloe @ Lena's café (personal, 2 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x28c8a737ccd84d61a9d59e01a2371a31591af0d0abfe1d439130a409ff406984",
+      "fee": "0.00426895"
+    },
+    {
+      "label": "pay Chloe $3.10 @ Lena's café",
+      "kind": "pay",
+      "hash": "0xafdd0c7a79b52b5fc0ca0b9acaf894f92ff032e3bffebd4091146dc4d5c77213",
+      "fee": "0.009842425"
+    },
+    {
+      "label": "acceptIntro Priya→Diego @ Lena's café (broadcast, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xf63f37e21cbbc813b2de693c4aee4f678f08b7970babaebe281037d912a99db1",
+      "fee": "0.004274175"
+    },
+    {
+      "label": "acceptIntro Ana→Diego @ Lena's café (personal, 0 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xd5317dfbd41359ea50bcab54046c04fdd4b53201b1fbb0f86a560d23382dc91d",
+      "fee": "0.003956275"
+    },
+    {
+      "label": "pay Diego $3.60 @ Lena's café",
+      "kind": "pay",
+      "hash": "0x616592ac654557e57d445f2cbba007777de7f5c151de665df93139d6de0b009f",
+      "fee": "0.009607225"
+    },
+    {
+      "label": "registerVenue Kiln Bakery",
+      "kind": "registerVenue",
+      "hash": "0x3cf21f042eb9dbdf718fcfd065fcdbfaf7ea9682491cf8df2699f8179d59ff8f",
+      "fee": "0.004484225"
+    },
+    {
+      "label": "setSeedAmbassador Hana @ Kiln Bakery",
+      "kind": "setSeedAmbassador",
+      "hash": "0x061cbcb66d23d74958f37145481765f7a37adb22b90a936401825a82c25295af",
+      "fee": "0.001588625"
+    },
+    {
+      "label": "acceptIntro Hana→Omar @ Kiln Bakery (broadcast, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xcbe3d5284cc6f89d8cad44d558dcb4452fa3d46625231454fa6997bd3dd7da9f",
+      "fee": "0.004331425"
+    },
+    {
+      "label": "pay Omar $4.80 @ Kiln Bakery",
+      "kind": "pay",
+      "hash": "0x57313dd6be10ba6ad455642d6a46913f60424fa72817c0552d9ee1a72756b2e9",
+      "fee": "0.010340725"
+    },
+    {
+      "label": "acceptIntro Hana→Yuki @ Kiln Bakery (broadcast, 0 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x0a1d56a633de4e8b9bc0165bad4a9376770379b946eeabd06412377f1dded535",
+      "fee": "0.004331725"
+    },
+    {
+      "label": "acceptIntro Omar→Yuki @ Kiln Bakery (personal, 2 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x617964e9a0d1a751e91371dad275b8b4b15653289f1bac732624796dc58f7e19",
+      "fee": "0.003955675"
+    },
+    {
+      "label": "pay Yuki $3.60 @ Kiln Bakery",
+      "kind": "pay",
+      "hash": "0xa547bb1cee82456bf2688f52173f3109a19bfc43f02054c8c8116009aa827d4f",
+      "fee": "0.010315425"
+    },
+    {
+      "label": "acceptIntro Omar→Priya @ Kiln Bakery (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x365cda6139fe6ebb527e606c7003799695a6aab079bed239bc3805a9152bde8a",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "pay Priya $2.40 @ Kiln Bakery (below minimum)",
+      "kind": "pay",
+      "hash": "0x18ba81814ec565b5bed6543d2cc73505d476d7094ae73d12ee7d2a1c03565fa0",
+      "fee": "0.004709575"
+    },
+    {
+      "label": "acceptIntro Yuki→Lena @ Kiln Bakery (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xc231c73bad3959a81fd1d805a8b141657fa24c6ea0bbf36173aa380015ec16a0",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "pay Lena $3.20 @ Kiln Bakery",
+      "kind": "pay",
+      "hash": "0x61be6cfacb5c2afe5fac642b3c9f704146ba6c4d91d6869799686de207e0889d",
+      "fee": "0.008592825"
+    },
+    {
+      "label": "acceptIntro Lena→Sofia @ Kiln Bakery (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x0ac4d94aaed5063e8d246c637bb277ea4a58c51b7a1da559d7105dfc0414eba3",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "pay Sofia $3.10 @ Kiln Bakery",
+      "kind": "pay",
+      "hash": "0xae6bdf1e911100138c94055e54a5f02e55e5a77de1e627d027bf2d6d75789cea",
+      "fee": "0.009217525"
+    },
+    {
+      "label": "registerVenue Pressed",
+      "kind": "registerVenue",
+      "hash": "0x5343d9ffa33f6f6afd56cc1231b64c63d34bde08a34c4ba459327353c8d09cc1",
+      "fee": "0.004482425"
+    },
+    {
+      "label": "setSeedAmbassador Diego @ Pressed",
+      "kind": "setSeedAmbassador",
+      "hash": "0x33d76e76ebaa6b3db649651305c187e697a4d7cbd81ed6cd63836dcae809dc6b",
+      "fee": "0.001588625"
+    },
+    {
+      "label": "acceptIntro Diego→Chloe @ Pressed (personal, 2 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x1527c6eff46140eb0366d3b259e8043742296d070dc474bb6ec02adbf8e791bc",
+      "fee": "0.0043259"
+    },
+    {
+      "label": "pay Chloe $4.50 @ Pressed",
+      "kind": "pay",
+      "hash": "0xdf281287ce73f7d88ee3c46b39c18453e6cb01c4601b202d0afa29e6f9fdcd2f",
+      "fee": "0.009715125"
+    },
+    {
+      "label": "acceptIntro Diego→Ben @ Pressed (broadcast, 0 opens)",
+      "kind": "acceptIntro",
+      "hash": "0xe49474c2ffd378d6793197ed0a77695206230fed1406ca6942cf0ed3bab7e9e5",
+      "fee": "0.004331725"
+    },
+    {
+      "label": "acceptIntro Chloe→Ben @ Pressed (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x7bd270519f2d5ab49405f60f9c99e41207a25c4a971d2928689f8c3a6ef5ece9",
+      "fee": "0.003955375"
+    },
+    {
+      "label": "pay Ben $3.80 @ Pressed",
+      "kind": "pay",
+      "hash": "0x0997c294e53cb59ee27065478106efcd9d1f02aaa69765c49cf971af42521dad",
+      "fee": "0.010314525"
+    },
+    {
+      "label": "acceptIntro Ben→Ana @ Pressed (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x9e41f0b71d1ea04ac8d54bd6a8c251bf83e529c5922fb3e0ad9d98a1f543e6fa",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "pay Ana $3.40 @ Pressed",
+      "kind": "pay",
+      "hash": "0x6b1c008bf35b2a69e53dfe44c41ef9459b498a9186c782408fd7dfd8a54432f5",
+      "fee": "0.008791125"
+    },
+    {
+      "label": "acceptIntro Ana→Tomás @ Pressed (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x38bd9d83e0b94b8f7cf3e4ff8afc9e69fd85db15914010378bf7e4aee790532a",
+      "fee": "0.00426925"
+    },
+    {
+      "label": "pay Tomás $2.90 @ Pressed",
+      "kind": "pay",
+      "hash": "0x94c44d6511a569e6b760b4c28608cd71fed67881d708e69b7226497aec18c25e",
+      "fee": "0.008166425"
+    },
+    {
+      "label": "acceptIntro Chloe→Maya @ Lena's café (personal, 1 opens)",
+      "kind": "acceptIntro",
+      "hash": "0x82d71e1058cf76f12a7b0d3fdf7f0a2bb7a2b9a126e2d900afd56772e14dc609",
+      "fee": "0.00426835"
+    },
+    {
+      "label": "pay Maya $1.90 @ Lena's café",
+      "kind": "pay",
+      "hash": "0xf9c79894048cb3aaa0bf65bfb6bec8f0f54f851c23d5f3e490bc50cd136f708b",
+      "fee": "0.007737225"
+    }
+  ],
+  "funding": [
+    {
+      "to": "Ana",
+      "from": "DEPLOYER (topup CLI)",
+      "amount": "2.80",
+      "hash": "0xc07b60079b709e7dacdff85a135e8d89f0cf1b8d8b45f411a1a9b9dbef6daac9"
+    },
+    {
+      "to": "Priya",
+      "from": "Lena",
+      "amount": "2.40",
+      "hash": "0xee19cb7ca8fa49c523fc23b309451d421801d56be638047f58d339fc2843eb2c"
+    },
+    {
+      "to": "Ben",
+      "from": "Lena",
+      "amount": "2.124151",
+      "hash": "0x88ab01c121235365586ec60585c6896c16c55bca682254a9c2a5ffd917483108"
+    },
+    {
+      "to": "Ben",
+      "from": "DEPLOYER (topup CLI)",
+      "amount": "9.875849",
+      "hash": "0x474f5dacd6b449d5aa96998f5f1974ff31ae692fd7917525e15ae303f3dd2d3b"
+    },
+    {
+      "to": "Ben",
+      "from": "Lena",
+      "amount": "1.75",
+      "hash": "0x1ecc8a6e7e67ef0b175159f182a8b0a4f3307be19813c14e9af6bd90dae3e426"
+    },
+    {
+      "to": "Chloe",
+      "from": "Lena",
+      "amount": "3.10",
+      "hash": "0x97986f4f9efe796d6a05c8b91f3a38f6e31fddf6c1c5a1ea6d16f3a3b52bf11f"
+    },
+    {
+      "to": "Diego",
+      "from": "Lena",
+      "amount": "3.60",
+      "hash": "0xba1545ea23ddf8d1197e591a15a2b963862faeb8c2be84d590a1c2d4b0689434"
+    },
+    {
+      "to": "Omar",
+      "from": "Lena",
+      "amount": "4.80",
+      "hash": "0x515592265d39039372aeca531e6948fe3d1cca7efc687123d60fac07157cdc43"
+    },
+    {
+      "to": "Yuki",
+      "from": "Lena",
+      "amount": "3.60",
+      "hash": "0x0fb0920f8b816f5cbdd63b69e1d81702613943d584670b5e7eb2f7755c456f12"
+    },
+    {
+      "to": "Priya",
+      "from": "Lena",
+      "amount": "1.234535",
+      "hash": "0x457beb3b2479acbbd41878f1dc46dc3a15f5b3b4612e9f44c1dd8726579eb377"
+    },
+    {
+      "to": "Priya",
+      "from": "Tomás",
+      "amount": "0.664239",
+      "hash": "0xfcfd70857aea4c75f46059d83a72e65502761ea18caa5ea014fe76cfe8be60d2"
+    },
+    {
+      "to": "Lena",
+      "from": "Tomás",
+      "amount": "3.151223",
+      "hash": "0x6744d680d882093efe1436041f8d92a5999d9c89cc5c7adccb4b72048730289b"
+    },
+    {
+      "to": "Sofia",
+      "from": "Tomás",
+      "amount": "2.752464",
+      "hash": "0xcbd8365019ca5e6e7b604e4429ec3d38e86257900d764f5dc7080fa3342e6cb5"
+    },
+    {
+      "to": "Chloe",
+      "from": "Lena",
+      "amount": "0.2506",
+      "hash": "0xda7022049b6a67b5228e9f94cc7e839c9d468cac7147cab6d85dffd20565aa22"
+    },
+    {
+      "to": "Chloe",
+      "from": "Tomás",
+      "amount": "4.13315",
+      "hash": "0x8917de8d41360b9c751ef11875b8c4dd6f5c71eb5936b81e9c88f5e3641d1149"
+    },
+    {
+      "to": "Ben",
+      "from": "Tomás",
+      "amount": "3.54425",
+      "hash": "0xd37c69bd5f909784bb92282020eac9f256b6c79decd99f582106508022c2d54e"
+    },
+    {
+      "to": "Ana",
+      "from": "Tomás",
+      "amount": "1.171355",
+      "hash": "0x42cef444ef9babf0e3ddee535cdf84003d38e5c2d38b58a88d1a4935b0b214ec"
+    },
+    {
+      "to": "Ana",
+      "from": "Maya",
+      "amount": "1.154872",
+      "hash": "0x912307f62834a8bce10c5053d5b8d1051118e4a7f93e4bcfc47c4c94b7961d38"
+    },
+    {
+      "to": "Tomás",
+      "from": "Maya",
+      "amount": "2.851223",
+      "hash": "0xc126959b2e2b03a8fcaab04522357bc4a8ee487ac8c963af5d9d97cfaf8c5536"
+    }
+  ],
+  "spend": {
+    "paymentVolume": "59.70",
+    "fundedFromDeployer": "12.675849",
+    "recycledFromVenueRevenue": "42.282062",
+    "relayerGas": "0.243275325",
+    "relayerGasUsdcBaseUnits": "243276",
+    "relayedTxs": 42,
+    "fundingTransferGas": "0.02455135"
+  }
+}

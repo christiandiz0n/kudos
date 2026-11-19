@@ -1,5 +1,5 @@
 # BACKEND_RELAYER
-_Last updated: 2026-11-18 by BACKEND_RELAYER (Phase 3 session 3: demo top-up + venue feed, D-811)_
+_Last updated: 2026-11-18 by BACKEND_RELAYER (Phase 5 pulled forward, session 3: demo seed on the hosted api, D-812..D-814)_
 
 ## Mission
 Owns the API service: DB schema, auth/session, venue/order/intro/payment endpoints, venue order signing, payment quotes (baseline attribution + attributor signature), the relayer wallet (nonce mgmt, retries, rate limits, max-gas guard, friendly error mapping) and SSE fan-out. Does NOT own contract logic, the Streams webhook/derived-state ingestion (STREAMS_INFRA), or attribution scoring internals (ATTRIBUTION_AI, from Phase 4).
@@ -8,9 +8,16 @@ Owns the API service: DB schema, auth/session, venue/order/intro/payment endpoin
 - `apps/api/**` except `apps/api/src/streams/**`, `apps/api/src/routes/webhooks.ts`, `apps/api/src/webhooks.test.ts`, `apps/api/drizzle-streams/**` (STREAMS_INFRA)
 - `apps/api/src/attribution/baseline.ts` (Phase 2 only; ATTRIBUTION_AI takes it in Phase 4)
 - `scripts/story/` (story:api CLI)
+- `scripts/seed/**` (seed:demo CLI; `.state/` is gitignored) + `docs/evidence/phase-5/seed/**`
 - Shared and minimal: `apps/api/src/app.ts` (route registration), `apps/api/src/db/schema.ts` (my tables, below `stream_deliveries`)
 
 ## Current status
+🟢 **Demo seed done on the hosted api (D-812..D-814).** `seed:demo` created 3 live venues with 13 personas, 42 relayed txs and 16 payments ($59.70), all settled via the live Stream within about 1 s.
+- **Venues:** Lena's café `0x9a40C2b1Da073Fea51A63B92f868A78969c56289` (15%), Kiln Bakery `0xDbf2Ffc4fdD279c4D32e99b03B6C6abC2D1fA494` (12%, min $3), Pressed `0x82891F492E93192F1b5cd3cEF48f6C0B56D56b4c` (20%). Dashboards are at `https://vouch-ubc.vercel.app/venue/<addr>`.
+- **Canonical pay:** `0x83214e73…f980`. The receipt's USDC Transfer logs give exactly 10.20 / 0.45 / 0.693 / 0.297 / 0.252 (Marco) / 0.108 (Sofia).
+- **Spend:** DEPLOYER $12.68, relayer gas $0.243. A re-run is a no-op.
+- **Evidence:** `docs/evidence/phase-5/seed/seed-summary.{json,md}`.
+
 🟢 **Phase 3 API additions code-complete (D-811), not deployed yet.** The Orchestrator deploys after Phase 2 Part B.
 - `POST/GET /demo/topup`: a capped, once-per-address testnet top-up. It is off unless `DEMO_TOPUP_ENABLED=true`.
 - `GET /venues/:venue/payments`: the venue feed.
@@ -81,6 +88,8 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 | `apps/api/src/sse/hub.ts` | channels `user:<addr>` / `venue:<addr>`; caps (global / per IP / per channel), max age, drops slow consumers, 15 s heartbeat | Hijacked replies set CORS + security headers themselves |
 | `apps/api/src/db/schema.ts` + `drizzle/0002_relayer_core.sql` (+ `0003`, `0004_demo_topups`) | my 11 tables (`demo_topups` added, D-811) | `pnpm --filter @vouch/api exec drizzle-kit generate --name …` |
 | `apps/api/src/test/*.test.ts` | api (endpoint contract + canonical story on FakeChain), relayer, auth, attribution, sse, errors, topup, feed | `fake-chain.ts` = in-memory Vouch rules; `helpers.ts` = personas / sign-in / signTd |
+| `scripts/seed/plan.ts` (+ `plan.test.ts`) | Pure seed plan: venues, personas, ordered steps; `simulatePlan` replays contract rules (D-505/D-508/D-509), `computeSplit` (D-503), `baselineBps`, `planFunding` | Edit the plan here; tests catch rule breaks |
+| `scripts/seed/demo-seed.ts` | Runs the plan on the hosted api: chain-checked idempotent steps, retries/pacing, just-in-time funding, canonical Transfer-log check, summary | State in `scripts/seed/.state/` (keys 0600, gitignored) |
 | `scripts/story/story-api.ts` | Phase 2 exit driver: canonical story on Arc through the API; `--check-intent <id>` re-checks settled | `pnpm --filter @vouch/scripts story:api` |
 
 ## Interfaces consumed / provided
@@ -141,6 +150,12 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
   - **Dropped from the v0 draft:** `POST /onboarding/topup`. It is replaced by the capped `POST /demo/topup` (D-811).
 
 ## Done (rolling, newest first)
+- 2026-11-18 — **Demo seed (Phase 5, pulled forward; D-812..D-814).**
+  - **What it is:** `scripts/seed/{plan.ts,plan.test.ts,demo-seed.ts}` plus `pnpm --filter @vouch/scripts seed:demo`. The scripts `test` glob now also runs `seed/*.test.ts` (23/23 pass). `.gitignore` gains `scripts/seed/.state/`.
+  - **Hosted run:** 3 venues, 10 personas + 3 owners, 42 relayed txs, 16 payments, volume $59.70. Every payment settled via Streams. The canonical split is exact on chain (checked from the Transfer logs, and independently with a raw `eth_getTransactionReceipt`).
+  - **Spend:** DEPLOYER $12.68 (topup CLI). $42.28 was recycled from seed venue revenue. Relayer gas $0.243.
+  - **Hosted stats:** café 6 verified / 7 payments / 20 edges, Kiln 5/5/12, Pressed 4/4/12.
+  - **Re-run:** sends nothing. `pnpm -r typecheck` is clean.
 - 2026-11-18 — **Phase 3 API additions (D-811, MSG-083).**
   - **Demo top-up:**
     - `GET/POST /demo/topup`: once per address (PK + conditional upsert; only a `failed` attempt can re-claim), a global rolling-24 h cap, a per-IP grant limit, and a funder floor.
@@ -189,6 +204,7 @@ browser wallet key (passkey-gated EOA, D-104)            apps/api (Fastify, one 
 - 2026-11-15 — File initialized by ORCHESTRATOR.
 
 ## Next up
+- [ ] The seed's owner wallets end with little USDC, because their revenue funded later customers (D-812). Dashboards read Streams stats, so they still look right. If someone demos an owner's own wallet screen, top it up first.
 - [ ] After the Orchestrator deploys D-811: set `DEMO_TOPUP_ENABLED=true` on Railway (optionally `TOPUP_PRIVATE_KEY` + fund it). Then run a hosted check: `GET /demo/topup` → `enabled:true`, plus one real top-up to a fresh wallet.
 - [ ] N-1: reserve part of the relayer budget for `pay` (cap non-pay kinds at ~50% of the global windows).
 - [ ] On Railway: set `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY`, `SESSION_SECRET` and `PUBLIC_WEB_URL`. Then run `story:api -- --api https://<railway> --require-settled` (the exit criterion with the live Stream).
@@ -218,6 +234,9 @@ pnpm --filter @vouch/api typecheck
 PORT=4010 DATABASE_URL=pglite://./data/local/pglite-backend-relayer-4010 STREAMS_SPIKE_LOG=off pnpm --filter @vouch/api start
 pnpm --filter @vouch/scripts story:api -- --api http://localhost:4010 --fund-from-payout   # ≈ $0.05 relayer gas
 pnpm --filter @vouch/scripts story:api -- --api http://localhost:4010 --check-intent <intentId>
+pnpm --filter @vouch/scripts seed:demo -- --dry-run         # validate plan, print expected splits + persona addresses (no network writes)
+pnpm --filter @vouch/scripts seed:demo                      # hosted api by default; resumable; a re-run is a no-op
+pnpm --filter @vouch/scripts seed:demo -- --summary-only    # re-read hosted stats/feeds → docs/evidence/phase-5/seed/
 # local "settled" without a Stream (stop the api first: PGlite is single-process):
 pnpm --silent --filter @vouch/scripts streams:backfill --db-url pglite://./data/local/pglite-backend-relayer-4010
 ```

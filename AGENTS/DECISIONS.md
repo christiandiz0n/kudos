@@ -947,3 +947,20 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
 - Vercel assigned `vouch-omega-six.vercel.app`. The Orchestrator added **`vouch-ubc.vercel.app`** as the project's production domain, and that is the ONLY URL to share or rehearse on. Passkeys are bound to it (D-104, D-907). Railway `CORS_ORIGINS` = `http://localhost:3100,https://vouch-ubc.vercel.app` (non-secret, set by the Orchestrator like D-018). The omega domain is deliberately not allowed, so nobody creates accounts there.
 - `NEXT_PUBLIC_API_URL` is left at its code default (the Railway URL). `NEXT_PUBLIC_WEB_URL` is unset, so links use the page origin.
 - Deploy command: `git archive HEAD | tar -x -C <scratch>/vercel-head && cd <scratch>/vercel-head && vercel link --yes --project vouch && vercel deploy --prod --yes`. CLI via `$(npm prefix -g)/bin`.
+
+## D-812 — Demo seed funding: just-in-time exact shortfall, seed-owned venue revenue first, then DEPLOYER via the topup CLI
+- **Date:** 2026-11-18
+- **Decision:** `scripts/seed/demo-seed.ts` funds a payer only right before its payment, and only with `amount − balance`. The shortfall comes first from the surplus of the seed's own venue-owner wallets (Lena, Tomás, Maya: their venue revenue, a plain USDC `transfer` signed by the seed-generated owner key, chunks ≥ $0.10, $0.05 gas buffer), and only the remainder from DEPLOYER through the existing `pnpm --filter @vouch/scripts topup -- --to <addr> --target <amount>` CLI (D-401 safety limits unchanged). A seed-level cap `--max-deployer` (default $16.00) stops the run before the topup CLI is called beyond it. `/demo/topup` is never used (it keeps its $30/day for judges).
+- **Reason:** the DEPLOYER held $26.69 at the start. All payment money lands in seed wallets (venue payout = owner, rewards = personas), so recycling it means the DEPLOYER only covers the peak (Ben's $12.00 before Lena has revenue) instead of the full $59.70 volume.
+- **Alternatives:** fund every persona's whole planned spend up front from DEPLOYER (≈ $55; more than the DEPLOYER can spare); use /demo/topup (rejected by the brief).
+- **Who:** BACKEND_RELAYER
+
+## D-813 — Demo seed state: generated keys + per-api progress in `scripts/seed/.state/` (gitignored); the chain is the source of truth on resume
+- **Date:** 2026-11-18
+- **Decision:** persona and venue-owner keys are generated once (`viem generatePrivateKey`) into `.state/keys.json` (mode 0600). Progress, session tokens, link codes, order ids, intent ids and tx hashes go to `.state/state-<api host>.json`, written atomically after every sub-step. Each step re-checks the chain before acting: `getVenue(owner)`, `isSeedAmbassador`, `getLiveIntros`/`getCustomer.verified`, `isOrderSettled(orderId saved BEFORE the quote)`. A first purchase whose customer is already verified with no record is marked done and never paid again. A re-run with every step done sends nothing (only public reads for the summary). Link opens are counted per (step, code) so a resume never inflates attribution. Keys and tokens are never printed.
+- **Who:** BACKEND_RELAYER
+
+## D-814 — Demo seed pacing and retries against the hosted api
+- **Date:** 2026-11-18
+- **Decision:** every call retries transport errors, 429, 502, 503, 504 and any `retryable: true` error ≥ 429 (RELAYER_BUDGET_EXHAUSTED, SPEND_QUOTA_EXCEEDED, RELAYER_DOWN), with exponential backoff 2 s → 60 s (honouring `Retry-After`) for up to 30 min per call; nothing is fatal because of a redeploy or a budget window. Spend-class POSTs (D-809) are spaced ≥ 3.2 s apart (≤ 19/min from one IP, leaving headroom for a concurrent QE run). Ambiguous outcomes of a retried POST (`PAYMENT_ALREADY_USED`, `ORDER_ALREADY_PAID`, `VENUE_EXISTS`, `OWNER_ACTION_PENDING`, `INTRO_ALREADY_USED`) are reconciled against the chain, never re-sent blindly. The canonical $12.00 quote must be exactly Ana/Priya 7000/3000 with the README split, or the seed refuses to pay it; after mining, the receipt's USDC `Transfer` logs are checked exactly.
+- **Who:** BACKEND_RELAYER

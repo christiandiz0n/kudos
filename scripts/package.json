@@ -7,7 +7,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "s5:relayer": "tsx --env-file-if-exists=../.env spikes/s5-relayer.ts",
     "topup": "tsx --env-file-if-exists=../.env setup/topup-demo.ts",
-    "test": "tsx --test streams/*.test.ts",
+    "test": "tsx --test streams/*.test.ts seed/*.test.ts",
     "streams": "tsx --env-file-if-exists=../.env streams/streams.ts",
     "streams:deliveries": "tsx --env-file-if-exists=../.env streams/show-deliveries.ts",
     "streams:ping": "tsx --env-file-if-exists=../.env streams/ping.ts",
@@ -16,7 +16,8 @@
     "streams:backfill": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts backfill",
     "streams:replay": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts replay",
     "streams:hash": "tsx --env-file-if-exists=../.env backfill/streams-derive.ts hash",
-    "story:api": "tsx --env-file-if-exists=../.env story/story-api.ts"
+    "story:api": "tsx --env-file-if-exists=../.env story/story-api.ts",
+    "seed:demo": "tsx --env-file-if-exists=../.env seed/demo-seed.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.16",

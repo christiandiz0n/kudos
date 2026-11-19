@@ -51,3 +51,4 @@ __pycache__/
 # agent inbox tool lock/tmp
 AGENTS/INBOX/.lock
 AGENTS/INBOX/*.tmp
+scripts/seed/.state/
