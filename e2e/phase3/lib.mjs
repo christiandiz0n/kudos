@@ -32,6 +32,8 @@ export const SHOTS = join(EVID, "screens");
 // A9 QE: headless is FORCED (the human asked that no browser window ever appears on screen).
 export const chromium = WEBKIT ? { launch: (opts = {}) => pw.webkit.launch({ ...opts, args: [], headless: true }) } : { launch: (opts = {}) => pw.chromium.launch({ ...opts, headless: true }) };
 export const devices = pw.devices;
+/** Unwrapped Playwright Chromium (honours `headless`): ONLY for e2e/phase5/p4-stage.mjs, whose --present is the human's headed recording mode. */
+export const rawChromium = pw.chromium;
 export const SCRATCH = process.env.QE_SCRATCH ?? "/private/tmp/claude-501/-Users-christiandizon-Desktop-ubc-2026/ff1dc655-46d1-429e-949b-e606fb040c32/scratchpad/qe-a9";
 mkdirSync(SHOTS, { recursive: true });
 mkdirSync(SCRATCH, { recursive: true });

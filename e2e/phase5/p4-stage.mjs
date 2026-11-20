@@ -20,7 +20,7 @@ import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { API, BASE, ROOT, apiJson, chromium, log, onboard, sessionOf, settle, sleep } from "../phase3/lib.mjs";
+import { API, BASE, ROOT, apiJson, rawChromium as chromium, log, onboard, sessionOf, settle, sleep } from "../phase3/lib.mjs";
 
 const argv = process.argv.slice(2);
 const has = (f) => argv.includes(`--${f}`);
