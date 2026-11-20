@@ -150,16 +150,13 @@ export function PayConfirmContent(p: PayConfirmProps) {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col items-start">
+      <div className="mt-5 flex flex-col items-start">
         <AmountDisplay value={p.amount} size="display" as="p" />
         <p className="mt-1 text-caption text-ink-3">{p.orderLabel}</p>
         {p.quoting ? (
           <Skeleton className="mt-3 h-16 w-full" />
         ) : p.cashback > 0n ? (
-          <div className="mt-3 flex w-full animate-vx-rise-in items-center gap-3 rounded-lg bg-accent-soft px-4 py-3">
-            <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent-ink shadow-1">
-              <Icon name="plus" size={20} />
-            </span>
+          <div className="mt-4 flex w-full animate-vx-rise-in items-center gap-3 rounded-lg bg-accent-soft px-4 py-3.5">
             <span className="min-w-0">
               <span className="flex items-baseline gap-1 text-title-3 text-accent-ink">
                 You&apos;ll get <AmountDisplay value={p.cashback} size="lg" className="text-accent-ink" /> back
@@ -175,7 +172,7 @@ export function PayConfirmContent(p: PayConfirmProps) {
       </div>
 
       {p.recommenders.length > 0 && p.cashback > 0n ? (
-        <fieldset className="mt-5">
+        <fieldset className="mt-6">
           <legend className="text-body-sm font-semibold text-ink">
             Who sent you here? <span className="font-normal text-ink-3">Optional</span>
           </legend>
@@ -189,7 +186,7 @@ export function PayConfirmContent(p: PayConfirmProps) {
           <Skeleton className="h-8 w-full" />
         </div>
       ) : p.split && p.cashback > 0n ? (
-        <section className="mt-5" aria-label="Where your money goes">
+        <section className="mt-6" aria-label="Where your money goes">
           <h3 className="mb-2 text-body-sm font-semibold text-ink">Where your {formatMoney(p.amount)} goes</h3>
           <SplitBreakdown variant="bar" total={p.amount} parts={p.split} />
         </section>

@@ -1,0 +1,6262 @@
+{
+  "base": "http://localhost:3100",
+  "mode": "checks",
+  "at": "2026-11-20T15:56:15.893Z",
+  "pages": [
+    {
+      "name": "live-sign-in",
+      "url": "/",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 6,
+          "min": 5.74,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 5.74,
+          "minRow": {
+            "text": "I run a venue",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 6.99,
+          "minRow": {
+            "text": "Scan to pay at local cafés, barbers and ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 8.53,
+          "minRow": {
+            "text": "+$0.45 back",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 5.39,
+          "minRow": {
+            "text": "Friends see this when you recommend a pl",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Continue with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "a:I run a venue",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Continue with Face ID or fingerprint",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-transparency",
+      "url": "/transparency",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 69,
+          "min": 5.74,
+          "minRow": {
+            "text": "Line",
+            "bucket": "body text",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 15,
+          "min": 6.99,
+          "minRow": {
+            "text": "Every payment at",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 12,
+          "min": 5.39,
+          "minRow": {
+            "text": "Plus setup events: VenueRegistered, Venu",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 11,
+          "min": 8.53,
+          "minRow": {
+            "text": "450,000",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "BE",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 11,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 3,
+          "min": 5.74,
+          "minRow": {
+            "text": "Read the contract source on Blockscout",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "div:Worked example table, scrolls sideways",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "a:Read the contract source on Blockscout (",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "a:Every event it has emitted (opens in a n",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-sign-in",
+      "url": "/design/screens/sign-in",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 5.74,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 6.99,
+          "minRow": {
+            "text": "Scan to pay at local cafés, barbers and ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 2,
+          "min": 7.21,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 5.39,
+          "minRow": {
+            "text": "Friends see this when you recommend a pl",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Continue with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "I already have an account",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Ben",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Continue with Face ID or fingerprint",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "button:I already have an account",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-sign-in-error",
+      "url": "/design/screens/sign-in-error",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 4,
+          "min": 6.38,
+          "minRow": {
+            "text": "Face ID or fingerprint was cancelled. Tr",
+            "bucket": "body text",
+            "fg": "#7a4d00",
+            "bg": "#fbefd6",
+            "ratio": 6.38,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.21,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.99,
+          "minRow": {
+            "text": "Scan to pay at local cafés, barbers and ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 5.39,
+          "minRow": {
+            "text": "Friends see this when you recommend a pl",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Continue with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "I already have an account",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Ben",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Continue with Face ID or fingerprint",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "button:I already have an account",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-wallet",
+      "url": "/design/screens/wallet",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 17,
+          "min": 12.87,
+          "minRow": {
+            "text": "BE",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 11,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 4,
+          "min": 6.47,
+          "minRow": {
+            "text": "A friend gets money back on their first ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#e8f0f9",
+            "ratio": 6.47,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 6,
+          "min": 7.21,
+          "minRow": {
+            "text": "+$1.28",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 6.11,
+          "minRow": {
+            "text": "Top up (testnet demo)",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 6,
+          "min": 5.39,
+          "minRow": {
+            "text": "Just now · sending",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Top up (testnet demo)",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:Recommend",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#e8f0f9",
+          "ratioVsAround": 4.18,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-wallet-empty",
+      "url": "/design/screens/wallet-empty",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 12.87,
+          "minRow": {
+            "text": "BE",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 11,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.99,
+          "minRow": {
+            "text": "Tap Scan to pay at a Kudos café, barber ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "Top up (testnet demo)",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Simulated money for this demo. No card n",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Top up (testnet demo)",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-scan",
+      "url": "/design/screens/scan",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 19.21,
+          "minRow": {
+            "text": "Type the code instead",
+            "bucket": "blue text button/link",
+            "fg": "#ffffff",
+            "bg": "#0b0f15",
+            "ratio": 19.21,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-scan-denied",
+      "url": "/design/screens/scan-denied",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue (disabled)"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 14.22,
+          "minRow": {
+            "text": "1",
+            "bucket": "body text",
+            "fg": "#eef2f7",
+            "bg": "#1b222d",
+            "ratio": 14.22,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 9.38,
+          "minRow": {
+            "text": "Code or link",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#141a23",
+            "ratio": 9.38,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 6.6,
+          "minRow": {
+            "text": "It's the short link printed under the co",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 99,
+          "minRow": null
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 9.79,
+          "minRow": {
+            "text": "Try the camera again",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#0b0f15",
+            "ratio": 9.79,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:",
+          "how": "box-shadow on wrapper: rgb(143, 179, 224) 0px 0px 0px 2px inset",
+          "ring": "#8fb3e0",
+          "around": "#141a23",
+          "ratioVsAround": 8.07,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Try the camera again",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-pay-confirm",
+      "url": "/design/screens/pay-confirm",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Pay $12.00 to Lena's café. Confirm with Face ID or fingerpri"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 19,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 3,
+          "min": 5.31,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 7,
+          "min": 5.06,
+          "minRow": {
+            "text": "Network fee",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#edf1f6",
+            "ratio": 5.06,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 6,
+          "min": 7.21,
+          "minRow": {
+            "text": "You'll get",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 18,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 8,
+          "min": 6.29,
+          "minRow": {
+            "text": "First-visit money back, right after you ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#e2efe8",
+            "ratio": 6.29,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Confirm with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Close",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-pay-insufficient",
+      "url": "/design/screens/pay-insufficient",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Top up (testnet demo)"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 6,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 19.21,
+          "minRow": {
+            "text": "Type the code instead",
+            "bucket": "blue text button/link",
+            "fg": "#ffffff",
+            "bg": "#0b0f15",
+            "ratio": 19.21,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 7.44,
+          "minRow": {
+            "text": "Your balance is $3.20. Add at least $8.8",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#ffffff",
+            "ratio": 7.44,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Top up (testnet demo)",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Adds simulated money for this demo. No c",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Close",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-pay-failed",
+      "url": "/design/screens/pay-failed",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Try again"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 4,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 6.11,
+          "minRow": {
+            "text": "Scan a new code",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 7.44,
+          "minRow": {
+            "text": "Nothing was charged. Try again, or ask f",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#ffffff",
+            "ratio": 7.44,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Try again",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Close",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-pay-invalid-link",
+      "url": "/design/screens/pay-invalid-link",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan a new code"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 4,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 6.11,
+          "minRow": {
+            "text": "Close",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 7.44,
+          "minRow": {
+            "text": "Part of it may be missing or mistyped, s",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#ffffff",
+            "ratio": 7.44,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan a new code",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Close",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-success-pending",
+      "url": "/design/screens/success-pending",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "secondary text (ink-2)": {
+          "n": 18,
+          "min": 6.56,
+          "minRow": {
+            "text": "$0.45",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 23,
+          "min": 5.31,
+          "minRow": {
+            "text": "You",
+            "bucket": "body text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 9.35,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 11,
+          "min": 5.06,
+          "minRow": {
+            "text": "welcome cashback",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#edf1f6",
+            "ratio": 5.06,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 8.53,
+          "minRow": {
+            "text": "to",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "See who got what",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "link": {
+          "n": 1,
+          "min": 14.49,
+          "minRow": {
+            "text": "View on explorer",
+            "bucket": "link",
+            "fg": "#15202e",
+            "bg": "#edf1f6",
+            "ratio": 14.49,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Done",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "summary:See who got what",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "summary:Receipt details",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Done",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-success",
+      "url": "/design/screens/success",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Recommend Lena's café"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "secondary text (ink-2)": {
+          "n": 7,
+          "min": 6.56,
+          "minRow": {
+            "text": "Receipt details",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 24,
+          "min": 5.31,
+          "minRow": {
+            "text": "You",
+            "bucket": "body text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 9.35,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 11,
+          "min": 7.21,
+          "minRow": {
+            "text": "+$0.45",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "See who got what",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 10,
+          "min": 4.85,
+          "minRow": {
+            "text": "welcome cashback",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#e2efe8",
+            "ratio": 4.85,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "link": {
+          "n": 1,
+          "min": 14.49,
+          "minRow": {
+            "text": "View on explorer",
+            "bucket": "link",
+            "fg": "#15202e",
+            "bg": "#edf1f6",
+            "ratio": 14.49,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Recommend",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Done",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "summary:See who got what",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "summary:Receipt details",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Recommend Lena's café",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-success-first-visit",
+      "url": "/design/screens/success-first-visit",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Recommend Lena's café"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "secondary text (ink-2)": {
+          "n": 6,
+          "min": 6.56,
+          "minRow": {
+            "text": "Receipt details",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 3,
+          "min": 15.45,
+          "minRow": {
+            "text": "$",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#f6f8fb",
+            "ratio": 15.45,
+            "size": 28.6,
+            "weight": 600,
+            "large": true,
+            "need": 3,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 5,
+          "min": 5.06,
+          "minRow": {
+            "text": "Receipt ID",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#edf1f6",
+            "ratio": 5.06,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "link": {
+          "n": 1,
+          "min": 14.49,
+          "minRow": {
+            "text": "View on explorer",
+            "bucket": "link",
+            "fg": "#15202e",
+            "bg": "#edf1f6",
+            "ratio": 14.49,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Recommend",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Done",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "summary:Receipt details",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Recommend Lena's café",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "button:Done",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-intro",
+      "url": "/design/screens/intro",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Save Ana's recommendation"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 8,
+          "min": 6.99,
+          "minRow": {
+            "text": "This reward stays as it is, even if",
+            "bucket": "body text",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 5.39,
+          "minRow": {
+            "text": "Café · 2 blocks away · open until 6",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 2,
+          "min": 7.21,
+          "minRow": {
+            "text": "On your first visit",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 6.29,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#e2efe8",
+            "ratio": 6.29,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Save",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Not now",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Save Ana's recommendation",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "button:Not now",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-recommend",
+      "url": "/design/screens/recommend",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Make my link"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 5,
+          "min": 13.89,
+          "minRow": {
+            "text": "About",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#e2efe8",
+            "ratio": 13.89,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 6,
+          "min": 6.29,
+          "minRow": {
+            "text": "You get",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#e2efe8",
+            "ratio": 6.29,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.21,
+          "minRow": {
+            "text": "+$0.99",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "One friend",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Make my link",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 5.39,
+          "minRow": {
+            "text": "Confirm with Face ID or fingerprint",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:One friend",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "input:Best cortado in the neighbourhood",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-recommend-link",
+      "url": "/design/screens/recommend-link",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Share link"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 6,
+          "min": 6.56,
+          "minRow": {
+            "text": "vouch.app/r/ana-for-ben-7Kq2",
+            "bucket": "body text",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 7.44,
+          "minRow": {
+            "text": "“",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#ffffff",
+            "ratio": 7.44,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.21,
+          "minRow": {
+            "text": "+$0.99",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#e2efe8",
+            "ratio": 7.21,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "Copy",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Share link",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Copy link",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:Share link",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-recommend-locked",
+      "url": "/design/screens/recommend-locked",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 14.49,
+          "minRow": {
+            "text": "$12.00",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#edf1f6",
+            "ratio": 14.49,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.56,
+          "minRow": {
+            "text": "After that, each friend you send who mak",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.52,
+          "minRow": {
+            "text": "+$0.99",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#edf1f6",
+            "ratio": 7.52,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-ambassador",
+      "url": "/design/screens/ambassador",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Share my record"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 16,
+          "min": 12.87,
+          "minRow": {
+            "text": "LC",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 2,
+          "min": 5.31,
+          "minRow": {
+            "text": "Ambassador",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 4,
+          "min": 6.56,
+          "minRow": {
+            "text": "Details",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 6,
+          "min": 8.02,
+          "minRow": {
+            "text": "+$4.86",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#f6f8fb",
+            "ratio": 8.02,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 8,
+          "min": 5.06,
+          "minRow": {
+            "text": "Public record",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#edf1f6",
+            "ratio": 5.06,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Share my record",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Share your record",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "summary:Details",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-venue-onboarding",
+      "url": "/design/screens/venue-onboarding",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Confirm with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 5.74,
+          "minRow": {
+            "text": "5%",
+            "bucket": "body text",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 9,
+          "min": 6.99,
+          "minRow": {
+            "text": "You only pay when a recommendation bring",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 4,
+          "min": 8.53,
+          "minRow": {
+            "text": "+$1.80",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 22,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "You keep",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 5,
+          "min": 5.39,
+          "minRow": {
+            "text": "Smaller first orders don't earn rewards.",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Confirm with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Lena's café",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:15",
+          "how": null,
+          "ring": null,
+          "around": "#ffffff",
+          "ratioVsAround": null,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:5.00",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-order-entry",
+      "url": "/design/screens/order-entry",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Show code for $12.00"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 15.45,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#f6f8fb",
+            "ratio": 15.45,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Counter",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 12,
+          "min": 5.39,
+          "minRow": {
+            "text": "A first-time customer gets",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 8.02,
+          "minRow": {
+            "text": "+$0.45",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#f6f8fb",
+            "ratio": 8.02,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 6.99,
+          "minRow": {
+            "text": "Note (optional)",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Show code for $12.00",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back to dashboard",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:1",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:2",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-order-qr",
+      "url": "/design/screens/order-qr",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 15.45,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#f6f8fb",
+            "ratio": 15.45,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Waiting",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 6.99,
+          "minRow": {
+            "text": "Table 4",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "Cancel order",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "body"
+        },
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-order-qr-low",
+      "url": "/design/screens/order-qr-low",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 4,
+          "min": 6.83,
+          "minRow": {
+            "text": "Expires in",
+            "bucket": "body text",
+            "fg": "#7a4d00",
+            "bg": "#f6f8fb",
+            "ratio": 6.83,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Waiting",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.99,
+          "minRow": {
+            "text": "Table 4",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "Cancel order",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "body"
+        },
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-order-qr-paid",
+      "url": "/design/screens/order-qr-paid",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Next order"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 2,
+          "min": 15.45,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#f6f8fb",
+            "ratio": 15.45,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 2,
+          "min": 5.31,
+          "minRow": {
+            "text": "Paid",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 5.39,
+          "minRow": {
+            "text": "Table 4",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 6.99,
+          "minRow": {
+            "text": "Ben paid. $10.20 to you, $1.35 to 4 peop",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Next order",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Next order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "body"
+        },
+        {
+          "el": "button:Next order",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-venue-dashboard",
+      "url": "/design/screens/venue-dashboard",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Take an order"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Live",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 43,
+          "min": 9.91,
+          "minRow": {
+            "text": "AN",
+            "bucket": "body text",
+            "fg": "#3b4450",
+            "bg": "#ffffff",
+            "ratio": 9.91,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 6.56,
+          "minRow": {
+            "text": "Everyone",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 24,
+          "min": 5.39,
+          "minRow": {
+            "text": "$1.35 to 4 people who sent Ben · now",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 5.74,
+          "minRow": {
+            "text": "How payments split",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Take an order",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Typical ad cost per new customer, in dol",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Latest",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "a:How payments split",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-venue-dashboard-visitor",
+      "url": "/design/screens/venue-dashboard-visitor",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Live",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 46,
+          "min": 1.22,
+          "minRow": {
+            "text": "+$0.69",
+            "bucket": "body text",
+            "fg": "#e7e8ea",
+            "bg": "#ffffff",
+            "ratio": 1.22,
+            "size": 15.3,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": false,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 6.56,
+          "minRow": {
+            "text": "Everyone",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 22,
+          "min": 5.39,
+          "minRow": {
+            "text": "$1.35 to 4 people who sent Ben · now",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 5.74,
+          "minRow": {
+            "text": "How payments split",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [
+        {
+          "text": "+$0.69",
+          "bucket": "body text",
+          "fg": "#e7e8ea",
+          "bg": "#ffffff",
+          "ratio": 1.22,
+          "size": 15.3,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": false,
+          "disabled": false,
+          "gradientBehind": false
+        },
+        {
+          "text": "PR",
+          "bucket": "body text",
+          "fg": "#cfd1d4",
+          "bg": "#ffffff",
+          "ratio": 1.53,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": false,
+          "disabled": false,
+          "gradientBehind": false
+        },
+        {
+          "text": "Priya",
+          "bucket": "body text",
+          "fg": "#cfd1d4",
+          "bg": "#ffffff",
+          "ratio": 1.53,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": false,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "focusRings": [
+        {
+          "el": "button:Latest",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "a:How payments split",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-sign-in",
+      "url": "/",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 6,
+          "min": 6.6,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 9.79,
+          "minRow": {
+            "text": "I run a venue",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#0b0f15",
+            "ratio": 9.79,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 9.38,
+          "minRow": {
+            "text": "Ana thanked",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#141a23",
+            "ratio": 9.38,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 9.66,
+          "minRow": {
+            "text": "+$0.45 back",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#141a23",
+            "ratio": 9.66,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 7.25,
+          "minRow": {
+            "text": "Friends see this when you recommend a pl",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#0b0f15",
+            "ratio": 7.25,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Continue with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "a:I run a venue",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:",
+          "how": "box-shadow on wrapper: rgb(143, 179, 224) 0px 0px 0px 2px inset",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Continue with Face ID or fingerprint",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#3a74b5",
+          "ratioVsOwnFill": 2.23
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-transparency",
+      "url": "/transparency",
+      "scheme": "dark",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 69,
+          "min": 6.6,
+          "minRow": {
+            "text": "Line",
+            "bucket": "body text",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 15,
+          "min": 9.38,
+          "minRow": {
+            "text": "sliceᵢ = ⌊amount × wᵢ × rate / 10⁸⌋, whe",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#141a23",
+            "ratio": 9.38,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 12,
+          "min": 6.6,
+          "minRow": {
+            "text": "since",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 11,
+          "min": 9.66,
+          "minRow": {
+            "text": "450,000",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#141a23",
+            "ratio": 9.66,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 7.96,
+          "minRow": {
+            "text": "BE",
+            "bucket": "blue text",
+            "fg": "#9bbce4",
+            "bg": "#15243a",
+            "ratio": 7.96,
+            "size": 11,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 3,
+          "min": 9.79,
+          "minRow": {
+            "text": "Read the contract source on Blockscout",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#0b0f15",
+            "ratio": 9.79,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "div:Worked example table, scrolls sideways",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "a:Read the contract source on Blockscout (",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "a:Every event it has emitted (opens in a n",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-sign-in",
+      "url": "/design/screens/sign-in",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 6.6,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 9.38,
+          "minRow": {
+            "text": "Ana thanked",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#141a23",
+            "ratio": 9.38,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 2,
+          "min": 7.53,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#173328",
+            "ratio": 7.53,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 2,
+          "min": 7.25,
+          "minRow": {
+            "text": "Friends see this when you recommend a pl",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#0b0f15",
+            "ratio": 7.25,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Continue with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 9.79,
+          "minRow": {
+            "text": "I already have an account",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#0b0f15",
+            "ratio": 9.79,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Ben",
+          "how": "box-shadow on wrapper: rgb(143, 179, 224) 0px 0px 0px 2px inset",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Continue with Face ID or fingerprint",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#3a74b5",
+          "ratioVsOwnFill": 2.23
+        },
+        {
+          "el": "button:I already have an account",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-wallet",
+      "url": "/design/screens/wallet",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 17,
+          "min": 11.11,
+          "minRow": {
+            "text": "CH",
+            "bucket": "body text",
+            "fg": "#eef2f7",
+            "bg": "#36342a",
+            "ratio": 11.11,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 4,
+          "min": 8.38,
+          "minRow": {
+            "text": "A friend gets money back on their first ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#15243a",
+            "ratio": 8.38,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 6,
+          "min": 7.53,
+          "minRow": {
+            "text": "+$1.28",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#173328",
+            "ratio": 7.53,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 8.91,
+          "minRow": {
+            "text": "Top up (testnet demo)",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#141a23",
+            "ratio": 8.91,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 6,
+          "min": 6.6,
+          "minRow": {
+            "text": "Simulated money for this demo. No card n",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Top up (testnet demo)",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#141a23",
+          "ratioVsAround": 8.07,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "button:Recommend",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#15243a",
+          "ratioVsAround": 7.2,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#3a74b5",
+          "ratioVsOwnFill": 2.23
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-pay-confirm",
+      "url": "/design/screens/pay-confirm",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Pay $12.00 to Lena's café. Confirm with Face ID or fingerpri"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 19,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 3,
+          "min": 7.96,
+          "minRow": {
+            "text": "Ana",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#15243a",
+            "ratio": 7.96,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 7,
+          "min": 6.04,
+          "minRow": {
+            "text": "Network fee",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#1b222d",
+            "ratio": 6.04,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 6,
+          "min": 7.53,
+          "minRow": {
+            "text": "You'll get",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#173328",
+            "ratio": 7.53,
+            "size": 18,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 8,
+          "min": 7.32,
+          "minRow": {
+            "text": "First-visit money back, right after you ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#173328",
+            "ratio": 7.32,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Confirm with Face ID or fingerprint",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Close",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#141a23",
+          "ratioVsAround": 8.07,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-success",
+      "url": "/design/screens/success",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Recommend Lena's café"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "secondary text (ink-2)": {
+          "n": 7,
+          "min": 8.58,
+          "minRow": {
+            "text": "Receipt details",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#1b222d",
+            "ratio": 8.58,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 24,
+          "min": 7.96,
+          "minRow": {
+            "text": "You",
+            "bucket": "body text",
+            "fg": "#9bbce4",
+            "bg": "#15243a",
+            "ratio": 7.96,
+            "size": 9.35,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 11,
+          "min": 7.53,
+          "minRow": {
+            "text": "+$0.45",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#173328",
+            "ratio": 7.53,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 8.91,
+          "minRow": {
+            "text": "See who got what",
+            "bucket": "blue text",
+            "fg": "#9bbce4",
+            "bg": "#141a23",
+            "ratio": 8.91,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 10,
+          "min": 5.15,
+          "minRow": {
+            "text": "welcome cashback",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#173328",
+            "ratio": 5.15,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "link": {
+          "n": 1,
+          "min": 14.22,
+          "minRow": {
+            "text": "View on explorer",
+            "bucket": "link",
+            "fg": "#eef2f7",
+            "bg": "#1b222d",
+            "ratio": 14.22,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Recommend",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 9.79,
+          "minRow": {
+            "text": "Done",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#0b0f15",
+            "ratio": 9.79,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "summary:See who got what",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#141a23",
+          "ratioVsAround": 8.07,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "summary:Receipt details",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#1b222d",
+          "ratioVsAround": 7.38,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Recommend Lena's café",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#3a74b5",
+          "ratioVsOwnFill": 2.23
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-recommend-link",
+      "url": "/design/screens/recommend-link",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Share link"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 6,
+          "min": 8.58,
+          "minRow": {
+            "text": "vouch.app/r/ana-for-ben-7Kq2",
+            "bucket": "body text",
+            "fg": "#b4bfcd",
+            "bg": "#1b222d",
+            "ratio": 8.58,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 1,
+          "min": 9.38,
+          "minRow": {
+            "text": "“",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#141a23",
+            "ratio": 9.38,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.53,
+          "minRow": {
+            "text": "+$0.99",
+            "bucket": "green text",
+            "fg": "#6fd3ae",
+            "bg": "#173328",
+            "ratio": 7.53,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 8.91,
+          "minRow": {
+            "text": "Copy",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#141a23",
+            "ratio": 8.91,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Share link",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Copy link",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "button:Share link",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#3a74b5",
+          "ratioVsOwnFill": 2.23
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-order-qr",
+      "url": "/design/screens/order-qr",
+      "scheme": "dark",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 17.08,
+          "minRow": {
+            "text": "Lena's café",
+            "bucket": "body text",
+            "fg": "#eef2f7",
+            "bg": "#0b0f15",
+            "ratio": 17.08,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 7.96,
+          "minRow": {
+            "text": "Waiting",
+            "bucket": "blue text",
+            "fg": "#9bbce4",
+            "bg": "#15243a",
+            "ratio": 7.96,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 10.31,
+          "minRow": {
+            "text": "Table 4",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#0b0f15",
+            "ratio": 10.31,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 8.91,
+          "minRow": {
+            "text": "Cancel order",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#141a23",
+            "ratio": 8.91,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "body"
+        },
+        {
+          "el": "button:Cancel order",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "mock-venue-dashboard",
+      "url": "/design/screens/venue-dashboard",
+      "scheme": "dark",
+      "primaryCount": 1,
+      "primaries": [
+        "Take an order"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "blue text": {
+          "n": 1,
+          "min": 7.96,
+          "minRow": {
+            "text": "Live",
+            "bucket": "blue text",
+            "fg": "#9bbce4",
+            "bg": "#15243a",
+            "ratio": 7.96,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "body text": {
+          "n": 43,
+          "min": 11.11,
+          "minRow": {
+            "text": "LU",
+            "bucket": "body text",
+            "fg": "#eef2f7",
+            "bg": "#36342a",
+            "ratio": 11.11,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 3,
+          "min": 8.58,
+          "minRow": {
+            "text": "Everyone",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#b4bfcd",
+            "bg": "#1b222d",
+            "ratio": 8.58,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 24,
+          "min": 6.6,
+          "minRow": {
+            "text": "paid only when they buy",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#94a0b2",
+            "bg": "#141a23",
+            "ratio": 6.6,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 8.91,
+          "minRow": {
+            "text": "Latest",
+            "bucket": "blue text button/link",
+            "fg": "#9bbce4",
+            "bg": "#141a23",
+            "ratio": 8.91,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.83,
+          "minRow": {
+            "text": "Take an order",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#3a74b5",
+            "ratio": 4.83,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:Typical ad cost per new customer, in dol",
+          "how": "box-shadow on wrapper: rgb(143, 179, 224) 0px 0px 0px 2px inset",
+          "ring": "#8fb3e0",
+          "around": "#141a23",
+          "ratioVsAround": 8.07,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Latest",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#1b222d",
+          "ratioVsAround": 7.38,
+          "ownFill": "#141a23",
+          "ratioVsOwnFill": 8.07
+        },
+        {
+          "el": "a:How payments split",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-wallet-new",
+      "url": "/wallet",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 12.87,
+          "minRow": {
+            "text": "QU",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 11,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.99,
+          "minRow": {
+            "text": "Tap Scan to pay at a Kudos café, barber ",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "Top up (testnet demo)",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 1,
+          "min": 5.74,
+          "minRow": {
+            "text": "Simulated money for this demo. No card n",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Top up (testnet demo)",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-scan",
+      "url": "/scan",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 8.37,
+          "minRow": {
+            "text": "You'll check the amount before anything ",
+            "bucket": "body text",
+            "fg": "#aaabad",
+            "bg": "#0b0f15",
+            "ratio": 8.37,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 1,
+          "min": 19.21,
+          "minRow": {
+            "text": "Type the code instead",
+            "bucket": "blue text button/link",
+            "fg": "#ffffff",
+            "bg": "#0b0f15",
+            "ratio": 19.21,
+            "size": 16,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Close scanner",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Type the code instead",
+          "how": "outline 2px offset 2px",
+          "ring": "#8fb3e0",
+          "around": "#0b0f15",
+          "ratioVsAround": 8.86,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-recommend-locked",
+      "url": "/recommend?venue=0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 3,
+          "min": 14.49,
+          "minRow": {
+            "text": "$12.00",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#edf1f6",
+            "ratio": 14.49,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 2,
+          "min": 6.56,
+          "minRow": {
+            "text": "After that, each friend you send who mak",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 7.52,
+          "minRow": {
+            "text": "+$0.99",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#edf1f6",
+            "ratio": 7.52,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Scan to pay",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Scan to pay",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": "#4075ad",
+          "ratioVsOwnFill": 1
+        },
+        {
+          "el": "body"
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-me",
+      "url": "/me",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Share my record"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 12.87,
+          "minRow": {
+            "text": "QU",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 18,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 2,
+          "min": 5.31,
+          "minRow": {
+            "text": "Ambassador",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 5,
+          "min": 6.56,
+          "minRow": {
+            "text": "Details",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 500,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 1,
+          "min": 8.53,
+          "minRow": {
+            "text": "$0.00",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 22,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 3,
+          "min": 5.06,
+          "minRow": {
+            "text": "Public record",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#edf1f6",
+            "ratio": 5.06,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 4.81,
+          "minRow": {
+            "text": "Share my record",
+            "bucket": "primary button text",
+            "fg": "#ffffff",
+            "bg": "#4075ad",
+            "ratio": 4.81,
+            "size": 17,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "button:Back",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Share your record",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "summary:Details",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-venue-new",
+      "url": "/venue/new",
+      "scheme": "light",
+      "primaryCount": 1,
+      "primaries": [
+        "Confirm with Face ID or fingerprint (disabled)"
+      ],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 7,
+          "min": 5.74,
+          "minRow": {
+            "text": "5%",
+            "bucket": "body text",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 9,
+          "min": 6.99,
+          "minRow": {
+            "text": "You only pay when a recommendation bring",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#f6f8fb",
+            "ratio": 6.99,
+            "size": 16,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "green text": {
+          "n": 4,
+          "min": 8.53,
+          "minRow": {
+            "text": "+$1.80",
+            "bucket": "green text",
+            "fg": "#12573f",
+            "bg": "#ffffff",
+            "ratio": 8.53,
+            "size": 22,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 6.11,
+          "minRow": {
+            "text": "You keep",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#ffffff",
+            "ratio": 6.11,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 5,
+          "min": 5.39,
+          "minRow": {
+            "text": "Smaller first orders don't earn rewards.",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#f6f8fb",
+            "ratio": 5.39,
+            "size": 13,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "primary button text": {
+          "n": 1,
+          "min": 99,
+          "minRow": null
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "input:",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:15",
+          "how": null,
+          "ring": null,
+          "around": "#ffffff",
+          "ratioVsAround": null,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "input:1.00",
+          "how": "box-shadow on wrapper: rgb(64, 117, 173) 0px 0px 0px 2px inset",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-lena-dashboard-1280x720",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 45,
+          "min": 12.87,
+          "minRow": {
+            "text": "LC",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 18,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 7,
+          "min": 6.56,
+          "minRow": {
+            "text": "Everyone",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 5.74,
+          "minRow": {
+            "text": "How payments split",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Live",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 17,
+          "min": 5.74,
+          "minRow": {
+            "text": "verified first purchases",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "a:How payments split",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Latest",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "div:Payments, scroll for more",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    },
+    {
+      "name": "live-lena-dashboard-1440x900",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "scheme": "light",
+      "primaryCount": 0,
+      "primaries": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "contrastByBucket": {
+        "body text": {
+          "n": 45,
+          "min": 12.87,
+          "minRow": {
+            "text": "LC",
+            "bucket": "body text",
+            "fg": "#15202e",
+            "bg": "#ebe2dc",
+            "ratio": 12.87,
+            "size": 18,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-2)": {
+          "n": 7,
+          "min": 6.56,
+          "minRow": {
+            "text": "Everyone",
+            "bucket": "secondary text (ink-2)",
+            "fg": "#4a5668",
+            "bg": "#edf1f6",
+            "ratio": 6.56,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text button/link": {
+          "n": 2,
+          "min": 5.74,
+          "minRow": {
+            "text": "How payments split",
+            "bucket": "blue text button/link",
+            "fg": "#33649b",
+            "bg": "#f6f8fb",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "blue text": {
+          "n": 1,
+          "min": 5.31,
+          "minRow": {
+            "text": "Live",
+            "bucket": "blue text",
+            "fg": "#33649b",
+            "bg": "#e8f0f9",
+            "ratio": 5.31,
+            "size": 13,
+            "weight": 600,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        },
+        "secondary text (ink-3)": {
+          "n": 17,
+          "min": 5.74,
+          "minRow": {
+            "text": "verified first purchases",
+            "bucket": "secondary text (ink-3)",
+            "fg": "#5b6779",
+            "bg": "#ffffff",
+            "ratio": 5.74,
+            "size": 14,
+            "weight": 400,
+            "large": false,
+            "need": 4.5,
+            "pass": true,
+            "disabled": false,
+            "gradientBehind": false
+          }
+        }
+      },
+      "contrastFails": [],
+      "focusRings": [
+        {
+          "el": "a:How payments split",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#f6f8fb",
+          "ratioVsAround": 4.52,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        },
+        {
+          "el": "button:Latest",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#edf1f6",
+          "ratioVsAround": 4.24,
+          "ownFill": "#ffffff",
+          "ratioVsOwnFill": 4.81
+        },
+        {
+          "el": "div:Payments, scroll for more",
+          "how": "outline 2px offset 2px",
+          "ring": "#4075ad",
+          "around": "#ffffff",
+          "ratioVsAround": 4.81,
+          "ownFill": null,
+          "ratioVsOwnFill": null
+        }
+      ],
+      "errs": []
+    }
+  ],
+  "projector": [
+    {
+      "vp": "1280x720",
+      "domMatches": 2,
+      "visible": true,
+      "box": {
+        "x": 944,
+        "y": 478,
+        "width": 182,
+        "height": 24
+      },
+      "inViewWithoutScroll": true,
+      "hitTest": "Ben paid $12.00",
+      "hitIsRow": true,
+      "scrollY": 0,
+      "docH": 720,
+      "pass": true
+    },
+    {
+      "vp": "1440x900",
+      "domMatches": 2,
+      "visible": true,
+      "box": {
+        "x": 1104,
+        "y": 478,
+        "width": 182,
+        "height": 24
+      },
+      "inViewWithoutScroll": true,
+      "hitTest": "Ben paid $12.00",
+      "hitIsRow": true,
+      "scrollY": 0,
+      "docH": 900,
+      "pass": true
+    }
+  ],
+  "motion": [
+    {
+      "reducedMotion": "reduce",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/wallet",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/design/screens/success",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/design/screens/order-qr",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/design/screens/success-pending",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/transparency",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "reduce",
+      "url": "/",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "runningAt1_5s": [
+        "ping:1000ms xInfinity",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-draw:650ms x1",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-draw:650ms x1",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-pop:420ms x1",
+        "vx-mg-fade:320ms x1",
+        "vx-mg-ping:900ms x1",
+        "vx-mg-pop:420ms x1",
+        "vx-mg-fade:320ms x1",
+        "vx-mg-ping:900ms x1"
+      ],
+      "runningAt3s": [
+        "ping:1000ms xInfinity",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-run:3200ms x1",
+        "vx-mg-ping:900ms x1"
+      ]
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/wallet",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/design/screens/success",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/design/screens/order-qr",
+      "runningAt1_5s": [
+        "pulse:2000ms xInfinity"
+      ],
+      "runningAt3s": [
+        "pulse:2000ms xInfinity"
+      ]
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/design/screens/success-pending",
+      "runningAt1_5s": [
+        "vx-spin:1200ms xInfinity",
+        "pulse:2000ms xInfinity"
+      ],
+      "runningAt3s": [
+        "vx-spin:1200ms xInfinity",
+        "pulse:2000ms xInfinity"
+      ]
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/transparency",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    },
+    {
+      "reducedMotion": "no-preference",
+      "url": "/",
+      "runningAt1_5s": [],
+      "runningAt3s": []
+    }
+  ]
+}

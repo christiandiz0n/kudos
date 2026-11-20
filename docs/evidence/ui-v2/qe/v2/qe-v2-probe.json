@@ -1,0 +1,516 @@
+{
+  "base": "https://vouch-ubc-blue.vercel.app",
+  "at": "2026-11-20T16:08:09.834Z",
+  "f2": [
+    {
+      "text": "+$1.28",
+      "bucket": "green text",
+      "fg": "#12573f",
+      "bg": "#e2efe8",
+      "ratio": 7.21,
+      "size": 14,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "−$4.50",
+      "bucket": "secondary text (ink-2)",
+      "fg": "#4a5668",
+      "bg": "#f6f8fb",
+      "ratio": 6.99,
+      "size": 16,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "Pending",
+      "bucket": "secondary text (ink-2)",
+      "fg": "#4a5668",
+      "bg": "#edf1f6",
+      "ratio": 6.56,
+      "size": 13,
+      "weight": 500,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "−$12.00",
+      "bucket": "body text",
+      "fg": "#15202e",
+      "bg": "#f6f8fb",
+      "ratio": 15.45,
+      "size": 16,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "+$0.45 cashback",
+      "bucket": "green text",
+      "fg": "#12573f",
+      "bg": "#f6f8fb",
+      "ratio": 8.02,
+      "size": 13,
+      "weight": 500,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "+$0.21",
+      "bucket": "green text",
+      "fg": "#12573f",
+      "bg": "#f6f8fb",
+      "ratio": 8.02,
+      "size": 16,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "+$0.62",
+      "bucket": "green text",
+      "fg": "#12573f",
+      "bg": "#f6f8fb",
+      "ratio": 8.02,
+      "size": 16,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    },
+    {
+      "text": "+$50.00",
+      "bucket": "green text",
+      "fg": "#12573f",
+      "bg": "#f6f8fb",
+      "ratio": 8.02,
+      "size": 16,
+      "weight": 600,
+      "large": false,
+      "need": 4.5,
+      "pass": true,
+      "disabled": false,
+      "gradientBehind": false
+    }
+  ],
+  "f3": [
+    {
+      "t": "Close scanner",
+      "checked": null,
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "rgb(238, 242, 247)",
+      "shadow": "none"
+    },
+    {
+      "t": "Type the code instead",
+      "checked": null,
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "rgb(255, 255, 255)",
+      "shadow": "none"
+    },
+    {
+      "t": "Close",
+      "checked": null,
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "rgb(21, 32, 46)",
+      "shadow": "none"
+    },
+    {
+      "t": "AN\nAna",
+      "checked": "true",
+      "bg": "rgb(232, 240, 249)",
+      "border": "rgb(51, 100, 155)",
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+    },
+    {
+      "t": "PR\nPriya",
+      "checked": "false",
+      "bg": "rgb(255, 255, 255)",
+      "border": "rgb(21, 32, 46)",
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+    },
+    {
+      "t": "Someone else",
+      "checked": "false",
+      "bg": "rgb(255, 255, 255)",
+      "border": "rgb(21, 32, 46)",
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+    },
+    {
+      "t": "Skip",
+      "checked": "false",
+      "bg": "rgba(0, 0, 0, 0)",
+      "border": "rgb(74, 86, 104)",
+      "shadow": "none"
+    },
+    {
+      "t": "Pay $12.00 to Lena's café. Confirm with Face ID or",
+      "checked": null,
+      "bg": "rgb(64, 117, 173)",
+      "border": "rgb(255, 255, 255)",
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0"
+    }
+  ],
+  "f4": [
+    {
+      "vp": "1440x900",
+      "box": {
+        "x": 804,
+        "y": 44,
+        "width": 138,
+        "height": 44
+      },
+      "pass": true
+    },
+    {
+      "vp": "1280x720",
+      "box": {
+        "x": 724,
+        "y": 44,
+        "width": 138,
+        "height": 44
+      },
+      "pass": true
+    },
+    {
+      "vp": "390x844",
+      "box": {
+        "x": 244,
+        "y": 12,
+        "width": 138,
+        "height": 44
+      },
+      "pass": true
+    }
+  ],
+  "visitor": [
+    {
+      "scheme": "dark",
+      "t": 300,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-fade-in:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-rise-in:1"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "t": 700,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "t": 1200,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "t": 2000,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-ping:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "t": 3500,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "t": 6000,
+      "fails": [],
+      "running": [
+        "ping:Infinity"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 300,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-fade-in:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-rise-in:1"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 700,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 1200,
+      "fails": [
+        [
+          "AN",
+          1.24,
+          "#e6e7e9",
+          "#ffffff",
+          17
+        ],
+        [
+          "Ana",
+          1.24,
+          "#e6e7e9",
+          "#ffffff",
+          17
+        ]
+      ],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 2000,
+      "fails": [
+        [
+          "MA",
+          2.74,
+          "#989da3",
+          "#ffffff",
+          17
+        ],
+        [
+          "Marco",
+          2.74,
+          "#989da3",
+          "#ffffff",
+          17
+        ]
+      ],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-draw:1",
+        "vx-mg-run:1",
+        "vx-mg-ping:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1",
+        "vx-mg-pop:1",
+        "vx-mg-fade:1",
+        "vx-mg-ping:1"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 3500,
+      "fails": [],
+      "running": [
+        "ping:Infinity",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1",
+        "vx-mg-run:1"
+      ]
+    },
+    {
+      "scheme": "light",
+      "t": 6000,
+      "fails": [],
+      "running": [
+        "ping:Infinity"
+      ]
+    }
+  ]
+}

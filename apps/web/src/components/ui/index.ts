@@ -41,3 +41,4 @@ export {
   type MoneyGraphPayment,
 } from "./MoneyGraph";
 export { AppFrame } from "./AppFrame";
+export { FitMoneyGraph } from "./FitMoneyGraph";

@@ -93,7 +93,7 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
           ) : null}
           {state === "paid" ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <span className="inline-flex size-16 animate-vx-pop items-center justify-center rounded-full bg-[#17694f] text-white">
+              <span className="inline-flex size-16 animate-vx-pop items-center justify-center rounded-full bg-[#4075ad] text-white">
                 <Icon name="check" size={34} strokeWidth={2.5} />
               </span>
               <p className="text-title-3 text-[#15202e]">Paid</p>

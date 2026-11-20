@@ -16,11 +16,11 @@
   color-scheme: light;
 
   /* Neutrals: calm cool off-white + navy ink (A9 blue theme) */
-  --vx-canvas: #f5f7fa; /* app background */
+  --vx-canvas: #f6f8fb; /* app background */
   --vx-surface: #ffffff; /* cards, sheets */
   --vx-surface-2: #edf1f6; /* sunken wells, inputs, segmented track */
   --vx-surface-3: #e1e7ef; /* pressed / hover on sunken */
-  --vx-line: #dde3eb; /* hairlines, dividers */
+  --vx-line: #e1e6ee; /* hairlines, dividers */
   --vx-line-strong: #7d8a9c; /* input borders, focusable outlines (3:1 on surfaces) */
   --vx-ink: #15202e; /* primary text */
   --vx-ink-2: #4a5668; /* secondary text */
@@ -62,10 +62,11 @@
   --vx-focus-halo: rgba(64, 117, 173, 0.24);
 
   /* Elevation: cool-tinted, low-contrast shadows */
-  --vx-shadow-1: 0 1px 0 rgba(21, 32, 46, 0.04), 0 1px 2px rgba(21, 32, 46, 0.06);
-  --vx-shadow-2: 0 2px 4px rgba(21, 32, 46, 0.04), 0 8px 24px rgba(21, 32, 46, 0.08);
+  --vx-shadow-1: 0 1px 2px rgba(21, 32, 46, 0.05);
+  --vx-shadow-2: 0 1px 2px rgba(21, 32, 46, 0.04), 0 8px 24px rgba(21, 32, 46, 0.07);
   --vx-shadow-3: 0 -2px 8px rgba(21, 32, 46, 0.04), 0 -16px 48px rgba(21, 32, 46, 0.14);
   --vx-scrim: rgba(21, 32, 46, 0.4);
+  --vx-backdrop: #e7ecf3; /* desktop: around the phone column */
 
   /* Identity tints for avatars (not accents; ink text on all ≥ 9:1) */
   --vx-tint-1: #dfe8f3; /* sky */
@@ -76,27 +77,28 @@
   --vx-tint-6: #e9e5d8; /* sand */
 }
 
-/* Dark: same hues, re-tuned for AA on near-black cool surfaces. */
+/* Dark (v2): same hues on near-black cool surfaces. The primary FILL stays a saturated mid blue with white text
+   (#3a74b5, 4.83:1), so the main button never looks washed out; blue TEXT uses the lighter primary-ink. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --vx-canvas: #0f141b;
-    --vx-surface: #171d26;
-    --vx-surface-2: #1f2631;
-    --vx-surface-3: #29313e;
-    --vx-line: #2c3442;
-    --vx-line-strong: #6f7c8f;
+    --vx-canvas: #0b0f15;
+    --vx-surface: #141a23;
+    --vx-surface-2: #1b222d;
+    --vx-surface-3: #252e3b;
+    --vx-line: #262f3c;
+    --vx-line-strong: #687587;
     --vx-ink: #eef2f7;
-    --vx-ink-2: #b8c2d0;
-    --vx-ink-3: #97a3b4;
-    --vx-on-ink: #0f141b;
-    --vx-primary: #7fa6d6;
-    --vx-primary-hover: #94b5de;
-    --vx-primary-pressed: #a9c4e6;
+    --vx-ink-2: #b4bfcd;
+    --vx-ink-3: #94a0b2;
+    --vx-on-ink: #0b0f15;
+    --vx-primary: #3a74b5;
+    --vx-primary-hover: #3570b0;
+    --vx-primary-pressed: #2f67a3;
     --vx-primary-ink: #9bbce4;
-    --vx-primary-soft: #1a2a40;
-    --vx-primary-soft-2: #22375a;
-    --vx-on-primary: #0b1420;
+    --vx-primary-soft: #15243a;
+    --vx-primary-soft-2: #1f3554;
+    --vx-on-primary: #ffffff;
     --vx-accent: #4cc39a;
     --vx-accent-ink: #6fd3ae;
     --vx-accent-soft: #173328;
@@ -113,10 +115,11 @@
     --vx-on-danger: #1a0805;
     --vx-focus: #8fb3e0;
     --vx-focus-halo: rgba(143, 179, 224, 0.28);
-    --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
-    --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+    --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.35);
+    --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
     --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
     --vx-scrim: rgba(0, 0, 0, 0.6);
+    --vx-backdrop: #06080c;
     --vx-tint-1: #24324a;
     --vx-tint-2: #3b2f2c;
     --vx-tint-3: #2c352e;
@@ -127,23 +130,23 @@
 }
 [data-theme="dark"] {
   color-scheme: dark;
-  --vx-canvas: #0f141b;
-  --vx-surface: #171d26;
-  --vx-surface-2: #1f2631;
-  --vx-surface-3: #29313e;
-  --vx-line: #2c3442;
-  --vx-line-strong: #6f7c8f;
+  --vx-canvas: #0b0f15;
+  --vx-surface: #141a23;
+  --vx-surface-2: #1b222d;
+  --vx-surface-3: #252e3b;
+  --vx-line: #262f3c;
+  --vx-line-strong: #687587;
   --vx-ink: #eef2f7;
-  --vx-ink-2: #b8c2d0;
-  --vx-ink-3: #97a3b4;
-  --vx-on-ink: #0f141b;
-  --vx-primary: #7fa6d6;
-  --vx-primary-hover: #94b5de;
-  --vx-primary-pressed: #a9c4e6;
+  --vx-ink-2: #b4bfcd;
+  --vx-ink-3: #94a0b2;
+  --vx-on-ink: #0b0f15;
+  --vx-primary: #3a74b5;
+  --vx-primary-hover: #3570b0;
+  --vx-primary-pressed: #2f67a3;
   --vx-primary-ink: #9bbce4;
-  --vx-primary-soft: #1a2a40;
-  --vx-primary-soft-2: #22375a;
-  --vx-on-primary: #0b1420;
+  --vx-primary-soft: #15243a;
+  --vx-primary-soft-2: #1f3554;
+  --vx-on-primary: #ffffff;
   --vx-accent: #4cc39a;
   --vx-accent-ink: #6fd3ae;
   --vx-accent-soft: #173328;
@@ -160,10 +163,11 @@
   --vx-on-danger: #1a0805;
   --vx-focus: #8fb3e0;
   --vx-focus-halo: rgba(143, 179, 224, 0.28);
-  --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
-  --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.35);
+  --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
   --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
   --vx-scrim: rgba(0, 0, 0, 0.6);
+  --vx-backdrop: #06080c;
   --vx-tint-1: #24324a;
   --vx-tint-2: #3b2f2c;
   --vx-tint-3: #2c352e;
@@ -180,9 +184,9 @@
   --vx-dur-slow: 360ms; /* sheets */
   --vx-dur-celebrate: 640ms; /* success mark */
   --vx-dur-flow: 2400ms; /* money-graph flow loop */
-  --vx-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --vx-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* exponential ease-out: confident arrival, no overshoot */
   --vx-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --vx-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vx-ease-spring: cubic-bezier(0.22, 1.2, 0.36, 1); /* the success mark only: a 2-3% settle, not a bounce */
 
   /* Layout */
   --vx-gutter: 20px;
@@ -291,7 +295,7 @@
   to { opacity: 1; }
 }
 @keyframes vx-rise-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes vx-sheet-in {
@@ -300,7 +304,7 @@
 }
 @keyframes vx-pop {
   0% { transform: scale(0.6); opacity: 0; }
-  60% { transform: scale(1.06); opacity: 1; }
+  60% { transform: scale(1.03); opacity: 1; }
   100% { transform: scale(1); }
 }
 @keyframes vx-ripple {
@@ -487,9 +491,7 @@ html:has([data-vx-footer]) {
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    background:
-      radial-gradient(1100px 520px at 50% -8%, var(--vx-primary-soft-2), transparent 70%),
-      var(--vx-primary-soft);
+    background: var(--vx-backdrop);
   }
   /* Phone column: definite height so <Screen/> scrolls inside and its sticky footer stays in the column. */
   .vx-app-shell {
@@ -499,7 +501,7 @@ html:has([data-vx-footer]) {
     min-height: 0;
     border-radius: 28px;
     background: var(--vx-canvas);
-    box-shadow: 0 0 0 1px var(--vx-line), var(--vx-shadow-2);
+    box-shadow: 0 0 0 1px var(--vx-line), 0 2px 6px rgba(0, 0, 0, 0.04), 0 24px 64px -16px rgba(21, 32, 46, 0.18);
   }
   /* clip-path (not just overflow + radius) so animated/composited children can't poke out of the corners. */
   .vx-app-column {

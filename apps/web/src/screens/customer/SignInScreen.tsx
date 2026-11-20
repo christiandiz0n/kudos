@@ -10,6 +10,7 @@
  *   onCreate         "Continue with Face ID or fingerprint" (new account)
  *   onSignIn         "I already have an account" (passkey sign-in, no name needed)
  */
+import type { ReactNode } from "react";
 import { BRAND as APP_NAME } from "@/lib/brand";
 import { Avatar, Button, Icon, Screen, TextField } from "@/components/ui";
 
@@ -23,6 +24,8 @@ export interface SignInScreenProps {
   error?: "cancelled" | "unsupported" | (string & {});
   onCreate?: () => void;
   onSignIn?: () => void;
+  /** Top-right of the header, e.g. the "I run a venue" link on `/` (a 44px target, QE F4). */
+  headerAction?: ReactNode;
 }
 
 const FORM_ID = "vx-sign-in";
@@ -37,8 +40,8 @@ function errorCopy(error: SignInScreenProps["error"]) {
 /** What Vouch does, in one picture: you pay, money comes back to you, a friend is thanked. Decorative. */
 function HeroCard() {
   return (
-    <div aria-hidden className="relative overflow-hidden rounded-xl bg-primary-soft px-5 pt-4 pb-5">
-      <div className="perforated-bottom mx-auto w-full max-w-64 rotate-[-1.5deg] rounded-sm bg-surface px-4 pt-4 pb-6 shadow-2 animate-vx-rise-in">
+    <div aria-hidden className="relative overflow-hidden rounded-xl bg-primary-soft px-5 py-5">
+      <div className="perforated-bottom mx-auto w-full max-w-64 rounded-sm bg-surface px-4 pt-4 pb-6 shadow-2 animate-vx-rise-in">
         <div className="flex items-baseline justify-between text-caption text-ink-3">
           <span className="flex items-center gap-2">
             <Avatar name="Lena's café" kind="venue" size="xs" />
@@ -62,7 +65,7 @@ function HeroCard() {
   );
 }
 
-export function SignInScreen({ invite, name = "", onNameChange, nameError, creating, error, onCreate, onSignIn }: SignInScreenProps) {
+export function SignInScreen({ invite, name = "", onNameChange, nameError, creating, error, onCreate, onSignIn, headerAction }: SignInScreenProps) {
   const err = errorCopy(error);
   return (
     <Screen
@@ -78,8 +81,8 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
           <Button type="submit" block size="lg" leadingIcon="faceId" loading={creating} loadingLabel="Setting up…">
             Continue with Face ID or fingerprint
           </Button>
-          <p className="px-2 text-center text-caption text-ink-2">
-            <Icon name="lock" size={14} className="mr-1 inline-block -translate-y-px align-middle text-primary-ink" />
+          <p className="px-2 text-center text-caption text-ink-3">
+            <Icon name="lock" size={14} className="mr-1 inline-block -translate-y-px align-middle" />
             No password, nothing to write down. Your face or fingerprint keeps your account safe.
           </p>
           <Button block variant="ghost" onClick={onSignIn} disabled={creating}>
@@ -88,15 +91,18 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
         </form>
       }
     >
-      <div className="flex min-h-full flex-col pt-6">
-        <p className="flex items-center gap-2 text-title-3 font-semibold tracking-tight text-primary-ink">
-          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-md bg-primary text-on-primary">
-            <Icon name="check" size={16} />
-          </span>
-          {APP_NAME}
-        </p>
+      <div className="flex min-h-full flex-col pt-3">
+        <div className="flex min-h-11 items-center justify-between gap-3">
+          <p className="flex items-center gap-2 text-title-3 font-semibold tracking-tight text-ink">
+            <span aria-hidden className="inline-flex size-8 items-center justify-center rounded-[10px] bg-primary text-on-primary">
+              <Icon name="heart" size={18} />
+            </span>
+            {APP_NAME}
+          </p>
+          {headerAction ? <div className="-mr-3 shrink-0">{headerAction}</div> : null}
+        </div>
         {/* After a failed attempt the picture steps aside so the message and the button stay in view. */}
-        <div className={err ? "mt-6" : "mt-5 mb-6"}>{err ? null : <HeroCard />}</div>
+        <div className={err ? "mt-4" : "mt-5 mb-7"}>{err ? null : <HeroCard />}</div>
 
         {invite ? (
           <p className="mb-3 inline-flex min-h-8 items-center gap-2 self-start rounded-full bg-accent-soft py-1 pr-3 pl-1 text-body-sm font-medium text-accent-ink">
@@ -104,8 +110,8 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
             {invite.referrerName} sent you to {invite.venueName}
           </p>
         ) : null}
-        <h1 className="text-title-1 text-balance text-ink">Get money back when a friend sends you somewhere new.</h1>
-        <p className="mt-3 text-body text-ink-2">
+        <h1 className="text-title-1 text-ink">Get money back when a friend sends you somewhere new.</h1>
+        <p className="mt-3 max-w-[38ch] text-body text-ink-2">
           Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who
           recommended it.
         </p>

@@ -1,0 +1,51 @@
+[
+  {
+    "file": "e40-success-pending-reduced-motion.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "state": "pending under prefers-reduced-motion (forced 202; nothing relayed)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e41-success-settled-reduced-motion.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "state": "settled under prefers-reduced-motion (forced GET /payments/:id)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e50-scan-camera-denied.png",
+    "route": "/scan",
+    "state": "camera permission not granted (headless default)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e51-scan-camera-denied-forced.png",
+    "route": "/scan",
+    "state": "camera denied (forced NotAllowedError)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e52-scan-type-code.png",
+    "route": "/scan",
+    "state": "camera denied → type the code",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e60-control-relay-failed.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "state": "control: signature OK, relay forced 502",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e61-pay-offline-at-confirm.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "state": "offline at confirm (context offline; navigator.onLine=false)",
+    "notes": "",
+    "viewport": "390x844"
+  }
+]

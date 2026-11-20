@@ -56,27 +56,17 @@ function Header({ p }: { p: RecommendScreenProps }) {
 function GetsCard({ p }: { p: RecommendScreenProps }) {
   return (
     <section aria-label="What you both get" className="overflow-hidden rounded-lg bg-surface shadow-1 ring-1 ring-line/60">
-      <div className="flex items-start gap-3 px-4 py-3.5">
-        <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-ink">
-          <Icon name="users" size={20} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-caption font-medium text-ink-3">Your friend gets</p>
-          <p className="text-body font-semibold text-ink">Money back on their first visit</p>
-        </div>
+      <div className="px-4 py-4">
+        <p className="text-body-sm text-ink-2">Your friend gets</p>
+        <p className="mt-0.5 text-body font-semibold text-ink">Money back on their first visit</p>
       </div>
-      <div className="flex items-start gap-3 border-t border-line bg-accent-soft px-4 py-3.5">
-        <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent-ink">
-          <Icon name="heart" size={20} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-caption font-medium text-ink-2">You get</p>
-          <p className="text-body font-semibold text-ink">
-            About <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="md" /> when they spend{" "}
-            <AmountDisplay value={p.exampleEarn.order} size="md" />
-          </p>
-          <p className="text-caption text-ink-2">Paid the moment they pay.</p>
-        </div>
+      <div className="border-t border-line bg-accent-soft px-4 py-4">
+        <p className="text-body-sm text-ink-2">You get</p>
+        <p className="mt-0.5 text-body font-semibold text-ink">
+          About <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="md" /> when they spend{" "}
+          <AmountDisplay value={p.exampleEarn.order} size="md" />
+        </p>
+        <p className="mt-0.5 text-body-sm text-ink-2">Paid the moment they pay.</p>
       </div>
     </section>
   );
@@ -150,9 +140,7 @@ export function RecommendScreen(p: RecommendScreenProps) {
       {link ? (
         <Card className="mt-2 flex animate-vx-rise-in flex-col items-center gap-4" padding="lg">
           <p className="flex items-center gap-2 text-body font-semibold text-ink">
-            <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-full bg-primary text-on-primary">
-              <Icon name="check" size={16} />
-            </span>
+            <Icon name="check" size={20} className="text-primary-ink" />
             Your link is ready
           </p>
           <div className="rounded-md bg-white p-2 ring-1 ring-primary-soft-2">
@@ -173,7 +161,6 @@ export function RecommendScreen(p: RecommendScreenProps) {
             <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="sm" className="font-semibold" /> when they spend{" "}
             <AmountDisplay value={p.exampleEarn.order} size="sm" />.
           </p>
-          <p className="text-caption text-ink-3">Share it, or let a friend scan this from your screen.</p>
         </Card>
       ) : (
         <>

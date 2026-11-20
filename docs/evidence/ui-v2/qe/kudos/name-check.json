@@ -1,0 +1,69 @@
+[
+  {
+    "label": "signin",
+    "url": "https://vouch-ubc-blue.vercel.app/",
+    "title": "Kudos",
+    "kudos": false,
+    "vouch": []
+  },
+  {
+    "label": "transparency",
+    "url": "https://vouch-ubc-blue.vercel.app/transparency",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "notfound",
+    "url": "https://vouch-ubc-blue.vercel.app/nope-404",
+    "title": "Page not found · Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "manifest",
+    "body": "{\"name\":\"Kudos\",\"short_name\":\"Kudos\",\"description\":\"Pay local. Thank the friends who sent you.\",\"id\":\"/\",\"start_url\":\"/\",\"scope\":\"/\",\"display\":\"standalone\",\"background_color\":\"#f5f7fa\",\"theme_color\":\""
+  },
+  {
+    "label": "wallet",
+    "url": "https://vouch-ubc-blue.vercel.app/wallet",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "scan",
+    "url": "https://vouch-ubc-blue.vercel.app/scan",
+    "title": "Kudos",
+    "kudos": false,
+    "vouch": []
+  },
+  {
+    "label": "me",
+    "url": "https://vouch-ubc-blue.vercel.app/me",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "venue-new",
+    "url": "https://vouch-ubc-blue.vercel.app/venue",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "projector-lena-cafe",
+    "url": "https://vouch-ubc-blue.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  },
+  {
+    "label": "projector-lenas-corner",
+    "url": "https://vouch-ubc-blue.vercel.app/venue/0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581",
+    "title": "Kudos",
+    "kudos": true,
+    "vouch": []
+  }
+]

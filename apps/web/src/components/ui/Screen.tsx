@@ -12,7 +12,7 @@ export function Screen({ header, footer, children, className, tone = "canvas" }:
   return (
     <div className={cn("flex h-full min-h-full flex-1 flex-col", tone === "canvas" ? "bg-canvas" : "bg-surface", className)}>
       {header}
-      <main className="flex-1 overflow-y-auto px-[var(--vx-gutter)] pb-6">{children}</main>
+      <main className="flex-1 animate-vx-fade-in overflow-y-auto px-[var(--vx-gutter)] pb-6">{children}</main>
       {footer ? (
         <div
           data-vx-footer
@@ -45,8 +45,8 @@ export function AppBar({ title, leading, trailing, large }: { title?: ReactNode;
 /** Small uppercase-free section label, e.g. "Recent". */
 export function SectionLabel({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
-    <div className="mt-6 mb-1 flex items-center justify-between">
-      <h2 className="text-body-sm font-semibold text-ink-2">{children}</h2>
+    <div className="mt-8 mb-2 flex min-h-8 items-center justify-between gap-3">
+      <h2 className="text-body font-semibold text-ink">{children}</h2>
       {action}
     </div>
   );

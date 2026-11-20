@@ -1,0 +1,99 @@
+{
+  "U1 eyebrow": {
+    "count": 0,
+    "examples": []
+  },
+  "U2 decorative numbering": {
+    "count": 2,
+    "examples": [
+      "apps/web/src/app/spike/passkey/PasskeyProbe.tsx:14",
+      "apps/web/src/components/ui/QRFrame.tsx:26"
+    ]
+  },
+  "U6 status string": {
+    "count": 25,
+    "examples": [
+      "apps/web/src/app/design/page.tsx:56",
+      "apps/web/src/app/design/page.tsx:74",
+      "apps/web/src/app/design/page.tsx:101",
+      "apps/web/src/app/design/page.tsx:202",
+      "apps/web/src/app/design/page.tsx:239"
+    ]
+  },
+  "U9 badge word": {
+    "count": 3,
+    "examples": [
+      "apps/web/src/app/design/_mocks/Playground.tsx:120",
+      "apps/web/src/app/design/_mocks/Playground.tsx:125",
+      "apps/web/src/screens/venue/VenueDashboardScreen.tsx:137"
+    ]
+  },
+  "U10 status dot": {
+    "count": 8,
+    "examples": [
+      "apps/web/src/components/ui/Badge.tsx:33",
+      "apps/web/src/components/ui/SplitBreakdown.tsx:153",
+      "apps/web/src/components/ui/SplitBreakdown.tsx:220",
+      "apps/web/src/screens/customer/PaymentSuccessScreen.tsx:147",
+      "apps/web/src/screens/venue/OrderScreens.tsx:200"
+    ]
+  },
+  "U11 emoji": {
+    "count": 2,
+    "examples": [
+      "apps/web/src/app/spike/passkey/PasskeyProbe.tsx:107",
+      "apps/web/src/app/spike/passkey/PasskeyProbe.tsx:107"
+    ]
+  },
+  "U11 icon tile": {
+    "count": 0,
+    "examples": []
+  },
+  "U12 chart-type title": {
+    "count": 0,
+    "examples": []
+  },
+  "U13 reading instructions": {
+    "count": 0,
+    "examples": []
+  },
+  "U15 chart scaffolding": {
+    "count": 0,
+    "examples": []
+  },
+  "U16 legend": {
+    "count": 0,
+    "examples": []
+  },
+  "unslop 13 em dash": {
+    "count": 3,
+    "examples": [
+      "apps/web/src/app/spike/passkey/page.tsx:9",
+      "apps/web/src/app/spike/qr/page.tsx:10",
+      "apps/web/src/app/spike/scan/page.tsx:9"
+    ]
+  },
+  "U17 gradient or glow": {
+    "count": 12,
+    "examples": [
+      "apps/web/src/components/ui/Screen.tsx:21",
+      "apps/web/src/components/ui/Skeleton.tsx:9",
+      "apps/web/src/design/tokens.css:344",
+      "apps/web/src/design/tokens.css:350",
+      "apps/web/src/design/tokens.css:351"
+    ]
+  },
+  "U18 off-scale spacing": {
+    "count": 0,
+    "examples": []
+  },
+  "U19 extra-heavy weight": {
+    "count": 0,
+    "examples": []
+  },
+  "U20 motion": {
+    "count": 0,
+    "examples": []
+  },
+  "total": 55
+}

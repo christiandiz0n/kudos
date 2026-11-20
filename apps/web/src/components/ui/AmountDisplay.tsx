@@ -1,7 +1,7 @@
 import { cn } from "@/design/cn";
 import { moneyParts, type MoneyPrecision } from "@/design/money";
 
-export type AmountSize = "sm" | "md" | "lg" | "xl" | "display";
+export type AmountSize = "sm" | "md" | "lg" | "xl" | "kpi" | "display";
 /**
  * - `plain`    $12.00 in ink.
  * - `positive` +$0.45 in green: money coming to someone. The only place green text appears.
@@ -15,6 +15,8 @@ const sizeClass: Record<AmountSize, string> = {
   md: "text-body font-semibold",
   lg: "text-title-2",
   xl: "text-title-1",
+  /** Projector KPI tiles: 40px, tight. */
+  kpi: "text-[2.5rem] leading-none font-semibold tracking-[-0.03em]",
   display: "text-display",
 };
 
@@ -49,7 +51,7 @@ export function AmountDisplay({
       : variant === "positive" || (variant === "signed" && value > 0n)
         ? "text-accent-ink"
         : "text-ink";
-  const small = splitCents ?? (size === "display" || size === "xl");
+  const small = splitCents ?? (size === "display" || size === "xl" || size === "kpi");
   const text = `${p.sign}${p.symbol}${p.whole}${p.fraction ? `.${p.fraction}` : ""}`;
 
   return (
