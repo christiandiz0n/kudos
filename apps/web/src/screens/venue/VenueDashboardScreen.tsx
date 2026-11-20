@@ -129,10 +129,10 @@ export function paymentLine(p: VenuePaymentItem): string {
 function LiveBadge({ status }: { status: LiveStatus }) {
   if (status === "live")
     return (
-      <span role="status" className="inline-flex h-7 items-center gap-2 rounded-full bg-accent-soft px-3 text-caption font-semibold text-accent-ink">
+      <span role="status" className="inline-flex h-7 items-center gap-2 rounded-full bg-primary-soft px-3 text-caption font-semibold text-primary-ink">
         <span aria-hidden className="relative flex size-2">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60" />
-          <span className="relative inline-flex size-2 rounded-full bg-accent" />
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60" />
+          <span className="relative inline-flex size-2 rounded-full bg-primary" />
         </span>
         Live
       </span>
@@ -174,52 +174,66 @@ function StatusNote({ status }: { status: LiveStatus }) {
   );
 }
 
-function CostCard({ p, wide }: { p: VenueDashboardProps; wide?: boolean }) {
+function AdCostInput({ p, className }: { p: VenueDashboardProps; className?: string }) {
+  return (
+    <span
+      className={cn(
+        "flex h-11 items-center gap-1 rounded-md bg-surface px-2.5 shadow-[inset_0_0_0_1px_var(--vx-line-strong)] focus-within:shadow-[inset_0_0_0_2px_var(--vx-focus)]",
+        className,
+      )}
+    >
+      <span className="text-body-sm text-ink-3">$</span>
+      <input
+        inputMode="decimal"
+        aria-label="Typical ad cost per new customer, in dollars"
+        value={p.typicalAdCost}
+        onChange={(e) => p.onTypicalAdCostChange?.(e.target.value)}
+        readOnly={!p.onTypicalAdCostChange}
+        className="vx-field-input money h-full w-full min-w-0 bg-transparent text-right text-body font-semibold text-ink outline-none"
+      />
+    </span>
+  );
+}
+
+function CostValue({ p, size }: { p: VenueDashboardProps; size: "xl" | "display" }) {
   const cpvc = p.stats.costPerVerified;
+  if (p.loading) return <Skeleton className="h-10 w-28" />;
+  if (cpvc === null) return <span className="money text-title-1 text-ink-3">—</span>;
+  if (cpvc < ONE_CENT)
+    return (
+      <span className="flex items-baseline gap-1.5">
+        <span className="text-body font-medium text-ink-2">under</span>
+        <AmountDisplay value={ONE_CENT} size={size} />
+      </span>
+    );
+  return <AmountDisplay value={cpvc} size={size} />;
+}
+
+function costSentence(p: VenueDashboardProps) {
+  const cpvc = p.stats.costPerVerified;
+  if (p.viewer === "visitor")
+    return cpvc === null ? "No new customers from recommendations yet." : `What ${p.venueName} has paid in rewards, on average, for each new customer.`;
+  return adComparison(cpvc, p.typicalAdCost);
+}
+
+function CostCard({ p, wide }: { p: VenueDashboardProps; wide?: boolean }) {
   return (
     <Card padding="lg" className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <span className="text-body-sm font-medium text-ink-2">Cost per new customer</span>
-          {p.loading ? (
-            <Skeleton className="h-10 w-28" />
-          ) : cpvc === null ? (
-            <span className="money text-title-1 text-ink-3">—</span>
-          ) : cpvc < ONE_CENT ? (
-            <span className="flex items-baseline gap-1.5">
-              <span className="text-body font-medium text-ink-2">under</span>
-              <AmountDisplay value={ONE_CENT} size={wide ? "display" : "xl"} />
-            </span>
-          ) : (
-            <AmountDisplay value={cpvc} size={wide ? "display" : "xl"} />
-          )}
+          <CostValue p={p} size={wide ? "display" : "xl"} />
           <span className="text-caption text-ink-3">paid only when they buy</span>
         </div>
         {p.viewer === "visitor" ? null : (
           <label className="flex w-[7.5rem] shrink-0 flex-col gap-1 text-right">
             <span className="text-caption font-medium text-ink-3">Typical ad cost</span>
-            <span className="flex h-11 items-center gap-1 rounded-md bg-surface px-2.5 shadow-[inset_0_0_0_1px_var(--vx-line-strong)] focus-within:shadow-[inset_0_0_0_2px_var(--vx-focus)]">
-              <span className="text-body-sm text-ink-3">$</span>
-              <input
-                inputMode="decimal"
-                aria-label="Typical ad cost per new customer, in dollars"
-                value={p.typicalAdCost}
-                onChange={(e) => p.onTypicalAdCostChange?.(e.target.value)}
-                readOnly={!p.onTypicalAdCostChange}
-                className="vx-field-input money h-full w-full min-w-0 bg-transparent text-right text-body font-semibold text-ink outline-none"
-              />
-            </span>
+            <AdCostInput p={p} />
           </label>
         )}
       </div>
       <p aria-live="polite" className="border-t border-line pt-3 text-body-sm text-ink-2">
-        {p.loading ? (
-          <Skeleton className="h-4 w-48" />
-        ) : p.viewer === "visitor" ? (
-          cpvc === null ? "No new customers from recommendations yet." : `What ${p.venueName} has paid in rewards, on average, for each new customer.`
-        ) : (
-          adComparison(cpvc, p.typicalAdCost)
-        )}
+        {p.loading ? <Skeleton className="h-4 w-48" /> : costSentence(p)}
       </p>
     </Card>
   );
@@ -277,8 +291,8 @@ function GraphEmpty({ onNewOrder, compact }: { onNewOrder?: () => void; compact?
           ["They recommend you", "Paying customers can send friends to you."],
           ["Pay only for results", "When a friend buys, part of it thanks whoever sent them."],
         ].map(([t, b], i) => (
-          <li key={t} className="flex gap-2.5 rounded-md bg-surface-2 p-3">
-            <span className="money flex size-6 shrink-0 items-center justify-center rounded-full bg-ink text-caption font-semibold text-on-ink">{i + 1}</span>
+          <li key={t} className="flex gap-2.5 rounded-md bg-primary-soft p-3">
+            <span className="money flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-caption font-semibold text-on-primary">{i + 1}</span>
             <span>
               <span className="block font-semibold text-ink">{t}</span>
               {b}
@@ -359,7 +373,7 @@ function PhoneLayout(p: VenueDashboardProps) {
         </>
       ) : null}
       {p.transparencyHref ? (
-        <a href={p.transparencyHref} className="focus-ring mt-4 flex min-h-12 items-center justify-between rounded-md text-body-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
+        <a href={p.transparencyHref} className="focus-ring mt-4 flex min-h-12 items-center justify-between rounded-md text-body-sm font-semibold text-primary-ink underline-offset-4 hover:underline">
           How payments split
           <Icon name="chevronRight" size={18} />
         </a>
@@ -368,60 +382,118 @@ function PhoneLayout(p: VenueDashboardProps) {
   );
 }
 
+/** Projector KPI tile: label, one big number, one plain line. */
+function KpiTile({ label, value, caption, className, children }: { label: string; value: ReactNode; caption?: ReactNode; className?: string; children?: ReactNode }) {
+  return (
+    <div className={cn("flex min-w-0 flex-col gap-1 rounded-lg bg-surface px-5 py-4 shadow-1 ring-1 ring-line/70", className)}>
+      <span className="text-body-sm font-semibold text-ink-2">{label}</span>
+      <span className="money text-display leading-none text-ink">{value}</span>
+      {caption ? <span className="text-body-sm text-ink-3">{caption}</span> : null}
+      {children}
+    </div>
+  );
+}
+
+function WideKpis({ p }: { p: VenueDashboardProps }) {
+  const s = p.stats;
+  const v = (n: ReactNode) => (p.loading ? <Skeleton className="h-12 w-24" /> : n);
+  return (
+    <div data-kpi className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.55fr)] gap-4">
+      {/* verifiedCustomers counts every verified first purchase, recommended or not (QE-3-04). */}
+      <KpiTile label="New customers" value={v(s.verifiedCustomers)} caption="verified first purchases" />
+      <KpiTile label="Rewards paid" value={v(<AmountDisplay value={s.rewardsPaid} size="display" />)} caption="to customers + the people who sent them" />
+      <KpiTile label="Cost per new customer" value={<CostValue p={p} size="display" />}>
+        <div className="flex items-center gap-3">
+          <p aria-live="polite" className="min-w-0 flex-1 text-body-sm text-ink-2">
+            {p.loading ? <Skeleton className="h-4 w-40" /> : costSentence(p)}
+          </p>
+          {p.viewer === "visitor" ? null : (
+            <label className="flex shrink-0 flex-col items-end gap-0.5">
+              <span className="text-caption font-medium text-ink-3">Typical ad cost</span>
+              <AdCostInput p={p} className="w-[6.5rem]" />
+            </label>
+          )}
+        </div>
+      </KpiTile>
+    </div>
+  );
+}
+
+/** Projector layout: fits one screen (1280×720 and up) with no page scroll. KPIs on top, the money graph as the
+ *  hero, the live feed down the right edge (≥ 5 rows visible at 1280×720; the card scrolls for more). */
 function WideLayout(p: VenueDashboardProps) {
   const empty = !p.loading && p.payments.length === 0;
   return (
-    <div className="flex h-full min-h-dvh flex-col gap-5 bg-canvas px-8 py-6">
-      <header className="flex items-center gap-4">
+    <div className="flex h-dvh min-h-[640px] flex-col gap-4 overflow-hidden bg-canvas px-8 py-5">
+      <header className="flex shrink-0 items-center gap-4">
         <Avatar name={p.venueName} kind="venue" size="lg" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-title-1 text-ink">{p.venueName}</h1>
           <p className="text-body-sm text-ink-3">New customers from recommendations, live</p>
         </div>
+        {p.transparencyHref ? (
+          <a
+            href={p.transparencyHref}
+            className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-md px-3 text-body-sm font-semibold text-primary-ink hover:bg-primary-soft"
+          >
+            How payments split
+            <Icon name="chevronRight" size={16} />
+          </a>
+        ) : null}
         <LiveBadge status={p.status} />
       </header>
       <StatusNote status={p.status} />
-      <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,380px)] gap-6">
-        <Card padding="lg" className="flex min-h-0 flex-col">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-title-3 text-ink">Where the money went</h2>
-              {!empty ? <p className="text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p> : null}
-            </div>
-            <GraphModeToggle p={p} />
-          </div>
-          <div className="flex min-h-0 flex-1 items-center justify-center">
-            {p.loading ? (
-              <Skeleton className="aspect-video w-full" />
-            ) : empty || !p.graph ? (
-              <GraphEmpty onNewOrder={p.onNewOrder} />
-            ) : (
-              <MoneyGraph
-                data={p.graph}
-                highlightPaymentId={p.highlightPaymentId}
-                mode={p.graphMode ?? "payment"}
-                orientation="landscape"
-                className="h-auto max-h-full w-full"
-              />
-            )}
-          </div>
-        </Card>
+      <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,370px)] gap-5">
         <div className="flex min-h-0 flex-col gap-4">
-          <CostCard p={p} wide />
-          <Card padding="lg">
-            <StatRow p={p} />
-          </Card>
-          <Card padding="md" className="flex min-h-[18rem] flex-1 flex-col overflow-hidden">
-            <h2 className="px-1 text-body-sm font-semibold text-ink-2">Payments</h2>
-            {empty ? (
-              <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
-            ) : (
-              <div className="min-h-0 flex-1 overflow-y-auto" tabIndex={0} aria-label="Payments, scroll for more">
-                <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
+          <WideKpis p={p} />
+          <Card padding="lg" className="flex min-h-0 flex-1 flex-col">
+            <div className="flex shrink-0 items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h2 className="text-title-3 text-ink">Where the money went</h2>
+                {!empty ? (
+                  <p className="truncate text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p>
+                ) : null}
               </div>
-            )}
+              <GraphModeToggle p={p} />
+            </div>
+            <div className="relative min-h-0 flex-1">
+              {p.loading ? (
+                <Skeleton className="absolute inset-0 mt-3" />
+              ) : empty || !p.graph ? (
+                <div className="absolute inset-0 overflow-y-auto">
+                  <GraphEmpty onNewOrder={p.onNewOrder} compact />
+                </div>
+              ) : (
+                <MoneyGraph
+                  data={p.graph}
+                  highlightPaymentId={p.highlightPaymentId}
+                  mode={p.graphMode ?? "payment"}
+                  orientation="landscape"
+                  className="absolute inset-0 h-full w-full"
+                />
+              )}
+            </div>
           </Card>
         </div>
+        <Card padding="md" className="flex min-h-0 flex-col overflow-hidden">
+          <div className="flex shrink-0 items-baseline justify-between px-1 pb-1">
+            <h2 className="text-title-3 text-ink">Payments</h2>
+            {!empty && !p.loading ? <span className="text-caption text-ink-3">newest first</span> : null}
+          </div>
+          {p.loading ? (
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          ) : empty ? (
+            <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
+          ) : (
+            <div className="min-h-0 flex-1 overflow-y-auto px-1" tabIndex={0} aria-label="Payments, scroll for more">
+              <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
+            </div>
+          )}
+        </Card>
       </div>
     </div>
   );
