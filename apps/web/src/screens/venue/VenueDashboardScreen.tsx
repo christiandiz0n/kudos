@@ -411,9 +411,15 @@ function WideLayout(p: VenueDashboardProps) {
           <Card padding="lg">
             <StatRow p={p} />
           </Card>
-          <Card padding="md" className="min-h-0 flex-1 overflow-hidden">
+          <Card padding="md" className="flex min-h-[18rem] flex-1 flex-col overflow-hidden">
             <h2 className="px-1 text-body-sm font-semibold text-ink-2">Payments</h2>
-            {empty ? <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p> : <Feed payments={p.payments} max={4} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />}
+            {empty ? (
+              <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-y-auto" tabIndex={0} aria-label="Payments, scroll for more">
+                <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
+              </div>
+            )}
           </Card>
         </div>
       </div>
