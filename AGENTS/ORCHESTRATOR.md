@@ -1,6 +1,8 @@
 # ORCHESTRATOR — HANDOFF
 _Last updated: 2026-11-20 ~06:10Z (session 4, A8/A9) by ORCHESTRATOR._
 
+> **Session 5 (Fri 2026-11-20 ~09:00 CST) — read first.** Old Stream 6b792277 TERMINATED 00:18 CST (trial credits). New Stream `vouch-v3-production-2` `e77ce7b6-6642-4cd5-9894-7bb8de5c030a` (QuickNode account Rutgers BC, start 73205500; no events missed: last old delivery 73143834, no contract logs in between). ui-blue QE PASS-with-findings → merged (747f41b) + prod deployed. Display name **Kudos** (web-only `apps/web/src/lib/brand.ts`; shared APP_NAME stays 'Vouch' because the API sign-in message uses it). p4-stage uses `rawChromium` (lib forces headless). Prod live story PASS 15:15Z via the new Stream (Ben 0x6894f75b exact). Rollback deployment: vouch-7pejykqtl (pre-merge). Pending: video URL → README/DEVPOST; submit; pause Stream; re-enable Vercel preview protection (`vercel project protection enable vouch --sso`).
+
 > **Session 4 (A8 + A9, Thu 2026-11-19 23:20 CST →) — read this block first; it supersedes the Session 3 block.**
 > - **Deadline** Fri 12:00 CST; target submitted by 10:00 CST. A8 priorities: submission → demo-on-video → pitch. A9: blue re-skin on branch `ui-blue` (worktree `../ubc-2026-ui-blue`), preview https://vouch-ubc-blue.vercel.app; the human decides "ship it"/"keep old" ~02:00–02:30 CST. D-021..D-023.
 > - **Prod (main):** P5-01 fixed + deployed (97808d9). Prod live story PASS (Thu 23:33–23:52, `docs/qa/phase-5-prod-regression.md` §8). Stream LIVE (caught up). Secret scan CLEAN-with-notes (`docs/qa/pre-public-secret-scan.md`); the repo has been public since Mon (human: keep public).
