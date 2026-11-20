@@ -24,9 +24,9 @@ const VENUE = STORY.venue.name;
 
 const ACTIVITY: ActivityItem[] = [
   { id: "p0", title: "Kiln Bakery", meta: "Just now · sending", amount: -usd("4.50"), kind: "payment", status: "pending" },
-  { id: "p1", title: VENUE, meta: "Today, 9:41 · first visit", amount: -STORY.total, note: "+$0.45 back", kind: "payment" },
-  { id: "r2", title: "Ana brought Chloe in", meta: "Today, 8:15 · Kiln Bakery", amount: usd("0.21"), kind: "reward", avatarName: "Chloe" },
-  { id: "r1", title: "Chloe came on your recommendation", meta: "Yesterday · Kiln Bakery", amount: usd("0.62"), kind: "reward", avatarName: "Chloe" },
+  { id: "p1", title: VENUE, meta: "Today, 9:41 · first visit", amount: -STORY.total, note: "+$0.45 cashback", kind: "payment" },
+  { id: "r2", title: "From Maya's first visit to Kiln Bakery", meta: "Via Ana, who you brought in · 8:15", amount: usd("0.21"), kind: "reward", avatarName: "Maya" },
+  { id: "r1", title: "From Chloe's first visit to Kiln Bakery", meta: "You recommended it · Yesterday", amount: usd("0.62"), kind: "reward", avatarName: "Chloe" },
   { id: "t1", title: "Top up (testnet demo)", meta: "Yesterday · simulated", amount: usd("50.00"), kind: "topup" },
 ];
 

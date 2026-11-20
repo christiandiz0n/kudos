@@ -33,7 +33,7 @@ Primary screens = everything a customer or venue staff sees in the normal flow. 
 ## Approved phrases (canonical story)
 | Moment | Copy |
 |---|---|
-| Onboarding headline | Pay local. Thank the friends who sent you. |
+| Onboarding headline | Get money back when a friend sends you somewhere new. (A9; was "Pay local. Thank the friends who sent you.") |
 | Passkey CTA | Get started · "Face ID or fingerprint. No passwords, nothing to write down." |
 | Invite chip | Ana sent you to Lena's café |
 | Friend's link | Ana thinks you'll love Lena's café · **Save Ana's recommendation** |
@@ -82,3 +82,18 @@ Network fee (paid by Vouch) · Settles on Arc Testnet · Receipt ID `0x2de2…82
 | Dashboard KPI | New customers · "verified first purchases" (it counts every verified first purchase, recommended or not) |
 | Cost vs ad, under a cent | "under $0.01" · "Almost nothing so far: under a cent per new customer, against $20.00 for a typical ad." No "× less" below a cent or above 100× |
 | Dashboard, visitor | Rows: "to the venue" (not "to you"); no ad-cost input; "What Lena's café has paid in rewards, on average, for each new customer." |
+
+## A9 customer polish (UI_DESIGN, 2026-11-19)
+Blue (`primary`) is for actions, selection and links; green stays reserved for money arriving to a person.
+| Moment | Copy |
+|---|---|
+| Onboarding headline | Get money back when a friend sends you somewhere new. |
+| Onboarding body | "Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it." |
+| Onboarding reassurance (under the button) | "No password, nothing to write down. Your face or fingerprint keeps your account safe." |
+| Home | "Your balance" · cashback stays on the purchase row (shown once) as a green "+$0.45 cashback" |
+| Home reward rows | "From Ben's first visit to Lena's café" · meta "You recommended it · 2 h ago" or "Via Ana, who you brought in · 2 h ago" |
+| Home recommend card | Liked Lena's café? · "A friend gets money back on their first visit. You get paid too." · **Recommend** |
+| Pay sheet | "Paying" Lena's café · $12.00 · **You'll get $0.45 back** · "First-visit money back, right after you pay" |
+| Success | Primary **Recommend Lena's café**, then "Done" · mini split "Where your money went" · "See who got what" |
+| Recommend | "Your friend gets: Money back on their first visit" · "You get: About $0.99 when they spend $12.00. Paid the moment they pay." |
+| Recommend, link made | "Your link is ready" · "Share it, or let a friend scan this from your screen." |

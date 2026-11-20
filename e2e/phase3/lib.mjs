@@ -22,16 +22,17 @@ export const API = (flag("api") ?? process.env.QE_API ?? "https://api-production
 export const ENGINE = flag("engine") ?? process.env.QE_ENGINE ?? "chromium";
 export const WEBKIT = ENGINE === "webkit";
 // WebKit was installed under node_modules only (PLAYWRIGHT_BROWSERS_PATH=0); the registry path is read at require time.
-if (WEBKIT) process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
+if (WEBKIT) process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.QE_PW_BROWSERS ?? "0"; // QE_PW_BROWSERS: reuse another checkout's .local-browsers
 const require = createRequire(join(ROOT, "apps/web/package.json"));
 const pw = require("playwright");
 const OUT = flag("out") ?? process.env.QE_OUT;
 export const EVID = OUT ? resolve(ROOT, OUT) : join(ROOT, "docs/evidence/phase-3/qe");
 export const SHOTS = join(EVID, "screens");
 /** The selected engine. Named `chromium` so the Phase 3 scripts run unchanged; chromium-only launch args are dropped on webkit. */
-export const chromium = WEBKIT ? { launch: (opts = {}) => pw.webkit.launch({ ...opts, args: [] }) } : pw.chromium;
+// A9 QE: headless is FORCED (the human asked that no browser window ever appears on screen).
+export const chromium = WEBKIT ? { launch: (opts = {}) => pw.webkit.launch({ ...opts, args: [], headless: true }) } : { launch: (opts = {}) => pw.chromium.launch({ ...opts, headless: true }) };
 export const devices = pw.devices;
-export const SCRATCH = process.env.QE_SCRATCH ?? "/private/tmp/claude-501/-Users-christiandizon-Desktop-ubc-2026/ae4cd97a-99ad-4771-bb22-b82f35ada2d7/scratchpad/qe3";
+export const SCRATCH = process.env.QE_SCRATCH ?? "/private/tmp/claude-501/-Users-christiandizon-Desktop-ubc-2026/ff1dc655-46d1-429e-949b-e606fb040c32/scratchpad/qe-a9";
 mkdirSync(SHOTS, { recursive: true });
 mkdirSync(SCRATCH, { recursive: true });
 
@@ -159,7 +160,8 @@ export async function audit(page, screen, { primary = true } = {}) {
       const inline = el.tagName === "A" && getComputedStyle(el).display === "inline" && !!el.closest("p, li, span");
       inter.push({
         tag: el.tagName.toLowerCase(), type: el.getAttribute("type"), name: (el.getAttribute("aria-label") || el.innerText || el.value || "").replace(/\s+/g, " ").trim().slice(0, 60),
-        w: Math.round(r.width), h: Math.round(r.height), primary: cls.includes("bg-ink"), accent: cls.includes("bg-accent"), disabled: el.disabled || el.getAttribute("aria-disabled") === "true", inline, inDetails: inDetails(el),
+        w: Math.round(r.width), h: Math.round(r.height), // A9: the blue primary is `bg-primary` (with text-on-primary hover:bg-primary-hover active:bg-primary-pressed); `bg-ink` kept for main.
+        primary: cls.includes("bg-primary") || cls.includes("bg-ink"), accent: cls.includes("bg-accent"), disabled: el.disabled || el.getAttribute("aria-disabled") === "true", inline, inDetails: inDetails(el),
       });
     }
     return { texts, attrs, inter, title: document.title };

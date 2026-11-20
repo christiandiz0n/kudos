@@ -92,9 +92,9 @@ export function ScanScreen({
   const showManual = blocked || manualOpen;
 
   return (
-    <div data-theme="dark" className="relative flex h-full min-h-full flex-col overflow-hidden bg-[#0d0c0b] text-ink">
+    <div data-theme="dark" className="relative flex h-full min-h-full flex-col overflow-hidden bg-canvas text-ink">
       <div className="absolute inset-0">
-        {!blocked && camera ? camera : <div className="size-full bg-[radial-gradient(120%_80%_at_50%_40%,#2a2723_0%,#0d0c0b_70%)]" />}
+        {!blocked && camera ? camera : <div className="size-full bg-[radial-gradient(120%_80%_at_50%_40%,var(--vx-surface-2)_0%,var(--vx-canvas)_70%)]" />}
       </div>
       <div className="relative flex items-center justify-between px-3 pt-3">
         <IconButton icon="close" label="Close scanner" onClick={onClose} />
@@ -140,7 +140,7 @@ export function ScanScreen({
             {/* Viewfinder: four soft corners; they tighten on a successful read (green stays reserved for money) */}
             <div aria-hidden className={cn("relative size-64 transition-transform duration-[var(--vx-dur-base)] ease-spring", found && "scale-95")}>
               {CORNERS.map((c) => (
-                <span key={c} className={cn("absolute size-14 transition-colors duration-[var(--vx-dur-fast)]", found ? "border-white" : "border-white/80", c)} />
+                <span key={c} className={cn("absolute size-14 transition-colors duration-[var(--vx-dur-fast)]", found ? "border-primary" : "border-white/80", c)} />
               ))}
               {cameraState === "starting" ? (
                 <span className="absolute inset-0 flex items-center justify-center">
@@ -157,6 +157,9 @@ export function ScanScreen({
             >
               {cameraState === "starting" ? "Starting the camera…" : found ? "Got it" : (error ?? hint)}
             </p>
+            {!error && !found && cameraState !== "starting" ? (
+              <p className="mt-2 max-w-[30ch] text-center text-body-sm text-white/65">You&apos;ll check the amount before anything is paid.</p>
+            ) : null}
           </div>
           <div className="relative px-5 pb-8">
             {showManual ? (

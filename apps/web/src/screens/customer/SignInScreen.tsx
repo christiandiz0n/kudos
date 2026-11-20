@@ -34,23 +34,26 @@ function errorCopy(error: SignInScreenProps["error"]) {
   return error;
 }
 
-/** Signature motif in miniature: a receipt that splits. Decorative. */
-function MiniReceipt() {
+/** What Vouch does, in one picture: you pay, money comes back to you, a friend is thanked. Decorative. */
+function HeroCard() {
   return (
-    <div aria-hidden className="rotate-[-2deg] self-start">
-      <div className="perforated-bottom w-56 rounded-sm bg-surface px-4 pt-4 pb-6 shadow-2">
+    <div aria-hidden className="relative overflow-hidden rounded-xl bg-primary-soft px-5 pt-4 pb-5">
+      <div className="perforated-bottom mx-auto w-full max-w-64 rotate-[-1.5deg] rounded-sm bg-surface px-4 pt-4 pb-6 shadow-2 animate-vx-rise-in">
         <div className="flex items-baseline justify-between text-caption text-ink-3">
-          <span>Lena&apos;s café</span>
+          <span className="flex items-center gap-2">
+            <Avatar name="Lena's café" kind="venue" size="xs" />
+            Lena&apos;s café
+          </span>
           <span className="money font-semibold text-ink">$12.00</span>
         </div>
         <div className="mt-3 flex h-2 overflow-hidden rounded-full">
-          <span className="w-[85%] bg-line-strong" />
+          <span className="w-[85%] bg-primary-soft-2" />
           <span className="flex-1 bg-accent" />
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <span className="flex -space-x-1">
+          <span className="flex items-center gap-1.5 text-caption text-ink-2">
             <Avatar name="Ana" size="xs" className="ring-2 ring-surface" />
-            <Avatar name="Priya" size="xs" className="ring-2 ring-surface" />
+            Ana thanked
           </span>
           <span className="money text-caption font-semibold text-accent-ink">+$0.45 back</span>
         </div>
@@ -75,28 +78,36 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
           <Button type="submit" block size="lg" leadingIcon="faceId" loading={creating} loadingLabel="Setting up…">
             Continue with Face ID or fingerprint
           </Button>
+          <p className="px-2 text-center text-caption text-ink-2">
+            <Icon name="lock" size={14} className="mr-1 inline-block -translate-y-px align-middle text-primary-ink" />
+            No password, nothing to write down. Your face or fingerprint keeps your account safe.
+          </p>
           <Button block variant="ghost" onClick={onSignIn} disabled={creating}>
             I already have an account
           </Button>
         </form>
       }
     >
-      <div className="flex min-h-full flex-col pt-8">
-        <p className="text-title-3 font-semibold tracking-tight text-ink">{APP_NAME}</p>
-        <div className="mt-8 mb-7">
-          <MiniReceipt />
-        </div>
+      <div className="flex min-h-full flex-col pt-6">
+        <p className="flex items-center gap-2 text-title-3 font-semibold tracking-tight text-primary-ink">
+          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-md bg-primary text-on-primary">
+            <Icon name="check" size={16} />
+          </span>
+          {APP_NAME}
+        </p>
+        {/* After a failed attempt the picture steps aside so the message and the button stay in view. */}
+        <div className={err ? "mt-6" : "mt-5 mb-6"}>{err ? null : <HeroCard />}</div>
 
         {invite ? (
-          <p className="mb-3 inline-flex items-center gap-2 self-start rounded-full bg-accent-soft py-1 pr-3 pl-1 text-body-sm font-medium text-accent-ink">
+          <p className="mb-3 inline-flex min-h-8 items-center gap-2 self-start rounded-full bg-accent-soft py-1 pr-3 pl-1 text-body-sm font-medium text-accent-ink">
             <Avatar name={invite.referrerName} size="xs" />
             {invite.referrerName} sent you to {invite.venueName}
           </p>
         ) : null}
-        <h1 className="text-title-1 text-ink">Pay local. Thank the friends who sent you.</h1>
+        <h1 className="text-title-1 text-balance text-ink">Get money back when a friend sends you somewhere new.</h1>
         <p className="mt-3 text-body text-ink-2">
-          Scan to pay at cafés, barbers and salons. Your first visit gives you money back, and pays the people whose
-          recommendation brought you in.
+          Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who
+          recommended it.
         </p>
 
         <TextField
@@ -121,10 +132,6 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
           </p>
         ) : null}
 
-        <p className="mt-5 flex items-start gap-2 text-body-sm text-ink-2">
-          <Icon name="faceId" size={18} className="mt-px shrink-0 text-ink-3" />
-          Nothing to download, no password, nothing to write down. Your face or fingerprint keeps your account safe.
-        </p>
       </div>
     </Screen>
   );

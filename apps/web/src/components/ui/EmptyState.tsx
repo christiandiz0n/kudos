@@ -2,10 +2,11 @@ import type { ReactNode } from "react";
 import { cn } from "@/design/cn";
 import { Icon, type IconName } from "./Icon";
 
-export type EmptyStateTone = "neutral" | "warning" | "danger" | "accent";
+export type EmptyStateTone = "neutral" | "warning" | "danger" | "accent" | "primary";
 
 const toneDisc: Record<EmptyStateTone, string> = {
-  neutral: "bg-surface-2 text-ink-2",
+  neutral: "bg-primary-soft text-primary-ink",
+  primary: "bg-primary-soft text-primary-ink",
   warning: "bg-warning-soft text-warning-ink",
   danger: "bg-danger-soft text-danger-ink",
   accent: "bg-accent-soft text-accent-ink",

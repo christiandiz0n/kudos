@@ -3,7 +3,7 @@ import { formatMoney } from "@/design/money";
 import { initials } from "./Avatar";
 
 /**
- * MONEY GRAPH v1 (UI_DESIGN venue, Phase 3). The signature visual: money leaving a customer's purchase, the big
+ * MONEY GRAPH v1 (UI_DESIGN venue, Phase 3; A9 blue venue). The signature visual: money leaving a customer's purchase, the big
  * neutral stream to the venue and the green streams up the recommendation chain (customer → recommender →
  * whoever brought them in). Props-only, deterministic layout, plain SVG + CSS (no d3, no physics).
  *
@@ -517,7 +517,7 @@ export function MoneyGraph(props: MoneyGraphProps) {
           key={e.key}
           d={e.d}
           fill="none"
-          stroke={venue ? "var(--vx-surface-3)" : "var(--vx-accent-4)"}
+          stroke={venue ? "var(--vx-primary-soft-2)" : "var(--vx-accent-4)"}
           strokeOpacity={net && g.hlId ? (venue ? 0.7 : 0.75) : 1}
           strokeWidth={e.width}
           strokeLinecap="round"
@@ -530,8 +530,8 @@ export function MoneyGraph(props: MoneyGraphProps) {
           d={e.d}
           fill="none"
           pathLength={1}
-          stroke={venue ? "var(--vx-line-strong)" : "var(--vx-accent-2)"}
-          strokeOpacity={venue ? 0.55 : 1}
+          stroke={venue ? "var(--vx-primary)" : "var(--vx-accent-2)"}
+          strokeOpacity={venue ? 0.5 : 1}
           strokeWidth={e.width}
           strokeLinecap="round"
           className={anim ? "vx-mg-draw" : undefined}
@@ -541,8 +541,8 @@ export function MoneyGraph(props: MoneyGraphProps) {
           <path
             d={e.d}
             fill="none"
-            stroke={venue ? "var(--vx-ink-2)" : "var(--vx-surface)"}
-            strokeOpacity={venue ? 0.6 : 0.9}
+            stroke={venue ? "var(--vx-primary-pressed)" : "var(--vx-surface)"}
+            strokeOpacity={venue ? 0.7 : 0.9}
             strokeWidth={Math.max(2.5, e.width * 0.32)}
             strokeLinecap="round"
             className="vx-mg-run"
@@ -656,8 +656,8 @@ export function MoneyGraph(props: MoneyGraphProps) {
       <g key={`${g.hlId ?? "none"}:${replayKey ?? ""}:${orientation}:${mode}`}>
         {g.edges.map(edgeEl)}
         <g>
-          <rect x={v.x - v.side / 2} y={v.y - v.side / 2} width={v.side} height={v.side} rx={v.side * 0.28} fill="var(--vx-ink)" />
-          <text x={v.x} y={v.y + f * 0.4} textAnchor="middle" fontSize={f * 1.1} fontWeight={600} fill="var(--vx-on-ink)">
+          <rect x={v.x - v.side / 2} y={v.y - v.side / 2} width={v.side} height={v.side} rx={v.side * 0.28} fill="var(--vx-primary)" />
+          <text x={v.x} y={v.y + f * 0.4} textAnchor="middle" fontSize={f * 1.1} fontWeight={600} fill="var(--vx-on-primary)">
             {initials(v.name)}
           </text>
           <g fontWeight={600} textAnchor={L ? "middle" : "start"}>
@@ -665,7 +665,7 @@ export function MoneyGraph(props: MoneyGraphProps) {
               {v.name}
             </text>
             {vAmount > 0n ? (
-              <text x={vLabelX} y={vLabelY + f * 1.15} fontSize={f * 0.9} fill="var(--vx-ink-2)" style={{ fontVariantNumeric: "tabular-nums" }} {...halo}>
+              <text x={vLabelX} y={vLabelY + f * 1.15} fontSize={f * 0.9} fill="var(--vx-primary-ink)" style={{ fontVariantNumeric: "tabular-nums" }} {...halo}>
                 {formatMoney(vAmount)}
               </text>
             ) : null}

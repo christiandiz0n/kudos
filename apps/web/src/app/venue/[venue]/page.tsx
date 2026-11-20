@@ -3,7 +3,7 @@ import { Dashboard } from "./Dashboard";
 
 export default function Page() {
   return (
-    <ClientPage>
+    <ClientPage frame="none">
       <Dashboard />
     </ClientPage>
   );

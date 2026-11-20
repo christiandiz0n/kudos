@@ -124,7 +124,13 @@ export function IntroLandingScreen(p: IntroLandingScreenProps) {
       <div className="flex flex-col pt-2">
         <div className="flex items-center gap-3">
           <Avatar name={referrerName} size="lg" />
-          <span aria-hidden className="h-px w-6 border-b-2 border-dotted border-line-strong" />
+          <span aria-hidden className="flex items-center gap-1 text-primary-ink">
+            <span className="h-px w-3 border-b-2 border-dotted border-primary-soft-2" />
+            <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary-soft">
+              <Icon name="heart" size={16} />
+            </span>
+            <span className="h-px w-3 border-b-2 border-dotted border-primary-soft-2" />
+          </span>
           <Avatar name={venueName} kind="venue" size="lg" />
         </div>
         <h1 className="mt-5 text-title-1 text-ink">
@@ -138,7 +144,7 @@ export function IntroLandingScreen(p: IntroLandingScreenProps) {
           </blockquote>
         ) : null}
 
-        <Card tone="accent" className="mt-5" padding="lg">
+        <Card tone="accent" className="mt-5 animate-vx-rise-in" padding="lg">
           <p className="text-body-sm font-semibold text-accent-ink">On your first visit</p>
           <p className="mt-1 flex items-baseline gap-2 text-body text-ink">
             <AmountDisplay value={example.cashback} variant="positive" size="lg" splitCents={false} />

@@ -1,0 +1,330 @@
+[
+  {
+    "ctx": "anon",
+    "path": "/",
+    "http": 200,
+    "screen": "s01-landing-signed-out",
+    "url": "/",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account | I run a venue",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/transparency",
+    "http": 200,
+    "screen": "s02-transparency",
+    "url": "/transparency",
+    "primaryCount": 0,
+    "primaries": [],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "How payments split | Every payment at | Lena's café | is split by a public smart contract on | Arc Testnet | , in one transaction. Nobody, including Vouch and | Lena's café | , can skip a recommender, change the terms a recommendation was made under, or touch the money in between. | The formula · terms v | 1 | Reward rate | 15% | = | 1,500 | bps | since | registration | Slice per recommender i | sliceᵢ = ⌊amount × wᵢ × rate / 10⁸⌋, where wᵢ is the attribution weight in bps (Σw = 10,000) | 25% of each slice | ⌊slice × 2,500 / 10,000⌋ to the customer as welcome cashback | 55% of each slice | ⌊slice × 5,500 / 10,000⌋ to recommender i | 20% of each slice | ⌊slice × 2,000 / 10,000⌋ to whoever introduced recommender i (level 2) | Venue | amount − Σ everything actually transferred | Rounding rule | Amounts are integer USDC base units (1 unit = $0.000001). Every share is rounded | down | . The venue receives the remainder, so rounding dust (at most 2 units per recommender) and any share that can't be paid (no introducer, a self-payment cycle, a failed transfer) go to the venue. Payouts always add up to the sale exactly: venueAmount + Σ RewardPaid = amount. | Worked example, in base units | Ben | 's first purchase: | $12.00 | = | 12,000,000 | units, at | 15% | . | Ana 70%, Priya 30% | . | Line | Formula | Units | Slice | Ana | ⌊ | 12,000,000 | × | 7,000 | × | 1,500 | / 10⁸⌋ | 1,260,000 | Slice | Priya | ⌊ | 12,000,000 | × | 3,000 | × | 1,500 | / 10⁸⌋ | 540,000 | Cashback | Ben | ⌊1,26",
+    "focus": {
+      "ok": false,
+      "el": "vercel-live-feedback:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "http": 200,
+    "screen": "s03-transparency-venue",
+    "url": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "primaryCount": 0,
+    "primaries": [],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "How payments split | Every payment at | Lena's café 18:20 | is split by a public smart contract on | Arc Testnet | , in one transaction. Nobody, including Vouch and | Lena's café 18:20 | , can skip a recommender, change the terms a recommendation was made under, or touch the money in between. | The formula · terms v | 1 | Reward rate | 15% | = | 1,500 | bps | since | Nov 18, 2026 | Slice per recommender i | sliceᵢ = ⌊amount × wᵢ × rate / 10⁸⌋, where wᵢ is the attribution weight in bps (Σw = 10,000) | 25% of each slice | ⌊slice × 2,500 / 10,000⌋ to the customer as welcome cashback | 55% of each slice | ⌊slice × 5,500 / 10,000⌋ to recommender i | 20% of each slice | ⌊slice × 2,000 / 10,000⌋ to whoever introduced recommender i (level 2) | Venue | amount − Σ everything actually transferred | Rounding rule | Amounts are integer USDC base units (1 unit = $0.000001). Every share is rounded | down | . The venue receives the remainder, so rounding dust (at most 2 units per recommender) and any share that can't be paid (no introducer, a self-payment cycle, a failed transfer) go to the venue. Payouts always add up to the sale exactly: venueAmount + Σ RewardPaid = amount. | Worked example, in base units | Ben | 's first purchase: | $12.00 | = | 12,000,000 | units, at | 15% | . | Ana 70%, Priya 30% | . | Line | Formula | Units | Slice | Ana | ⌊ | 12,000,000 | × | 7,000 | × | 1,500 | / 10⁸⌋ | 1,260,000 | Slice | Priya | ⌊ | 12,000,000 | × | 3,000 | × | 1,500 | / 10⁸⌋ | 540,000 | Cashback |",
+    "focus": {
+      "ok": false,
+      "el": "vercel-live-feedback:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/i/vG6xcBExH",
+    "http": 200,
+    "screen": "s04-intro-signed-out",
+    "url": "/i/vG6xcBExH",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | BE | Ben | sent you to | Lena's café 18:20 | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/a/0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+    "http": 200,
+    "screen": "s05-record-public",
+    "url": "/a/0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+    "primaryCount": 0,
+    "primaries": [],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Ben's record | BE | Ben | Ambassador | 1 | new | customer | across | 1 | venue | Earned from recommendations | +$0.04 | Every number here comes from a real first purchase someone made after Ben's recommendation. | Venues | LC | Lena's café 18:20 | 1 new customer · First visits you sent | +$0.04",
+    "focus": {
+      "ok": true,
+      "el": "summary:Details",
+      "outline": "solid 2px rgb(64, 117, 173)",
+      "boxShadow": "rgba(64, 117, 173, 0.24) 0px 0px 0px 6px"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/scan",
+    "http": 200,
+    "screen": "s06-scan-signed-out",
+    "url": "/scan",
+    "primaryCount": 0,
+    "primaries": [],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Scan to pay | Starting the camera… | Type the code instead",
+    "focus": {
+      "ok": false,
+      "el": "vercel-live-feedback:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/venue",
+    "http": 200,
+    "screen": "s07-venue-signed-out",
+    "url": "/venue",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "http": 200,
+    "screen": "s08-venue-dashboard-signed-out",
+    "url": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/wallet",
+    "http": 200,
+    "screen": "s09-wallet-signed-out",
+    "url": "/wallet",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/me",
+    "http": 200,
+    "screen": "s10-me-signed-out",
+    "url": "/me",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue with Face ID or fingerprint"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Vouch | LC | Lena's café | $12.00 | AN | Ana thanked | +$0.45 back | Get money back when a friend sends you somewhere new. | Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it. | Your first name | Friends see this when you recommend a place. | Continue with Face ID or fingerprint | No password, nothing to write down. Your face or fingerprint keeps your account safe. | I already have an account",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "anon",
+    "path": "/i/NOPE0000",
+    "http": 200,
+    "screen": "s11-intro-unknown",
+    "url": "/i/NOPE0000",
+    "primaryCount": 0,
+    "primaries": [],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "This link doesn't work | It may have been mistyped. Ask your friend to send it again. | Open Vouch",
+    "focus": {
+      "ok": false,
+      "el": "vercel-live-feedback:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": [
+      {
+        "kind": "console",
+        "text": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://vouch-ubc-blue.vercel.app/i/NOPE0000"
+      }
+    ]
+  },
+  {
+    "ctx": "anon",
+    "path": "/does-not-exist",
+    "http": 404,
+    "screen": "s12-404",
+    "url": "/does-not-exist",
+    "primaryCount": 1,
+    "primaries": [
+      "Go to Vouch"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "We can't find that page | The link may be mistyped or out of date. Nothing has changed in your account. | Go to Vouch | Scan a code",
+    "focus": {
+      "ok": false,
+      "el": "vercel-live-feedback:",
+      "outline": "none 0px rgb(21, 32, 46)",
+      "boxShadow": "none"
+    },
+    "errs": [
+      {
+        "kind": "console",
+        "text": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://vouch-ubc-blue.vercel.app/i/NOPE0000"
+      }
+    ]
+  },
+  {
+    "screen": "QE-3-07 focus ring",
+    "ring": {
+      "tag": "INPUT",
+      "inputOutline": "none 0px",
+      "inputShadow": "none",
+      "wrapperShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(64, 117, 173) 0px 0px 0px 2px inset",
+      "wrapperOutline": "none 0px"
+    }
+  },
+  {
+    "screen": "s50-transparency-1280",
+    "errs": []
+  }
+]

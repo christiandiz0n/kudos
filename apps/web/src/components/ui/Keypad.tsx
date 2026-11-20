@@ -21,7 +21,7 @@ export function Keypad({ onKey, disabled, className }: { onKey: (key: KeypadKey)
           disabled={disabled}
           onClick={() => onKey(k)}
           aria-label={k === "back" ? "Delete" : k === "." ? "Decimal point" : k}
-          className="focus-ring money flex h-16 items-center justify-center rounded-md text-title-2 text-ink transition-colors duration-[var(--vx-dur-instant)] hover:bg-surface-2 active:bg-surface-3 disabled:text-ink-3"
+          className="focus-ring money flex h-16 items-center justify-center rounded-md text-title-2 text-ink transition-colors duration-[var(--vx-dur-instant)] hover:bg-primary-soft active:bg-primary-soft-2 disabled:text-ink-3"
         >
           {k === "back" ? <Icon name="backspace" size={24} /> : k}
         </button>

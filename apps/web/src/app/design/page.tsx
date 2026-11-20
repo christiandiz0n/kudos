@@ -21,7 +21,7 @@ function Section({ id, n, title, intro, children }: { id: string; n: string; tit
   return (
     <section id={id} data-shot={id} className="scroll-mt-6 border-t border-line px-4 py-12 sm:px-8">
       <div className="mx-auto max-w-[1320px]">
-        <p className="money text-caption font-semibold text-accent-ink">{n}</p>
+        <p className="money text-caption font-semibold text-primary-ink">{n}</p>
         <h2 className="mt-1 text-title-1 text-ink">{title}</h2>
         {intro ? <div className="mt-2 max-w-[68ch] text-body text-ink-2">{intro}</div> : null}
         <div className="mt-8">{children}</div>
@@ -36,9 +36,15 @@ const SWATCHES: Array<[string, string]> = [
   ["surface-2", "Wells, tracks"],
   ["line", "Hairlines"],
   ["line-strong", "Input borders"],
-  ["ink", "Text, primary button"],
+  ["ink", "Text"],
   ["ink-2", "Secondary text"],
   ["ink-3", "Meta, captions"],
+  ["primary", "Primary action, venue"],
+  ["primary-hover", "Hover"],
+  ["primary-pressed", "Pressed"],
+  ["primary-ink", "Blue text, links"],
+  ["primary-soft", "Blue tint, selected"],
+  ["primary-soft-2", "Selected chip, ring"],
   ["accent", "Money to people"],
   ["accent-ink", "Green text"],
   ["accent-soft", "Green tint"],
@@ -67,13 +73,14 @@ export default function DesignPage() {
           <div>
             <p className="text-body-sm font-semibold text-ink-2">{APP_NAME} design system · v0 · Phase 1 draft for approval</p>
             <h1 className="mt-3 max-w-[18ch] text-[2.5rem] leading-[1.05] font-semibold tracking-[-0.03em] text-ink sm:text-[3.5rem]">
-              Ink and paper. Green means somebody got paid.
+              Calm blue. Green means somebody got paid.
             </h1>
             <div className="mt-5 max-w-[60ch] space-y-3 text-body text-ink-2">
               <p>
-                Clean fintech, set in a neighbourhood. Warm paper neutrals and ink-black actions keep it calm and trustworthy.
-                There is one accent, a deep green, and it is reserved for money moving to a person: cashback, rewards, the
-                referral flow, success. Primary buttons are ink, not green, so the green always carries meaning.
+                Clean, friendly consumer fintech. Cool off-white neutrals, navy text and one brand blue (#4075AD) for
+                actions, selection, links, focus and the venue keep it calm and trustworthy. Green is reserved for money
+                moving to a person: cashback, rewards, the referral flow, success. Primary buttons are blue, not green, so
+                the green always carries meaning.
               </p>
               <p>
                 <strong className="text-ink">Signature motif: the split receipt.</strong> Every payment is a perforated receipt
@@ -199,7 +206,7 @@ export default function DesignPage() {
             {SPACING.map((s) => (
               <div key={s} className="flex items-center gap-3 py-1">
                 <span className="money w-10 text-caption text-ink-3">{s}</span>
-                <span className="h-3 rounded-xs bg-accent-3" style={{ width: s * 3 }} />
+                <span className="h-3 rounded-xs bg-primary-soft-2" style={{ width: s * 3 }} />
               </div>
             ))}
           </div>
@@ -274,7 +281,7 @@ export default function DesignPage() {
             v1 (Phase 3). One payment, drawn as money leaving Ben&apos;s purchase: the neutral stream to the venue on the left,
             green streams up the recommendation chain on the right (Ben → Ana → Marco, Ben → Priya → Sofia). Cashback is a
             &ldquo;+$0.45 back&rdquo; badge on Ben, never a loop. Edge width ∝ √amount. Seeded 5 / 20 / 60-person networks live in
-            the <a href="/design/money-graph" className="font-semibold text-accent-ink underline underline-offset-4">money graph playground</a>.
+            the <a href="/design/money-graph" className="font-semibold text-primary-ink underline underline-offset-4">money graph playground</a>.
           </p>
         }
       >

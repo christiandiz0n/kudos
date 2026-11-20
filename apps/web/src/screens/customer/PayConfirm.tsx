@@ -145,19 +145,28 @@ export function PayConfirmContent(p: PayConfirmProps) {
       <div className="flex items-center gap-3">
         <Avatar name={p.venueName} kind="venue" size="md" />
         <div className="min-w-0">
-          <p className="text-body font-semibold text-ink">{p.venueName}</p>
-          <p className="text-caption text-ink-3">{p.orderLabel}</p>
+          <p className="text-caption text-ink-3">Paying</p>
+          <p className="truncate text-body font-semibold text-ink">{p.venueName}</p>
         </div>
       </div>
 
       <div className="mt-4 flex flex-col items-start">
         <AmountDisplay value={p.amount} size="display" as="p" />
+        <p className="mt-1 text-caption text-ink-3">{p.orderLabel}</p>
         {p.quoting ? (
-          <Skeleton rounded="full" className="mt-2 h-8 w-44" />
+          <Skeleton className="mt-3 h-16 w-full" />
         ) : p.cashback > 0n ? (
-          <p className="mt-2 inline-flex h-9 items-center gap-1 rounded-full bg-accent-soft px-3.5 text-body font-medium text-accent-ink">
-            You&apos;ll get <AmountDisplay value={p.cashback} size="md" className="text-accent-ink" /> back
-          </p>
+          <div className="mt-3 flex w-full animate-vx-rise-in items-center gap-3 rounded-lg bg-accent-soft px-4 py-3">
+            <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent-ink shadow-1">
+              <Icon name="plus" size={20} />
+            </span>
+            <span className="min-w-0">
+              <span className="flex items-baseline gap-1 text-title-3 text-accent-ink">
+                You&apos;ll get <AmountDisplay value={p.cashback} size="lg" className="text-accent-ink" /> back
+              </span>
+              <span className="block text-caption text-ink-2">First-visit money back, right after you pay</span>
+            </span>
+          </div>
         ) : p.noReward === "belowMinimum" ? (
           <BelowMinimumWarning venueName={p.venueName} amount={p.amount} minOrder={p.minOrder} />
         ) : (

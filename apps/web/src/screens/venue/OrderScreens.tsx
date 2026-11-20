@@ -66,7 +66,7 @@ export function OrderEntryScreen(p: OrderEntryScreenProps) {
   const belowReward = ok && p.rewardMinOrder !== undefined && p.amount < p.rewardMinOrder;
   return (
     <Screen
-      header={<AppBar title={p.venueName} leading={p.onBack ? <IconButton icon="arrowLeft" label="Back to dashboard" onClick={p.onBack} /> : undefined} trailing={<Badge>Counter</Badge>} />}
+      header={<AppBar title={p.venueName} leading={p.onBack ? <IconButton icon="arrowLeft" label="Back to dashboard" onClick={p.onBack} /> : undefined} trailing={<Badge tone="primary">Counter</Badge>} />}
       footer={
         <Button block size="lg" leadingIcon="qr" disabled={!ok} loading={p.creating} loadingLabel="Creating code…" onClick={p.onShowCode}>
           {ok ? `Show code for ${formatMoney(p.amount)}` : "Show code"}
@@ -74,11 +74,11 @@ export function OrderEntryScreen(p: OrderEntryScreenProps) {
       }
     >
       <div className="flex flex-col items-center pt-6 pb-4 text-center">
-        <p className="text-body-sm font-medium text-ink-2">New order</p>
+        <p className="inline-flex h-7 items-center rounded-full bg-primary-soft px-3 text-caption font-semibold text-primary-ink">New order</p>
         <p
           aria-live="polite"
           aria-label={`Amount ${p.entry ? `$${p.entry}` : "$0"}`}
-          className={cn("money mt-1 text-[4.25rem] leading-none font-semibold tracking-[-0.04em]", p.entry ? "text-ink" : "text-ink-3")}
+          className={cn("money mt-3 text-[4.25rem] leading-none font-semibold tracking-[-0.04em]", p.entry ? "text-ink" : "text-ink-3")}
         >
           <span className="text-[0.5em] align-[0.6em]">$</span>
           {p.entry || "0"}
@@ -162,7 +162,9 @@ export function OrderQRScreen(p: OrderQRScreenProps) {
     ) : p.state === "processing" ? (
       <Badge>Paying…</Badge>
     ) : (
-      <Badge dot>Waiting</Badge>
+      <Badge tone="primary" dot>
+        Waiting
+      </Badge>
     );
   return (
     <Screen
@@ -195,7 +197,7 @@ export function OrderQRScreen(p: OrderQRScreenProps) {
             {p.orderLabel ? <p className="text-body-sm font-medium text-ink-2">{p.orderLabel}</p> : null}
             <p className="money text-[2.75rem] leading-tight font-semibold tracking-[-0.03em] text-ink">{formatMoney(p.amount)}</p>
             <p role="status" className="mt-1 mb-5 flex items-center gap-2 text-body-sm text-ink-2">
-              {p.state === "live" ? <span aria-hidden className="size-2 animate-pulse rounded-full bg-accent" /> : null}
+              {p.state === "live" ? <span aria-hidden className="size-2 animate-pulse rounded-full bg-primary" /> : null}
               {p.state === "processing"
                 ? "Payment on its way"
                 : p.state === "expired"

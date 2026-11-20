@@ -53,7 +53,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange, l
             onClick={() => onChange(o.value)}
             className={cn(
               "focus-ring h-11 rounded-sm px-3 text-body-sm font-semibold transition-[background-color,color,box-shadow] duration-[var(--vx-dur-fast)]",
-              selected ? "bg-surface text-ink shadow-1" : "text-ink-2 hover:text-ink",
+              selected ? "bg-surface text-primary-ink shadow-1 ring-1 ring-primary-soft-2" : "text-ink-2 hover:text-ink",
             )}
           >
             {o.label}

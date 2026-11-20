@@ -65,7 +65,7 @@ function Mono({ children }: { children: string }) {
 
 function ExtLink({ href, children }: { href: string; children: string }) {
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="focus-ring flex min-h-12 items-center justify-between gap-3 rounded-md px-1 text-body-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
+    <a href={href} target="_blank" rel="noreferrer" className="focus-ring flex min-h-12 items-center justify-between gap-3 rounded-md px-1 text-body-sm font-semibold text-primary-ink underline-offset-4 hover:underline">
       {children}
       <Icon name="external" size={18} className="shrink-0" />
       <span className="sr-only"> (opens in a new tab)</span>
@@ -237,7 +237,7 @@ export function TransparencyScreen(p: TransparencyScreenProps) {
       <p className="mt-2 text-caption text-ink-3">Plus setup events: VenueRegistered, VenueKeysUpdated, SeedAmbassadorSet, IntroDropped.</p>
 
       <SectionLabel>How Streams powers this</SectionLabel>
-      <Card tone="accent" padding="md" className="text-body-sm text-ink">
+      <Card tone="primary" padding="md" className="text-body-sm text-ink">
         A QuickNode Stream watches this contract on Arc and pushes every event to our API within seconds (HMAC-signed webhook).
         Dashboards, feeds and the money graph are rebuilt from those events alone; replaying the stream from block{" "}
         {p.deployBlock ? n(BigInt(p.deployBlock)) : "the deploy block"} reproduces them exactly.

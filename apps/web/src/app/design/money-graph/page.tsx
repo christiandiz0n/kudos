@@ -10,7 +10,7 @@ export default function MoneyGraphPage() {
   return (
     <main className="min-h-dvh bg-canvas px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-[1320px]">
-        <Link href="/design" className="focus-ring rounded-xs text-caption font-semibold text-accent-ink underline-offset-4 hover:underline">
+        <Link href="/design" className="focus-ring rounded-xs text-caption font-semibold text-primary-ink underline-offset-4 hover:underline">
           ← Design system
         </Link>
         <h1 className="mt-2 text-title-1 text-ink">Money graph</h1>

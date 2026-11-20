@@ -10,7 +10,7 @@ const sizes: Record<AvatarSize, string> = {
 };
 
 /**
- * Muted identity tints (--vx-tint-1..6, not accents): warm paper tones so the faces of the network feel
+ * Muted identity tints (--vx-tint-1..6, not accents): soft tones so the faces of the network feel
  * local and human without competing with the green. Ink text on all of them is ≥ 9:1.
  */
 // Literal class names so Tailwind's scanner sees them.
@@ -55,7 +55,7 @@ export function Avatar({ name, size = "md", kind = "person", className, decorati
         "inline-flex shrink-0 items-center justify-center font-semibold text-ink select-none",
         sizes[size],
         kind === "venue" ? "rounded-[30%]" : "rounded-full",
-        kind === "you" ? "bg-accent-soft text-accent-ink ring-2 ring-accent ring-offset-2 ring-offset-surface" : tintFor(name),
+        kind === "you" ? "bg-primary-soft text-primary-ink ring-2 ring-primary ring-offset-2 ring-offset-surface" : tintFor(name),
         className,
       )}
     >

@@ -163,7 +163,7 @@ export function Sheet({ open, onClose, dismissible = true, ariaLabel, title, des
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         onKeyDown={onKeyDown}
-        className="relative w-full max-w-[480px] animate-vx-sheet-in outline-none"
+        className="relative w-full max-w-[480px] animate-vx-sheet-in outline-none sm:mb-[max(2rem,calc((100dvh-940px)/2))] sm:max-w-[460px] sm:overflow-hidden sm:rounded-b-xl"
         style={{
           transform: dragY ? `translateY(${dragY}px)` : undefined,
           transition: !dragging ? "transform var(--vx-dur-base) var(--vx-ease-out)" : "none",

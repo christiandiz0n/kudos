@@ -11,12 +11,15 @@ const base =
   "active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100 aria-disabled:cursor-not-allowed";
 
 const variants: Record<ButtonVariant, string> = {
-  // Ink-black: the one primary action on a screen.
-  primary: "bg-ink text-on-ink hover:bg-ink/90 disabled:bg-surface-3 disabled:text-ink-3",
-  // Outlined on paper.
+  // Brand blue: the one primary action on a screen.
+  primary:
+    "bg-primary text-on-primary shadow-[0_1px_2px_rgba(21,32,46,0.12)] hover:bg-primary-hover active:bg-primary-pressed " +
+    "disabled:bg-surface-3 disabled:text-ink-3 disabled:shadow-none",
+  // Outlined on white, blue label.
   secondary:
-    "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-surface-2 disabled:text-ink-3 disabled:bg-surface-2",
-  ghost: "bg-transparent text-ink hover:bg-surface-2 disabled:text-ink-3",
+    "bg-surface text-primary-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-primary-soft hover:shadow-[inset_0_0_0_1px_var(--vx-primary-soft-2)] " +
+    "disabled:text-ink-3 disabled:bg-surface-2",
+  ghost: "bg-transparent text-primary-ink hover:bg-primary-soft disabled:text-ink-3",
   destructive: "bg-danger text-on-danger hover:bg-danger/90 disabled:bg-surface-3 disabled:text-ink-3",
   // Reserved for money moments (e.g. "Recommend Lena's" after you got paid). Use rarely.
   accent: "bg-accent text-on-accent hover:bg-accent/90 disabled:bg-surface-3 disabled:text-ink-3",

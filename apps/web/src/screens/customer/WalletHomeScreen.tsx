@@ -17,7 +17,7 @@
  *   toppingUp?              top-up request in flight
  *   onScan, onTopUp, onRecommend, onOpenRecord, onOpenActivity(id)
  */
-import { AmountDisplay, AppBar, Avatar, Badge, Button, Card, EmptyState, Icon, List, ListItem, Screen, SectionLabel, Skeleton, SkeletonRow } from "@/components/ui";
+import { AmountDisplay, AppBar, Avatar, Badge, Button, EmptyState, Icon, List, ListItem, Screen, SectionLabel, Skeleton, SkeletonRow } from "@/components/ui";
 import { cn } from "@/design/cn";
 
 export interface ActivityItem {
@@ -104,8 +104,8 @@ export function WalletHomeScreen({
         </p>
       ) : null}
 
-      <section aria-label="Balance" aria-busy={loading || undefined} className="pt-4 pb-2">
-        <p className="text-body-sm font-medium text-ink-2">Balance</p>
+      <section aria-label="Balance" aria-busy={loading || undefined} className="mt-3 rounded-xl bg-surface p-5 shadow-2 ring-1 ring-line/60">
+        <p className="text-body-sm font-medium text-ink-2">Your balance</p>
         {loading ? (
           <>
             <span className="sr-only">Loading your balance</span>
@@ -116,30 +116,33 @@ export function WalletHomeScreen({
           <>
             <AmountDisplay value={balance} size="display" as="p" className="mt-1" />
             {earnedThisWeek ? (
-              <p className="mt-2 flex w-fit h-8 items-center gap-1 rounded-full bg-accent-soft px-3 text-body-sm font-medium text-accent-ink">
+              <p className="mt-2 flex h-8 w-fit animate-vx-rise-in items-center gap-1 rounded-full bg-accent-soft px-3 text-body-sm font-medium text-accent-ink">
                 <AmountDisplay value={earnedThisWeek} variant="positive" size="sm" className="font-semibold" /> earned this week
               </p>
             ) : null}
           </>
         )}
-        <div className="mt-4 flex flex-col items-start gap-1.5">
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-line pt-4">
           <Button size="sm" variant="secondary" leadingIcon="plus" loading={toppingUp} loadingLabel="Adding…" onClick={onTopUp} disabled={loading || offline}>
             Top up (testnet demo)
           </Button>
-          <span className="pl-1 text-caption whitespace-nowrap text-ink-3">Simulated money for this demo. No card needed.</span>
+          <span className="text-caption text-ink-3">Simulated money for this demo. No card needed.</span>
         </div>
       </section>
 
       {canRecommend && !loading ? (
-        <Card tone="accent" className="mt-5 flex items-center gap-3">
+        <section aria-label="Recommend" className="mt-4 flex items-center gap-3 rounded-lg bg-primary-soft p-4">
+          <span aria-hidden className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-primary-ink shadow-1">
+            <Icon name="heart" size={22} />
+          </span>
           <div className="min-w-0 flex-1">
             <p className="text-body-sm font-semibold text-ink">Liked {canRecommend.venueName}?</p>
-            <p className="text-caption text-ink-2">Recommend it. When a friend makes their first purchase, part of it comes to you.</p>
+            <p className="text-caption text-ink-2">A friend gets money back on their first visit. You get paid too.</p>
           </div>
           <Button size="sm" variant="secondary" onClick={onRecommend}>
             Recommend
           </Button>
-        </Card>
+        </section>
       ) : null}
 
       {record && !loading ? (
@@ -172,7 +175,7 @@ export function WalletHomeScreen({
         <EmptyState
           icon="scan"
           title="No payments yet"
-          body="Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back."
+          body="Tap Scan to pay at a Vouch café, barber or salon. Your first visit gives you money back."
           className="py-8"
         />
       ) : (
@@ -193,9 +196,9 @@ export function WalletHomeScreen({
                       <Badge className="mt-0.5 h-5 px-2" dot>
                         Pending
                       </Badge>
-                    ) : (
-                      a.note
-                    )
+                    ) : a.note ? (
+                      <span className={cn("money font-medium", a.amount < 0n ? "text-accent-ink" : "text-ink-3")}>{a.note}</span>
+                    ) : null
                   }
                 />
               </li>
