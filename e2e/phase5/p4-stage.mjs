@@ -627,9 +627,42 @@ async function renameSaved() {
   process.exit(ok.every(Boolean) ? 0 : 2);
 }
 
+/** --fix-w2 (headless): change ONLY the cached displayName in Ana's saved profile (session user + wallet record), so
+ *  W2's header matches the server name. Token, keys, passkey untouched. */
+async function fixW2() {
+  const S = JSON.parse(readFileSync(STATE, "utf8"));
+  const creds = JSON.parse(readFileSync(join(STATE_DIR, S.ana.credsFile), "utf8"));
+  const p = await openPersona(S.profiles.ana, "phone", { headless: true, creds });
+  try {
+    await p.page.goto(`${BASE}/wallet`);
+    await settle(p.page, 1200);
+    const r = await p.page.evaluate(async (name) => {
+      const out = {};
+      const raw = localStorage.getItem("vouch.session.v1");
+      if (raw) { const s = JSON.parse(raw); if (s.user) { s.user.displayName = name; localStorage.setItem("vouch.session.v1", JSON.stringify(s)); out.session = true; } }
+      out.wallet = await new Promise((res) => {
+        const req = indexedDB.open("vouch-wallet");
+        req.onsuccess = () => {
+          const db = req.result; const tx = db.transaction("wallets", "readwrite"); const st = tx.objectStore("wallets");
+          const g = st.get("current");
+          g.onsuccess = () => { const w = g.result; if (!w) return res(false); w.displayName = name; st.put(w, "current"); tx.oncomplete = () => res(true); };
+          g.onerror = () => res(false);
+        };
+        req.onerror = () => res(false);
+      });
+      return out;
+    }, RENAMES.ana);
+    await p.page.reload();
+    await settle(p.page, 1500);
+    const header = (await p.page.evaluate(() => document.body.innerText)).split("\n").slice(0, 3).join(" | ");
+    console.log("fix-w2:", JSON.stringify(r), "header:", header);
+  } finally { await p.ctx.close(); }
+}
+
 if (has("build")) await build({ force: has("force") });
 else if (has("verify")) await verifySaved();
 else if (has("rename")) await renameSaved();
+else if (has("fix-w2")) await fixW2();
 else if (has("present")) await present(); // HEADED by design: only the human runs it, at recording time
 else {
   console.log("usage: node e2e/phase5/p4-stage.mjs --base https://vouch-ubc.vercel.app (--build [--force] | --verify | --present [--check-seconds N])");
