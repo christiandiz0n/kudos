@@ -973,3 +973,11 @@ Hosted check after 920a042: with the default `100.64.0.0/10`, `req.ip` was Railw
 ### D-022 — 2026-11-19 23:35 CST — Amendment A9: UI re-skin on branch `ui-blue` (human)
 - Human A9 (verbatim in ORCHESTRATOR_PROMPT.md): blue theme (#4075AD) + demo-path UX polish on branch `ui-blue`, Vercel PREVIEW only; preview ready by 02:30 CST (scope freeze 02:00); no API/contract/data-flow changes; independent QE on the preview, including the live story; a private before/after page; "ship it" → merge + prod deploy + verify; "keep old" → discard the branch.
 - Orchestrator: the work happens in a separate git worktree `../ubc-2026-ui-blue` (branch `ui-blue` from 97808d9), so the main tree keeps serving docs/P4/prod work. Two UI_DESIGN instances share that worktree with split ownership: theme tokens, venue screens and money graph vs customer screens.
+
+### D-023 — 2026-11-19 ~23:55 CST — Human approvals: CORS for the preview, unprotect previews, keep the repo public, author line
+- Human: "add CORS" → Railway api `CORS_ORIGINS` = `http://localhost:3100,https://vouch-ubc.vercel.app,https://vouch-ubc-blue.vercel.app` (verified by preflight from both web origins; api healthy).
+- Human: "unprotect previews" → `vercel project protection disable vouch --sso` (ssoProtection null). Preview `vouch-ubc-blue.vercel.app` (alias of the ui-blue preview deployment) returns 200. Re-enable after the ship/keep decision.
+- Human: "keep public": the repo has been public since 2026-11-16 14:55Z (GitHub PublicEvent, never recorded here). The pre-public secret scan (`docs/qa/pre-public-secret-scan.md`) is CLEAN-with-notes; the prod SESSION_SECRET and STREAMS_WEBHOOK_SECRET are not in the repo (equality check, values never printed). Commit-author email exposure accepted (no history rewrite).
+- Human: the author line is "Christian Dizon, Rutgers University" (built solo).
+- Human: all Playwright runs are headless; only the human runs `p4-stage.mjs --present` (headed) at recording time.
+
