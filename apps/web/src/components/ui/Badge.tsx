@@ -1,14 +1,16 @@
 import type { ReactNode } from "react";
 import { cn } from "@/design/cn";
 
-export type BadgeTone = "neutral" | "accent" | "warning" | "danger" | "solid";
+export type BadgeTone = "neutral" | "accent" | "warning" | "danger" | "solid" | "primary";
 
 const tones: Record<BadgeTone, string> = {
   neutral: "bg-surface-2 text-ink-2",
   accent: "bg-accent-soft text-accent-ink",
   warning: "bg-warning-soft text-warning-ink",
   danger: "bg-danger-soft text-danger-ink",
-  solid: "bg-ink text-on-ink",
+  solid: "bg-primary text-on-primary",
+  /** Blue tint: informational / selected state (not money). */
+  primary: "bg-primary-soft text-primary-ink",
 };
 
 export interface BadgeProps {

@@ -1,9 +1,10 @@
 /*
  * Vouch design tokens (UI_DESIGN, Phase 1). See docs/design/DESIGN_SYSTEM.md.
  *
- * Direction: clean fintech on warm "receipt paper" neutrals. Ink-black primary actions.
- * ONE accent (green) that is reserved for money moving to a person: cashback, rewards,
- * the referral flow, success. If something is green, somebody got paid.
+ * Direction (A9): calm, modern consumer fintech. Cool off-white neutrals, navy ink text, and a
+ * brand blue (#4075AD) for primary actions, selection, links, focus and the venue.
+ * Green stays reserved for money moving to a person: cashback, rewards, the referral flow,
+ * success. If something is green, somebody got paid.
  *
  * Every raw value lives here as a --vx-* variable. Tailwind utilities are generated from the
  * @theme block at the bottom (bg-surface, text-ink-2, border-line, shadow-2, ease-out, ...).
@@ -14,17 +15,26 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Neutrals: warm paper + ink */
-  --vx-canvas: #f6f4ef; /* app background */
+  /* Neutrals: calm cool off-white + navy ink (A9 blue theme) */
+  --vx-canvas: #f5f7fa; /* app background */
   --vx-surface: #ffffff; /* cards, sheets */
-  --vx-surface-2: #eeebe4; /* sunken wells, inputs, segmented track */
-  --vx-surface-3: #e4e0d7; /* pressed / hover on sunken */
-  --vx-line: #e2ddd3; /* hairlines, dividers */
-  --vx-line-strong: #8f877b; /* input borders, focusable outlines (3:1 on surfaces) */
-  --vx-ink: #1b1915; /* primary text, primary button */
-  --vx-ink-2: #57514a; /* secondary text */
-  --vx-ink-3: #6b645b; /* meta, captions (AA on canvas + surface) */
-  --vx-on-ink: #fbfaf7; /* text on ink fills */
+  --vx-surface-2: #edf1f6; /* sunken wells, inputs, segmented track */
+  --vx-surface-3: #e1e7ef; /* pressed / hover on sunken */
+  --vx-line: #dde3eb; /* hairlines, dividers */
+  --vx-line-strong: #7d8a9c; /* input borders, focusable outlines (3:1 on surfaces) */
+  --vx-ink: #15202e; /* primary text */
+  --vx-ink-2: #4a5668; /* secondary text */
+  --vx-ink-3: #5b6779; /* meta, captions (AA on canvas + surface + surface-2) */
+  --vx-on-ink: #f5f7fa; /* text on ink fills */
+
+  /* Brand blue (A9): primary actions, selection, links, focus, the venue in the money graph. */
+  --vx-primary: #4075ad; /* primary button fill (white text 4.81:1) */
+  --vx-primary-hover: #36659a; /* hover */
+  --vx-primary-pressed: #2e5784; /* pressed / active */
+  --vx-primary-ink: #33649b; /* blue text + links on canvas, surface and tints (>= 5.3:1) */
+  --vx-primary-soft: #e8f0f9; /* tinted backgrounds, selected rows */
+  --vx-primary-soft-2: #d4e3f3; /* stronger tint: selected chips, graph venue edges */
+  --vx-on-primary: #ffffff; /* text on primary fills */
 
   /* The accent: "Vouch green". Money that comes back to people. */
   --vx-accent: #17694f; /* fills, strokes, large amounts */
@@ -48,38 +58,45 @@
   --vx-on-danger: #ffffff;
 
   /* Focus ring */
-  --vx-focus: #17694f;
-  --vx-focus-halo: rgba(23, 105, 79, 0.22);
+  --vx-focus: #4075ad;
+  --vx-focus-halo: rgba(64, 117, 173, 0.24);
 
-  /* Elevation: warm-tinted, low-contrast shadows */
-  --vx-shadow-1: 0 1px 0 rgba(27, 25, 21, 0.04), 0 1px 2px rgba(27, 25, 21, 0.06);
-  --vx-shadow-2: 0 2px 4px rgba(27, 25, 21, 0.04), 0 8px 24px rgba(27, 25, 21, 0.08);
-  --vx-shadow-3: 0 -2px 8px rgba(27, 25, 21, 0.04), 0 -16px 48px rgba(27, 25, 21, 0.14);
-  --vx-scrim: rgba(27, 25, 21, 0.36);
+  /* Elevation: cool-tinted, low-contrast shadows */
+  --vx-shadow-1: 0 1px 0 rgba(21, 32, 46, 0.04), 0 1px 2px rgba(21, 32, 46, 0.06);
+  --vx-shadow-2: 0 2px 4px rgba(21, 32, 46, 0.04), 0 8px 24px rgba(21, 32, 46, 0.08);
+  --vx-shadow-3: 0 -2px 8px rgba(21, 32, 46, 0.04), 0 -16px 48px rgba(21, 32, 46, 0.14);
+  --vx-scrim: rgba(21, 32, 46, 0.4);
 
   /* Identity tints for avatars (not accents; ink text on all ≥ 9:1) */
-  --vx-tint-1: #ece3d3; /* oat */
-  --vx-tint-2: #e9dcd6; /* clay */
-  --vx-tint-3: #dde4dc; /* sage */
-  --vx-tint-4: #dfe1e6; /* slate */
-  --vx-tint-5: #ede0e3; /* rose */
-  --vx-tint-6: #e5e1d0; /* sand */
+  --vx-tint-1: #dfe8f3; /* sky */
+  --vx-tint-2: #ebe2dc; /* clay */
+  --vx-tint-3: #dde7e2; /* sage */
+  --vx-tint-4: #e2e4ef; /* periwinkle */
+  --vx-tint-5: #eee2e6; /* rose */
+  --vx-tint-6: #e9e5d8; /* sand */
 }
 
-/* Dark: same hues, re-tuned for AA on near-black warm surfaces. */
+/* Dark: same hues, re-tuned for AA on near-black cool surfaces. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --vx-canvas: #12110f;
-    --vx-surface: #1c1b18;
-    --vx-surface-2: #262420;
-    --vx-surface-3: #312e29;
-    --vx-line: #34312c;
-    --vx-line-strong: #7d766b;
-    --vx-ink: #f4f1eb;
-    --vx-ink-2: #c4bdb2;
-    --vx-ink-3: #a29a8f;
-    --vx-on-ink: #12110f;
+    --vx-canvas: #0f141b;
+    --vx-surface: #171d26;
+    --vx-surface-2: #1f2631;
+    --vx-surface-3: #29313e;
+    --vx-line: #2c3442;
+    --vx-line-strong: #6f7c8f;
+    --vx-ink: #eef2f7;
+    --vx-ink-2: #b8c2d0;
+    --vx-ink-3: #97a3b4;
+    --vx-on-ink: #0f141b;
+    --vx-primary: #7fa6d6;
+    --vx-primary-hover: #94b5de;
+    --vx-primary-pressed: #a9c4e6;
+    --vx-primary-ink: #9bbce4;
+    --vx-primary-soft: #1a2a40;
+    --vx-primary-soft-2: #22375a;
+    --vx-on-primary: #0b1420;
     --vx-accent: #4cc39a;
     --vx-accent-ink: #6fd3ae;
     --vx-accent-soft: #173328;
@@ -94,32 +111,39 @@
     --vx-danger-ink: #f59a90;
     --vx-danger-soft: #3a1a17;
     --vx-on-danger: #1a0805;
-    --vx-focus: #6fd3ae;
-    --vx-focus-halo: rgba(111, 211, 174, 0.25);
+    --vx-focus: #8fb3e0;
+    --vx-focus-halo: rgba(143, 179, 224, 0.28);
     --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
     --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
     --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
     --vx-scrim: rgba(0, 0, 0, 0.6);
-    --vx-tint-1: #3a3328;
+    --vx-tint-1: #24324a;
     --vx-tint-2: #3b2f2c;
     --vx-tint-3: #2c352e;
-    --vx-tint-4: #2d3038;
+    --vx-tint-4: #2d3142;
     --vx-tint-5: #3a2d31;
     --vx-tint-6: #36342a;
   }
 }
 [data-theme="dark"] {
   color-scheme: dark;
-  --vx-canvas: #12110f;
-  --vx-surface: #1c1b18;
-  --vx-surface-2: #262420;
-  --vx-surface-3: #312e29;
-  --vx-line: #34312c;
-  --vx-line-strong: #7d766b;
-  --vx-ink: #f4f1eb;
-  --vx-ink-2: #c4bdb2;
-  --vx-ink-3: #a29a8f;
-  --vx-on-ink: #12110f;
+  --vx-canvas: #0f141b;
+  --vx-surface: #171d26;
+  --vx-surface-2: #1f2631;
+  --vx-surface-3: #29313e;
+  --vx-line: #2c3442;
+  --vx-line-strong: #6f7c8f;
+  --vx-ink: #eef2f7;
+  --vx-ink-2: #b8c2d0;
+  --vx-ink-3: #97a3b4;
+  --vx-on-ink: #0f141b;
+  --vx-primary: #7fa6d6;
+  --vx-primary-hover: #94b5de;
+  --vx-primary-pressed: #a9c4e6;
+  --vx-primary-ink: #9bbce4;
+  --vx-primary-soft: #1a2a40;
+  --vx-primary-soft-2: #22375a;
+  --vx-on-primary: #0b1420;
   --vx-accent: #4cc39a;
   --vx-accent-ink: #6fd3ae;
   --vx-accent-soft: #173328;
@@ -134,16 +158,16 @@
   --vx-danger-ink: #f59a90;
   --vx-danger-soft: #3a1a17;
   --vx-on-danger: #1a0805;
-  --vx-focus: #6fd3ae;
-  --vx-focus-halo: rgba(111, 211, 174, 0.25);
+  --vx-focus: #8fb3e0;
+  --vx-focus-halo: rgba(143, 179, 224, 0.28);
   --vx-shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
   --vx-shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
   --vx-shadow-3: 0 -16px 48px rgba(0, 0, 0, 0.5);
   --vx-scrim: rgba(0, 0, 0, 0.6);
-  --vx-tint-1: #3a3328;
+  --vx-tint-1: #24324a;
   --vx-tint-2: #3b2f2c;
   --vx-tint-3: #2c352e;
-  --vx-tint-4: #2d3038;
+  --vx-tint-4: #2d3142;
   --vx-tint-5: #3a2d31;
   --vx-tint-6: #36342a;
 }
@@ -182,6 +206,13 @@
   --color-ink-2: var(--vx-ink-2);
   --color-ink-3: var(--vx-ink-3);
   --color-on-ink: var(--vx-on-ink);
+  --color-primary: var(--vx-primary);
+  --color-primary-hover: var(--vx-primary-hover);
+  --color-primary-pressed: var(--vx-primary-pressed);
+  --color-primary-ink: var(--vx-primary-ink);
+  --color-primary-soft: var(--vx-primary-soft);
+  --color-primary-soft-2: var(--vx-primary-soft-2);
+  --color-on-primary: var(--vx-on-primary);
   --color-accent: var(--vx-accent);
   --color-accent-ink: var(--vx-accent-ink);
   --color-accent-soft: var(--vx-accent-soft);
@@ -342,7 +373,7 @@
 .vx-range::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--vx-accent) var(--vx-fill), var(--vx-surface-3) var(--vx-fill));
+  background: linear-gradient(to right, var(--vx-primary) var(--vx-fill), var(--vx-surface-3) var(--vx-fill));
 }
 .vx-range::-moz-range-track {
   height: 6px;
@@ -352,7 +383,7 @@
 .vx-range::-moz-range-progress {
   height: 6px;
   border-radius: 999px;
-  background: var(--vx-accent);
+  background: var(--vx-primary);
 }
 .vx-range::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -362,7 +393,7 @@
   margin-top: -11px;
   border-radius: 999px;
   background: var(--vx-surface);
-  border: 2px solid var(--vx-accent);
+  border: 2px solid var(--vx-primary);
   box-shadow: var(--vx-shadow-2);
   transition: transform var(--vx-dur-instant) var(--vx-ease-out);
 }
@@ -371,7 +402,7 @@
   height: 24px;
   border-radius: 999px;
   background: var(--vx-surface);
-  border: 2px solid var(--vx-accent);
+  border: 2px solid var(--vx-primary);
   box-shadow: var(--vx-shadow-2);
 }
 .vx-range:active::-webkit-slider-thumb {

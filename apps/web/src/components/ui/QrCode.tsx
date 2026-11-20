@@ -26,7 +26,7 @@ export function QrCode({ value, size = 240, label = "Payment code" }: { value: s
       className="block h-auto max-w-full rounded-sm bg-white"
     >
       <rect width={total} height={total} fill="#ffffff" />
-      <path d={d} fill="#1b1915" />
+      <path d={d} fill="#15202e" />
     </svg>
   );
 }

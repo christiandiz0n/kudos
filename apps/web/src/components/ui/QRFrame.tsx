@@ -45,19 +45,19 @@ function ringPath(S: number, i: number, r: number) {
 
 /**
  * Frames the venue's order QR with a countdown ring that drains until the signed order expires.
- * Green → amber in the last 20% → expired overlay with a refresh action. `paid` shows a check.
+ * Blue → amber in the last 20% → expired overlay with a refresh action. `paid` shows a check.
  */
 export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", onRefresh, autoRefresh, size = 300, className }: QRFrameProps) {
   const frac = state === "live" ? Math.max(0, Math.min(1, secondsLeft / totalSeconds)) : state === "paid" || state === "processing" ? 1 : 0;
   const low = state === "live" && frac <= 0.2;
-  const stroke = state === "processing" ? "var(--vx-ink-2)" : low ? "var(--vx-warning)" : "var(--vx-accent)";
+  const stroke = state === "processing" ? "var(--vx-ink-2)" : low ? "var(--vx-warning)" : "var(--vx-primary)";
   const d = ringPath(size, 3, 28);
 
   return (
     <div className={cn("flex flex-col items-center gap-3", className)}>
       <div className="relative" style={{ width: size, height: size }}>
         <svg aria-hidden width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0">
-          <path d={d} fill="none" stroke="var(--vx-line)" strokeWidth={5} />
+          <path d={d} fill="none" stroke="var(--vx-primary-soft-2)" strokeWidth={5} />
           <path
             d={d}
             fill="none"
@@ -73,12 +73,12 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
           <div className={cn("w-full transition-opacity duration-[var(--vx-dur-base)]", state !== "live" && "opacity-10 blur-[3px]")}>{children}</div>
           {state === "expired" ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-              <p className="text-title-3 text-[#1b1915]">Code expired</p>
+              <p className="text-title-3 text-[#15202e]">Code expired</p>
               {onRefresh ? (
                 <button
                   type="button"
                   onClick={onRefresh}
-                  className="focus-ring inline-flex h-12 items-center gap-2 rounded-md bg-[#1b1915] px-5 font-semibold text-white"
+                  className="focus-ring inline-flex h-12 items-center gap-2 rounded-md bg-[#4075ad] px-5 font-semibold text-white hover:bg-[#36659a]"
                 >
                   <Icon name="refresh" size={18} /> New code
                 </button>
@@ -87,8 +87,8 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
           ) : null}
           {state === "processing" || state === "refreshing" ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-              <span aria-hidden className="size-12 animate-vx-spin rounded-full border-4 border-[#e2ddd3] border-t-[#1b1915]" />
-              <p className="text-title-3 text-[#1b1915]">{state === "processing" ? "Payment on its way…" : "Getting a new code…"}</p>
+              <span aria-hidden className="size-12 animate-vx-spin rounded-full border-4 border-[#d4e3f3] border-t-[#4075ad]" />
+              <p className="text-title-3 text-[#15202e]">{state === "processing" ? "Payment on its way…" : "Getting a new code…"}</p>
             </div>
           ) : null}
           {state === "paid" ? (
@@ -96,7 +96,7 @@ export function QRFrame({ children, secondsLeft, totalSeconds, state = "live", o
               <span className="inline-flex size-16 animate-vx-pop items-center justify-center rounded-full bg-[#17694f] text-white">
                 <Icon name="check" size={34} strokeWidth={2.5} />
               </span>
-              <p className="text-title-3 text-[#1b1915]">Paid</p>
+              <p className="text-title-3 text-[#15202e]">Paid</p>
             </div>
           ) : null}
         </div>

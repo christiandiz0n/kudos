@@ -6,7 +6,7 @@ export type ToastTone = "neutral" | "success" | "warning" | "danger";
 
 const toneIcon: Record<ToastTone, IconName> = { neutral: "info", success: "check", warning: "alert", danger: "alert" };
 const toneIconClass: Record<ToastTone, string> = {
-  neutral: "bg-ink text-on-ink",
+  neutral: "bg-primary-soft text-primary-ink",
   success: "bg-accent text-on-accent",
   warning: "bg-warning-soft text-warning-ink",
   danger: "bg-danger-soft text-danger-ink",

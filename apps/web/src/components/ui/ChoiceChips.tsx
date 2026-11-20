@@ -59,10 +59,10 @@ export function ChoiceChips({ label, options, value, onChange, className }: Choi
               "focus-ring inline-flex h-11 items-center gap-2 rounded-full pr-4 text-body-sm font-semibold transition-[background-color,box-shadow,color] duration-[var(--vx-dur-fast)]",
               o.person ? "pl-1.5" : "pl-4",
               selected
-                ? "bg-ink text-on-ink"
+                ? "bg-primary text-on-primary shadow-1"
                 : o.quiet
                   ? "bg-transparent font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:bg-surface-2"
-                  : "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-surface-2",
+                  : "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-primary-soft hover:shadow-[inset_0_0_0_1px_var(--vx-primary-soft-2)]",
             )}
           >
             {o.person ? <Avatar name={o.label} size="sm" /> : null}

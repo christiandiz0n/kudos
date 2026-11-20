@@ -68,7 +68,7 @@ export function MoneyGraphPlayground({ initialSize = "5" }: { initialSize?: Size
               type="button"
               onClick={() => setHl(p.id)}
               aria-pressed={p.id === hlId}
-              className="focus-ring h-10 rounded-full px-3 font-medium ring-1 ring-line hover:bg-surface-2 aria-pressed:bg-ink aria-pressed:text-on-ink aria-pressed:ring-ink"
+              className="focus-ring h-10 rounded-full px-3 font-medium ring-1 ring-line hover:bg-surface-2 aria-pressed:bg-primary aria-pressed:text-on-primary aria-pressed:ring-primary"
             >
               {p.customer} · {formatMoney(p.amount)}
             </button>

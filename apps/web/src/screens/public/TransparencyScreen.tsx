@@ -65,7 +65,7 @@ function Mono({ children }: { children: string }) {
 
 function ExtLink({ href, children }: { href: string; children: string }) {
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="focus-ring flex min-h-12 items-center justify-between gap-3 rounded-md px-1 text-body-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
+    <a href={href} target="_blank" rel="noreferrer" className="focus-ring flex min-h-12 items-center justify-between gap-3 rounded-md px-1 text-body-sm font-semibold text-primary-ink underline-offset-4 hover:underline">
       {children}
       <Icon name="external" size={18} className="shrink-0" />
       <span className="sr-only"> (opens in a new tab)</span>
