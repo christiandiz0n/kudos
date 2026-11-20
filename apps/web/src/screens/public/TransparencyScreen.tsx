@@ -132,7 +132,9 @@ export function TransparencyScreen(p: TransparencyScreenProps) {
         {p.example.customer}&apos;s first purchase: {formatMoney(p.example.total)} = {n(p.example.total)} units, at {formatBps(p.rewardBps)}.{" "}
         {p.example.referrers.map((r) => `${r.name} ${r.weightBps / 100}%`).join(", ")}.
       </p>
-      <Card padding="none" className="overflow-x-auto">
+      {/* Keyboard users can scroll the table: named, focusable, brand focus ring (QE F5: was the UA amber outline). */}
+      <Card padding="none" className="focus-ring overflow-x-auto" tabIndex={0} role="region" aria-label="Worked example table, scrolls sideways">
+
         <table className="w-full min-w-[22rem] text-left text-body-sm">
           <thead className="text-caption text-ink-3">
             <tr className="border-b border-line">
