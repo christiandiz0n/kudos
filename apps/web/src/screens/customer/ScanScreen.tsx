@@ -140,7 +140,7 @@ export function ScanScreen({
             {/* Viewfinder: four soft corners; they tighten on a successful read (green stays reserved for money) */}
             <div aria-hidden className={cn("relative size-64 transition-transform duration-[var(--vx-dur-base)] ease-spring", found && "scale-95")}>
               {CORNERS.map((c) => (
-                <span key={c} className={cn("absolute size-14 transition-colors duration-[var(--vx-dur-fast)]", found ? "border-white" : "border-white/80", c)} />
+                <span key={c} className={cn("absolute size-14 transition-colors duration-[var(--vx-dur-fast)]", found ? "border-primary" : "border-white/80", c)} />
               ))}
               {cameraState === "starting" ? (
                 <span className="absolute inset-0 flex items-center justify-center">
@@ -157,6 +157,9 @@ export function ScanScreen({
             >
               {cameraState === "starting" ? "Starting the camera…" : found ? "Got it" : (error ?? hint)}
             </p>
+            {!error && !found && cameraState !== "starting" ? (
+              <p className="mt-2 max-w-[30ch] text-center text-body-sm text-white/65">You&apos;ll check the amount before anything is paid.</p>
+            ) : null}
           </div>
           <div className="relative px-5 pb-8">
             {showManual ? (

@@ -95,9 +95,8 @@ export function SignInScreen({ invite, name = "", onNameChange, nameError, creat
           </span>
           {APP_NAME}
         </p>
-        <div className="mt-5 mb-6">
-          <HeroCard />
-        </div>
+        {/* After a failed attempt the picture steps aside so the message and the button stay in view. */}
+        <div className={err ? "mt-6" : "mt-5 mb-6"}>{err ? null : <HeroCard />}</div>
 
         {invite ? (
           <p className="mb-3 inline-flex min-h-8 items-center gap-2 self-start rounded-full bg-accent-soft py-1 pr-3 pl-1 text-body-sm font-medium text-accent-ink">
