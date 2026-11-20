@@ -73,8 +73,10 @@ export interface MoneyGraphProps extends Partial<MoneyGraphPayment> {
   replayKey?: string | number;
   /** `landscape` 16:9 (projector, ≥1024px); `portrait` (phone card, ~360 wide). */
   orientation?: "landscape" | "portrait";
-  /** Max nodes per tier before the tail collapses. Default 7 landscape / 4 portrait. */
+  /** Max nodes per tier before the tail collapses. Default 7 landscape / 4 portrait (landscape + `box`: from the height). */
   maxPerTier?: number;
+  /** Landscape only: lay out at this pixel size (1 unit = 1px) instead of the fixed 1280x720 viewBox. See FitMoneyGraph. */
+  box?: { w: number; h: number };
   className?: string;
   /** Overrides the generated accessible description. */
   title?: string;
@@ -168,11 +170,15 @@ const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v
 
 export function layoutMoneyGraph(
   data: MoneyGraphData,
-  opts: { mode?: "payment" | "network"; highlightPaymentId?: string; orientation?: Orientation; maxPerTier?: number } = {},
+  opts: { mode?: "payment" | "network"; highlightPaymentId?: string; orientation?: Orientation; maxPerTier?: number; box?: { w: number; h: number } } = {},
 ): GraphLayout {
   const mode = opts.mode ?? "payment";
   const orientation = opts.orientation ?? "landscape";
-  const K = Math.max(2, opts.maxPerTier ?? (orientation === "landscape" ? 7 : 4));
+  // v2 (QE F1): with `box` the landscape graph is laid out at the container's real pixel size (1 unit = 1px), so type
+  // sizes below are true pixels on the projector. The tier cap then follows the height: every row keeps a readable slot.
+  const box = orientation === "landscape" && opts.box && opts.box.w > 200 && opts.box.h > 160 ? opts.box : null;
+  const fitK = box ? Math.max(3, Math.floor((box.h - 56) / 74)) : null;
+  const K = Math.max(2, opts.maxPerTier ?? fitK ?? (orientation === "landscape" ? 7 : 4));
   const venueId = norm(data.venue.id);
   const names = new Map(Object.entries(data.names ?? {}).map(([k, v]) => [norm(k), v]));
 
@@ -331,12 +337,12 @@ export function layoutMoneyGraph(
   // Geometry in (u = along the flow, v = across), mapped to (x, y) by orientation
   const present = ([0, 1, 2] as Tier[]).filter((t) => tiers[t].length);
   const L = orientation === "landscape";
-  const across = L ? 720 : 360;
-  const padV = L ? 44 : 18;
+  const across = box ? box.h : L ? 720 : 360;
+  const padV = box ? Math.max(28, box.h * 0.07) : L ? 44 : 18;
   const maxCount = Math.max(1, ...present.map((t) => tiers[t].length));
   const slot = Math.min(L ? 300 : 170, (across - 2 * padV) / maxCount);
-  const font = L ? clamp(slot * 0.2, 15, 24) : clamp(slot * 0.17, 14, 17);
-  const R = L ? clamp(slot * 0.27, 14, 38) : clamp(slot * 0.25, 15, 26);
+  const font = box ? clamp(slot * 0.16, 18, 26) : L ? clamp(slot * 0.2, 15, 24) : clamp(slot * 0.17, 14, 17);
+  const R = box ? clamp(slot * 0.24, 20, 40) : L ? clamp(slot * 0.27, 14, 38) : clamp(slot * 0.25, 15, 26);
   const twoLine = !L || slot >= 2 * R + 2.5 * font + 12;
   const labelH = twoLine ? font * 2.35 : font * 1.25;
   const vSide = L ? clamp(R * 2.4, 56, 84) : 50;
@@ -346,10 +352,11 @@ export function layoutMoneyGraph(
   const cols = present.length + 1;
   const uPos: number[] = [];
   if (L) {
-    W = 1280;
-    H = 720;
-    const u0 = 120;
-    const u1 = W - 110;
+    W = box ? Math.round(box.w) : 1280;
+    H = box ? Math.round(box.h) : 720;
+    const edge = box ? Math.max(96, W * 0.085) : 0;
+    const u0 = box ? edge : 120;
+    const u1 = box ? W - edge : W - 110;
     for (let i = 0; i < cols; i++) uPos.push(cols === 1 ? W / 2 : u0 + (i * (u1 - u0)) / (cols - 1));
   } else {
     W = 360;
@@ -492,7 +499,7 @@ const CSS = `
 const delay = (ms: number) => ({ "--t": `${Math.round(ms)}ms` }) as CSSProperties;
 
 export function MoneyGraph(props: MoneyGraphProps) {
-  const { mode = "payment", highlightPaymentId, replayKey, maxPerTier, className, title } = props;
+  const { mode = "payment", highlightPaymentId, replayKey, maxPerTier, className, title, box } = props;
   const orientation: Orientation = props.orientation ?? (props.size === "compact" ? "portrait" : "landscape");
   const live = props.live ?? props.animated ?? true;
   const data: MoneyGraphData | null =
@@ -502,7 +509,7 @@ export function MoneyGraph(props: MoneyGraphProps) {
       : null);
   if (!data) return null;
 
-  const g = layoutMoneyGraph(data, { mode, highlightPaymentId, orientation, maxPerTier });
+  const g = layoutMoneyGraph(data, { mode, highlightPaymentId, orientation, maxPerTier, box });
   const { R, font: f, twoLine, W, H } = g;
   const L = orientation === "landscape";
   const anim = live && !!g.hlId;

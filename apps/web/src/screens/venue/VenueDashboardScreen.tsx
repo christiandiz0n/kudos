@@ -13,6 +13,7 @@ import {
   EmptyState,
   Icon,
   List,
+  FitMoneyGraph,
   ListItem,
   MoneyGraph,
   Screen,
@@ -196,7 +197,7 @@ function AdCostInput({ p, className }: { p: VenueDashboardProps; className?: str
   );
 }
 
-function CostValue({ p, size }: { p: VenueDashboardProps; size: "xl" | "display" }) {
+function CostValue({ p, size }: { p: VenueDashboardProps; size: "xl" | "kpi" | "display" }) {
   const cpvc = p.stats.costPerVerified;
   if (p.loading) return <Skeleton className="h-10 w-28" />;
   if (cpvc === null) return <span className="money text-title-1 text-ink-3">—</span>;
@@ -252,10 +253,10 @@ function StatRow({ p }: { p: VenueDashboardProps }) {
   );
 }
 
-function Feed({ payments, max, toLabel = "to you" }: { payments: VenuePaymentItem[]; max?: number; toLabel?: string }) {
+function Feed({ payments, max, toLabel = "to you", wrapMeta }: { payments: VenuePaymentItem[]; max?: number; toLabel?: string; wrapMeta?: boolean }) {
   const list = max ? payments.slice(0, max) : payments;
   return (
-    <List label="Payments, newest first">
+    <List label="Payments, newest first" className={wrapMeta ? "[&_li_.truncate]:line-clamp-2 [&_li_.truncate]:whitespace-normal" : undefined}>
       {list.map((f) => (
         <li key={f.id} className={f.fresh ? "animate-vx-rise-in" : undefined}>
           <ListItem
@@ -386,10 +387,10 @@ function PhoneLayout(p: VenueDashboardProps) {
 /** Projector KPI tile: label, one big number, one plain line. */
 function KpiTile({ label, value, caption, className, children }: { label: string; value: ReactNode; caption?: ReactNode; className?: string; children?: ReactNode }) {
   return (
-    <div className={cn("flex min-w-0 flex-col gap-1 rounded-lg bg-surface px-5 py-4 shadow-1 ring-1 ring-line/70", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-1.5 rounded-lg bg-surface px-5 py-4 shadow-1 ring-1 ring-line/70", className)}>
       <span className="text-body-sm font-semibold text-ink-2">{label}</span>
-      <span className="money text-display leading-none text-ink">{value}</span>
-      {caption ? <span className="text-body-sm text-ink-3">{caption}</span> : null}
+      <span className="money text-[2.5rem] leading-none font-semibold tracking-[-0.03em] text-ink">{value}</span>
+      {caption ? <span className="line-clamp-2 text-body-sm text-ink-3">{caption}</span> : null}
       {children}
     </div>
   );
@@ -402,10 +403,10 @@ function WideKpis({ p }: { p: VenueDashboardProps }) {
     <div data-kpi className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.55fr)] gap-4">
       {/* verifiedCustomers counts every verified first purchase, recommended or not (QE-3-04). */}
       <KpiTile label="New customers" value={v(s.verifiedCustomers)} caption="verified first purchases" />
-      <KpiTile label="Rewards paid" value={v(<AmountDisplay value={s.rewardsPaid} size="display" />)} caption="to customers + the people who sent them" />
-      <KpiTile label="Cost per new customer" value={<CostValue p={p} size="display" />}>
+      <KpiTile label="Rewards paid" value={v(<AmountDisplay value={s.rewardsPaid} size="kpi" />)} caption="to customers + the people who sent them" />
+      <KpiTile label="Cost per new customer" value={<CostValue p={p} size="kpi" />}>
         <div className="flex items-center gap-3">
-          <p aria-live="polite" className="min-w-0 flex-1 text-body-sm text-ink-2">
+          <p aria-live="polite" className="line-clamp-2 min-w-0 flex-1 text-body-sm text-ink-2">
             {p.loading ? <Skeleton className="h-4 w-40" /> : costSentence(p)}
           </p>
           {p.viewer === "visitor" ? null : (
@@ -425,13 +426,13 @@ function WideKpis({ p }: { p: VenueDashboardProps }) {
 function WideLayout(p: VenueDashboardProps) {
   const empty = !p.loading && p.payments.length === 0;
   return (
-    <div className="h-dvh min-h-[640px] overflow-hidden bg-canvas px-10 xl:px-12">
-      <div className="mx-auto flex h-full w-full max-w-[1200px] flex-col gap-4 py-5">
+    <div className="h-dvh min-h-[640px] overflow-hidden bg-canvas px-8 xl:px-12">
+      <div className="mx-auto flex h-full w-full max-w-[1360px] flex-col gap-4 py-5">
         <header className="flex shrink-0 items-center gap-4">
           <Avatar name={p.venueName} kind="venue" size="lg" />
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-title-1 text-ink">{p.venueName}</h1>
-            <p className="text-body-sm text-ink-3">New customers from recommendations, live</p>
+            <h1 className="truncate text-[2rem] leading-tight font-semibold tracking-[-0.02em] text-ink">{p.venueName}</h1>
+            <p className="text-body text-ink-2">New customers from recommendations, live</p>
           </div>
           {p.transparencyHref ? (
             <a
@@ -445,33 +446,33 @@ function WideLayout(p: VenueDashboardProps) {
           <LiveBadge status={p.status} />
         </header>
         <StatusNote status={p.status} />
-        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,370px)] gap-5">
+        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(300px,360px)] gap-5">
           <div className="flex min-h-0 flex-col gap-4">
             <WideKpis p={p} />
-            <Card padding="lg" className="flex min-h-0 flex-1 flex-col">
+            {/* The hero: the graph gets every remaining pixel and is drawn at that size (QE F1). */}
+            <Card padding="none" className="flex min-h-0 flex-1 flex-col px-5 pt-4 pb-3">
               <div className="flex shrink-0 items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <h2 className="text-title-3 text-ink">Where the money went</h2>
+                <div className="flex min-w-0 items-baseline gap-3">
+                  <h2 className="shrink-0 text-title-2 text-ink">Where the money went</h2>
                   {!empty ? (
-                    <p className="truncate text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p>
+                    <p className="truncate text-body text-ink-2">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p>
                   ) : null}
                 </div>
                 <GraphModeToggle p={p} />
               </div>
-              <div className="relative min-h-0 flex-1">
+              <div className="relative mt-2 min-h-0 flex-1">
                 {p.loading ? (
-                  <Skeleton className="absolute inset-0 mt-3" />
+                  <Skeleton className="absolute inset-0" />
                 ) : empty || !p.graph ? (
                   <div className="absolute inset-0 overflow-y-auto">
                     <GraphEmpty onNewOrder={p.onNewOrder} compact />
                   </div>
                 ) : (
-                  <MoneyGraph
+                  <FitMoneyGraph
                     data={p.graph}
                     highlightPaymentId={p.highlightPaymentId}
                     mode={p.graphMode ?? "payment"}
-                    orientation="landscape"
-                    className="absolute inset-0 h-full w-full"
+                    className="absolute inset-0"
                   />
                 )}
               </div>
@@ -479,8 +480,8 @@ function WideLayout(p: VenueDashboardProps) {
           </div>
           <Card padding="md" className="flex min-h-0 flex-col overflow-hidden">
             <div className="flex shrink-0 items-baseline justify-between px-1 pb-1">
-              <h2 className="text-title-3 text-ink">Payments</h2>
-              {!empty && !p.loading ? <span className="text-caption text-ink-3">newest first</span> : null}
+              <h2 className="text-title-2 text-ink">Payments</h2>
+              {!empty && !p.loading ? <span className="text-body-sm text-ink-3">newest first</span> : null}
             </div>
             {p.loading ? (
               <div className="flex flex-col gap-3 py-2">
@@ -492,7 +493,7 @@ function WideLayout(p: VenueDashboardProps) {
               <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
             ) : (
               <div className="min-h-0 flex-1 overflow-y-auto px-1" tabIndex={0} aria-label="Payments, scroll for more">
-                <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
+                <Feed payments={p.payments} max={20} wrapMeta toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
               </div>
             )}
           </Card>
