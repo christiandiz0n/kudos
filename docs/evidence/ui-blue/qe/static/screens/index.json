@@ -1,0 +1,233 @@
+[
+  {
+    "file": "s01-landing-signed-out.png",
+    "route": "/",
+    "state": "landing / onboarding (signed out)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s01b-landing-focus-first-tab.png",
+    "route": "/",
+    "state": "first Tab stop on landing: name field focus ring",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s02-transparency-full.png",
+    "route": "/transparency",
+    "state": "public transparency (default example) (full page)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s02-transparency.png",
+    "route": "/transparency",
+    "state": "public transparency (default example)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s03-transparency-venue-full.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency for a live venue (full page)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s03-transparency-venue.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency for a live venue",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s04-intro-signed-out.png",
+    "route": "/i/vG6xcBExH",
+    "state": "friend's link opened signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s05-record-public.png",
+    "route": "/a/0xf5Ac8A0fc0B33c2368F0BF7A59Bb81e1fCcf13bc",
+    "state": "public ambassador record (visitor)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s06-scan-signed-out.png",
+    "route": "/scan",
+    "state": "scanner, signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s07-venue-signed-out.png",
+    "route": "/venue",
+    "state": "venue app entry, signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s08-venue-dashboard-signed-out.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "venue dashboard URL, signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s09-wallet-signed-out.png",
+    "route": "/wallet",
+    "state": "wallet URL, signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s10-me-signed-out.png",
+    "route": "/me",
+    "state": "own record URL, signed out",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s11-intro-unknown.png",
+    "route": "/i/NOPE0000",
+    "state": "unknown friend's link",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s12-404.png",
+    "route": "/does-not-exist",
+    "state": "unknown route (404)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s20-wallet-new.png",
+    "route": "/wallet",
+    "state": "wallet home, new account ($0)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s21-me-empty.png",
+    "route": "/me",
+    "state": "own record, nothing yet",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s22-scan-camera.png",
+    "route": "/scan",
+    "state": "in-app scanner (fake camera)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s23-recommend-locked.png",
+    "route": "/recommend?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "recommend before buying (locked)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s24-intro-signed-in.png",
+    "route": "/i/vG6xcBExH",
+    "state": "friend's link, signed in (save offered)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s25-pay-already-paid.png",
+    "route": "/pay?v=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c&o=0xf45b15cb831f6cbe20faf873e0faf5d287ba36668b75a5f2bbec42e8b9abd6f1",
+    "state": "order already paid (real paid order)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s26-pay-malformed-missing-o.png",
+    "route": "/pay?v=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "malformed pay link (no order)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s27-pay-malformed-garbage.png",
+    "route": "/pay?v=0x123&o=nope",
+    "state": "malformed pay link (garbage)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s28-venue-dashboard-nonowner-full.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "dashboard of a live venue (non-owner) (full page)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s28-venue-dashboard-nonowner.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "dashboard of a live venue (non-owner)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s29-counter-nonowner.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c/counter",
+    "state": "counter of someone else's venue",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s30-venue-entry-signed-in.png",
+    "route": "/venue/new",
+    "state": "venue entry, signed in, no venue",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s31-transparency-signed-in.png",
+    "route": "/transparency",
+    "state": "transparency (signed in)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s32-venue-onboarding-initial.png",
+    "route": "/venue/new",
+    "state": "venue onboarding at 390×844 (initial scroll)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s33-venue-onboarding-focus-min.png",
+    "route": "/venue/new",
+    "state": "venue onboarding, minimum field focused (scroll-padding)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s40-dashboard-reduced-motion.png",
+    "route": "/venue/0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "dashboard + money graph, prefers-reduced-motion",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s41-transparency-reduced-motion.png",
+    "route": "/transparency",
+    "state": "transparency, prefers-reduced-motion",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "s50-transparency-1280.png",
+    "route": "/transparency?venue=0xC6CF2be7Ef591D0DB16206796eeb003e891E319c",
+    "state": "transparency at 1280×720",
+    "notes": "desktop",
+    "viewport": "1280x720"
+  }
+]
