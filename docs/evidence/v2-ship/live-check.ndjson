@@ -1,0 +1,85 @@
+{"t":"2026-11-20T16:10:38.827Z","ms":1795191038831,"kind":"stdout","line":"story:api → https://api-production-902bc54c.up.railway.app  (Vouch 0xF4B641dc628de05336aa983B07D5d181254ff08e on Arc Testnet 5042002)"}
+{"t":"2026-11-20T16:10:39.282Z","ms":1795191039282,"kind":"stdout","line":"  api ok (db postgres); relayer 0x3eAFdcE9B632C036146960A03Db720dc84568daD balance 20.100907056595649495 USDC; budget left $0.981738/h · $4.880497/day"}
+{"t":"2026-11-20T16:10:39.471Z","ms":1795191039471,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:39.471Z","ms":1795191039471,"kind":"stdout","line":"[0] balances"}
+{"t":"2026-11-20T16:10:39.703Z","ms":1795191039703,"kind":"stdout","line":"  Ana    $18.567 (needs $1.00)"}
+{"t":"2026-11-20T16:10:39.849Z","ms":1795191039849,"kind":"stdout","line":"  Priya  $14.379 (needs $1.00)"}
+{"t":"2026-11-20T16:10:41.004Z","ms":1795191041004,"kind":"stdout","line":"  ✓ fund Ben +$11.55 from Lena (payout)  https://explorer.testnet.arc.io/tx/0x50397eda59bc5c8afd08aa28f69cfa856e3a99b018828d7b07b4f987bd0200b1"}
+{"t":"2026-11-20T16:10:41.074Z","ms":1795191041074,"kind":"stdout","line":"  Ben    $12.05 (needs $12.00)"}
+{"t":"2026-11-20T16:10:41.075Z","ms":1795191041075,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:41.075Z","ms":1795191041075,"kind":"stdout","line":"[1] sign in (EIP-191 challenge → session)"}
+{"t":"2026-11-20T16:10:41.861Z","ms":1795191041861,"kind":"stdout","line":"  ✓ Lena, Sam, Ana, Priya, Ben signed in"}
+{"t":"2026-11-20T16:10:41.862Z","ms":1795191041862,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:41.862Z","ms":1795191041862,"kind":"stdout","line":"[2] Lena registers her venue (owner-signed, relayed) and seeds Sam"}
+{"t":"2026-11-20T16:10:41.970Z","ms":1795191041970,"kind":"stdout","line":"  venue 0x362AAfaBf2F34eF1cABFA66fbE735cE809BB8e2B  owner nonce 10"}
+{"t":"2026-11-20T16:10:43.924Z","ms":1795191043924,"kind":"stdout","line":"  ✓ registerVenue (Lena-signed)        https://explorer.testnet.arc.io/tx/0x07f2b2988ccaf6e292e26abc4f6e7d9d93bf5fb595223a3e753c16f356467c53"}
+{"t":"2026-11-20T16:10:44.114Z","ms":1795191044114,"kind":"sse-open","status":200,"venue":"0x362AAfaBf2F34eF1cABFA66fbE735cE809BB8e2B"}
+{"t":"2026-11-20T16:10:44.115Z","ms":1795191044115,"kind":"sse","event":"message","txHash":null,"bytes":0}
+{"t":"2026-11-20T16:10:44.471Z","ms":1795191044471,"kind":"sse","event":"venue.action.pending","txHash":"0xc88ce0cf1739d3224fe372b2c327d4dcda3a01336664e75b649c6831473bab56","bytes":209}
+{"t":"2026-11-20T16:10:45.505Z","ms":1795191045505,"kind":"stdout","line":"  ✓ setSeedAmbassador Sam (Lena-signed) https://explorer.testnet.arc.io/tx/0xc88ce0cf1739d3224fe372b2c327d4dcda3a01336664e75b649c6831473bab56"}
+{"t":"2026-11-20T16:10:45.505Z","ms":1795191045505,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:45.505Z","ms":1795191045505,"kind":"stdout","line":"[3] Ana joins via Sam"}
+{"t":"2026-11-20T16:10:45.775Z","ms":1795191045776,"kind":"stdout","line":"  · Sam shares a personal link http://localhost:3100/i/VifLRt0gD"}
+{"t":"2026-11-20T16:10:47.322Z","ms":1795191047322,"kind":"stdout","line":"  ✓ acceptIntro Sam→Ana (1 opens)      https://explorer.testnet.arc.io/tx/0xb90eb1f2e1cd2c4b844388056dfaf92600bffe3918cc3255bbf0e164044a7cc7"}
+{"t":"2026-11-20T16:10:48.171Z","ms":1795191048171,"kind":"sse","event":"payment.pending","txHash":"0x7b5955bc30a26daf3d763771c6bf07e608fcc875cdf4d5530182d225313db92d","bytes":386}
+{"t":"2026-11-20T16:10:49.026Z","ms":1795191049026,"kind":"stdout","line":"  ✓ pay Ana $1.00                      https://explorer.testnet.arc.io/tx/0x7b5955bc30a26daf3d763771c6bf07e608fcc875cdf4d5530182d225313db92d"}
+{"t":"2026-11-20T16:10:49.026Z","ms":1795191049026,"kind":"stdout","line":"  ✓ Ana quote: 100% Sam"}
+{"t":"2026-11-20T16:10:49.027Z","ms":1795191049027,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:49.027Z","ms":1795191049027,"kind":"stdout","line":"[4] Priya joins via Ana"}
+{"t":"2026-11-20T16:10:49.286Z","ms":1795191049286,"kind":"stdout","line":"  · Ana shares a personal link http://localhost:3100/i/6lMTh16c7"}
+{"t":"2026-11-20T16:10:50.802Z","ms":1795191050802,"kind":"stdout","line":"  ✓ acceptIntro Ana→Priya (1 opens)    https://explorer.testnet.arc.io/tx/0x4d869016148a474e3d3adb2e53286da357e05a8bab555ce079cabaf1e79a931b"}
+{"t":"2026-11-20T16:10:51.621Z","ms":1795191051621,"kind":"sse","event":"payment.pending","txHash":"0xe36643d88118c067597c6212fbba9765063456d7c0aae941fe2d5e77f5321e38","bytes":386}
+{"t":"2026-11-20T16:10:52.444Z","ms":1795191052444,"kind":"stdout","line":"  ✓ pay Priya $1.00                    https://explorer.testnet.arc.io/tx/0xe36643d88118c067597c6212fbba9765063456d7c0aae941fe2d5e77f5321e38"}
+{"t":"2026-11-20T16:10:52.444Z","ms":1795191052444,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:52.444Z","ms":1795191052444,"kind":"stdout","line":"[5] Ben: Ana personal (3 opens) + Priya broadcast (2 opens)"}
+{"t":"2026-11-20T16:10:52.718Z","ms":1795191052718,"kind":"stdout","line":"  · Ana shares a personal link http://localhost:3100/i/5Di9X5v7R"}
+{"t":"2026-11-20T16:10:54.385Z","ms":1795191054385,"kind":"stdout","line":"  ✓ acceptIntro Ana→Ben (3 opens)      https://explorer.testnet.arc.io/tx/0x56af7350a763246aabfe443040875a64255f702811109beeb87c129abea2ae35"}
+{"t":"2026-11-20T16:10:54.875Z","ms":1795191054875,"kind":"stdout","line":"  · Priya shares a broadcast link http://localhost:3100/i/cBqXUSgYh"}
+{"t":"2026-11-20T16:10:56.557Z","ms":1795191056557,"kind":"stdout","line":"  ✓ acceptIntro Priya→Ben (2 opens)    https://explorer.testnet.arc.io/tx/0x18a8205ccdc75929df3b86a5e2d911f5e6a90a0e0f3ee863df9b38e65f970d64"}
+{"t":"2026-11-20T16:10:56.557Z","ms":1795191056557,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:56.557Z","ms":1795191056557,"kind":"stdout","line":"[6] Ben pays $12.00 (quote → one signature → relayed pay)"}
+{"t":"2026-11-20T16:10:56.960Z","ms":1795191056960,"kind":"stdout","line":"  QR: http://localhost:3100/pay?v=0x362AAfaBf2F34eF1cABFA66fbE735cE809BB8e2B&o=0xa25f39545ac61836ca7172549f2ae3e9dab8ba881399a3a9e4dd2c05f8f7899a"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"  quote: pay $12.00, you get $0.45 back; weights Ana/Priya 7000/3000 (baseline-v1)"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"    cashback   —      $0.45"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"    referrer   Ana    $0.693"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"    referrer   Priya  $0.297"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"    introducer Sam    $0.252"}
+{"t":"2026-11-20T16:10:57.224Z","ms":1795191057224,"kind":"stdout","line":"    introducer Ana    $0.108"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"    venue      Lena   $10.20"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"  ✓ PaymentAuth.submitter = RELAYER (D-014)"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"  ✓ baseline weights Ana 7000 / Priya 3000"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"  ✓ quote venue 10.20 · cashback 0.45"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"  ✓ quote L1 Ana 0.693 · Priya 0.297"}
+{"t":"2026-11-20T16:10:57.225Z","ms":1795191057225,"kind":"stdout","line":"  ✓ quote L2 Sam 0.252 · Ana 0.108"}
+{"t":"2026-11-20T16:10:57.683Z","ms":1795191057683,"kind":"sse","event":"payment.pending","txHash":"0xe2bc677ce9f95909de5be0cde450a6d125ea3f73d944337a546834512ec4b4f2","bytes":388}
+{"t":"2026-11-20T16:10:57.684Z","ms":1795191057684,"kind":"stdout","line":"  API: pending 0xe2bc677ce9f95909de5be0cde450a6d125ea3f73d944337a546834512ec4b4f2"}
+{"t":"2026-11-20T16:10:58.501Z","ms":1795191058501,"kind":"stdout","line":"  ✓ pay Ben $12.00 (canonical)         https://explorer.testnet.arc.io/tx/0xe2bc677ce9f95909de5be0cde450a6d125ea3f73d944337a546834512ec4b4f2"}
+{"t":"2026-11-20T16:10:58.502Z","ms":1795191058502,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:58.502Z","ms":1795191058502,"kind":"stdout","line":"[7] on-chain verification (receipt logs + balances)"}
+{"t":"2026-11-20T16:10:58.580Z","ms":1795191058580,"kind":"stdout","line":"  ✓ pay() sent by the API relayer"}
+{"t":"2026-11-20T16:10:58.585Z","ms":1795191058585,"kind":"stdout","line":"  ✓ PaymentSettled venueAmount 10,200,000 · weightsMode ATTRIBUTOR"}
+{"t":"2026-11-20T16:10:58.586Z","ms":1795191058586,"kind":"stdout","line":"  ✓ RewardPaid C:Ben:450000 L1:Ana:693000 L1:Priya:297000 L2:Sam:252000 L2:Ana:108000"}
+{"t":"2026-11-20T16:10:58.814Z","ms":1795191058814,"kind":"stdout","line":"  ✓ balance deltas Lena 10200000 Ben -11550000 Ana 801000 Priya 297000 Sam 252000"}
+{"t":"2026-11-20T16:10:58.815Z","ms":1795191058815,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:10:58.815Z","ms":1795191058815,"kind":"stdout","line":"[8] DB \"settled\" via Streams (GET /payments/7ea4c60d-445a-4cdd-a31a-521a324aa19e, up to 90s)"}
+{"t":"2026-11-20T16:12:29.669Z","ms":1795191149669,"kind":"stdout","line":"  … WAITING ON STREAMS: relay status \"relayed\", not settled in this API's DB after 90s."}
+{"t":"2026-11-20T16:12:29.671Z","ms":1795191149671,"kind":"stdout","line":"    This API instance has not ingested the PaymentSettled (no live Stream delivering to it, or ingestion not deployed)."}
+{"t":"2026-11-20T16:12:29.671Z","ms":1795191149671,"kind":"stdout","line":"    The on-chain split above is final; re-check later with GET /payments/<intentId> on the Stream-fed API."}
+{"t":"2026-11-20T16:12:29.979Z","ms":1795191149979,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:12:29.979Z","ms":1795191149979,"kind":"stdout","line":"[9] transactions"}
+{"t":"2026-11-20T16:12:29.979Z","ms":1795191149979,"kind":"stdout","line":"    registerVenue (Lena-signed)              0x07f2b2988ccaf6e292e26abc4f6e7d9d93bf5fb595223a3e753c16f356467c53"}
+{"t":"2026-11-20T16:12:29.979Z","ms":1795191149979,"kind":"stdout","line":"    setSeedAmbassador Sam (Lena-signed)      0xc88ce0cf1739d3224fe372b2c327d4dcda3a01336664e75b649c6831473bab56"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    acceptIntro Sam→Ana (1 opens)            0xb90eb1f2e1cd2c4b844388056dfaf92600bffe3918cc3255bbf0e164044a7cc7"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    pay Ana $1.00                            0x7b5955bc30a26daf3d763771c6bf07e608fcc875cdf4d5530182d225313db92d"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    acceptIntro Ana→Priya (1 opens)          0x4d869016148a474e3d3adb2e53286da357e05a8bab555ce079cabaf1e79a931b"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    pay Priya $1.00                          0xe36643d88118c067597c6212fbba9765063456d7c0aae941fe2d5e77f5321e38"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    acceptIntro Ana→Ben (3 opens)            0x56af7350a763246aabfe443040875a64255f702811109beeb87c129abea2ae35"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    acceptIntro Priya→Ben (2 opens)          0x18a8205ccdc75929df3b86a5e2d911f5e6a90a0e0f3ee863df9b38e65f970d64"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    pay Ben $12.00 (canonical)               0xe2bc677ce9f95909de5be0cde450a6d125ea3f73d944337a546834512ec4b4f2"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"    relayer gas this run: 0.0391414564 USDC (9 txs)"}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":""}
+{"t":"2026-11-20T16:12:29.980Z","ms":1795191149980,"kind":"stdout","line":"venue 0x362AAfaBf2F34eF1cABFA66fbE735cE809BB8e2B · pay intent 7ea4c60d-445a-4cdd-a31a-521a324aa19e"}
+{"t":"2026-11-20T16:12:29.981Z","ms":1795191149981,"kind":"stderr","line":""}
+{"t":"2026-11-20T16:12:29.981Z","ms":1795191149981,"kind":"stderr","line":"STORY ON-CHAIN OK, DB NOT SETTLED (--require-settled)"}
+{"t":"2026-11-20T16:12:30.034Z","ms":1795191150034,"kind":"exit","code":3}
+{"t":"2026-11-20T16:12:33.343Z","ms":1795191153343,"kind":"pay-block","txHash":"0xe2bc677ce9f95909de5be0cde450a6d125ea3f73d944337a546834512ec4b4f2","block":73214170,"blockTimestamp":1795191058}

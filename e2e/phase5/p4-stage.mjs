@@ -515,7 +515,7 @@ async function verifySaved() {
   const ownerText = await w.owner.page.evaluate(() => document.body.innerText);
   const anaText = await w.ana.page.evaluate(() => document.body.innerText);
   const counterText = await w.owner.counter.evaluate(() => document.body.innerText);
-  const ui = { counterKeypad: /Show code/.test(counterText) && !/first name/i.test(counterText), ownerSeesFeed: /Priya/.test(ownerText) && /Ana/.test(ownerText), anaWallet: /\$\d/.test(anaText) && !/first name/i.test(anaText) };
+  const ui = { counterKeypad: /Show code/.test(counterText) && !/first name/i.test(counterText), ownerSeesFeed: /Priya|Ibrahim/.test(ownerText) && /Ana|Ashad/.test(ownerText), anaWallet: /\$\d/.test(anaText) && !/first name/i.test(anaText) };
   await w.owner.page.screenshot({ path: join(EVID, "verify-w1-owner-dashboard-1440.png") });
   await w.owner.counter.screenshot({ path: join(EVID, "verify-w1-tab2-counter-1440.png") });
   await w.ana.page.screenshot({ path: join(EVID, "verify-w2-ana-wallet-390.png") });
@@ -563,7 +563,7 @@ async function present() {
   const ownerText = await w.owner.page.evaluate(() => document.body.innerText);
   const anaText = await w.ana.page.evaluate(() => document.body.innerText);
   const counterText = await w.owner.counter.evaluate(() => document.body.innerText);
-  const ui = { counterKeypad: /Show code/.test(counterText) && !/first name/i.test(counterText), ownerSeesFeed: /Priya/.test(ownerText) && /Ana/.test(ownerText), anaWallet: /\$\d/.test(anaText) && !/first name/i.test(anaText) };
+  const ui = { counterKeypad: /Show code/.test(counterText) && !/first name/i.test(counterText), ownerSeesFeed: /Priya|Ibrahim/.test(ownerText) && /Ana|Ashad/.test(ownerText), anaWallet: /\$\d/.test(anaText) && !/first name/i.test(anaText) };
   const qrBrowser = await chromium.launch({ ...LAUNCH, headless: false, args: [...BAR_ARGS, "--window-position=520,120"] });
   const w3 = await benPage(qrBrowser, S);
   printStage(S);
@@ -596,8 +596,40 @@ async function present() {
   await new Promise(() => {});
 }
 
+/** --rename (headless, no spend, off-chain only): display names via the API's own PATCH endpoints, using each saved
+ *  profile's existing session (read in-page, never printed). Venue name (owner), Ana's and Priya's display names. */
+const RENAMES = { venue: "Yasser's Shawarmas", ana: "Ashad", priya: "Ibrahim" };
+async function renameSaved() {
+  const S = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : null;
+  const why = await stageUsable(S);
+  if (why) { console.log(`NOT RENAMED: ${why}`); process.exit(1); }
+  const creds = (k) => JSON.parse(readFileSync(join(STATE_DIR, S[k].credsFile), "utf8"));
+  const patch = async (k, kind, path, body) => {
+    const p = await openPersona(S.profiles[k], kind, { headless: true, creds: creds(k) });
+    try {
+      await p.page.goto(`${BASE}/wallet`);
+      await settle(p.page, 1500);
+      const r = await p.page.evaluate(async ({ api, path, body }) => {
+        const s = JSON.parse(localStorage.getItem("vouch.session.v1") || "null");
+        if (!s?.token) return { status: 0, err: "no session token in profile" };
+        const res = await fetch(api + path, { method: "PATCH", headers: { "content-type": "application/json", authorization: `Bearer ${s.token}` }, body: JSON.stringify(body) });
+        return { status: res.status, body: (await res.text()).slice(0, 200) };
+      }, { api: API, path, body });
+      console.log(`rename ${k} ${path}:`, r.status, r.body ?? r.err);
+      return r.status === 200;
+    } finally { await p.ctx.close(); }
+  };
+  const ok = [];
+  ok.push(await patch("owner", "desk", `/venues/${S.venue.address}`, { name: RENAMES.venue }));
+  ok.push(await patch("ana", "phone", "/me", { displayName: RENAMES.ana }));
+  ok.push(await patch("priya", "phone", "/me", { displayName: RENAMES.priya }));
+  console.log(ok.every(Boolean) ? "RENAMED" : "RENAME INCOMPLETE", JSON.stringify(ok));
+  process.exit(ok.every(Boolean) ? 0 : 2);
+}
+
 if (has("build")) await build({ force: has("force") });
 else if (has("verify")) await verifySaved();
+else if (has("rename")) await renameSaved();
 else if (has("present")) await present(); // HEADED by design: only the human runs it, at recording time
 else {
   console.log("usage: node e2e/phase5/p4-stage.mjs --base https://vouch-ubc.vercel.app (--build [--force] | --verify | --present [--check-seconds N])");

@@ -1,0 +1,18 @@
+{
+  "buildId": "2026-11-20T15-16-52-613Z",
+  "base": "http://localhost:3100",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "status": "failed",
+  "startedAt": "2026-11-20T15:16:52.614Z",
+  "steps": [],
+  "spend": {
+    "deployerTransfers": [],
+    "relayerTxs": [],
+    "demoTopupCapUsed": "0.00",
+    "deployerTotal": "0.00",
+    "relayerGasTotal": "0.000000"
+  },
+  "deployerBefore": "25.001896",
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3100/venue\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3100/venue\", waiting until \"load\"\u001b[22m\n",
+  "deployerAfter": "25.001896"
+}
