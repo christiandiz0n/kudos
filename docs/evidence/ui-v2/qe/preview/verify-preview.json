@@ -1,0 +1,14 @@
+{
+  "base": "https://vouch-ubc-blue.vercel.app",
+  "at": "2026-11-20T16:03:04.639Z",
+  "venueLink": {
+    "visible": true,
+    "height": 44,
+    "inHeader": true
+  },
+  "primaryBg": "rgb(64, 117, 173)",
+  "signedIn": true,
+  "url": "/wallet",
+  "wallet": true,
+  "errors": []
+}

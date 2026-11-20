@@ -1,0 +1,4826 @@
+{
+  "base": "https://vouch-ubc-blue.vercel.app",
+  "at": "2026-11-20T16:04:49.136Z",
+  "contrast": [
+    {
+      "scheme": "light",
+      "id": "__live_signin",
+      "url": "/",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "sign-in",
+      "url": "/design/screens/sign-in",
+      "n": 16,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "sign-in-error",
+      "url": "/design/screens/sign-in-error",
+      "n": 11,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "wallet",
+      "url": "/design/screens/wallet",
+      "n": 36,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "wallet-empty",
+      "url": "/design/screens/wallet-empty",
+      "n": 12,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "wallet-loading",
+      "url": "/design/screens/wallet-loading",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "wallet-offline",
+      "url": "/design/screens/wallet-offline",
+      "n": 37,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "wallet-toast",
+      "url": "/design/screens/wallet-toast",
+      "n": 38,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "scan",
+      "url": "/design/screens/scan",
+      "n": 4,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "scan-manual",
+      "url": "/design/screens/scan-manual",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Continue",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "scan-denied",
+      "url": "/design/screens/scan-denied",
+      "n": 12,
+      "fails": [],
+      "primaryMin": 5.17,
+      "primary": [
+        {
+          "text": "Continue",
+          "bucket": "primary button text",
+          "fg": "#94a0b2",
+          "bg": "#252e3b",
+          "ratio": 5.17,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-confirm",
+      "url": "/design/screens/pay-confirm",
+      "n": 44,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-quoting",
+      "url": "/design/screens/pay-quoting",
+      "n": 30,
+      "fails": [],
+      "primaryMin": 4.61,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#5b6779",
+          "bg": "#e1e7ef",
+          "ratio": 4.61,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-repeat",
+      "url": "/design/screens/pay-repeat",
+      "n": 23,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-insufficient",
+      "url": "/design/screens/pay-insufficient",
+      "n": 11,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Top up (testnet demo)",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-expired",
+      "url": "/design/screens/pay-expired",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan a new code",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-unavailable",
+      "url": "/design/screens/pay-unavailable",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-failed",
+      "url": "/design/screens/pay-failed",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-cancelled",
+      "url": "/design/screens/pay-cancelled",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-offline",
+      "url": "/design/screens/pay-offline",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-invalid-link",
+      "url": "/design/screens/pay-invalid-link",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan a new code",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-below-minimum",
+      "url": "/design/screens/pay-below-minimum",
+      "n": 24,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "pay-no-recommendation",
+      "url": "/design/screens/pay-no-recommendation",
+      "n": 23,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "success-pending",
+      "url": "/design/screens/success-pending",
+      "n": 56,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "success",
+      "url": "/design/screens/success",
+      "n": 56,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Recommend",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "success-first-visit",
+      "url": "/design/screens/success-first-visit",
+      "n": 17,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Recommend",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "success-repeat",
+      "url": "/design/screens/success-repeat",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "intro",
+      "url": "/design/screens/intro",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Save",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "intro-accepted",
+      "url": "/design/screens/intro-accepted",
+      "n": 5,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "intro-expired",
+      "url": "/design/screens/intro-expired",
+      "n": 3,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Go to Kudos",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "intro-already-customer",
+      "url": "/design/screens/intro-already-customer",
+      "n": 3,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Go to Kudos",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "recommend",
+      "url": "/design/screens/recommend",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Make my link",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "recommend-link",
+      "url": "/design/screens/recommend-link",
+      "n": 10,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Share link",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "recommend-locked",
+      "url": "/design/screens/recommend-locked",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "ambassador",
+      "url": "/design/screens/ambassador",
+      "n": 37,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Share my record",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-onboarding",
+      "url": "/design/screens/venue-onboarding",
+      "n": 27,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-onboarding-error",
+      "url": "/design/screens/venue-onboarding-error",
+      "n": 28,
+      "fails": [],
+      "primaryMin": 4.61,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#5b6779",
+          "bg": "#e1e7ef",
+          "ratio": 4.61,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-entry",
+      "url": "/design/screens/order-entry",
+      "n": 19,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Show code for $12.00",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-entry-error",
+      "url": "/design/screens/order-entry-error",
+      "n": 18,
+      "fails": [],
+      "primaryMin": 4.61,
+      "primary": [
+        {
+          "text": "Show code",
+          "bucket": "primary button text",
+          "fg": "#5b6779",
+          "bg": "#e1e7ef",
+          "ratio": 4.61,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-qr",
+      "url": "/design/screens/order-qr",
+      "n": 8,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-qr-low",
+      "url": "/design/screens/order-qr-low",
+      "n": 8,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-qr-expired",
+      "url": "/design/screens/order-qr-expired",
+      "n": 9,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "order-qr-paid",
+      "url": "/design/screens/order-qr-paid",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Next order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-dashboard",
+      "url": "/design/screens/venue-dashboard",
+      "n": 84,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-dashboard-network",
+      "url": "/design/screens/venue-dashboard-network",
+      "n": 105,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-dashboard-visitor",
+      "url": "/design/screens/venue-dashboard-visitor",
+      "n": 81,
+      "fails": [],
+      "failsAt1200ms": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-dashboard-empty",
+      "url": "/design/screens/venue-dashboard-empty",
+      "n": 32,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "venue-dashboard-offline",
+      "url": "/design/screens/venue-dashboard-offline",
+      "n": 85,
+      "fails": [],
+      "primaryMin": 4.81,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#4075ad",
+          "ratio": 4.81,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "light",
+      "id": "transparency",
+      "url": "/design/screens/transparency",
+      "n": 111,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "__live_signin",
+      "url": "/",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "sign-in",
+      "url": "/design/screens/sign-in",
+      "n": 16,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "sign-in-error",
+      "url": "/design/screens/sign-in-error",
+      "n": 11,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Continue with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "wallet",
+      "url": "/design/screens/wallet",
+      "n": 36,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "wallet-empty",
+      "url": "/design/screens/wallet-empty",
+      "n": 12,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "wallet-loading",
+      "url": "/design/screens/wallet-loading",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "wallet-offline",
+      "url": "/design/screens/wallet-offline",
+      "n": 37,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "wallet-toast",
+      "url": "/design/screens/wallet-toast",
+      "n": 38,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "scan",
+      "url": "/design/screens/scan",
+      "n": 4,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "scan-manual",
+      "url": "/design/screens/scan-manual",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Continue",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "scan-denied",
+      "url": "/design/screens/scan-denied",
+      "n": 12,
+      "fails": [],
+      "primaryMin": 5.17,
+      "primary": [
+        {
+          "text": "Continue",
+          "bucket": "primary button text",
+          "fg": "#94a0b2",
+          "bg": "#252e3b",
+          "ratio": 5.17,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-confirm",
+      "url": "/design/screens/pay-confirm",
+      "n": 44,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-quoting",
+      "url": "/design/screens/pay-quoting",
+      "n": 30,
+      "fails": [],
+      "primaryMin": 5.17,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#94a0b2",
+          "bg": "#252e3b",
+          "ratio": 5.17,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-repeat",
+      "url": "/design/screens/pay-repeat",
+      "n": 23,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-insufficient",
+      "url": "/design/screens/pay-insufficient",
+      "n": 11,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Top up (testnet demo)",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-expired",
+      "url": "/design/screens/pay-expired",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan a new code",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-unavailable",
+      "url": "/design/screens/pay-unavailable",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-failed",
+      "url": "/design/screens/pay-failed",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-cancelled",
+      "url": "/design/screens/pay-cancelled",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-offline",
+      "url": "/design/screens/pay-offline",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Try again",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-invalid-link",
+      "url": "/design/screens/pay-invalid-link",
+      "n": 8,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan a new code",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-below-minimum",
+      "url": "/design/screens/pay-below-minimum",
+      "n": 24,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "pay-no-recommendation",
+      "url": "/design/screens/pay-no-recommendation",
+      "n": 23,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "success-pending",
+      "url": "/design/screens/success-pending",
+      "n": 56,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "success",
+      "url": "/design/screens/success",
+      "n": 56,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Recommend",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "success-first-visit",
+      "url": "/design/screens/success-first-visit",
+      "n": 17,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Recommend",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "success-repeat",
+      "url": "/design/screens/success-repeat",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "intro",
+      "url": "/design/screens/intro",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Save",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "intro-accepted",
+      "url": "/design/screens/intro-accepted",
+      "n": 5,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Done",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "intro-expired",
+      "url": "/design/screens/intro-expired",
+      "n": 3,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Go to Kudos",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "intro-already-customer",
+      "url": "/design/screens/intro-already-customer",
+      "n": 3,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Go to Kudos",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "recommend",
+      "url": "/design/screens/recommend",
+      "n": 15,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Make my link",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "recommend-link",
+      "url": "/design/screens/recommend-link",
+      "n": 10,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Share link",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "recommend-locked",
+      "url": "/design/screens/recommend-locked",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Scan to pay",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "ambassador",
+      "url": "/design/screens/ambassador",
+      "n": 37,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Share my record",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-onboarding",
+      "url": "/design/screens/venue-onboarding",
+      "n": 27,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-onboarding-error",
+      "url": "/design/screens/venue-onboarding-error",
+      "n": 28,
+      "fails": [],
+      "primaryMin": 5.17,
+      "primary": [
+        {
+          "text": "Confirm with Face ID or fingerprint",
+          "bucket": "primary button text",
+          "fg": "#94a0b2",
+          "bg": "#252e3b",
+          "ratio": 5.17,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-entry",
+      "url": "/design/screens/order-entry",
+      "n": 19,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Show code for $12.00",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-entry-error",
+      "url": "/design/screens/order-entry-error",
+      "n": 18,
+      "fails": [],
+      "primaryMin": 5.17,
+      "primary": [
+        {
+          "text": "Show code",
+          "bucket": "primary button text",
+          "fg": "#94a0b2",
+          "bg": "#252e3b",
+          "ratio": 5.17,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": true,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-qr",
+      "url": "/design/screens/order-qr",
+      "n": 8,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-qr-low",
+      "url": "/design/screens/order-qr-low",
+      "n": 8,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-qr-expired",
+      "url": "/design/screens/order-qr-expired",
+      "n": 9,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "order-qr-paid",
+      "url": "/design/screens/order-qr-paid",
+      "n": 7,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Next order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-dashboard",
+      "url": "/design/screens/venue-dashboard",
+      "n": 84,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-dashboard-network",
+      "url": "/design/screens/venue-dashboard-network",
+      "n": 105,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-dashboard-visitor",
+      "url": "/design/screens/venue-dashboard-visitor",
+      "n": 81,
+      "fails": [],
+      "failsAt1200ms": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-dashboard-empty",
+      "url": "/design/screens/venue-dashboard-empty",
+      "n": 32,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "venue-dashboard-offline",
+      "url": "/design/screens/venue-dashboard-offline",
+      "n": 85,
+      "fails": [],
+      "primaryMin": 4.83,
+      "primary": [
+        {
+          "text": "Take an order",
+          "bucket": "primary button text",
+          "fg": "#ffffff",
+          "bg": "#3a74b5",
+          "ratio": 4.83,
+          "size": 17,
+          "weight": 600,
+          "large": false,
+          "need": 4.5,
+          "pass": true,
+          "disabled": false,
+          "gradientBehind": false
+        }
+      ],
+      "errs": []
+    },
+    {
+      "scheme": "dark",
+      "id": "transparency",
+      "url": "/design/screens/transparency",
+      "n": 111,
+      "fails": [],
+      "primaryMin": null,
+      "primary": [],
+      "errs": []
+    }
+  ],
+  "cls": [
+    {
+      "name": "sign-in-390",
+      "url": "/",
+      "vp": {
+        "width": 390,
+        "height": 844
+      },
+      "cls": 0,
+      "shifts": [],
+      "pass": true
+    },
+    {
+      "name": "wallet-390",
+      "url": "/wallet",
+      "vp": {
+        "width": 390,
+        "height": 844
+      },
+      "cls": 0,
+      "shifts": [],
+      "pass": true
+    },
+    {
+      "name": "lena-dashboard-390",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "vp": {
+        "width": 390,
+        "height": 844
+      },
+      "cls": 0.0007,
+      "shifts": [
+        {
+          "v": 0.0007,
+          "t": 255,
+          "src": [
+            "DIV.-mr-3 flex min-w-12 items-center justify"
+          ]
+        }
+      ],
+      "pass": true
+    },
+    {
+      "name": "sign-in-1440",
+      "url": "/",
+      "vp": {
+        "width": 1440,
+        "height": 900
+      },
+      "cls": 0,
+      "shifts": [],
+      "pass": true
+    },
+    {
+      "name": "wallet-1440",
+      "url": "/wallet",
+      "vp": {
+        "width": 1440,
+        "height": 900
+      },
+      "cls": 0,
+      "shifts": [],
+      "pass": true
+    },
+    {
+      "name": "lena-dashboard-1440",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "vp": {
+        "width": 1440,
+        "height": 900
+      },
+      "cls": 0.003,
+      "shifts": [
+        {
+          "v": 0.0003,
+          "t": 287,
+          "src": [
+            "A.focus-ring inline-flex min-h-11 items-ce"
+          ]
+        },
+        {
+          "v": 0.0027,
+          "t": 354,
+          "src": [
+            "SPAN.line-clamp-2 text-body-sm text-ink-3",
+            "SPAN.line-clamp-2 text-body-sm text-ink-3",
+            "DIV.rounded-lg bg-surface shadow-1 ring-1 ri"
+          ]
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "vouch": [
+    {
+      "scheme": "light",
+      "url": "/",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/sign-in",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/sign-in-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/wallet",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/wallet-empty",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/wallet-loading",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/wallet-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/wallet-toast",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/scan",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/scan-manual",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/scan-denied",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-confirm",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-quoting",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-repeat",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-insufficient",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-unavailable",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-failed",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-cancelled",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-invalid-link",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-below-minimum",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/pay-no-recommendation",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/success-pending",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/success",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/success-first-visit",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/success-repeat",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/intro",
+      "title": "Kudos",
+      "hits": [
+        {
+          "where": "text",
+          "s": "Ana vouched for Lena's café"
+        }
+      ]
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/intro-accepted",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/intro-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/intro-already-customer",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/recommend",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/recommend-link",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/recommend-locked",
+      "title": "Kudos",
+      "hits": [
+        {
+          "where": "text",
+          "s": "Buy once to vouch"
+        }
+      ]
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/ambassador",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-onboarding",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-onboarding-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-entry",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-entry-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-qr",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-qr-low",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-qr-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/order-qr-paid",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-dashboard",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-dashboard-network",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-dashboard-visitor",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-dashboard-empty",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/venue-dashboard-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/design/screens/transparency",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/sign-in",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/sign-in-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/wallet",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/wallet-empty",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/wallet-loading",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/wallet-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/wallet-toast",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/scan",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/scan-manual",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/scan-denied",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-confirm",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-quoting",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-repeat",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-insufficient",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-unavailable",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-failed",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-cancelled",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-invalid-link",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-below-minimum",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/pay-no-recommendation",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/success-pending",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/success",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/success-first-visit",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/success-repeat",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/intro",
+      "title": "Kudos",
+      "hits": [
+        {
+          "where": "text",
+          "s": "Ana vouched for Lena's café"
+        }
+      ]
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/intro-accepted",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/intro-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/intro-already-customer",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/recommend",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/recommend-link",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/recommend-locked",
+      "title": "Kudos",
+      "hits": [
+        {
+          "where": "text",
+          "s": "Buy once to vouch"
+        }
+      ]
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/ambassador",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-onboarding",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-onboarding-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-entry",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-entry-error",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-qr",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-qr-low",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-qr-expired",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/order-qr-paid",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-dashboard",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-dashboard-network",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-dashboard-visitor",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-dashboard-empty",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/venue-dashboard-offline",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "dark",
+      "url": "/design/screens/transparency",
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/wallet",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/venue/new",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/scan",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/me",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    },
+    {
+      "scheme": "light",
+      "url": "/recommend?venue=0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "live": true,
+      "title": "Kudos",
+      "hits": [
+        {
+          "where": "text",
+          "s": "Buy once to vouch"
+        }
+      ]
+    },
+    {
+      "scheme": "light",
+      "url": "/transparency",
+      "live": true,
+      "title": "Kudos",
+      "hits": []
+    }
+  ],
+  "selectors": [
+    {
+      "where": "/",
+      "name": "Continue with Face ID or fingerprint",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 669
+    },
+    {
+      "where": "/",
+      "name": "I already have an account",
+      "count": 1,
+      "visible": true,
+      "h": 48,
+      "y": 776
+    },
+    {
+      "where": "/",
+      "name": "I run a venue (link)",
+      "count": 1,
+      "visible": true,
+      "h": 44,
+      "y": 12
+    },
+    {
+      "where": "/",
+      "name": "first name (label)",
+      "count": 1,
+      "visible": true,
+      "h": 48,
+      "y": 495
+    },
+    {
+      "where": "/design/screens/pay-confirm",
+      "name": "Confirm with Face ID or fingerprint",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 746
+    },
+    {
+      "where": "/design/screens/intro",
+      "name": "Save <name>'s recommendation",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 712
+    },
+    {
+      "where": "/design/screens/order-entry",
+      "name": "Show code",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 768
+    },
+    {
+      "where": "/design/screens/recommend",
+      "name": "Make my link",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 742
+    },
+    {
+      "where": "/design/screens/venue-onboarding",
+      "name": "Name customers will see",
+      "count": 1,
+      "visible": true,
+      "h": 48,
+      "y": 218
+    },
+    {
+      "where": "/design/screens/venue-onboarding",
+      "name": "Minimum first order",
+      "count": 1,
+      "visible": true,
+      "h": 48,
+      "y": 760
+    },
+    {
+      "where": "/design/screens/venue-dashboard",
+      "name": "Latest (tab)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/design/screens/venue-dashboard",
+      "name": "Everyone (tab)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/design/screens/venue-dashboard",
+      "name": "Everyone (button)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/design/screens/venue-dashboard",
+      "name": "Everyone (radio)",
+      "count": 1,
+      "visible": true,
+      "h": 44,
+      "y": 473
+    },
+    {
+      "where": "/design/screens/wallet",
+      "name": "Top up (testnet demo)",
+      "count": 1,
+      "visible": true,
+      "h": 44,
+      "y": 243
+    },
+    {
+      "where": "/wallet (live)",
+      "name": "Top up (testnet demo)",
+      "count": 1,
+      "visible": true,
+      "h": 44,
+      "y": 203
+    },
+    {
+      "where": "/venue/LENA (live)",
+      "name": "Latest (tab)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/venue/LENA (live)",
+      "name": "Everyone (tab)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/venue/LENA (live)",
+      "name": "Everyone (button)",
+      "count": 0,
+      "visible": false,
+      "h": null,
+      "y": null
+    },
+    {
+      "where": "/venue/LENA (live)",
+      "name": "Ben paid $12.00",
+      "count": 2,
+      "visible": true,
+      "h": 24,
+      "y": 1399
+    },
+    {
+      "where": "/venue/new (live)",
+      "name": "Name customers will see",
+      "count": 1,
+      "visible": true,
+      "h": 48,
+      "y": 218
+    },
+    {
+      "where": "/venue/new (live)",
+      "name": "Confirm with Face ID or fingerprint (NOT pressed)",
+      "count": 1,
+      "visible": true,
+      "h": 56,
+      "y": 768
+    }
+  ],
+  "motion": [
+    {
+      "id": "sign-in",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "sign-in-error",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "wallet",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "wallet-empty",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "wallet-loading",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "wallet-offline",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "wallet-toast",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "scan",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "scan-manual",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "scan-denied",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-confirm",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-quoting",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-repeat",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-insufficient",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-expired",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-unavailable",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-failed",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-cancelled",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-offline",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-invalid-link",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-below-minimum",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "pay-no-recommendation",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "success-pending",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "success",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "success-first-visit",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "success-repeat",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "intro",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "intro-accepted",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "intro-expired",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "intro-already-customer",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "recommend",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "recommend-link",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "recommend-locked",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "ambassador",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-onboarding",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-onboarding-error",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-entry",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-entry-error",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-qr",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-qr-low",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-qr-expired",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "order-qr-paid",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-dashboard",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-dashboard-network",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-dashboard-visitor",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-dashboard-empty",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "venue-dashboard-offline",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    },
+    {
+      "id": "transparency",
+      "runningAt600ms": [],
+      "runningAt1300ms": []
+    }
+  ],
+  "green": [
+    {
+      "url": "/",
+      "green": [
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45 back"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/sign-in",
+      "green": [
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45 back"
+        },
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "ANAna sent you to Lena's café"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/sign-in-error",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "ANAna sent you to Lena's café"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/wallet",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "+$1.28 earned this week"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.28"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45 cashback"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.21"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.62"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$50.00"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/wallet-empty",
+      "green": []
+    },
+    {
+      "url": "/design/screens/wallet-loading",
+      "green": []
+    },
+    {
+      "url": "/design/screens/wallet-offline",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "+$1.28 earned this week"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.28"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45 cashback"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.21"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.62"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$50.00"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/wallet-toast",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "+$1.28 earned this week"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.28"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45 cashback"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.21"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.62"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$50.00"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/scan",
+      "green": []
+    },
+    {
+      "url": "/design/screens/scan-manual",
+      "green": []
+    },
+    {
+      "url": "/design/screens/scan-denied",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-confirm",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "You'll get $0.45 back"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80 to 5 people"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.36"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/pay-quoting",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-repeat",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-insufficient",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-expired",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-unavailable",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-failed",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-cancelled",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-offline",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-invalid-link",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-below-minimum",
+      "green": []
+    },
+    {
+      "url": "/design/screens/pay-no-recommendation",
+      "green": []
+    },
+    {
+      "url": "/design/screens/success-pending",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80 to 5 people"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/success",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "+$0.45 back to you"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80 to 5 people"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.36"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.69"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.30"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.25"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.11"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/success-first-visit",
+      "green": []
+    },
+    {
+      "url": "/design/screens/success-repeat",
+      "green": []
+    },
+    {
+      "url": "/design/screens/intro",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "p",
+          "text": "On your first visit"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/intro-accepted",
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "svg",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/intro-expired",
+      "green": []
+    },
+    {
+      "url": "/design/screens/intro-already-customer",
+      "green": []
+    },
+    {
+      "url": "/design/screens/recommend",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/recommend-link",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/recommend-locked",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/ambassador",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$18.40"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$4.86"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$6.30"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$5.10"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.14"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.00"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/venue-onboarding",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.80"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.35"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "Rewards 15%"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/venue-onboarding-error",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.80"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.35"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "Rewards 15%"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/order-entry",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/order-entry-error",
+      "green": []
+    },
+    {
+      "url": "/design/screens/order-qr",
+      "green": []
+    },
+    {
+      "url": "/design/screens/order-qr-low",
+      "green": []
+    },
+    {
+      "url": "/design/screens/order-qr-expired",
+      "green": []
+    },
+    {
+      "url": "/design/screens/order-qr-paid",
+      "green": []
+    },
+    {
+      "url": "/design/screens/venue-dashboard",
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "rect",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.69"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.30"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.25"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.11"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/venue-dashboard-network",
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "rect",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$2.40"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$4.29"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$2.73"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$1.36"
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$4.06"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$1.80"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$1.69"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$2.07"
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/venue-dashboard-visitor",
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "rect",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.69"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.30"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.25"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.11"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/venue-dashboard-empty",
+      "green": []
+    },
+    {
+      "url": "/design/screens/venue-dashboard-offline",
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "rect",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.69"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.30"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.25"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.11"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/design/screens/transparency",
+      "green": [
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "450,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "693,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "297,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "252,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "108,000"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80 to 5 people"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.693"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.297"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.252"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.108"
+        }
+      ]
+    },
+    {
+      "url": "/wallet",
+      "live": true,
+      "green": []
+    },
+    {
+      "url": "/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "live": true,
+      "green": [
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "rect",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.16"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        },
+        {
+          "kind": "svg",
+          "tag": "text",
+          "text": "+$0.06"
+        },
+        {
+          "kind": "svg",
+          "tag": "circle",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "/venue/new",
+      "live": true,
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.80"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$1.35"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "Rewards 15%"
+        }
+      ]
+    },
+    {
+      "url": "/scan",
+      "live": true,
+      "green": []
+    },
+    {
+      "url": "/me",
+      "live": true,
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$0.00"
+        }
+      ]
+    },
+    {
+      "url": "/recommend?venue=0x9a40C2b1Da073Fea51A63B92f868A78969c56289",
+      "live": true,
+      "green": [
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.99"
+        }
+      ]
+    },
+    {
+      "url": "/transparency",
+      "live": true,
+      "green": [
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "450,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "693,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "297,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "252,000"
+        },
+        {
+          "kind": "text",
+          "tag": "td",
+          "text": "108,000"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80 to 5 people"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "$1.80"
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "bg",
+          "tag": "span",
+          "text": ""
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.45"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.693"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.297"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.252"
+        },
+        {
+          "kind": "text",
+          "tag": "span",
+          "text": "+$0.108"
+        }
+      ]
+    }
+  ]
+}

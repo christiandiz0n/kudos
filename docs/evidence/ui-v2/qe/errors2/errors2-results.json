@@ -1,0 +1,222 @@
+[
+  {
+    "ctx": "offline-cust",
+    "state": "control: signature OK, relay forced 502",
+    "expect": "didn't go through",
+    "expectFound": true,
+    "screen": "e60-control-relay-failed",
+    "url": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "primaryCount": 1,
+    "primaries": [
+      "Try again"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "QE | QE errors café 06:15 | Paying with Kudos | Payment didn't go through | Nothing was charged. Try again, or ask for a new code. | Try again | Scan a new code",
+    "focus": {
+      "ok": true,
+      "el": "button:Try again",
+      "outline": "solid 2px rgb(64, 117, 173)",
+      "boxShadow": "rgba(64, 117, 173, 0.24) 0px 0px 0px 6px"
+    },
+    "errs": [
+      {
+        "kind": "console",
+        "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+        "url": "https://vouch-ubc-blue.vercel.app/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687"
+      }
+    ]
+  },
+  {
+    "ctx": "offline-cust",
+    "state": "offline at confirm (context offline; navigator.onLine=false)",
+    "expect": "offline",
+    "expectFound": true,
+    "screen": "e61-pay-offline-at-confirm",
+    "url": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "primaryCount": 1,
+    "primaries": [
+      "Try again"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "QE | QE errors café 06:15 | Paying with Kudos | You're offline | Connect to Wi-Fi or mobile data to pay. Nothing was charged. | Try again | Close",
+    "focus": {
+      "ok": true,
+      "el": "button:Try again",
+      "outline": "solid 2px rgb(64, 117, 173)",
+      "boxShadow": "rgba(64, 117, 173, 0.24) 0px 0px 0px 6px"
+    },
+    "errs": [
+      {
+        "kind": "requestfailed",
+        "text": "POST /payments net::ERR_INTERNET_DISCONNECTED",
+        "url": "https://vouch-ubc-blue.vercel.app/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687"
+      },
+      {
+        "kind": "console",
+        "text": "Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+        "url": "https://vouch-ubc-blue.vercel.app/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687"
+      }
+    ],
+    "navigatorOnLine": false
+  },
+  {
+    "ctx": "reduced",
+    "state": "pending under prefers-reduced-motion (forced 202; nothing relayed)",
+    "expect": "",
+    "expectFound": null,
+    "screen": "e40-success-pending-reduced-motion",
+    "url": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "primaryCount": 1,
+    "primaries": [
+      "Done"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Paying QE errors café 06:15… | $0.50 | $ | 0 | . | 50 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | This takes a few seconds. | Done",
+    "focus": {
+      "ok": true,
+      "el": "summary:Receipt details",
+      "outline": "solid 2px rgb(64, 117, 173)",
+      "boxShadow": "rgba(64, 117, 173, 0.24) 0px 0px 0px 6px"
+    },
+    "errs": [
+      {
+        "kind": "console",
+        "text": "Failed to load resource: the server responded with a status of 429 ()",
+        "url": "https://vouch-ubc-blue.vercel.app/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687"
+      },
+      {
+        "kind": "console",
+        "text": "Failed to load resource: the server responded with a status of 429 ()",
+        "url": "https://vouch-ubc-blue.vercel.app/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687"
+      }
+    ],
+    "animations": []
+  },
+  {
+    "ctx": "reduced",
+    "state": "settled under prefers-reduced-motion (forced GET /payments/:id)",
+    "expect": "",
+    "expectFound": null,
+    "screen": "e41-success-settled-reduced-motion",
+    "url": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0x2e5bd456df04e50fcb3d29c0a08d1aa823c4f3fffeb7ce4c05879134df096687",
+    "primaryCount": 1,
+    "primaries": [
+      "Recommend QE errors café 06:15"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Paid at QE errors café 06:15 | $0.50 | $ | 0 | . | 50 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | Recommend | QE errors café 06:15 | Done",
+    "focus": {
+      "ok": true,
+      "el": "button:Recommend QE errors café 06:15",
+      "outline": "solid 2px rgb(64, 117, 173)",
+      "boxShadow": "rgba(64, 117, 173, 0.24) 0px 0px 0px 6px"
+    },
+    "errs": [],
+    "animations": []
+  },
+  {
+    "ctx": "camera-denied",
+    "state": "camera permission not granted (headless default)",
+    "expect": "Camera is off",
+    "expectFound": false,
+    "screen": "e50-scan-camera-denied",
+    "url": "/scan",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue (disabled)"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Scan to pay | No camera available | This browser can't use a camera here. There are two other ways to pay: | 1 | Open your phone's | camera app | , point it at the code and tap the link that appears. | 2 | Or type the short link from the counter screen below. | Code or link | It's the short link printed under the code. | Continue",
+    "focus": {
+      "ok": true,
+      "el": "button:Close scanner",
+      "outline": "solid 2px rgb(143, 179, 224)",
+      "boxShadow": "rgba(143, 179, 224, 0.28) 0px 0px 0px 6px"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "camera-denied",
+    "state": "camera denied (forced NotAllowedError)",
+    "expect": "Camera is off",
+    "expectFound": true,
+    "screen": "e51-scan-camera-denied-forced",
+    "url": "/scan",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue (disabled)"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Scan to pay | Camera is off for Kudos | That's fine, there are two other ways to pay: | 1 | Open your phone's | camera app | , point it at the code and tap the link that appears. | 2 | Or type the short link from the counter screen below. | Code or link | It's the short link printed under the code. | Continue | Try the camera again",
+    "focus": {
+      "ok": true,
+      "el": "button:Close scanner",
+      "outline": "solid 2px rgb(143, 179, 224)",
+      "boxShadow": "rgba(143, 179, 224, 0.28) 0px 0px 0px 6px"
+    },
+    "errs": []
+  },
+  {
+    "ctx": "camera-denied",
+    "state": "camera denied → type the code",
+    "expect": "",
+    "expectFound": null,
+    "screen": "e52-scan-type-code",
+    "url": "/scan",
+    "primaryCount": 1,
+    "primaries": [
+      "Continue (disabled)"
+    ],
+    "accents": [],
+    "banned": [],
+    "bannedA11y": [],
+    "moneyBad": [],
+    "rawUnits": [],
+    "smallTargets": [],
+    "smallPrimary": [],
+    "text": "Scan to pay | Camera is off for Kudos | That's fine, there are two other ways to pay: | 1 | Open your phone's | camera app | , point it at the code and tap the link that appears. | 2 | Or type the short link from the counter screen below. | Code or link | It's the short link printed under the code. | Continue | Try the camera again",
+    "focus": {
+      "ok": true,
+      "el": "input:",
+      "outline": "none 0px rgb(238, 242, 247)",
+      "boxShadow": "none"
+    },
+    "errs": []
+  }
+]
