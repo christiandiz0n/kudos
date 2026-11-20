@@ -126,7 +126,7 @@ export function WalletHome({ address, name }: AccountCtx) {
     try {
       await demoTopup();
       await load();
-      toasts.push({ tone: "success", title: "Money added", description: "Demo money, for trying Vouch." });
+      toasts.push({ tone: "success", title: "Money added", description: "Demo money, for trying Kudos." });
     } catch (e) {
       toasts.push({ tone: "neutral", title: e instanceof Error ? e.message : "Top-up didn't work. Try again.", ms: 7000 });
     } finally {

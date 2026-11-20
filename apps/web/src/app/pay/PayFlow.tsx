@@ -242,7 +242,7 @@ export function PayFlow({ address, venue, orderId }: AccountCtx & { venue: Addre
         status={settled ? "settled" : "pending"}
         split={settled ? (settled.rewarded ? splitFromSettled(settled, venueName, address, names) : undefined) : quote?.quote.rewarded ? splitFromQuote(quote, venueName, names) : undefined}
         thanked={settled ? thankedFrom(settled.lines, names) : quote ? thankedFrom(quote.quote.rewards.map((r) => ({ role: r.role, recipient: r.recipient })), names) : []}
-        details={txHash ? { receiptId: `${txHash.slice(0, 6)}…${txHash.slice(-4)}`, network: "Arc Testnet", networkFee: "Under $0.01, paid by Vouch", explorerUrl: explorerTxUrl(txHash) } : undefined}
+        details={txHash ? { receiptId: `${txHash.slice(0, 6)}…${txHash.slice(-4)}`, network: "Arc Testnet", networkFee: "Under $0.01, paid by Kudos", explorerUrl: explorerTxUrl(txHash) } : undefined}
         onDone={() => router.push("/wallet")}
         onRecommend={settled && settled.firstPurchase ? () => router.push(`/recommend?venue=${venue}`) : undefined}
         noReward={noReward}

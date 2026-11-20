@@ -197,7 +197,7 @@ export function PayConfirmContent(p: PayConfirmProps) {
 
       {p.details ? (
         <Details className="mt-5">
-          <DetailRow label="Network fee" value={`${p.details.networkFee}, paid by Vouch`} />
+          <DetailRow label="Network fee" value={`${p.details.networkFee}, paid by Kudos`} />
           <DetailRow label="Settles on" value={p.details.network} />
           <DetailRow label="Order ID" value={p.details.orderId} mono />
         </Details>
@@ -268,7 +268,7 @@ export function PayBackdrop({ venueName }: { venueName?: string }) {
         {venueName ? <Avatar name={venueName} kind="venue" size="lg" /> : <Skeleton rounded="full" className="size-14" />}
         <div className="min-w-0 flex-1">
           {venueName ? <p className="truncate text-title-3 text-ink">{venueName}</p> : <Skeleton className="h-5 w-40" />}
-          <p className="mt-1 text-caption text-ink-3">Paying with Vouch</p>
+          <p className="mt-1 text-caption text-ink-3">Paying with Kudos</p>
         </div>
       </div>
       <Skeleton className="mt-10 h-12 w-44" />

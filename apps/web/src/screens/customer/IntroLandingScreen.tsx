@@ -41,7 +41,7 @@ function Blocked({ p, icon, title, body }: { p: IntroLandingScreenProps; icon: "
       header={<AppBar />}
       footer={
         <Button block size="lg" onClick={p.onDone ?? p.onDismiss}>
-          Go to Vouch
+          Go to Kudos
         </Button>
       }
     >

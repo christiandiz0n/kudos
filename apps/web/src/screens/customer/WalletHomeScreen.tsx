@@ -175,7 +175,7 @@ export function WalletHomeScreen({
         <EmptyState
           icon="scan"
           title="No payments yet"
-          body="Tap Scan to pay at a Vouch café, barber or salon. Your first visit gives you money back."
+          body="Tap Scan to pay at a Kudos café, barber or salon. Your first visit gives you money back."
           className="py-8"
         />
       ) : (

@@ -204,7 +204,7 @@ export function OrderQRScreen(p: OrderQRScreenProps) {
                   ? "This code expired"
                   : p.state === "refreshing"
                     ? "Getting a new code"
-                    : "Waiting for payment · scan with Vouch"}
+                    : "Waiting for payment · scan with Kudos"}
             </p>
             <QRFrame secondsLeft={p.secondsLeft} totalSeconds={p.totalSeconds} state={p.state} onRefresh={p.onRefresh} autoRefresh={p.autoRefresh} size={312}>
               {p.qr}

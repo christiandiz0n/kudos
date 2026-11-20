@@ -122,7 +122,7 @@ export function IntroLanding() {
           body="It may have been mistyped. Ask your friend to send it again."
           action={
             <Link href="/" className={buttonClasses({ variant: "secondary" })}>
-              Open Vouch
+              Open Kudos
             </Link>
           }
         />

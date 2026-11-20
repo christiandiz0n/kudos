@@ -103,7 +103,7 @@ function DashboardFlow({ venue, address }: { venue: string } & AccountCtx) {
         const n = await resolveNames([...s.edges.flatMap((e) => [e.from, e.to]), ...hist.map((h) => h.customer)]);
         if (alive) setNames(n);
       } catch {
-        if (alive) toasts.push({ tone: "warning", key: "dash", title: "We can't reach Vouch right now.", description: "Your numbers are safe. We'll keep trying." });
+        if (alive) toasts.push({ tone: "warning", key: "dash", title: "We can't reach Kudos right now.", description: "Your numbers are safe. We'll keep trying." });
       } finally {
         if (alive) setLoading(false);
       }

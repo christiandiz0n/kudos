@@ -3,7 +3,7 @@ import Link from "next/link";
 import { EmptyState, Screen, buttonClasses } from "@/components/ui";
 
 /** QE-3-08: on-brand 404 for unknown paths, with a way home (existing components only; static, server-rendered). */
-export const metadata: Metadata = { title: "Page not found · Vouch" };
+export const metadata: Metadata = { title: "Page not found · Kudos" };
 
 export default function NotFound() {
   return (
@@ -11,7 +11,7 @@ export default function NotFound() {
       footer={
         <div className="flex flex-col gap-2">
           <Link href="/" className={buttonClasses({ size: "lg", block: true })}>
-            Go to Vouch
+            Go to Kudos
           </Link>
           <Link href="/scan" className={buttonClasses({ variant: "ghost", block: true })}>
             Scan a code

@@ -99,7 +99,7 @@ function Flow({ address, name }: AccountCtx) {
   async function share() {
     if (!link) return;
     try {
-      await navigator.share({ title: `${venueName} on Vouch`, text: note.trim() || `${name} recommends ${venueName}`, url: link.url });
+      await navigator.share({ title: `${venueName} on Kudos`, text: note.trim() || `${name} recommends ${venueName}`, url: link.url });
     } catch (e) {
       if ((e as DOMException)?.name !== "AbortError") await copy();
     }

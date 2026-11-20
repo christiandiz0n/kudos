@@ -90,7 +90,7 @@ export function TransparencyScreen(p: TransparencyScreenProps) {
     <Screen header={<AppBar title="How payments split" large />}>
       <p className="-mt-1 text-body text-ink-2">
         Every payment at {p.venueName} is split by a public smart contract on {p.network}, in one transaction. Nobody, including
-        Vouch and {p.venueName}, can skip a recommender, change the terms a recommendation was made under, or touch the money in
+        Kudos and {p.venueName}, can skip a recommender, change the terms a recommendation was made under, or touch the money in
         between.
       </p>
 
@@ -196,7 +196,7 @@ export function TransparencyScreen(p: TransparencyScreenProps) {
         <dl className="divide-y divide-line">
           {[
             ["Network", `${p.network} · chain id ${p.chainId}`],
-            ["Split contract (Vouch v3, verified source)", p.contractAddress],
+            ["Split contract (v3, verified source)", p.contractAddress],
             ...(p.deployBlock ? [["Deployed at block", n(BigInt(p.deployBlock))]] : []),
             ["Payment token (USDC, 6 decimals)", p.tokenAddress],
           ].map(([k, v]) => (

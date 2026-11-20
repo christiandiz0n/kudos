@@ -225,7 +225,7 @@ export function Playground() {
         </div>
         <EmptyState icon="users" title="No recommendations yet" body="Share Lena's café with a friend. You'll see it here when they visit." action={<Button size="sm" variant="secondary">Recommend</Button>} />
         <Details>
-          <DetailRow label="Network fee" value="$0.01, paid by Vouch" />
+          <DetailRow label="Network fee" value="$0.01, paid by Kudos" />
           <DetailRow label="Receipt ID" value="0x2de25bf8…8214" mono />
         </Details>
       </Spec>

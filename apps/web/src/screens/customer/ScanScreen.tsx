@@ -108,7 +108,7 @@ export function ScanScreen({
             <span className="mb-4 inline-flex size-14 items-center justify-center rounded-full bg-surface-2 text-ink-2">
               <Icon name="cameraOff" size={26} />
             </span>
-            <h1 className="text-title-2 text-ink">{cameraState === "denied" ? "Camera is off for Vouch" : "No camera available"}</h1>
+            <h1 className="text-title-2 text-ink">{cameraState === "denied" ? "Camera is off for Kudos" : "No camera available"}</h1>
             <p className="mt-2 text-body text-ink-2">
               {cameraState === "denied"
                 ? "That's fine, there are two other ways to pay:"

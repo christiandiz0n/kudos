@@ -10,7 +10,7 @@
  *   onCreate         "Continue with Face ID or fingerprint" (new account)
  *   onSignIn         "I already have an account" (passkey sign-in, no name needed)
  */
-import { APP_NAME } from "@vouch/shared";
+import { BRAND as APP_NAME } from "@/lib/brand";
 import { Avatar, Button, Icon, Screen, TextField } from "@/components/ui";
 
 export interface SignInScreenProps {

@@ -56,7 +56,7 @@ export function Onboarding({ invite, onDone }: { invite?: { referrerName: string
       toasts.push({
         tone: "neutral",
         title: "No account on this device yet",
-        description: "Your account lives on the phone or browser where you created it. Open Vouch there, or start here.",
+        description: "Your account lives on the phone or browser where you created it. Open Kudos there, or start here.",
         ms: 8000,
       });
       return;

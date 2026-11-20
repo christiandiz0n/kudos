@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { APP_NAME } from "@vouch/shared";
+import { BRAND as APP_NAME } from "@/lib/brand";
 import { MoneyGraphPlayground } from "../_mocks/MoneyGraphPlayground";
 
 export const metadata: Metadata = { title: `${APP_NAME} · Money graph` };

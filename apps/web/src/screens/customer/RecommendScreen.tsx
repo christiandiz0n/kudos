@@ -99,7 +99,7 @@ export function RecommendScreen(p: RecommendScreenProps) {
           title="Buy once to vouch"
           body={
             <>
-              You can recommend {p.venueName} after your first purchase there. That way every recommendation on Vouch comes from a real
+              You can recommend {p.venueName} after your first purchase there. That way every recommendation on Kudos comes from a real
               customer, and friends can trust it.
             </>
           }

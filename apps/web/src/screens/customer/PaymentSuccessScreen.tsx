@@ -172,7 +172,7 @@ export function PaymentSuccessScreen({
         <Details className="mt-4" summary="Receipt details">
           <DetailRow label="Receipt ID" value={details.receiptId} mono />
           <DetailRow label="Settles on" value={details.network} />
-          <DetailRow label="Network fee" value={`${details.networkFee}, paid by Vouch`} />
+          <DetailRow label="Network fee" value={`${details.networkFee}, paid by Kudos`} />
           {details.explorerUrl ? (
             <DetailRow
               label="Public record"

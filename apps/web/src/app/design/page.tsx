@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { APP_NAME } from "@vouch/shared";
+import { BRAND as APP_NAME } from "@/lib/brand";
 import { MoneyGraph, SplitBreakdown } from "@/components/ui";
 import { CONTRAST_PAIRS, DARK_SELECTOR, LIGHT_SELECTOR, contrast, parsePalette } from "@/design/contrast";
 import { STORY, STORY_GRAPH, STORY_SPLIT } from "@/design/fixtures";
@@ -336,7 +336,7 @@ export default function DesignPage() {
               <tbody className="divide-y divide-line">
                 {[
                   ["USDC, tokens, crypto", "dollars, $12.00"],
-                  ["gas, gas fee", "(nothing; we cover it) · Details: “Network fee, paid by Vouch”"],
+                  ["gas, gas fee", "(nothing; we cover it) · Details: “Network fee, paid by Kudos”"],
                   ["wallet address, 0x…", "your account / your name"],
                   ["transaction hash, tx", "receipt · Details: “Receipt ID”"],
                   ["sign, signature", "confirm, approve, save"],

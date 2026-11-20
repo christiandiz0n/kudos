@@ -37,7 +37,7 @@ export function Record({ address, viewer, fallbackName }: { address: string; vie
   async function share() {
     const url = `${webOrigin()}/a/${address}`;
     try {
-      if (navigator.share) await navigator.share({ title: "My Vouch record", url });
+      if (navigator.share) await navigator.share({ title: "My Kudos record", url });
       else {
         await navigator.clipboard.writeText(url);
         setCopied(true);
@@ -50,7 +50,7 @@ export function Record({ address, viewer, fallbackName }: { address: string; vie
 
   return (
     <AmbassadorScreen
-      name={a?.displayName ?? fallbackName ?? "A Vouch ambassador"}
+      name={a?.displayName ?? fallbackName ?? "A Kudos ambassador"}
       verifiedCustomers={a?.customersCredited ?? 0}
       venueCount={a?.venues.length ?? 0}
       earned={a ? money(a.earned.total) : 0n}

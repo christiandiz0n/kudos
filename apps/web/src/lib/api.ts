@@ -55,7 +55,7 @@ const FRIENDLY: Record<string, string> = {
   SELF_REFERRAL: "That's your own recommendation. Share it with a friend instead.",
   REFERRER_NOT_ELIGIBLE: "You can recommend a place after your first purchase there.",
   UNKNOWN_VENUE: "We couldn't find this place.",
-  VENUE_NOT_MANAGED: "This place can't take payments through Vouch right now.",
+  VENUE_NOT_MANAGED: "This place can't take payments through Kudos right now.",
   TX_FAILED: "That didn't go through. Nothing was charged. Try again.",
   INVALID_SIGNATURE: "We couldn't confirm that. Nothing was charged. Try again.",
   SIGNATURE_EXPIRED: "That took a little too long. Try again.",
@@ -63,7 +63,7 @@ const FRIENDLY: Record<string, string> = {
   OWNER_NONCE_STALE: "Something changed in the meantime. Try again.",
   UNAUTHENTICATED: "Please sign in again.",
   TOO_MANY_CONNECTIONS: "Live updates are busy. We'll keep checking.",
-  NETWORK: "We can't reach Vouch right now. Check your connection and try again.",
+  NETWORK: "We can't reach Kudos right now. Check your connection and try again.",
 };
 
 export function friendlyError(e: unknown): string {

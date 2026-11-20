@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { APP_NAME } from "@vouch/shared";
+import { BRAND as APP_NAME } from "@/lib/brand";
 import "./globals.css";
 import { fontSans } from "@/design/fonts";
 import { ToastProvider } from "@/hooks/useToasts";

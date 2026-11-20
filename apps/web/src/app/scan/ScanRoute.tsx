@@ -64,7 +64,7 @@ export function ScanRoute() {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, w, h);
     const code = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: "dontInvert" });
-    if (code?.data && !go(code.data)) setError("That code isn't for Vouch. Try the one on the counter screen.");
+    if (code?.data && !go(code.data)) setError("That code isn't for Kudos. Try the one on the counter screen.");
   }, [go]);
 
   const start = useCallback(async () => {
@@ -117,7 +117,7 @@ export function ScanRoute() {
             setManualError(undefined);
           },
           onSubmit: () => {
-            if (!go(manualValue)) setManualError("That doesn't look like a Vouch code or link.");
+            if (!go(manualValue)) setManualError("That doesn't look like a Kudos code or link.");
           },
           error: manualError,
         }}

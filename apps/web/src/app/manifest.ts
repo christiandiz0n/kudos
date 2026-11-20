@@ -6,8 +6,8 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Vouch",
-    short_name: "Vouch",
+    name: "Kudos",
+    short_name: "Kudos",
     description: "Pay local. Thank the friends who sent you.",
     id: "/",
     start_url: "/", // signed in → /wallet; venue staff go on to /venue from there

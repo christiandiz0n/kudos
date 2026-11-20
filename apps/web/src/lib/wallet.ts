@@ -193,8 +193,8 @@ export async function createWallet(displayName: string): Promise<StoredWallet> {
     try {
       cred = (await navigator.credentials.create({
         publicKey: {
-          rp: { name: "Vouch" },
-          user: { id: random(16), name: displayName || "Vouch", displayName: displayName || "Vouch" },
+          rp: { name: "Kudos" },
+          user: { id: random(16), name: displayName || "Kudos", displayName: displayName || "Kudos" },
           challenge: random(32),
           pubKeyCredParams: [
             { type: "public-key", alg: -7 },
