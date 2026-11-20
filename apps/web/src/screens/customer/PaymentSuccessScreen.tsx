@@ -151,7 +151,14 @@ export function PaymentSuccessScreen({
             </h2>
             <AmountDisplay value={amount} size="md" />
           </div>
-          <SplitBreakdown variant="bar" total={amount} parts={split} pending={pending} />
+          {/* Names in the 3-column legend wrap to 2 lines instead of truncating ("Marco & Sofia" at 390px). */}
+          <SplitBreakdown
+            variant="bar"
+            total={amount}
+            parts={split}
+            pending={pending}
+            className="[&_li_.truncate]:overflow-visible [&_li_.truncate]:whitespace-normal [&_li_.truncate]:leading-tight"
+          />
           <details className="group mt-3 border-t border-line pt-1">
             <summary className="focus-ring -mx-1 flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md px-1 text-body-sm font-medium text-primary-ink [&::-webkit-details-marker]:hidden">
               See who got what

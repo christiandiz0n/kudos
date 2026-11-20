@@ -90,7 +90,8 @@ Blue (`primary`) is for actions, selection and links; green stays reserved for m
 | Onboarding headline | Get money back when a friend sends you somewhere new. |
 | Onboarding body | "Scan to pay at local cafés, barbers and salons. Your first visit gives you money back and thanks the friend who recommended it." |
 | Onboarding reassurance (under the button) | "No password, nothing to write down. Your face or fingerprint keeps your account safe." |
-| Home | "Your balance" · cashback stays on the purchase row as a green "+$0.45 back" |
+| Home | "Your balance" · cashback stays on the purchase row (shown once) as a green "+$0.45 cashback" |
+| Home reward rows | "From Ben's first visit to Lena's café" · meta "You recommended it · 2 h ago" or "Via Ana, who you brought in · 2 h ago" |
 | Home recommend card | Liked Lena's café? · "A friend gets money back on their first visit. You get paid too." · **Recommend** |
 | Pay sheet | "Paying" Lena's café · $12.00 · **You'll get $0.45 back** · "First-visit money back, right after you pay" |
 | Success | Primary **Recommend Lena's café**, then "Done" · mini split "Where your money went" · "See who got what" |

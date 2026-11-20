@@ -135,7 +135,7 @@ export function activityItems(items: ActivityItemJson[], me: string, names: Reco
         title: vn(p.venue),
         meta: thanked.length ? `${relTime(it.blockTime)} · thanked ${thanked.join(" and ")}` : relTime(it.blockTime),
         amount: -money(p.amount),
-        note: back > 0n ? `${formatMoney(back, { showPlus: true })} back` : undefined,
+        note: back > 0n ? `${formatMoney(back, { showPlus: true })} cashback` : undefined,
         kind: "payment",
         avatarName: vn(p.venue),
       });
@@ -143,8 +143,11 @@ export function activityItems(items: ActivityItemJson[], me: string, names: Reco
       const r = it.reward;
       if (r.returned || money(r.amount) === 0n) continue;
       const customer = nameOr(names, r.customer, "A friend");
-      const title = r.role === "introducer" ? `${nameOr(names, r.viaReferrer)} brought ${customer} in` : `${customer} came on your recommendation`;
-      out.push({ id: `r-${r.txHash}-${r.recipient}-${r.roleId}-${r.viaReferrer}`, title, meta: `${vn(r.venue)} · ${relTime(it.blockTime)}`, amount: money(r.amount), kind: "reward", avatarName: customer });
+      // Copy (A9): "From Ben's first visit to Lena's café" · "You recommended it" / "Ana recommended it".
+      const whose = customer === "A friend" ? "a friend's" : `${customer}'s`;
+      const title = `From ${whose} first visit to ${vn(r.venue)}`;
+      const why = r.role === "introducer" ? `Via ${nameOr(names, r.viaReferrer)}, who you brought in` : "You recommended it";
+      out.push({ id: `r-${r.txHash}-${r.recipient}-${r.roleId}-${r.viaReferrer}`, title, meta: `${why} · ${relTime(it.blockTime)}`, amount: money(r.amount), kind: "reward", avatarName: customer });
     }
   }
   return out;

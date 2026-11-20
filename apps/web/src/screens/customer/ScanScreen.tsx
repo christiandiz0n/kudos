@@ -92,9 +92,9 @@ export function ScanScreen({
   const showManual = blocked || manualOpen;
 
   return (
-    <div data-theme="dark" className="relative flex h-full min-h-full flex-col overflow-hidden bg-[#0d0c0b] text-ink">
+    <div data-theme="dark" className="relative flex h-full min-h-full flex-col overflow-hidden bg-canvas text-ink">
       <div className="absolute inset-0">
-        {!blocked && camera ? camera : <div className="size-full bg-[radial-gradient(120%_80%_at_50%_40%,#2a2723_0%,#0d0c0b_70%)]" />}
+        {!blocked && camera ? camera : <div className="size-full bg-[radial-gradient(120%_80%_at_50%_40%,var(--vx-surface-2)_0%,var(--vx-canvas)_70%)]" />}
       </div>
       <div className="relative flex items-center justify-between px-3 pt-3">
         <IconButton icon="close" label="Close scanner" onClick={onClose} />
