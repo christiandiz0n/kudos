@@ -237,7 +237,7 @@ export function TransparencyScreen(p: TransparencyScreenProps) {
       <p className="mt-2 text-caption text-ink-3">Plus setup events: VenueRegistered, VenueKeysUpdated, SeedAmbassadorSet, IntroDropped.</p>
 
       <SectionLabel>How Streams powers this</SectionLabel>
-      <Card tone="accent" padding="md" className="text-body-sm text-ink">
+      <Card tone="primary" padding="md" className="text-body-sm text-ink">
         A QuickNode Stream watches this contract on Arc and pushes every event to our API within seconds (HMAC-signed webhook).
         Dashboards, feeds and the money graph are rebuilt from those events alone; replaying the stream from block{" "}
         {p.deployBlock ? n(BigInt(p.deployBlock)) : "the deploy block"} reproduces them exactly.
