@@ -1,0 +1,111 @@
+{
+ "receipt-0x0f2beeb1.json": {
+  "tx": "0x0f2beeb1b6ffa3ccdd7829761dddcc55a31e3dca93bf4a62c2ec807acd04ce15",
+  "status": "0x1",
+  "block": 73141794,
+  "transfers": [
+   {
+    "from": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "to": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "value": 1000000
+   },
+   {
+    "from": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "to": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "value": 50000
+   },
+   {
+    "from": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "to": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60",
+    "value": 110000
+   },
+   {
+    "from": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "to": "0xba917207774385077604e23980dc6b79133c3643",
+    "value": 840000
+   }
+  ],
+  "events": [
+   {
+    "name": "CustomerVerified",
+    "customer": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "introducer": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60"
+   },
+   {
+    "name": "PaymentSettled",
+    "venue": "0x4d01ea28cc8ebbabb8e58d8e7c94a35773491ec4",
+    "customer": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "amount": 1000000,
+    "venueAmount": 840000,
+    "rewardPool": 200000,
+    "firstPurchase": true,
+    "rewarded": true,
+    "weightsMode": 1
+   },
+   {
+    "name": "RewardPaid",
+    "recipient": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "customer": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "role": 0,
+    "amount": 50000,
+    "via": "0x0000000000000000000000000000000000000000"
+   },
+   {
+    "name": "RewardPaid",
+    "recipient": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60",
+    "customer": "0x168fc567683f3bc2b3a015711dba1ef1f1f33884",
+    "role": 1,
+    "amount": 110000,
+    "via": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60"
+   },
+   {
+    "name": "RewardReturned",
+    "intended": "0x0000000000000000000000000000000000000000",
+    "role": 2,
+    "amount": 40000,
+    "reason": 0
+   }
+  ],
+  "intoVouch": 1000000,
+  "outOfVouch": 1000000,
+  "vouchNetZero": true
+ },
+ "receipt-0xd8373c1f.json": {
+  "tx": "0xd8373c1f3b1462345b6f667a650dd0c0827a74e1d96dd00d7a9fa02034b25d4e",
+  "status": "0x1",
+  "block": 73141725,
+  "transfers": [
+   {
+    "from": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60",
+    "to": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "value": 1000000
+   },
+   {
+    "from": "0xf4b641dc628de05336aa983b07d5d181254ff08e",
+    "to": "0xba917207774385077604e23980dc6b79133c3643",
+    "value": 1000000
+   }
+  ],
+  "events": [
+   {
+    "name": "CustomerVerified",
+    "customer": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60",
+    "introducer": "0x0000000000000000000000000000000000000000"
+   },
+   {
+    "name": "PaymentSettled",
+    "venue": "0x4d01ea28cc8ebbabb8e58d8e7c94a35773491ec4",
+    "customer": "0xa1ef7743d6808960638c6c10463c6caaec6f0d60",
+    "amount": 1000000,
+    "venueAmount": 1000000,
+    "rewardPool": 0,
+    "firstPurchase": true,
+    "rewarded": false,
+    "weightsMode": 0
+   }
+  ],
+  "intoVouch": 1000000,
+  "outOfVouch": 1000000,
+  "vouchNetZero": true
+ }
+}

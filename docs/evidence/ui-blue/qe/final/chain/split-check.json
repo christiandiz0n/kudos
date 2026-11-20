@@ -1,0 +1,20 @@
+{
+  "source": "eth_getTransactionReceipt on https://rpc.testnet.arc.io, decoded in decoded.json (same dir)",
+  "rule": "contracts/src/libraries/VouchSplit.sol: pool = amount*rewardBps; CASHBACK 25% / L1 55% / L2 20% of pool; missing L2 returned to venue",
+  "venueTerms": {"rewardBps": 2000, "minOrder": "0.50"},
+  "ana_0xd8373c1f": {
+    "paid": 1000000, "firstPurchase": true, "introducer": null, "rewarded": false,
+    "expected": {"venue": 1000000},
+    "onchain": {"venue_0xba91": 1000000},
+    "sum_out": 1000000, "match": true,
+    "ui": "projector + owner dashboard: 'Ana paid $1.00 ... $1.00 to the venue'"
+  },
+  "ben_0x0f2beeb1": {
+    "paid": 1000000, "firstPurchase": true, "introducer": "Ana 0xa1ef", "rewardPool": 200000,
+    "expected": {"cashback_ben": 50000, "l1_ana": 110000, "l2_returned_to_venue": 40000, "venue_total": 840000},
+    "onchain": {"ben_0x168f": 50000, "ana_0xa1ef": 110000, "RewardReturned_role2": 40000, "venue_0xba91": 840000},
+    "sum_out": 1000000, "match": true,
+    "ui": "projector: 'Ben paid $1.00 | +$0.05 back | Ana +$0.11 | $0.84 to the venue'; Rewards paid $0.16 = 0.05+0.11"
+  },
+  "verdict": "EXACT: both txs status 1, USDC in == USDC out (Vouch net zero), split matches VouchSplit constants and the amounts the UI showed"
+}
