@@ -1,5 +1,5 @@
 # HUMAN_INPUT — things only the human can do or decide
-_Last updated: 2026-11-18 18:05Z (session 3, A7) by ORCHESTRATOR_
+_Last updated: 2026-11-20 06:20Z (session 4, A8/A9) by ORCHESTRATOR_
 
 Status legend: ⏳ pending · ✅ done · ⏸ deferred · ❌ dropped
 
@@ -32,3 +32,12 @@ _Printed by `scripts/setup/gen-env.py`; also in `packages/shared/src/wallets.pub
 | 13 | 2 | **Set the api secrets on Railway** | Hosted relayer (Phase 2 exit: canonical story through the hosted api, settled via the live Stream) | Railway → project `vouch` → service `api` → Variables → New Variable, same values as `.env`: `RELAYER_PRIVATE_KEY`, `ATTRIBUTOR_PRIVATE_KEY`, `VENUE_SIGNER_PRIVATE_KEY`, `SESSION_SECRET` → Deploy. Reply "secrets set". Then reactivate the Stream when told (QE Part B), pause after. | Yes (Phase 2 exit) | ✅ APPLIED (human, 2026-11-18 ~12:43 ET; deployment ce50f9ff). Orchestrator verified by NAMES (all 4 present) and `/relayer/status` enabled:true, reachable:true, lowBalance:false, balance ~19.67. |
 | 14 | 3/5 | **Vercel account + CLI login** (web hosting, A7 Thu AM) | Stable HTTPS URL for judges, phones, and the demo QR | (1) https://vercel.com/signup → **Continue with GitHub** (the `christiandiz0n` account) → Hobby plan. (2) In this Claude Code prompt: `! npm i -g vercel` then `! vercel login` (choose "Continue with GitHub"). Reply "vercel ready". The Orchestrator then links `apps/web`, sets `NEXT_PUBLIC_API_URL` (public, not secret), deploys, and adds the Vercel origin to Railway `CORS_ORIGINS` (non-secret, like D-018). | Yes (Thu AM deploy) | ✅ "vercel ready" 2026-11-18; deployed → **https://vouch-ubc.vercel.app** (D-020) |
 | 15 | 3 | **Faucet the RELAYER** for demo top-ups | Judges joining via QR get a once-per-wallet $3 testnet top-up (D-019 #4) from the relayer; balance is ~19.67 | https://faucet.circle.com → Arc Testnet → USDC → `0x3eAFdcE9B632C036146960A03Db720dc84568daD` (RELAYER, public) → captcha. Once today, once Thu morning (limit 20 / 2 h per address). | No (Thu demo) | ✅ relayer + deployer +20 each (2026-11-18 evening); repeat Thu AM if the balance is under ~$15 |
+| 16 | A8 | Approve the Railway CORS origin for the preview | Preview can reach the api | — | — | ✅ "add CORS" (D-023) |
+| 17 | A8 | Author line | Docs | — | — | ✅ Christian Dizon, Rutgers University, built solo |
+| 18 | A8 | Repo public | Submission | Already public since 2026-11-16; scan CLEAN-with-notes | — | ✅ "keep public" (D-023) |
+| 19 | A9 | **Ship/keep the blue UI** | Which UI the video is recorded on | Review https://claude.ai/artifact/Ts66ZYY82bXy4GCsx7WPrn + https://vouch-ubc-blue.vercel.app ; reply "ship it" or "keep old". QE is NOT finished; if "ship it", the Orchestrator finishes QE (~30 min) before merging. "keep old" = record now on prod as-is. | Yes (before recording) | ⏳ |
+| 20 | A8 | Resume check: the Stream is ON (it was never paused tonight; check the dashboard shows Active) | Payments settle | QuickNode dashboard → vouch-v3-production → Active | Yes | ⏳ ~07:30 CST |
+| 21 | A8 | 6-step core phone check on https://vouch-ubc.vercel.app (sign in, scan, pay, cashback, venue sees "paid", money graph updates) | Demo confidence | — | No | ⏳ ~07:45 CST |
+| 22 | A8 | Record the video (kit https://claude.ai/artifact/N7P16izBQFTPGtFSyFzL8b ; `--verify` then `--present`; Ben's link unused) and send the URL | Submission | — | **Yes** | ⏳ ~08:00 CST |
+| 23 | A8 | Submit on Devpost (`docs/submission/SUBMIT_STEPS.md`) | Submission | — | **Yes** | ⏳ by 10:00 CST (hard 12:00) |
+
