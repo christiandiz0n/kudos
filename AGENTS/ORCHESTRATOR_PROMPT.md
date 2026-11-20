@@ -526,3 +526,49 @@ It is Wednesday ~1pm ET. Hard deadline: Friday 1:00 PM ET. Target submission: Fr
 CUT (Tier 3): AI attribution refinement, eval harness, risk flags, second frontend, friends feed. The deterministic baseline attribution stays. Don't start any cut item unless everything above is done and QE-green.
 Quality rule: cut scope, not quality. A polished core flow on a real phone beats breadth. If any task runs more than 50% over its time, stop and propose a cut.
 Hand off and ask me to reset your context whenever you pass ~75% context usage.
+
+---
+
+## Amendment A8 — final sprint (human, Thu 2026-11-19 ~23:20 CST)
+- It is Thursday ~11:20 PM CST (America/Chicago). I'm in Austin. HARD DEADLINE: Friday 12:00 PM CST. Target: submitted by 10:00 AM CST. All times below are CST.
+- Thursday was lost. Nothing from the Thursday plan has happened yet. The product is ~95% done; the SUBMISSION is not.
+- Priority order (do not start a lower item while a higher one is incomplete):
+  1. A valid submission: demo video recorded and uploaded, repo public (with my explicit approval), README complete, Devpost answers final, Devpost submitted.
+  2. A demo that looks right on video: P5-01 fixed (Ben's canonical $12.00 visible on Lena's café dashboard and projector feed), the P4 video-prep chain (Priya recommended Ana) built, everything verified on https://vouch-ubc.vercel.app.
+  3. Saturday pitch readiness (only if finalists are announced): PITCH.md tightened.
+- CUT everything else: the kill-the-backend demo, the replay demo, the full 32-step phone checklist (I'll do a 6-step core version), P5-02, further polish. Don't start any cut item.
+- Rule: never risk breaking what works. After 6:00 AM CST, only docs and copy changes, or a fix for something that breaks the demo, and each must be verified on production before and after.
+
+## Amendment A9 — UI re-skin + UX polish (human, Thu 2026-11-19 ~23:35 CST). Overrides A8 where they conflict.
+Goal: make the app feel more intuitive and carefully designed: a clean, modern, friendly consumer fintech app with a calm blue theme. Primary brand color #4075AD. It must stay safe: production must never break, and the video gets recorded on the final UI Friday morning.
+
+### Hard constraints
+- Do the work on a git branch `ui-blue`, and deploy it to a Vercel PREVIEW URL only. Don't touch production (https://vouch-ubc.vercel.app) or `main` until I approve.
+- Timebox: the preview must be ready for my review by 2:30 AM CST. At 2:00 AM, stop adding scope and finish what's in progress.
+- No changes to the API, contracts, or data flow. UI, copy, and layout only. Every existing flow and QE check must still pass.
+- If at 2:30 AM the preview isn't clearly better and fully working, we keep the current UI and I record on that. Don't merge anything half-done.
+- Note: passkeys are tied to the domain, so my phone accounts on the preview URL won't exist on production. That's fine; I'll create a throwaway account on the preview to review.
+
+### Theme (do this first; it's cheap and highest impact)
+- Build a blue palette from #4075AD: primary #4075AD, darker hover/pressed, light tints for backgrounds and selected states, plus neutral grays. Verify WCAG AA contrast for text and buttons, and adjust shades if #4075AD fails on white for small text.
+- Replace the ink-black primary buttons with the blue primary. Keep green ONLY for money arriving to a person (the existing rule).
+- Apply consistently via the design-system tokens, not one-off colors. Update the money graph, focus rings, links, QR frame, and charts to match.
+
+### UX polish: only the screens on the demo path, in this order
+1. Onboarding / sign-in: one clear headline about what Vouch does, one button ("Continue with Face ID or fingerprint"), and a short reassurance line.
+2. Wallet home: balance first and large, clear primary actions (Scan to pay, Recommend), recent activity with friendly labels (e.g., "+$0.45 cashback from Lena's café").
+3. Scan → confirm pay: the confirm sheet shows the amount, the venue, and "You'll get $0.45 back" prominently. "Who sent you here?" is a simple optional tap. One primary button.
+4. Payment success: a satisfying, quick success state that shows where the money went (a mini version of the split), with a clear next action ("Recommend Lena's café").
+5. Recommend/share: dead simple; one tap to share a link, with plain wording about what the friend gets and what you get.
+6. Venue dashboard (projector): big, readable numbers (new verified customers, rewards paid, cost per customer vs ads), the money graph as the hero, and a live feed with the canonical $12.00 visible (this also fixes P5-01).
+UX principles for all screens: one obvious next step per screen; plain language, no jargon; generous spacing; consistent components; clear empty, loading, and error states; tap targets ≥ 44px; subtle motion with reduced-motion support; and everything readable at 390px and on a projector.
+
+### Process
+- UI_DESIGN (customer screens) and UI_DESIGN (venue + money graph + theme tokens) in parallel; FRONTEND_INTEGRATION only if wiring is touched.
+- Then independent QE_E2E on the preview URL: all prior Phase 3 checks (routes, banned-word rule, error states, 390px, tap targets, contrast) plus the live payment story on the preview. Before/after screenshots for every changed screen.
+- Publish a private before/after comparison page with screenshots at 390px and projector width, and send me the preview URL plus that page at ~2:30 AM.
+- On my "ship it": merge to main, deploy production, verify on https://vouch-ubc.vercel.app (live story + core screens), and update README screenshots. On my "keep old": discard the branch.
+
+### Still required tonight in parallel (from A8, not blocked by the UI work)
+- The recording kit, finalized README and Devpost text, SUBMIT_STEPS.md, the P4 chain, and the secrets scan before going public. Write the recording kit so it works for either UI, and update the screenshots after the decision.
+- Tell me when to pause the Stream. Keep it on during the preview QE live story.
