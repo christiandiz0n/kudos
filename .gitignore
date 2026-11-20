@@ -52,3 +52,6 @@ __pycache__/
 AGENTS/INBOX/.lock
 AGENTS/INBOX/*.tmp
 scripts/seed/.state/
+
+# QE_E2E P4 stage state (persona profiles + virtual passkeys; never commit)
+e2e/phase5/.state/

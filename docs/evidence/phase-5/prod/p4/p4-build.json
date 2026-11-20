@@ -1,0 +1,285 @@
+{
+  "buildId": "2026-11-20T05-42-30-780Z",
+  "base": "https://vouch-ubc.vercel.app",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "status": "complete",
+  "startedAt": "2026-11-20T05:42:30.780Z",
+  "steps": [
+    {
+      "step": "venue registered",
+      "at": "2026-11-20T05:42:56.523Z",
+      "venue": "0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581",
+      "tx": "0x3ca4ef1b01d6701d7441d526b0f3fdf44b6a29f8058baf500e1be202793d548a",
+      "rewardBps": 2000
+    },
+    {
+      "step": "priya account",
+      "at": "2026-11-20T05:43:00.951Z",
+      "name": "Priya",
+      "address": "0x0CFc6fEfbe073Ce671d97e31fEaB3b94b79a9211"
+    },
+    {
+      "step": "priya funded from DEPLOYER",
+      "at": "2026-11-20T05:43:08.793Z",
+      "tx": "0x22eec6e3e1e640bfa54dd6bb2c2b69c086df89858fb666776d20a762a0f1f175",
+      "sent": "3.00",
+      "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$31.005594 | plan total         $3.00 in 1 transfer(s) | deployer projected $28.00299 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x22eec6e3e1e640bfa54dd6bb2c2b69c086df89858fb666776d20a762a0f1f175  waiting for receipt... | deployer           before=$31.005594 after=$28.003745  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111"
+    },
+    {
+      "step": "priya paid $1.00 (settled)",
+      "at": "2026-11-20T05:43:13.881Z",
+      "tx": "0x1a1696a17cb2414c33c86120d54a9dd8a8f50497c09299fe1584912293d76fa0"
+    },
+    {
+      "step": "priya made a link",
+      "at": "2026-11-20T05:43:17.268Z",
+      "link": "https://vouch-ubc.vercel.app/i/AKXVR9io1"
+    },
+    {
+      "step": "ana saved Priya's link",
+      "at": "2026-11-20T05:43:23.957Z",
+      "address": "0x5A8736a5926ED00Ebb867F6361f82DC3AE7e0994",
+      "tx": "0x5648d2aff2d8ecacc82564f355f3b48064efffd650ab0006d7046fc80a967bb5"
+    },
+    {
+      "step": "ana funded from DEPLOYER",
+      "at": "2026-11-20T05:43:31.370Z",
+      "tx": "0x09f579f1f13e16641683961f6c0d78fc819dd1110b1f0fa7eb959f78158f5a69",
+      "sent": "3.00",
+      "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$28.003745 | plan total         $3.00 in 1 transfer(s) | deployer projected $25.001141 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x09f579f1f13e16641683961f6c0d78fc819dd1110b1f0fa7eb959f78158f5a69  waiting for receipt... | deployer           before=$28.003745 after=$25.001896  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111"
+    },
+    {
+      "step": "ana paid $2.00 (settled)",
+      "at": "2026-11-20T05:43:38.853Z",
+      "tx": "0x0a295b304d7214f33631d168919cf9bcfdf106a565ac0b52253e5392b26d2179"
+    },
+    {
+      "step": "ana made Ben's link",
+      "at": "2026-11-20T05:43:42.901Z",
+      "benLink": "https://vouch-ubc.vercel.app/i/4gh0y7xmW"
+    },
+    {
+      "step": "verified",
+      "at": "2026-11-20T05:43:44.618Z",
+      "ok": true
+    }
+  ],
+  "spend": {
+    "deployerTransfers": [
+      {
+        "to": "Priya",
+        "tx": "0x22eec6e3e1e640bfa54dd6bb2c2b69c086df89858fb666776d20a762a0f1f175",
+        "sent": "3.00",
+        "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$31.005594 | plan total         $3.00 in 1 transfer(s) | deployer projected $28.00299 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x22eec6e3e1e640bfa54dd6bb2c2b69c086df89858fb666776d20a762a0f1f175  waiting for receipt... | deployer           before=$31.005594 after=$28.003745  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111",
+        "fee": 0.00184875
+      },
+      {
+        "to": "Ana",
+        "tx": "0x09f579f1f13e16641683961f6c0d78fc819dd1110b1f0fa7eb959f78158f5a69",
+        "sent": "3.00",
+        "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$28.003745 | plan total         $3.00 in 1 transfer(s) | deployer projected $25.001141 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x09f579f1f13e16641683961f6c0d78fc819dd1110b1f0fa7eb959f78158f5a69  waiting for receipt... | deployer           before=$28.003745 after=$25.001896  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111",
+        "fee": 0.00184875
+      }
+    ],
+    "relayerTxs": [
+      {
+        "what": "venue registration",
+        "tx": "0x3ca4ef1b01d6701d7441d526b0f3fdf44b6a29f8058baf500e1be202793d548a",
+        "status": "success",
+        "block": 73140005,
+        "feeUsdc": 0.004496325
+      },
+      {
+        "what": "Priya pay $1.00",
+        "tx": "0x1a1696a17cb2414c33c86120d54a9dd8a8f50497c09299fe1584912293d76fa0",
+        "status": "success",
+        "block": 73140045,
+        "feeUsdc": 0.00602025
+      },
+      {
+        "what": "Ana saves Priya's link",
+        "tx": "0x5648d2aff2d8ecacc82564f355f3b48064efffd650ab0006d7046fc80a967bb5",
+        "status": "success",
+        "block": 73140064,
+        "feeUsdc": 0.00426955
+      },
+      {
+        "what": "Ana pay $2.00",
+        "tx": "0x0a295b304d7214f33631d168919cf9bcfdf106a565ac0b52253e5392b26d2179",
+        "status": "success",
+        "block": 73140090,
+        "feeUsdc": 0.008038525
+      }
+    ],
+    "demoTopupCapUsed": "0.00",
+    "deployerTotal": "6.003698",
+    "relayerGasTotal": "0.022825"
+  },
+  "deployerBefore": "31.005594",
+  "owner": {
+    "name": "Lena",
+    "address": "0xBD030510813C2260Ff053c30Fcc52E0a3E4805a8",
+    "credsFile": "creds-2026-11-20T05-42-30-780Z-owner.json",
+    "credentialCount": 1
+  },
+  "venue": {
+    "address": "0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581",
+    "name": "Lena's Corner",
+    "payout": "0xBD030510813C2260Ff053c30Fcc52E0a3E4805a8",
+    "terms": {
+      "termsVersion": 1,
+      "rewardBps": 2000,
+      "minOrder": {
+        "baseUnits": "500000",
+        "display": "0.50"
+      },
+      "effectiveAt": "1795153373"
+    },
+    "dashboardUrl": "https://vouch-ubc.vercel.app/venue/0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581",
+    "projectorUrl": "https://vouch-ubc.vercel.app/venue/0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581"
+  },
+  "priya": {
+    "name": "Priya",
+    "address": "0x0CFc6fEfbe073Ce671d97e31fEaB3b94b79a9211",
+    "payTx": "0x1a1696a17cb2414c33c86120d54a9dd8a8f50497c09299fe1584912293d76fa0",
+    "payTimings": [
+      {
+        "at": "2026-11-20T05:43:13.393Z",
+        "orderId": "0xb5734c94d0ecf6d6759a06952eb1bcd7c2e85db59b06549019dcd0793516f77f",
+        "intentId": "45363f63-c037-456d-8bbc-c39f5f4feaec",
+        "txHash": "0x1a1696a17cb2414c33c86120d54a9dd8a8f50497c09299fe1584912293d76fa0",
+        "step": "pending",
+        "faceIdMs": 52,
+        "relayMs": 558
+      },
+      {
+        "at": "2026-11-20T05:43:13.867Z",
+        "orderId": "0xb5734c94d0ecf6d6759a06952eb1bcd7c2e85db59b06549019dcd0793516f77f",
+        "intentId": "45363f63-c037-456d-8bbc-c39f5f4feaec",
+        "txHash": "0x1a1696a17cb2414c33c86120d54a9dd8a8f50497c09299fe1584912293d76fa0",
+        "step": "settled",
+        "via": "sse",
+        "settleMs": 475
+      }
+    ],
+    "link": "https://vouch-ubc.vercel.app/i/AKXVR9io1",
+    "credsFile": "creds-2026-11-20T05-42-30-780Z-priya.json",
+    "credentialCount": 1
+  },
+  "ana": {
+    "name": "Ana",
+    "address": "0x5A8736a5926ED00Ebb867F6361f82DC3AE7e0994",
+    "acceptTx": "0x5648d2aff2d8ecacc82564f355f3b48064efffd650ab0006d7046fc80a967bb5",
+    "chips": [
+      "AF\nA friend",
+      "Someone else",
+      "Skip"
+    ],
+    "paySheetText": "LC Lena's Corner Paying with Vouch Confirm payment LC Lena's Corner Order AA94 $2.00 $ 2 .00 You'll get $0.10 back Who sent you here? Optional AF A friend Someone else Skip Where your $2.00 goes Lena's Corner $1.68 $0.32 to 2 people You +$0.10 A friend +$0.22 Details Confirm with Face ID or fingerprint You pay $2.00. No fees.",
+    "payTx": "0x0a295b304d7214f33631d168919cf9bcfdf106a565ac0b52253e5392b26d2179",
+    "payTimings": [
+      {
+        "at": "2026-11-20T05:43:36.314Z",
+        "orderId": "0xaa94d130f08cfea27240261951bd52d7da17b31f3e16c6ce4fbd1ad297ae76e0",
+        "intentId": "4d1c4b99-fd65-4cac-b5f7-7638ae916038",
+        "txHash": "0x0a295b304d7214f33631d168919cf9bcfdf106a565ac0b52253e5392b26d2179",
+        "step": "pending",
+        "faceIdMs": 52,
+        "relayMs": 562
+      },
+      {
+        "at": "2026-11-20T05:43:36.728Z",
+        "orderId": "0xaa94d130f08cfea27240261951bd52d7da17b31f3e16c6ce4fbd1ad297ae76e0",
+        "intentId": "4d1c4b99-fd65-4cac-b5f7-7638ae916038",
+        "txHash": "0x0a295b304d7214f33631d168919cf9bcfdf106a565ac0b52253e5392b26d2179",
+        "step": "settled",
+        "via": "sse",
+        "settleMs": 414
+      }
+    ],
+    "credsFile": "creds-2026-11-20T05-42-30-780Z-ana.json",
+    "credentialCount": 1
+  },
+  "benLink": "https://vouch-ubc.vercel.app/i/4gh0y7xmW",
+  "benLinkCode": "4gh0y7xmW",
+  "verify": {
+    "checks": [
+      {
+        "name": "Priya pay exact: 1.00 in, 1.00 → venue payout",
+        "ok": true,
+        "detail": [
+          "0xBD030510813C2260Ff053c30Fcc52E0a3E4805a8:1.00"
+        ]
+      },
+      {
+        "name": "Ana pay exact: 2.00 in = Σ out",
+        "ok": true,
+        "detail": "in 2.00 out 2.00"
+      },
+      {
+        "name": "Ana pay split: Ana 0.10 · Priya 0.22 · venue 1.68",
+        "ok": true,
+        "detail": [
+          "0x5A8736a5926ED00Ebb867F6361f82DC3AE7e0994:0.10",
+          "0x0CFc6fEfbe073Ce671d97e31fEaB3b94b79a9211:0.22",
+          "0xBD030510813C2260Ff053c30Fcc52E0a3E4805a8:1.68"
+        ]
+      },
+      {
+        "name": "introducerOf(venue, Ana) == Priya",
+        "ok": true,
+        "detail": "0x0CFc6fEfbe073Ce671d97e31fEaB3b94b79a9211"
+      },
+      {
+        "name": "introducerOf(venue, Priya) == 0 (plain first purchase)",
+        "ok": true,
+        "detail": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "name": "Ben's link: Ana · personal · active · this venue · 20%",
+        "ok": true,
+        "detail": {
+          "referrer": "Ana",
+          "linkType": "personal",
+          "status": "active",
+          "termsVersion": 1,
+          "expiresAt": "2026-11-27T05:43:40.000Z"
+        }
+      },
+      {
+        "name": "api stats: 2 payments, 2 verified, gross 3.00",
+        "ok": true,
+        "detail": {
+          "payments": 2,
+          "verified": 2,
+          "gross": "3.00",
+          "rewardsPaid": "0.32"
+        }
+      },
+      {
+        "name": "expected Ben split = $0.40 → 0.10 / 0.22 / 0.08 / venue 1.60",
+        "ok": true,
+        "detail": {
+          "pool": "0.40",
+          "ben": "0.10",
+          "ana": "0.22",
+          "priya": "0.08",
+          "venue": "1.60"
+        }
+      }
+    ],
+    "expectedBen": {
+      "pool": "0.40",
+      "ben": "0.10",
+      "ana": "0.22",
+      "priya": "0.08",
+      "venue": "1.60"
+    },
+    "ok": true,
+    "dashboardShowsPriya": true,
+    "dashboardShowsAna": true,
+    "dashboardHasTakeAnOrder": false
+  },
+  "builtAt": "2026-11-20T05:43:52.913Z",
+  "deployerAfter": "25.001896"
+}

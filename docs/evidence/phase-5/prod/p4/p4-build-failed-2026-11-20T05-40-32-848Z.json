@@ -1,0 +1,136 @@
+{
+  "buildId": "2026-11-20T05-40-32-848Z",
+  "base": "https://vouch-ubc.vercel.app",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "status": "failed",
+  "startedAt": "2026-11-20T05:40:32.848Z",
+  "steps": [
+    {
+      "step": "venue registered",
+      "at": "2026-11-20T05:40:57.064Z",
+      "venue": "0xD5c384c26860EA330Cba37112BD71A0f7B490E03",
+      "tx": "0x11590b0a91bd6e65f0144becec89562f38f64225a72cbe4bd13a4031842e59db",
+      "rewardBps": 2000
+    },
+    {
+      "step": "priya account",
+      "at": "2026-11-20T05:41:00.331Z",
+      "name": "Priya",
+      "address": "0x490E84a7D951b68490E352374c996bA2761408CA"
+    },
+    {
+      "step": "priya funded from DEPLOYER",
+      "at": "2026-11-20T05:41:11.330Z",
+      "tx": "0x8842f5497b1397ee62b6f295f11da9dee28da97b33081fac873f2eb127c4baa2",
+      "sent": "3.00",
+      "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$34.007442 | plan total         $3.00 in 1 transfer(s) | deployer projected $31.004838 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x8842f5497b1397ee62b6f295f11da9dee28da97b33081fac873f2eb127c4baa2  waiting for receipt... | deployer           before=$34.007442 after=$31.005594  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111"
+    },
+    {
+      "step": "priya paid $1.00 (settled)",
+      "at": "2026-11-20T05:41:17.145Z",
+      "tx": "0xe54d2789f90eb013544ba7fc00064fe845f5da9f979209cd1fd5618624de79f9"
+    },
+    {
+      "step": "priya made a link",
+      "at": "2026-11-20T05:41:20.408Z",
+      "link": "https://vouch-ubc.vercel.app/i/AqkVj0gwL"
+    },
+    {
+      "step": "ana saved Priya's link",
+      "at": "2026-11-20T05:41:28.508Z",
+      "address": "0x1bEe8F7b001BD8575C3fD4cd09fA0b2aF56A26a3",
+      "tx": "0x0e99ead15dde9a74866d461c85a5a1fd722e64a61cec0077826f9883d4649942"
+    }
+  ],
+  "spend": {
+    "deployerTransfers": [
+      {
+        "to": "Priya",
+        "tx": "0x8842f5497b1397ee62b6f295f11da9dee28da97b33081fac873f2eb127c4baa2",
+        "sent": "3.00",
+        "tail": "deployer           0x5eD3054292e9fCE089aa082997962B08fFF81111  balance=$34.007442 | plan total         $3.00 in 1 transfer(s) | deployer projected $31.004838 after sends and ~$0.002604 gas (reserve $5.00) | sent ad-hoc       $3.00  tx=0x8842f5497b1397ee62b6f295f11da9dee28da97b33081fac873f2eb127c4baa2  waiting for receipt... | deployer           before=$34.007442 after=$31.005594  https://explorer.testnet.arc.io/address/0x5eD3054292e9fCE089aa082997962B08fFF81111",
+        "fee": 0.00184875
+      }
+    ],
+    "relayerTxs": [
+      {
+        "what": "venue registration",
+        "tx": "0x11590b0a91bd6e65f0144becec89562f38f64225a72cbe4bd13a4031842e59db",
+        "status": "success",
+        "block": 73139773,
+        "feeUsdc": 0.004484525
+      },
+      {
+        "what": "Priya pay $1.00",
+        "tx": "0xe54d2789f90eb013544ba7fc00064fe845f5da9f979209cd1fd5618624de79f9",
+        "status": "success",
+        "block": 73139815,
+        "feeUsdc": 0.00602015
+      },
+      {
+        "what": "Ana saves Priya's link",
+        "tx": "0x0e99ead15dde9a74866d461c85a5a1fd722e64a61cec0077826f9883d4649942",
+        "status": "success",
+        "block": 73139837,
+        "feeUsdc": 0.00426865
+      }
+    ],
+    "demoTopupCapUsed": "0.00",
+    "deployerTotal": "3.001848",
+    "relayerGasTotal": "0.014773"
+  },
+  "deployerBefore": "34.007442",
+  "owner": {
+    "name": "Lena",
+    "address": "0x60Cec165E478DFF2293938955307409944cc311b"
+  },
+  "venue": {
+    "address": "0xD5c384c26860EA330Cba37112BD71A0f7B490E03",
+    "name": "Lena's Corner",
+    "payout": "0x60Cec165E478DFF2293938955307409944cc311b",
+    "terms": {
+      "termsVersion": 1,
+      "rewardBps": 2000,
+      "minOrder": {
+        "baseUnits": "500000",
+        "display": "0.50"
+      },
+      "effectiveAt": "1795153255"
+    },
+    "dashboardUrl": "https://vouch-ubc.vercel.app/venue/0xD5c384c26860EA330Cba37112BD71A0f7B490E03",
+    "projectorUrl": "https://vouch-ubc.vercel.app/venue/0xD5c384c26860EA330Cba37112BD71A0f7B490E03"
+  },
+  "priya": {
+    "name": "Priya",
+    "address": "0x490E84a7D951b68490E352374c996bA2761408CA",
+    "payTx": "0xe54d2789f90eb013544ba7fc00064fe845f5da9f979209cd1fd5618624de79f9",
+    "payTimings": [
+      {
+        "at": "2026-11-20T05:41:16.395Z",
+        "orderId": "0xa3e44cea117c6046d2fecf1f6703971fe0f3cb9ecabd86721d001b264d9c4b9e",
+        "intentId": "613b9872-de2f-4b3b-8d6e-ab2b83b27b2a",
+        "txHash": "0xe54d2789f90eb013544ba7fc00064fe845f5da9f979209cd1fd5618624de79f9",
+        "step": "pending",
+        "faceIdMs": 54,
+        "relayMs": 580
+      },
+      {
+        "at": "2026-11-20T05:41:17.133Z",
+        "orderId": "0xa3e44cea117c6046d2fecf1f6703971fe0f3cb9ecabd86721d001b264d9c4b9e",
+        "intentId": "613b9872-de2f-4b3b-8d6e-ab2b83b27b2a",
+        "txHash": "0xe54d2789f90eb013544ba7fc00064fe845f5da9f979209cd1fd5618624de79f9",
+        "step": "settled",
+        "via": "sse",
+        "settleMs": 738
+      }
+    ],
+    "link": "https://vouch-ubc.vercel.app/i/AqkVj0gwL"
+  },
+  "ana": {
+    "name": "Ana",
+    "address": "0x1bEe8F7b001BD8575C3fD4cd09fA0b2aF56A26a3",
+    "acceptTx": "0x0e99ead15dde9a74866d461c85a5a1fd722e64a61cec0077826f9883d4649942"
+  },
+  "error": "Command failed: pnpm --silent --filter @vouch/scripts topup --to 0x1bEe8F7b001BD8575C3fD4cd09fA0b2aF56A26a3 --target 3.00 --max-total 3.10\n/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/errors/getContractError.ts:84\n  return new ContractFunctionExecutionError(cause as BaseError, {\n         ^\n\nContractFunctionExecutionError: Request exceeds defined limit.\n\nStatus: 429\nURL: https://rpc.testnet.arc.io/\nRequest body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}\n \nRaw Call Arguments:\n  to:    0x3600000000000000000000000000000000000000\n  data:  0x313ce567\n \nContract Call:\n  address:   0x3600000000000000000000000000000000000000\n  function:  decimals()\n\nDocs: https://viem.sh/docs/contract/readContract\nDetails: rate limit exceeded\nVersion: viem@2.57.18\n    at getContractError (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/errors/getContractError.ts:84:10)\n    at readContract (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/actions/public/readContract.ts:140:11)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async <anonymous> (/Users/christiandizon/Desktop/ubc-2026/scripts/setup/topup-demo.ts:205:18) {\n  cause: CallExecutionError: Request exceeds defined limit.\n  \n  Status: 429\n  URL: https://rpc.testnet.arc.io/\n  Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}\n   \n  Raw Call Arguments:\n    to:    0x3600000000000000000000000000000000000000\n    data:  0x313ce567\n  \n  Details: rate limit exceeded\n  Version: viem@2.57.18\n      at getCallError (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/errors/getCallError.ts:42:10)\n      at call (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/_esm/actions/public/call.js:183:15)\n      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n      at async readContract (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/actions/public/readContract.ts:124:22)\n      at async <anonymous> (/Users/christiandizon/Desktop/ubc-2026/scripts/setup/topup-demo.ts:205:18) {\n    cause: LimitExceededRpcError: Request exceeds defined limit.\n    \n    Status: 429\n    URL: https://rpc.testnet.arc.io/\n    Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}\n    \n    Details: rate limit exceeded\n    Version: viem@2.57.18\n        at withRetry.delay.count.count (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/buildRequest.ts:207:25)\n        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n        at async attemptRetry (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/promise/withRetry.ts:67:22) {\n      details: 'rate limit exceeded',\n      docsPath: undefined,\n      metaMessages: [\n        'Status: 429',\n        'URL: https://rpc.testnet.arc.io/',\n        'Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}'\n      ],\n      shortMessage: 'Request exceeds defined limit.',\n      version: '2.57.18',\n      code: -32005,\n      [cause]: RpcRequestError: RPC Request failed.\n      \n      Status: 429\n      URL: https://rpc.testnet.arc.io/\n      Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}\n      \n      Details: rate limit exceeded\n      Version: viem@2.57.18\n          at Object.request (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/rpc/http.ts:219:19)\n          at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n          at async fn (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/clients/transports/http.ts:169:19)\n          at async request (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/clients/transports/http.ts:175:39)\n          at async withRetry.delay.count.count (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/buildRequest.ts:164:22)\n          at async attemptRetry (/Users/christiandizon/Desktop/ubc-2026/node_modules/.pnpm/viem@2.57.18_typescript@5.9.3_zod@4.6.7/node_modules/viem/utils/promise/withRetry.ts:67:22) {\n        details: 'rate limit exceeded',\n        docsPath: undefined,\n        metaMessages: [\n          'Status: 429',\n          'URL: https://rpc.testnet.arc.io/',\n          'Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}'\n        ],\n        shortMessage: 'RPC Request failed.',\n        version: '2.57.18',\n        code: -32005,\n        data: undefined,\n        headers: Headers {},\n        status: 429,\n        url: 'https://rpc.testnet.arc.io/',\n        [cause]: { code: -32005, message: 'rate limit exceeded' }\n      }\n    },\n    details: 'rate limit exceeded',\n    docsPath: undefined,\n    metaMessages: [\n      'Status: 429',\n      'URL: https://rpc.testnet.arc.io/',\n      'Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}',\n      ' ',\n      'Raw Call Arguments:',\n      '  to:    0x3600000000000000000000000000000000000000\\n' +\n        '  data:  0x313ce567'\n    ],\n    shortMessage: 'Request exceeds defined limit.',\n    version: '2.57.18'\n  },\n  details: 'rate limit exceeded',\n  docsPath: '/docs/contract/readContract',\n  metaMessages: [\n    'Status: 429',\n    'URL: https://rpc.testnet.arc.io/',\n    'Request body: {\"method\":\"eth_call\",\"params\":[{\"data\":\"0x313ce567\",\"to\":\"0x3600000000000000000000000000000000000000\"},\"latest\"]}',\n    ' ',\n    'Raw Call Arguments:',\n    '  to:    0x3600000000000000000000000000000000000000\\n  data:  0x313ce567',\n    ' ',\n    'Contract Call:',\n    '  address:   0x3600000000000000000000000000000000000000\\n' +\n      '  function:  decimals()'\n  ],\n  shortMessage: 'Request exceeds defined limit.',\n  version: '2.57.18',\n  abi: [\n    {\n      type: 'event',\n      name: 'Approval',\n      inputs: [\n        { indexed: true, name: 'owner', type: 'address' },\n        { indexed: true, name: 'spender', type: 'address' },\n        { indexed: false, name: 'value', type: 'uint256' }\n      ]\n    },\n    {\n      type: 'event',\n      name: 'Transfer',\n      inputs: [\n        { indexed: true, name: 'from', type: 'address' },\n        { indexed: true, name: 'to', type: 'address' },\n        { indexed: false, name: 'value', type: 'uint256' }\n      ]\n    },\n    {\n      type: 'function',\n      name: 'allowance',\n      stateMutability: 'view',\n      inputs: [\n        { name: 'owner', type: 'address' },\n        { name: 'spender', type: 'address' }\n      ],\n      outputs: [ { type: 'uint256' } ]\n    },\n    {\n      type: 'function',\n      name: 'approve',\n      stateMutability: 'nonpayable',\n      inputs: [\n        { name: 'spender', type: 'address' },\n        { name: 'amount', type: 'uint256' }\n      ],\n      outputs: [ { type: 'bool' } ]\n    },\n    {\n      type: 'function',\n      name: 'balanceOf',\n      stateMutability: 'view',\n      inputs: [ { name: 'account', type: 'address' } ],\n      outputs: [ { type: 'uint256' } ]\n    },\n    {\n      type: 'function',\n      name: 'decimals',\n      stateMutability: 'view',\n      inputs: [],\n      outputs: [ { type: 'uint8' } ]\n    },\n    {\n      type: 'function',\n      name: 'name',\n      stateMutability: 'view',\n      inputs: [],\n      outputs: [ { type: 'string' } ]\n    },\n    {\n      type: 'function',\n      name: 'symbol',\n      stateMutability: 'view',\n      inputs: [],\n      outputs: [ { type: 'string' } ]\n    },\n    {\n      type: 'function',\n      name: 'totalSupply',\n      stateMutability: 'view',\n      inputs: [],\n      outputs: [ { type: 'uint256' } ]\n    },\n    {\n      type: 'function',\n      name: 'transfer',\n      stateMutability: 'nonpayable',\n      inputs: [\n        { name: 'recipient', type: 'address' },\n        { name: 'amount', type: 'uint256' }\n      ],\n      outputs: [ { type: 'bool' } ]\n    },\n    {\n      type: 'function',\n      name: 'transferFrom',\n      stateMutability: 'nonpayable',\n      inputs: [\n        { name: 'sender', type: 'address' },\n        { name: 'recipient', type: 'address' },\n        { name: 'amount', type: 'uint256' }\n      ],\n      outputs: [ { type: 'bool' } ]\n    }\n  ],\n  args: undefined,\n  contractAddress: '0x3600000000000000000000000000000000000000',\n  formattedArgs: undefined,\n  functionName: 'decimals',\n  sender: undefined\n}\n\nNode.js v24.13.0\n",
+  "deployerAfter": "31.005594"
+}

@@ -25,7 +25,13 @@ The venue for the live part is **"Lena's Corner"**.
 
 ### 2a. Run the stage script (laptop)
 
-From the repo root:
+First, a quick check that opens no windows and spends nothing. It should end with READY:
+
+```
+node e2e/phase5/p4-stage.mjs --base https://vouch-ubc.vercel.app --verify
+```
+
+Then, from the repo root:
 
 ```
 node e2e/phase5/p4-stage.mjs --base https://vouch-ubc.vercel.app --present
@@ -35,12 +41,12 @@ It opens 3 windows on the laptop:
 
 | Window | What it shows |
 |---|---|
-| W1 | Lena's Corner owner dashboard (you click "Take an order" here) |
+| W1 | Lena's Corner owner. Tab 1: dashboard + money graph. Tab 2: the **counter** keypad (you key the order here) |
 | W2 | Ana's wallet, phone size (her "just arrived" toast shows here) |
 | W3 | A big QR code of Ana's link, for Ben |
 
 It also prints:
-- Ben's link (Ana's recommendation link)
+- Ben's link (Ana's recommendation link; tonight's is https://vouch-ubc.vercel.app/i/4gh0y7xmW)
 - The projector URL
 
 The windows stay open until you press **Ctrl+C** in the terminal.
@@ -66,6 +72,7 @@ _If the script fails, see F0 in section 7._
 4. Tap **"Save Ana's recommendation"**.
 5. Go to the wallet. Tap **"Top up (testnet demo)"**. Wait until it shows **$3.00**.
 6. Do **not** pay yet. That's the live moment.
+7. On the pay screen, wait until the "Who sent you here?" chip shows **Ana** (it says "A friend" for a moment while it loads) before tapping it.
 
 ### 2c. Window layout (laptop)
 
@@ -102,10 +109,10 @@ Device key: **L** = laptop, **P** = iPhone (mirrored on the laptop).
 |---|---|---|---|
 | 0:00–0:12 | "Lena runs a café. She pays for ads she can't measure. Her best customers come from friends who recommend her, and those friends get nothing for it." | W1: Lena's Corner dashboard | L |
 | 0:12–0:24 | "Vouch fixes that. Ana has bought here, so she's allowed to recommend it. She sent her friend Ben a link, and Ben saved it." | W3 QR (or W2 Ana's wallet), then Ben's wallet on the iPhone | L → P |
-| 0:24–0:34 | "Ben walks in. Lena keys in his order, two dollars, and shows a code." | W1: "Take an order" → type 2.00 → "Show code" | L |
+| 0:24–0:34 | "Ben walks in. Lena keys in his order, two dollars, and shows a code." | W1 **tab 2 (counter)**: type 2.00 → "Show code" | L |
 | 0:34–0:52 | "Ben scans it. He sees the price, the money he gets back, and who sent him. One Face ID. No wallet setup, no fees." | iPhone camera → pay screen ("You'll get $0.10 back", "Who sent you here?" → Ana) → "Confirm with Face ID or fingerprint" | P |
 | 0:52–1:08 | "A second or two later, it's settled. Ben got ten cents back. Ana got twenty-two cents. Priya, who brought Ana in, got eight cents. Lena's Corner kept a dollar sixty." | iPhone success screen; W2 Ana's "just arrived" toast; W1 order shows paid | P + L |
-| 1:08–1:18 | "Lena's dashboard shows where the money went and what each new customer cost her. She only pays when a recommended customer actually buys." | W1: back to the dashboard, money graph | L |
+| 1:08–1:18 | "Lena's dashboard shows where the money went and what each new customer cost her. She only pays when a recommended customer actually buys." | W1 **tab 1**: dashboard, money graph | L |
 | 1:18–1:36 | "Here's a demo café with more customers: Lena's café. This is Ben's twelve-dollar order. Switch to Everyone, and you see every recommendation that brought someone in." | Lena's café dashboard (seeded). Point at "Ben paid $12.00" in Payments. Then click "Everyone". | L |
 | 1:36–1:54 | "That twelve dollars is one transaction on Arc. Twelve in, six payouts out, to the exact cent. The café can't skip the people who sent the customer. The network fee was about one cent, paid in USDC by our relayer." | Explorer: tx 0x83214e73…, token transfers list | L |
 | 1:54–2:04 | "The rules are public. Terms freeze when a link is shared, rewards are capped by the venue's rate, and each customer earns a reward only once per venue." | /transparency page, scroll slowly | L |
@@ -159,7 +166,7 @@ Voiceover: record it live in the same take. That's the simplest. If a line goes 
 | 1 | Lena's Corner dashboard | W1 (opened by the script) | L |
 | 2 | Ana's link QR | W3 | L |
 | 3 | Ben's wallet | https://vouch-ubc.vercel.app/wallet | P |
-| 4 | Counter QR | W1 → "Take an order" | L |
+| 4 | Counter QR | W1 tab 2 (counter) → 2.00 → "Show code" | L |
 | 5 | Pay screen | opens from the iPhone camera scan | P |
 | 6 | Ana's toast | W2 | L |
 | 7 | Seeded Lena's café dashboard | https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289 | L |
@@ -206,7 +213,7 @@ Tick each one.
 | "Not enough money yet" on the pay screen | Tap "Top up (testnet demo)" on that screen. Wait 2–20 s. Top-up is $3, once per account, from a shared daily pool ($21 left on Thu night). |
 | Stays "Arriving" for more than 5 s | The Stream is paused or lagging. The payment is already on chain. Resume the Stream in the QuickNode dashboard ("Continue where it left off"); it then turns paid. Keep recording or redo that part. |
 | W1/W2 show a sign-in screen | Ctrl+C and re-run the `--present` command; it rebuilds if needed. |
-| Counter code expired | Press "Take an order" again. |
+| Counter code expired | On W1 tab 2, key the amount again and press "Show code". |
 | Ana's toast doesn't show | Reload W2. Her balance and activity still show the $0.22. |
 | Money graph doesn't animate | Toggle Latest / Everyone, or reload. |
 | Explorer slow or down | Show the README "How we use Arc" table instead. |

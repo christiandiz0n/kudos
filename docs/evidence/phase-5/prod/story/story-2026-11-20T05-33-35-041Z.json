@@ -1,0 +1,743 @@
+{
+  "startedAt": "2026-11-20T05:33:35.041Z",
+  "base": "https://vouch-ubc.vercel.app",
+  "api": "https://api-production-902bc54c.up.railway.app",
+  "amount": "1.00",
+  "audits": [
+    {
+      "ctx": "venue",
+      "screen": "l01-venue-onboarding-20pct",
+      "url": "/venue/new",
+      "primaryCount": 1,
+      "primaries": [
+        "Confirm with Face ID or fingerprint"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Set up your place | You only pay when a recommendation brings in a new customer who buys. Nothing up front, no monthly fee. | Name customers will see | Reward on a new customer's first purchase | 20% | 5% | 30% | On a | $12.00 | first purchase: | +$2.40 | in rewards | Back to the customer | +$0.60 | To the people who sent them | +$1.80 | You keep | $9.60 | You keep | 80 | % | Rewards | 20% | Repeat visits cost nothing. | Minimum first order for a reward | $ | Smaller first orders don't earn rewards. At least $0.50. | Recommendations keep the reward they were made with. Changes apply to new ones only. | Start at | 20% | · change it any time | Confirm with Face ID or fingerprint",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l02-venue-onboarding-saving",
+      "url": "/venue/new",
+      "primaryCount": 1,
+      "primaries": [
+        "Setting up QE Lena's café 05:33… (disabled)"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Set up your place | You only pay when a recommendation brings in a new customer who buys. Nothing up front, no monthly fee. | Name customers will see | Reward on a new customer's first purchase | 20% | 5% | 30% | On a | $12.00 | first purchase: | +$2.40 | in rewards | Back to the customer | +$0.60 | To the people who sent them | +$1.80 | You keep | $9.60 | You keep | 80 | % | Rewards | 20% | Repeat visits cost nothing. | Minimum first order for a reward | $ | Smaller first orders don't earn rewards. At least $0.50. | Recommendations keep the reward they were made with. Changes apply to new ones only. | Start at | 20% | · change it any time | Setting up QE Lena's café 05:33…",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l03-venue-dashboard-empty",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 1,
+      "primaries": [
+        "Take an order"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Live | QE Lena's café 05:33 | Cost per new customer | — | paid only when they buy | Typical ad cost | $ | You'll see this after your first new customer. | New customers | 0 | verified first purchases | Rewards paid | $0.00 | $ | 0 | . | 00 | to customers + the people who sent them | Where the money went | Latest | Everyone | No new customers yet | When a recommended customer pays, you'll see the money reach everyone who sent them, right here. | 1 | Show your code | Key in the order. The customer scans and pays. | 2 | They recommend you | Paying customers can send friends to you. | 3 | Pay only for results | When a friend buys, part of it thanks whoever sent them. | How payments split | Take an order",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l05-counter-qr-100",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+      "primaryCount": 0,
+      "primaries": [],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QE Lena's café 05:33 | Waiting | Order EC8B | $1.00 | Waiting for payment · scan with Vouch | Expires in | 1:59 | Cancel order",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l06-ana-pay-signed-out",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Vouch | Lena's café | $12.00 | AN | PR | +$0.45 back | Pay local. Thank the friends who sent you. | Scan to pay at cafés, barbers and salons. Your first visit gives you money back, and pays the people whose recommendation brought you in. | Your first name | Friends see this when you recommend a place. | Nothing to download, no password, nothing to write down. Your face or fingerprint keeps your account safe. | Continue with Face ID or fingerprint | I already have an account",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l07-ana-pay-insufficient",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+      "primaryCount": 1,
+      "primaries": [
+        "Top up (testnet demo)"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QL | QE Lena's café 05:33 | Paying with Vouch | Not enough money yet | Your balance is $0.00. Add at least $1.00 to pay $1.00. | QE Lena's café 05:33 | · | $1.00 | Top up (testnet demo) | Adds simulated money for this demo. No card needed.",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l08-ana-pay-confirm",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+      "primaryCount": 1,
+      "primaries": [
+        "Pay $1.00 to QE Lena's café 05:33. Confirm with Face ID or f"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QL | QE Lena's café 05:33 | Paying with Vouch | Confirm payment | QL | QE Lena's café 05:33 | Order EC8B | $1.00 | $ | 1 | . | 00 | No one recommended this place to you yet, so this is a regular payment. | Confirm with Face ID or fingerprint | You pay | $1.00 | . No fees.",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l09-ana-pending",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Paying QE Lena's café 05:33… | $1.00 | $ | 1 | . | 00 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | This takes a few seconds. | Done",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l10-ana-settled",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Paid at QE Lena's café 05:33 | $1.00 | $ | 1 | . | 00 | Thanks for coming in. | When a friend recommends a place to you, your first visit there gets money back. | Done | Recommend | QE Lena's café 05:33",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l11-counter-paid-ana",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+      "primaryCount": 1,
+      "primaries": [
+        "Next order"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QE Lena's café 05:33 | Paid | Paid | $1.00 | Order EC8B | Ana paid. $1.00 to you. | Next order",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l13-ana-wallet-after",
+      "url": "/wallet",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "AN | Ana | Balance | $2.00 | $ | 2 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Liked | QE Lena's café 05:33 | ? | Recommend it. When a friend makes their first purchase, part of it comes to you. | Recommend | Recent | QL | QE Lena's café 05:33 | Just now | −$1.00 | Scan to pay",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l14-ana-recommend",
+      "url": "/recommend?venue=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 1,
+      "primaries": [
+        "Make my link"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Recommend QE Lena's café 05:33 | One friend | Anyone | For one friend | . | Send it to someone you know. Personal recommendations count double. | Add a note (optional) | Your friend sees | AN | Ana | vouched for | QE Lena's café 05:33 | Money back on their first visit | When a friend makes their first purchase, you get part of it: about | +$1.32 | on a | $12.00 | order. Paid the moment they pay. | Make my link | Confirm with Face ID or fingerprint",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l15-ana-recommend-link",
+      "url": "/recommend?venue=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 1,
+      "primaries": [
+        "Copy link"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Recommend QE Lena's café 05:33 | One friend | Anyone | For one friend | . | Send it to someone you know. Personal recommendations count double. | Ana | recommends | QE Lena's café 05:33 | vouch-ubc.vercel.app/i/c9DeK93R0 | A friend can scan this from your screen. | When a friend makes their first purchase, you get part of it: about | +$1.32 | on a | $12.00 | order. Paid the moment they pay. | Copy link",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l16-ben-link-signed-out",
+      "url": "/i/c9DeK93R0",
+      "primaryCount": 1,
+      "primaries": [
+        "Continue with Face ID or fingerprint"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Vouch | Lena's café | $12.00 | AN | PR | +$0.45 back | AN | Ana | sent you to | QE Lena's café 05:33 | Pay local. Thank the friends who sent you. | Scan to pay at cafés, barbers and salons. Your first visit gives you money back, and pays the people whose recommendation brought you in. | Your first name | Friends see this when you recommend a place. | Nothing to download, no password, nothing to write down. Your face or fingerprint keeps your account safe. | Continue with Face ID or fingerprint | I already have an account",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l17-ben-link-signed-in",
+      "url": "/i/c9DeK93R0",
+      "primaryCount": 1,
+      "primaries": [
+        "Save Ana's recommendation"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "AN | QL | Ana | vouched for | QE Lena's café 05:33 | Money back on your first visit | On your first visit | +$0.60 | back on a | $12.00 | order | Ana | is thanked from the same payment. It costs you nothing extra. | Locked in | on Nov 19 | . | This reward stays as it is, even if | QE Lena's café 05:33 | changes its rewards later. | Save | Ana | 's recommendation | Not now",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l18-ben-link-saved",
+      "url": "/i/c9DeK93R0",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Saved | Next time you're at | QE Lena's café 05:33 | , scan to pay. You'll get | +$0.60 | back on a | $12.00 | order, and | Ana | is thanked from the same payment. | Done",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l19-ben-wallet-topped-up",
+      "url": "/wallet",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "BE | Ben | Balance | $3.00 | $ | 3 | . | 00 | Top up (testnet demo) | Simulated money for this demo. No card needed. | Recent | No payments yet | Scan the code at a Vouch café, barber or salon to pay. Your first visit gives you money back. | Scan to pay | Money added | Demo money, for trying Vouch.",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l20-ben-pay-confirm",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+      "primaryCount": 1,
+      "primaries": [
+        "Pay $1.00 to QE Lena's café 05:33. Confirm with Face ID or f"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QL | QE Lena's café 05:33 | Paying with Vouch | Confirm payment | QL | QE Lena's café 05:33 | Order 8A21 | $1.00 | $ | 1 | . | 00 | You'll get | $0.05 | back | Who sent you here? | Optional | AN | Ana | Someone else | Skip | Where your | $1.00 | goes | QE Lena's café 05:33 | $0.84 | $0.16 | to | 2 | people | You | + | $0.05 | Ana | + | $0.11 | Confirm with Face ID or fingerprint | You pay | $1.00 | . No fees.",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l21-ben-picked-ana",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+      "primaryCount": 2,
+      "primaries": [
+        "AN Ana",
+        "Pay $1.00 to QE Lena's café 05:33. Confirm with Face ID or f"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QL | QE Lena's café 05:33 | Paying with Vouch | Confirm payment | QL | QE Lena's café 05:33 | Order 8A21 | $1.00 | $ | 1 | . | 00 | You'll get | $0.05 | back | Who sent you here? | Optional | AN | Ana | Someone else | Skip | Where your | $1.00 | goes | QE Lena's café 05:33 | $0.84 | $0.16 | to | 2 | people | You | + | $0.05 | Ana | + | $0.11 | Confirm with Face ID or fingerprint | You pay | $1.00 | . No fees.",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l22-ben-pending",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Paying QE Lena's café 05:33… | $1.00 | $ | 1 | . | 00 | $0.05 | back, on its way | Thanking | Ana | for sending you… | This takes a few seconds. | Where your money goes | Arriving | $1.00 | QE Lena's café 05:33 | $0.84 | $0.16 | to | 2 | people | QL | QE Lena's café 05:33 | $0.84 | You | You | First-visit money back | $0.05 | AN | Ana | Recommended you | $0.11 | Total | $1.00 | Done",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l23-ben-settled",
+      "url": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+      "primaryCount": 1,
+      "primaries": [
+        "Done"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Paid at QE Lena's café 05:33 | $1.00 | $ | 1 | . | 00 | +$0.05 | back to you | Ana | was | just thanked for sending you. | Where your money went | $1.00 | QE Lena's café 05:33 | $0.84 | $0.16 | to | 2 | people | QL | QE Lena's café 05:33 | $0.84 | You | You | First-visit money back | +$0.05 | AN | Ana | Recommended you | +$0.11 | Total | $1.00 | Done | Recommend | QE Lena's café 05:33",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l24-counter-paid-ben",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+      "primaryCount": 1,
+      "primaries": [
+        "Next order"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QE Lena's café 05:33 | Paid | Paid | $1.00 | Order 8A21 | Ben paid. $0.84 to you, $0.11 to 1 person who sent Ben, $0.05 back to Ben. | Next order",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l25-ana-wallet-reward-toast",
+      "url": "/wallet",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "AN | Ana | Balance | $2.11 | $ | 2 | . | 11 | +$0.11 | earned this week | Top up (testnet demo) | Simulated money for this demo. No card needed. | Liked | QE Lena's café 05:33 | ? | Recommend it. When a friend makes their first purchase, part of it comes to you. | Recommend | Recent | BE | Ben came on your recommendation | QE Lena's café 05:33 · Just now | +$0.11 | QL | QE Lena's café 05:33 | Just now | −$1.00 | Scan to pay | Your recommendation paid off | +$0.11 just arrived",
+      "errs": []
+    },
+    {
+      "ctx": "projector",
+      "screen": "l26-projector",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 0,
+      "primaries": [],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "QL | QE Lena's café 05:33 | New customers from recommendations, live | Live | Where the money went | Ben · now | Latest | Everyone | QL | QE Lena's café 05:33 | $0.84 | BE | Ben | paid $1.00 | +$0.05 back | AN | Ana | +$0.11 | Cost per new customer | $0.08 | $ | 0 | . | 08 | paid only when they buy | What QE Lena's café 05:33 has paid in rewards, on average, for each new customer. | New customers | 2 | verified first purchases | Rewards paid | $0.16 | $ | 0 | . | 16 | to customers + the people who sent them | Payments | BE | Ben paid $1.00 | $0.11 to 1 person who sent Ben · now | $0.84 | to the venue | AN | Ana paid $1.00 | First visit · now | $1.00 | to the venue",
+      "errs": []
+    },
+    {
+      "ctx": "venue",
+      "screen": "l27-venue-dashboard-after",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 1,
+      "primaries": [
+        "Take an order"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Live | QE Lena's café 05:33 | Cost per new customer | $0.08 | $ | 0 | . | 08 | paid only when they buy | Typical ad cost | $ | $19.92 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.16 | $ | 0 | . | 16 | to customers + the people who sent them | Where the money went | Latest | Everyone | QL | QE Lena's café 05:33 | $0.84 | BE | Ben | paid $1.00 | +$0.05 back | AN | Ana | +$0.11 | Ben · now | Payments | BE | Ben paid $1.00 | First visit · $0.05 back to Ben · now | $0.84 | to you | AN | Ana paid $1.00 | First visit · now | $1.00 | to you | How payments split | Take an order",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l30-ana-record",
+      "url": "/me",
+      "primaryCount": 1,
+      "primaries": [
+        "Share my record"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Your record | AN | Ana | Ambassador | 1 | new | customer | across | 1 | venue | Earned from recommendations | +$0.11 | Every number here comes from a real first purchase. Your record belongs to you and goes wherever you go. | Venues | QL | QE Lena's café 05:33 | 1 new customer · First visits you sent | +$0.11 | Share my record",
+      "errs": []
+    },
+    {
+      "ctx": "ana",
+      "screen": "l31-ana-wallet-final",
+      "url": "/wallet",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "AN | Ana | Balance | $2.11 | $ | 2 | . | 11 | +$0.11 | earned this week | Top up (testnet demo) | Simulated money for this demo. No card needed. | Liked | QE Lena's café 05:33 | ? | Recommend it. When a friend makes their first purchase, part of it comes to you. | Recommend | Your recommendations | 1 new customer across 1 venue | Recent | BE | Ben came on your recommendation | QE Lena's café 05:33 · Just now | +$0.11 | QL | QE Lena's café 05:33 | 1 min ago | −$1.00 | Scan to pay",
+      "errs": []
+    },
+    {
+      "ctx": "ben",
+      "screen": "l32-ben-wallet-final",
+      "url": "/wallet",
+      "primaryCount": 1,
+      "primaries": [
+        "Scan to pay"
+      ],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "BE | Ben | Balance | $2.05 | $ | 2 | . | 05 | +$0.05 | earned this week | Top up (testnet demo) | Simulated money for this demo. No card needed. | Liked | QE Lena's café 05:33 | ? | Recommend it. When a friend makes their first purchase, part of it comes to you. | Recommend | Recent | QL | QE Lena's café 05:33 | Just now · thanked Ana | −$1.00 | +$0.05 back | Scan to pay",
+      "errs": []
+    },
+    {
+      "ctx": "reduced",
+      "screen": "l34-dashboard-live-reduced-motion",
+      "url": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "primaryCount": 0,
+      "primaries": [],
+      "accents": [],
+      "banned": [],
+      "bannedA11y": [],
+      "moneyBad": [],
+      "rawUnits": [],
+      "smallTargets": [],
+      "smallPrimary": [],
+      "text": "Live | QE Lena's café 05:33 | Cost per new customer | $0.08 | $ | 0 | . | 08 | paid only when they buy | What QE Lena's café 05:33 has paid in rewards, on average, for each new customer. | New customers | 2 | verified first purchases | Rewards paid | $0.16 | $ | 0 | . | 16 | to customers + the people who sent them | Where the money went | Latest | Everyone | QL | QE Lena's café 05:33 | $0.84 | BE | Ben | paid $1.00 | +$0.05 back | AN | Ana | +$0.11 | Ben · 1 min | Payments | BE | Ben paid $1.00 | First visit · $0.05 back to Ben · 1 min | $0.84 | to the venue | AN | Ana paid $1.00 | First visit · 1 min | $1.00 | to the venue | How payments split",
+      "errs": []
+    }
+  ],
+  "timeline": [
+    {
+      "ev": "venue registered",
+      "t": "2026-11-20T05:33:55.650Z",
+      "vaddr": "0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+      "ms": 1907,
+      "onchain": true,
+      "rewardBps": 2000
+    },
+    {
+      "ev": "ana topped up",
+      "t": "2026-11-20T05:34:25.193Z",
+      "tx": "0x5f3082a7cde5bd23dd7ec614b43bf57dacd40742ad05938eed32e7aa1dabe87a",
+      "ms": 3160
+    },
+    {
+      "ev": "ana settled",
+      "t": "2026-11-20T05:34:27.481Z",
+      "timings": [
+        {
+          "at": "2026-11-20T05:34:26.622Z",
+          "orderId": "0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+          "intentId": "3360595b-0c61-42d2-9007-cad87b75a696",
+          "txHash": "0x7b656f0962a658af39fd7a692718f7d81fb0c7522687eecc4d0f58505aed41b0",
+          "step": "pending",
+          "faceIdMs": 37,
+          "relayMs": 492
+        },
+        {
+          "at": "2026-11-20T05:34:27.462Z",
+          "orderId": "0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+          "intentId": "3360595b-0c61-42d2-9007-cad87b75a696",
+          "txHash": "0x7b656f0962a658af39fd7a692718f7d81fb0c7522687eecc4d0f58505aed41b0",
+          "step": "settled",
+          "via": "sse",
+          "settleMs": 840
+        }
+      ],
+      "tapToPendingMs": 562,
+      "tapToSettledMs": 1415
+    },
+    {
+      "ev": "venue/projector saw Ana",
+      "t": "2026-11-20T05:34:28.784Z",
+      "venueSeesPaidMs": 1787,
+      "projectorFeedMs": 1494
+    },
+    {
+      "ev": "ana link",
+      "t": "2026-11-20T05:34:38.606Z",
+      "link": "https://vouch-ubc.vercel.app/i/c9DeK93R0"
+    },
+    {
+      "ev": "ben saved Ana's recommendation",
+      "t": "2026-11-20T05:34:46.438Z",
+      "ms": 1827
+    },
+    {
+      "ev": "ben topped up (wallet)",
+      "t": "2026-11-20T05:34:50.459Z",
+      "tx": "0xa1cbaeaf97cd8c6a844248ccb96c87402227be428e78994e42855c55184dec38",
+      "ms": 1497
+    },
+    {
+      "ev": "ben settled",
+      "t": "2026-11-20T05:35:01.592Z",
+      "timings": [
+        {
+          "at": "2026-11-20T05:35:00.793Z",
+          "orderId": "0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+          "intentId": "b261e918-6bf8-4d20-886e-341bf3725f98",
+          "txHash": "0x24407f3a4ce2846cad025094b2f901cfcd20ce83b1ef923596af97b1942ba948",
+          "step": "pending",
+          "faceIdMs": 53,
+          "relayMs": 533
+        },
+        {
+          "at": "2026-11-20T05:35:01.576Z",
+          "orderId": "0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+          "intentId": "b261e918-6bf8-4d20-886e-341bf3725f98",
+          "txHash": "0x24407f3a4ce2846cad025094b2f901cfcd20ce83b1ef923596af97b1942ba948",
+          "step": "settled",
+          "via": "sse",
+          "settleMs": 783
+        }
+      ],
+      "tapToPendingMs": 629,
+      "tapToSettledMs": 1413
+    },
+    {
+      "ev": "venue/projector/Ana saw Ben",
+      "t": "2026-11-20T05:35:04.313Z",
+      "venueSeesPaidMs": 1787,
+      "projectorFeedMs": 1482,
+      "anaToastMs": 1505
+    }
+  ],
+  "sliderValue": "20",
+  "venue": "0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+  "venueName": "QE Lena's café 05:33",
+  "venueRegisteredMs": 1907,
+  "venueOwner": "0xa78CEDaE0f89d1abc53741Df0152C2E394FA9940",
+  "venueTerms": {
+    "termsVersion": 1,
+    "rewardBps": 2000,
+    "minOrder": {
+      "baseUnits": "500000",
+      "display": "0.50"
+    },
+    "effectiveAt": "1795152835"
+  },
+  "venueOnchainAtDashboard": true,
+  "qr1": "https://vouch-ubc.vercel.app/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+  "ana": "0x5554a3AC6f950D784f9D11361eDE5D86B4d3a1A2",
+  "anaTopup": {
+    "status": "pending",
+    "amount": {
+      "baseUnits": "3000000",
+      "display": "3.00"
+    },
+    "txHash": "0x5f3082a7cde5bd23dd7ec614b43bf57dacd40742ad05938eed32e7aa1dabe87a",
+    "relayId": "57153952-112d-41d3-814a-c6058bd457c1"
+  },
+  "anaTopupMs": 3160,
+  "streamActive": true,
+  "ana1": {
+    "timings": [
+      {
+        "at": "2026-11-20T05:34:26.622Z",
+        "orderId": "0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+        "intentId": "3360595b-0c61-42d2-9007-cad87b75a696",
+        "txHash": "0x7b656f0962a658af39fd7a692718f7d81fb0c7522687eecc4d0f58505aed41b0",
+        "step": "pending",
+        "faceIdMs": 37,
+        "relayMs": 492
+      },
+      {
+        "at": "2026-11-20T05:34:27.462Z",
+        "orderId": "0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+        "intentId": "3360595b-0c61-42d2-9007-cad87b75a696",
+        "txHash": "0x7b656f0962a658af39fd7a692718f7d81fb0c7522687eecc4d0f58505aed41b0",
+        "step": "settled",
+        "via": "sse",
+        "settleMs": 840
+      }
+    ],
+    "tapToPendingMs": 562,
+    "tapToSettledMs": 1415,
+    "venueSeesPaidMs": 1787,
+    "projectorFeedMs": 1494,
+    "intent": {
+      "error": {
+        "code": "UNAUTHENTICATED",
+        "message": "Please sign in again.",
+        "retryable": false
+      }
+    }
+  },
+  "introCode": "c9DeK93R0",
+  "introLink": "https://vouch-ubc.vercel.app/i/c9DeK93R0",
+  "benAcceptMs": 1827,
+  "ben": "0xEf782e50324FE9f5c20E03273f82d9D8e69077c0",
+  "benTopup": {
+    "status": "pending",
+    "amount": {
+      "baseUnits": "3000000",
+      "display": "3.00"
+    },
+    "txHash": "0xa1cbaeaf97cd8c6a844248ccb96c87402227be428e78994e42855c55184dec38",
+    "relayId": "a9be51b7-ca88-48b3-a224-63401973dc37"
+  },
+  "benTopupMs": 1497,
+  "qr2": "https://vouch-ubc.vercel.app/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+  "whoSentYouChips": [
+    "AN\nAna",
+    "Someone else",
+    "Skip"
+  ],
+  "pickedAna": true,
+  "ben1": {
+    "timings": [
+      {
+        "at": "2026-11-20T05:35:00.793Z",
+        "orderId": "0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+        "intentId": "b261e918-6bf8-4d20-886e-341bf3725f98",
+        "txHash": "0x24407f3a4ce2846cad025094b2f901cfcd20ce83b1ef923596af97b1942ba948",
+        "step": "pending",
+        "faceIdMs": 53,
+        "relayMs": 533
+      },
+      {
+        "at": "2026-11-20T05:35:01.576Z",
+        "orderId": "0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+        "intentId": "b261e918-6bf8-4d20-886e-341bf3725f98",
+        "txHash": "0x24407f3a4ce2846cad025094b2f901cfcd20ce83b1ef923596af97b1942ba948",
+        "step": "settled",
+        "via": "sse",
+        "settleMs": 783
+      }
+    ],
+    "tapToPendingMs": 629,
+    "tapToSettledMs": 1413,
+    "venueSeesPaidMs": 1787,
+    "projectorFeedMs": 1482,
+    "anaRewardToastMs": 1505,
+    "intent": {
+      "error": {
+        "code": "UNAUTHENTICATED",
+        "message": "Please sign in again.",
+        "retryable": false
+      }
+    }
+  },
+  "projectorText": "QL | QE Lena's café 05:33 | New customers from recommendations, live | Live | Where the money went | Ben · now | Latest | Everyone | QL | QE Lena's café 05:33 | $0.84 | BE | Ben | paid $1.00 | +$0.05 back | AN | Ana | +$0.11 | Cost per new customer | $0.08 | $ | 0 | . | 08 | paid only when they buy | What QE Lena's café 05:33 has paid in rewards, on average, for each new customer. | New customers | 2 | verified first purchases | Rewards paid | $0.16 | $ | 0 | . | 16 | to customers + the people who sent them | Payments | BE | Ben paid $1.00 | $0.11 to 1 person who sent Ben · now | $0.84 | to the venue | AN | Ana paid $1.00 | First visit · now | $1.00 | to the venue",
+  "ownerDashText": "Live | QE Lena's café 05:33 | Cost per new customer | $0.08 | $ | 0 | . | 08 | paid only when they buy | Typical ad cost | $ | $19.92 less per new customer than a typical ad. | New customers | 2 | verified first purchases | Rewards paid | $0.16 | $ | 0 | . | 16 | to customers + the people who sent them | Where the money went | Latest | Everyone | QL | QE Lena's café 05:33 | $0.84 | BE | Ben | paid $1.00 | +$0.05 back | AN | Ana | +$0.11 | Ben · now | Payments | BE | Ben paid $1.00 | First visit · $0.05 back to Ben · now | $0.84 | to you | AN | Ana paid $1.00 | First visit · now | $1.00 | to you | How payments split | Take an order",
+  "reducedMotionAnimations": 0,
+  "ok": true,
+  "endedAt": "2026-11-20T05:36:05.877Z"
+}

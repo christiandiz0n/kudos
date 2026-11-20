@@ -1,0 +1,240 @@
+[
+  {
+    "file": "l01-venue-onboarding-20pct.png",
+    "route": "/venue/new",
+    "state": "venue onboarding, reward set to 20% with the slider, min $0.50",
+    "notes": "slider=20",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l02-venue-onboarding-saving.png",
+    "route": "/venue/new",
+    "state": "venue onboarding: saving",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l03-venue-dashboard-empty.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "new venue dashboard (live, empty)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l04-projector-dashboard-empty-1280.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "venue dashboard at 1280×720 before any payment (non-owner projector)",
+    "notes": "",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "l05-counter-qr-100.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+    "state": "counter QR for $1.00",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l06-ana-pay-signed-out.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+    "state": "Ana opens the QR link (signed out)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l07-ana-pay-insufficient.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+    "state": "Ana: not enough money yet (real $0) → top-up offered",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l08-ana-pay-confirm.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+    "state": "Ana: pay sheet after the in-app top-up (first visit, no recommendation)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l09-ana-pending.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+    "state": "Ana: pending ('Arriving'), relayed, waiting for Streams",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l10-ana-settled.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0xec8b19fc09d37eba778bd367b7f7df9d3f3623aceb08f1d17385ec11f4aac38a",
+    "state": "Ana: paid (settled via Streams)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l11-counter-paid-ana.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+    "state": "counter flips to Paid (Ana)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l12-projector-after-ana-1280.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "projector dashboard updated live after Ana's payment (no reload)",
+    "notes": "",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "l13-ana-wallet-after.png",
+    "route": "/wallet",
+    "state": "Ana's wallet after paying",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l14-ana-recommend.png",
+    "route": "/recommend?venue=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "Ana: recommend (unlocked after a purchase)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l15-ana-recommend-link.png",
+    "route": "/recommend?venue=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "Ana: personal link ready to share",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l16-ben-link-signed-out.png",
+    "route": "/i/c9DeK93R0",
+    "state": "Ben opens Ana's link (signed out)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l17-ben-link-signed-in.png",
+    "route": "/i/c9DeK93R0",
+    "state": "Ben: Ana thinks you'll love it, save offered",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l18-ben-link-saved.png",
+    "route": "/i/c9DeK93R0",
+    "state": "Ben: recommendation saved",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l19-ben-wallet-topped-up.png",
+    "route": "/wallet",
+    "state": "Ben's wallet after the in-app demo top-up",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l20-ben-pay-confirm.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+    "state": "Ben: pay sheet with money back + 'Who sent you here?'",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l21-ben-picked-ana.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+    "state": "Ben: picked Ana in 'Who sent you here?'",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l22-ben-pending.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+    "state": "Ben: pending (Arriving)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l23-ben-settled.png",
+    "route": "/pay?v=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8&o=0x8a21732bdc8a108392acb9960e841fbba839be095f09e779440a4b279a900cec",
+    "state": "Ben: paid, split receipt (Ana thanked)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l24-counter-paid-ben.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8/counter",
+    "state": "counter flips to Paid (Ben)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l25-ana-wallet-reward-toast.png",
+    "route": "/wallet",
+    "state": "Ana's wallet: reward arrived live (toast)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l26-projector-money-graph-1280.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "projector dashboard + money graph after Ben's payment (live, 1280×720)",
+    "notes": "",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "l27-venue-dashboard-after.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "owner dashboard after both payments (390)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l28-venue-dashboard-owner-1280.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "owner dashboard at 1280×720 (projector layout)",
+    "notes": "",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "l29-money-graph-everyone-1280.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "money graph 'Everyone' at 1280×720",
+    "notes": "",
+    "viewport": "1280x720"
+  },
+  {
+    "file": "l30-ana-record.png",
+    "route": "/me",
+    "state": "Ana's ambassador record",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l31-ana-wallet-final.png",
+    "route": "/wallet",
+    "state": "Ana's wallet with the reward in activity",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l32-ben-wallet-final.png",
+    "route": "/wallet",
+    "state": "Ben's wallet after paying",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l33-transparency-venue.png",
+    "route": "/transparency?venue=0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "transparency page for the story venue",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "l34-dashboard-live-reduced-motion.png",
+    "route": "/venue/0x8C03352aCAd63441F929a1295cdbAC357E6C86B8",
+    "state": "live dashboard + money graph with prefers-reduced-motion",
+    "notes": "",
+    "viewport": "390x844"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "at": "2026-11-20T05:49:25.042Z",
+  "venue": "0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581",
+  "benLink": "https://vouch-ubc.vercel.app/i/4gh0y7xmW",
+  "sessions": [
+    {
+      "who": "owner",
+      "mode": "gated",
+      "session": "valid",
+      "problems": []
+    },
+    {
+      "who": "ana",
+      "mode": "gated",
+      "session": "valid",
+      "problems": []
+    }
+  ],
+  "ui": {
+    "counterKeypad": true,
+    "ownerSeesFeed": true,
+    "anaWallet": true
+  },
+  "automationBar": {
+    "innerHeight": {
+      "playwrightDefault": 561,
+      "ours": 613,
+      "withoutTestType": 508
+    },
+    "barHiddenInOurs": true,
+    "barHeightPx": 52
+  }
+}
