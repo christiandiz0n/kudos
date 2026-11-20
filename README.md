@@ -2,7 +2,9 @@
 
 **Vouch is a pay-per-verified-customer marketing network for local businesses. Customers pay in USDC on Arc, and the sale itself instantly pays the people whose recommendations brought them in.**
 
-Built solo for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Best use of Arc** · **QuickNode Streams bounty**.
+**[YOUR NAME], Rutgers University, built solo.** <!-- TODO(human): replace [YOUR NAME] -->
+
+Built for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Best use of Arc** · **QuickNode Streams bounty**.
 
 | | |
 |---|---|
@@ -12,6 +14,8 @@ Built solo for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Be
 | **Stream** | QuickNode Stream `vouch-v3-production` (ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`) |
 | **Demo video** | `<VIDEO_URL>` |
 | **How payments split** | https://vouch-ubc.vercel.app/transparency |
+| **Demo venue** | Lena's café dashboard: https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289 (sign in first; any new account works) |
+| **Repository** | https://github.com/christiandiz0n/vouch |
 
 > This is a prototype on a testnet. No real money moves, nothing here is audited, and it is not legal, tax or financial advice.
 
@@ -25,15 +29,25 @@ Vouch makes a recommendation pay at the moment it works. The venue sets a reward
 
 ## Screenshots
 
-These come from the independent Phase 3 QE run on the deployed stack: two fresh accounts, a $1.00 order at a 20% reward rate, and a live Stream. <!-- evidence: docs/qa/phase-3-qe-gate.md §3, docs/evidence/phase-3/qe/screens/ -->
+All taken on production (https://vouch-ubc.vercel.app) against the seeded demo data: three venues (Lena's café at 15%, Kiln Bakery, Pressed) and about a dozen people, all with real payments on Arc Testnet. <!-- evidence: docs/qa/phase-5-prod-regression.md §2 (numbers cross-checked against the hosted /stats, /payments, /ambassadors); P5-01 shots: docs/evidence/phase-5/prod/p5-01/ -->
+
+**Venue dashboard on a projector (1440×900):** cost per new customer, new customers, rewards paid, the money graph for the latest payment, and the payments feed. Ben's $12.00 first visit (the canonical split below) is in the feed.
+
+<img src="docs/evidence/phase-5/prod/p5-01/lena-dashboard-1440x900.png" width="820" alt="Lena's café dashboard: cost per new customer $0.62, 6 new customers, $3.71 rewards paid, payments feed including Ben paid $12.00">
+
+**"Everyone" view:** every recommendation that brought a paying customer to Lena's café, and what each person earned.
+
+<img src="docs/evidence/phase-5/prod/screens/p-lena-everyone-1280.png" width="820" alt="Money graph, Everyone view: Lena's café connected to Diego, Priya, Maya, Chloe, Ana, Marco, Sofia and Ben with their earnings">
+
+| Venue dashboard on a phone | Ana's public record | Ben's public record |
+|---|---|---|
+| <img src="docs/evidence/phase-5/prod/screens/p-lena-dashboard-390.png" width="240" alt="Lena's café dashboard at phone size"> | <img src="docs/evidence/phase-5/prod/screens/p-record-ana-390.png" width="240" alt="Ana's record: 3 new customers across 2 venues, +$1.29"> | <img src="docs/evidence/phase-5/prod/screens/p-record-ben-390.png" width="240" alt="Ben's record: 2 new customers across 2 venues, +$0.80"> |
+
+**The payment flow** (from the independent Phase 3 QE run on the deployed stack: two fresh accounts, a $1.00 order at a 20% reward rate, live Stream): <!-- evidence: docs/qa/phase-3-qe-gate.md §3, docs/evidence/phase-3/qe/screens/ -->
 
 | Counter QR | Pay sheet | Paid, with split receipt |
 |---|---|---|
 | <img src="docs/evidence/phase-3/qe/screens/l05-counter-qr-100.png" width="240" alt="Venue counter showing a QR code for a $1.00 order"> | <img src="docs/evidence/phase-3/qe/screens/l20-ben-pay-confirm.png" width="240" alt="Pay sheet: $1.00, you'll get $0.05 back, who sent you here?"> | <img src="docs/evidence/phase-3/qe/screens/l23-ben-settled.png" width="240" alt="Paid screen: $0.05 back to you, Ana was thanked, split receipt"> |
-
-**Venue dashboard (projector, 1280×720):** the money graph, cost per new customer compared with a typical ad, and a live payments feed.
-
-<img src="docs/evidence/phase-3/qe/screens/l28-venue-dashboard-owner-1280.png" width="820" alt="Venue dashboard with money graph Ben to Ana, cost per new customer $0.08, payments feed">
 
 ---
 
@@ -59,13 +73,22 @@ These come from the independent Phase 3 QE run on the deployed stack: two fresh 
 6. Every screen updates within about two seconds (measured tap → settled: 1.35–1.45 s). Lena's dashboard animates the money graph through the referral chain.
 7. Ben is now a verified customer and can recommend the café himself. Ana's ambassador record grows. Ben's later purchases are plain payments with no reward.
 
-**This exact split ran on chain through the hosted stack:** tx [`0x40147554…ddfcb`](https://explorer.testnet.arc.io/tx/0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb), block 72,890,535. It moved 12,000,000 base units in and paid out 10,200,000 / 450,000 / 693,000 / 297,000 / 252,000 / 108,000. <!-- evidence: cast receipt 0x40147554…ddfcb (USDC Transfer logs 23,25,27,29,31,33,35) re-read 2026-11-18 by DOCS_SUBMISSION; docs/evidence/phase-2/qe/part-b-latency-summary.txt; docs/qa/phase-2-qe-e2e.md Part B -->
+**This exact split has run on chain twice through the hosted stack:**
+
+| Run | Transaction | Payees |
+|---|---|---|
+| Seeded demo data, Lena's café (Ben, Ana, Priya, and their introducers Marco and Sofia) | [`0x83214e73…71f980`](https://explorer.testnet.arc.io/tx/0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980), block 72,958,157 | **6 distinct addresses**: the café's payout address, Ben, Ana, Priya, Marco, Sofia <!-- evidence: cast receipt 0x83214e73… re-read 2026-11-20 by DOCS_SUBMISSION: USDC Transfer logs 67 (12.00 in), 69/71/73/75/77/79 out; payees 0x5d71…d794 Ben, 0x995b…d26f Ana, 0xf066…0434 Priya, 0x09b9…ce82 Marco, 0x9d6b…7e7a Sofia, 0x7e86…c4a7 venue payout; names from the hosted /venues/0x9a40…/payments --> |
+| Phase 2 live check (QE Part B) | [`0x40147554…ddfcb`](https://explorer.testnet.arc.io/tx/0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb), block 72,890,535 | 5 distinct addresses: in that test the same wallet was Ana and Priya's introducer, so it received both 0.693 and 0.108 <!-- evidence: cast receipt 0x40147554… (USDC Transfer logs 23,25,27,29,31,33,35) re-read 2026-11-20; docs/evidence/phase-2/qe/part-b-latency-summary.txt; docs/qa/phase-2-qe-e2e.md Part B --> |
+
+Both moved 12,000,000 base units in and paid out 10,200,000 / 450,000 / 693,000 / 297,000 / 252,000 / 108,000.
 
 **Rounding rule** (D-503/D-504): all math uses integer USDC base units (6 decimals). Each referrer gets a slice, `floor(amount × weight × frozenRate / 10,000²)`. Each slice is split 25/55/20, and every share is **floored**. The venue gets `amount − Σ(shares actually transferred)`, so rounding dust and any undistributable share (for example a referrer with no introducer) go back to the venue. **The payouts always sum exactly to the sale.** Indexers check `PaymentSettled.venueAmount + Σ RewardPaid.amount == amount`.
 
 ---
 
 ## Architecture
+
+<!-- TODO(orchestrator): the repo is public; after pushing, open this README on github.com in a private window and check that this Mermaid diagram renders (it was reviewed by hand, never machine-rendered). If it shows as a code block or an error, simplify the labels. -->
 
 ```mermaid
 flowchart LR
@@ -106,15 +129,16 @@ flowchart LR
 
 ## How we use Arc
 
-**USDC is the gas token, so a full two-level split costs well under a cent and the cost is predictable.** We read both receipts from `https://rpc.testnet.arc.io` with `cast receipt`. The fee is `gasUsed × effectiveGasPrice`, in 18-decimal native USDC.
+**USDC is the gas token, so a full two-level split costs about a cent or less, and the cost is a dollar amount you can predict.** We read these receipts from `https://rpc.testnet.arc.io` with `cast receipt`. The fee is `gasUsed × effectiveGasPrice`, in 18-decimal native USDC.
 
 | Payment | Recipients | Gas used | Effective gas price | Fee (USDC) |
 |---|---|---|---|---|
 | Canonical $12.00, two levels: [`0x40147554…ddfcb`](https://explorer.testnet.arc.io/tx/0x40147554390c5de5d702a0086a1b144730abca46ff39d2ab642945a7791ddfcb) | 6 payouts (venue, cashback, 2 direct, 2 second-level) | 375,553 <!-- evidence: cast receipt, gasUsed 0x5bb01 --> | 22.8 gwei | **0.0085626** (≈ $0.0086, or 0.07% of the sale) <!-- evidence: 375553 × 22.8e9 wei = 8.5626084e15 wei / 1e18 --> |
+| Seeded canonical $12.00, two levels, 6 distinct payees: [`0x83214e73…71f980`](https://explorer.testnet.arc.io/tx/0x83214e735269dc32850d18381fb229e8406fdbd5ea0ee4b9f85c1a73f071f980) | 6 payouts | 494,313 <!-- evidence: cast receipt 2026-11-20, gasUsed 494313 --> | 25.0 gwei | **0.0123578** (≈ $0.012, or 0.10% of the sale) <!-- evidence: 494313 × 25e9 / 1e18 = 0.012357825 --> |
 | Live phone run, $1.00, one referrer, second-level share returned to the venue: [`0x67fd5b7a…edfd7`](https://explorer.testnet.arc.io/tx/0x67fd5b7a51b4d67ca7a82245817bc3d377242ddfd1ccc7a43ecbccce8ccedfd7) | 3 payouts + 1 returned share | 321,489 <!-- evidence: cast receipt --> | 25.0 gwei | **0.0080372** (≈ $0.0080) <!-- evidence: 321489 × 25e9 / 1e18; matches docs/qa/phase-3-qe-gate.md -->|
 | Self-submit (customer sends `pay` and pays gas himself): [`0xfca0e1ae…8c7be`](https://explorer.testnet.arc.io/tx/0xfca0e1aeb40f9aa4e8564a60d0ac56817297956b2560d9db9bdc8823aa18c7be) | 6 payouts | 371,065 <!-- evidence: cast receipt; from 0xb333…2344 (the customer) --> | 25.0 gwei | **0.0092766** (≈ $0.0093) <!-- evidence: 371065 × 25e9 / 1e18 --> |
 
-*These are testnet numbers. Arc's base fee floor is 20 gwei (D-101). Mainnet fees may differ.*
+*These are testnet numbers. The same $12.00 split used 375,553 gas in one run and 494,313 in another, and the gas price was 22.8 vs 25 gwei, so the fee ranged from $0.0086 to $0.0124. Arc's base fee floor is 20 gwei (D-101). Mainnet fees may differ.*
 
 **What Arc gives us, concretely:**
 - **One balance, one unit.** The relayer pays gas in the same USDC the customer spends. There is no second token to buy, bridge or explain, and the cost of a payment is a dollar figure the business can budget. Native USDC (18 decimals) and the ERC-20 at `0x3600…0000` (6 decimals) are the same balance (D-102). The contract uses only the 6-decimal ERC-20 and is non-payable.
@@ -271,7 +295,7 @@ One contract with no admin: `contracts/src/Vouch.sol`. It uses OpenZeppelin EIP-
 6. Every order, authorization and intro is single-use; replays revert.
 7. Only the named submitter (the relayer or the customer) can submit a payment.
 
-**Tests:** `forge test` gives **197 passed, 0 failed, 2 skipped** (the opt-in fork suites) across 21 suites. <!-- evidence: re-run by DOCS_SUBMISSION 2026-11-18 ("Ran 21 test suites … 197 tests passed, 0 failed, 2 skipped"); matches AGENTS/PHASE_LOG.md Phase 1.5 --> They cover unit tests, property fuzzing (1,000 runs each), stateful invariant suites (builder and an independent QE suite), golden EIP-712 vectors shared with TypeScript, and fork tests against **real Arc USDC**, including the check that `receiveWithAuthorization` can only be called by the payee contract. An independent QE agent reviewed every version adversarially: v1 failed with 2 blockers, which were fixed in v2; v2 and v3 passed with findings, all closed or documented below (`docs/qa/phase-1-contracts-qe.md`).
+**Tests:** `forge test` gives **197 passed, 0 failed, 2 skipped** (the opt-in fork suites) across 21 suites. <!-- evidence: re-run by DOCS_SUBMISSION 2026-11-18 and again 2026-11-20 00:40 CST ("Ran 21 test suites … 197 tests passed, 0 failed, 2 skipped"); matches AGENTS/PHASE_LOG.md Phase 1.5 --> They cover unit tests, property fuzzing (1,000 runs each), stateful invariant suites (builder and an independent QE suite), golden EIP-712 vectors shared with TypeScript, and fork tests against **real Arc USDC**, including the check that `receiveWithAuthorization` can only be called by the payee contract. An independent QE agent reviewed every version adversarially: v1 failed with 2 blockers, which were fixed in v2; v2 and v3 passed with findings, all closed or documented below (`docs/qa/phase-1-contracts-qe.md`).
 
 ## Attribution
 

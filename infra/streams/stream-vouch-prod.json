@@ -1,6 +1,6 @@
 {
   "_comment": "Production QuickNode Stream for Vouch v3 (D-015, D-307). Created by the HUMAN in the dashboard (REST API unavailable on the trial plan, D-011). No secrets here: the security token lives only in Railway -> api -> Variables -> STREAMS_WEBHOOK_SECRET.",
-  "name": "vouch-v3-prod",
+  "name": "vouch-v3-production",
   "network": "arc-testnet",
   "dataset": "logs",
   "start_range": 72605845,

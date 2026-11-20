@@ -1,6 +1,8 @@
-# Demo video script: Vouch (target 2:20, hard max 2:30)
+# Demo video script: Vouch (archived draft)
 
-_Draft by DOCS_SUBMISSION, 2026-11-18. Upload as YouTube unlisted or Google Drive "anyone with the link", then put the URL into `docs/submission/DEVPOST.md` and the README (`<VIDEO_URL>`)._
+> **Use [`RECORDING_KIT.md`](RECORDING_KIT.md) instead. It is the source of truth for the video** (final script, capture setup, URLs, checklist, fallbacks, upload).
+>
+> This file is the Wed 2026-11-18 draft, kept for reference. Since then (Amendment A8) the self-submit shot and the `streams:verify` replay shot were cut from the video, the live part moved to the scripted stage venue "Lena's Corner", and the explorer shot uses the seeded Lena's café tx `0x83214e73…` (fee about $0.012, so "less than a cent" no longer applies to that shot). Prep step P4 below is still the manual fallback if the stage script fails.
 
 **Arc of the story:** Lena's ad problem → a live payment splits → the money graph on the projector → why a chain → Streams → close.
 
