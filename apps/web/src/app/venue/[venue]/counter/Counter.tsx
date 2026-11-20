@@ -145,7 +145,7 @@ function CounterFlow({ venue }: { venue: string }) {
             if (o.settled) void summarize(o.settled);
             return markPaid();
           }
-          if (o.status === "relayed" || o.relayStatus === "pending") setProcessing(true);
+          if (o.status === "relayed") setProcessing(true); // relayStatus mirrors the order row ("pending" = not paid yet), not a relay in flight
         } catch {
           /* ignore */
         }
