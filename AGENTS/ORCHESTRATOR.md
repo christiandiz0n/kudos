@@ -1,5 +1,15 @@
 # ORCHESTRATOR — HANDOFF
-_Last updated: 2026-11-19 04:00Z (session 3, A7) by ORCHESTRATOR._
+_Last updated: 2026-11-20 ~06:10Z (session 4, A8/A9) by ORCHESTRATOR._
+
+> **Session 4 (A8 + A9, Thu 2026-11-19 23:20 CST →) — read this block first; it supersedes the Session 3 block.**
+> - **Deadline** Fri 12:00 CST; target submitted by 10:00 CST. A8 priorities: submission → demo-on-video → pitch. A9: blue re-skin on branch `ui-blue` (worktree `../ubc-2026-ui-blue`), preview https://vouch-ubc-blue.vercel.app; the human decides "ship it"/"keep old" ~02:00–02:30 CST. D-021..D-023.
+> - **Prod (main):** P5-01 fixed + deployed (97808d9). Prod live story PASS (Thu 23:33–23:52, `docs/qa/phase-5-prod-regression.md` §8). Stream LIVE (caught up). Secret scan CLEAN-with-notes (`docs/qa/pre-public-secret-scan.md`); the repo has been public since Mon (human: keep public).
+> - **P4 stage (for the video):** `e2e/phase5/p4-stage.mjs` (`--verify` headless, `--build`, `--present` = headed, HUMAN ONLY). Lena's Corner `0x18235a7735DE0D4dC077E52fE8dBf0fFedc15581` 20%; Priya → Ana chain; Ben's link https://vouch-ubc.vercel.app/i/4gh0y7xmW (single-use). State in gitignored `e2e/phase5/.state/`. Findings to route: P5-03 (no "Take an order" on the wide dashboard once it has payments; the counter is tab 2) and P5-04 (the referrer chip shows "A friend" briefly).
+> - **Docs:** README/DEVPOST/SUBMIT_STEPS/RECORDING_KIT committed (cf30d25, 76497e3, 006f298). Author: Christian Dizon, Rutgers University, built solo. Only `<VIDEO_URL>` is open. Kit page https://claude.ai/artifact/N7P16izBQFTPGtFSyFzL8b ; before/after page https://claude.ai/artifact/Ts66ZYY82bXy4GCsx7WPrn (source scratchpad `ba_build.py` + `ba_status.json`).
+> - **Infra changes tonight:** Railway `CORS_ORIGINS` += `https://vouch-ubc-blue.vercel.app`; Vercel project SSO protection DISABLED (re-enable after the decision: `vercel project protection enable vouch --sso`). Dev server :3100 now runs from the ui-blue worktree.
+> - **Rules:** ALL Playwright headless (human). After 06:00 CST only docs/copy or demo-breaking fixes, verified on prod before and after.
+> - **On "ship it":** merge ui-blue → main, deploy prod (`git archive HEAD` → `vercel deploy --prod`), re-run the prod live story + core screens headless, swap README/Devpost screenshots, re-enable protection. **On "keep old":** delete the branch/worktree, re-enable protection.
+> - **Human morning:** ~7:30 confirm the Stream is on; 7:45 6-step phone check; ~8:00 record (kit; run `--verify` then `--present`); ~9:00 video URL; 9:30 submit via SUBMIT_STEPS.md.
 
 > **Session 3 (A7 D-019; updated 2026-11-19 ~04:00Z = Wed 23:00 ET) — read this block first; it supersedes "Current status"/"Next up" below.**
 > - **Gates:** Phase 2 PASS-with-findings (Part B). **Phase 3 PASS** (independent QE, live two-device story exact on chain, 9/9 findings fixed). Phase 4 visuals (money graph, cost/verified, transparency) shipped inside Phase 3. Tier 3 CUT.
