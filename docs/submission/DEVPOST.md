@@ -4,7 +4,7 @@ _DOCS_SUBMISSION, Fri 2026-11-20 ~01:00 CST. Fields are in the order the task li
 
 **How to copy:** each field's text sits between "COPY FROM HERE" and "END". On a phone, open this file on GitHub and long-press to select. For the long "About the project" field, copy from the **Raw** view (GitHub → "Raw" button) so the `##` headings and `**bold**` survive; Devpost's About field accepts Markdown.
 
-Placeholders to replace before pasting: `<VIDEO_URL>` (your video link) and `[YOUR NAME]` (search this file for both).
+Placeholder to replace before pasting: `<VIDEO_URL>` (your video link) (search this file for it).
 
 Every number below was checked on chain (`cast receipt`) or against the live api on 2026-11-20.
 
@@ -203,8 +203,8 @@ END
 
 COPY FROM HERE
 
-[YOUR NAME], Rutgers University, built solo.
+Christian Dizon, Rutgers University, built solo.
 
 END
 
-Replace `[YOUR NAME]`. If Devpost asks for teammates, there are none: submit as a solo team.
+If Devpost asks for teammates, there are none: submit as a solo team.

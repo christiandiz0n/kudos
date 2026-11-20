@@ -10,7 +10,7 @@ Devpost's form layout changes between hackathons. Steps marked **(check)** are w
 ## Before you start (about 5 minutes)
 
 1. The video is uploaded and plays in a private window (see `RECORDING_KIT.md` §8).
-2. `<VIDEO_URL>` is replaced in `README.md` and `docs/submission/DEVPOST.md`, and `[YOUR NAME]` is filled in both. Ask the Orchestrator to commit and push.
+2. `<VIDEO_URL>` is replaced in `README.md` and `docs/submission/DEVPOST.md` (the author line, Christian Dizon, is already filled in). Ask the Orchestrator to commit and push.
 3. The repo is public. (It answered as **public** at 00:45 CST, checked with `gh repo view`.) Open https://github.com/christiandiz0n/vouch in a private window: the README must show.
 4. Have `DEVPOST.md` open on GitHub (Raw view for Field 7) on the laptop.
 5. Have the image files ready on the laptop (Field 6 table).
@@ -58,7 +58,7 @@ Devpost's form layout changes between hackathons. Steps marked **(check)** are w
    - [ ] **Best use of Arc**
    - [ ] **QuickNode Streams**
    - Official UBC Winner is automatic; tick it only if it's listed as an option.
-8. **Team**: make sure you're listed as the only member. Your Devpost profile name should match `[YOUR NAME]`.
+8. **Team**: make sure you're listed as the only member. Your Devpost profile name should match `Christian Dizon`.
 9. **Submit** page (check):
    - Tick the required boxes (usually "I have read and agree to the official rules / terms and conditions").
    - Click **Submit project**.

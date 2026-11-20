@@ -2,7 +2,7 @@
 
 **Vouch is a pay-per-verified-customer marketing network for local businesses. Customers pay in USDC on Arc, and the sale itself instantly pays the people whose recommendations brought them in.**
 
-**[YOUR NAME], Rutgers University, built solo.** <!-- TODO(human): replace [YOUR NAME] -->
+**Christian Dizon, Rutgers University, built solo.**
 
 Built for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Best use of Arc** · **QuickNode Streams bounty**.
 

@@ -23,7 +23,7 @@ Guides:
 | 7 | README with architecture overview | ✅ | Mermaid diagram (render check pending, see below) |
 | 8 | Contract address(es) in README | ✅ | v3 `0xF4B6…f08e` (runtime 23,998 bytes, Blockscout verified, re-checked 00:40 CST) |
 | 9 | Streams configuration in README | ✅ | "QuickNode Streams" section; `infra/streams/stream-vouch-prod.json` name fixed to `vouch-v3-production` |
-| 10 | Author line | 🟥 | Replace `[YOUR NAME]` in `README.md` and `DEVPOST.md` Field 10 (search for it) |
+| 10 | Author line | ✅ | Christian Dizon, Rutgers University, built solo (README line 5, DEVPOST Field 10) |
 
 ## Tracks
 
@@ -64,7 +64,7 @@ Guides:
 2. 🟥 Make sure the Stream is ON ("Continue where it left off" in the QuickNode dashboard). Keep it on through recording.
 3. 🟥 Run the stage script and do the 6-step phone setup (`RECORDING_KIT.md` §2).
 4. 🟥 Record, trim, upload (`RECORDING_KIT.md` §3–§8). Target done by ~09:00.
-5. 🟥 Fill `<VIDEO_URL>` and `[YOUR NAME]`; the Orchestrator commits and pushes.
+5. 🟥 Fill `<VIDEO_URL>`; the Orchestrator commits and pushes.
 6. 🟥 Submit on Devpost (`SUBMIT_STEPS.md`) by **10:00**.
 7. 🟥 Final private-window link check (`SUBMIT_STEPS.md`).
 8. Keep the Stream, Railway and Vercel running until judging ends. After 06:00 only docs/copy changes or demo-breaking fixes, each verified on prod before and after (A8).
