@@ -1,4 +1,4 @@
-# Devpost submission: Vouch (final, copy-paste ready)
+# Devpost submission: Kudos (final, copy-paste ready)
 
 _DOCS_SUBMISSION, Fri 2026-11-20 ~01:00 CST. Fields are in the order the task lists them; the step-by-step clicking guide is [`SUBMIT_STEPS.md`](SUBMIT_STEPS.md)._
 
@@ -14,7 +14,7 @@ Every number below was checked on chain (`cast receipt`) or against the live api
 
 COPY FROM HERE
 
-Vouch
+Kudos
 
 END
 
@@ -99,7 +99,7 @@ Small businesses like cafés, barbers and salons spend money on ads they can't m
 
 ## What it does
 
-**What did you build?** Vouch is a phone app for local businesses and their customers that pays a recommendation at the moment it works.
+**What did you build?** Kudos is a phone app for local businesses and their customers that pays a recommendation at the moment it works.
 
 A café sets a reward for a new customer's first purchase, for example 15%. Ana, a regular, taps **Recommend** and texts her friend Ben a link. When Ben comes in, the barista keys in his $12.00 order and shows a QR code. Ben scans it, sees "You'll get $0.45 back", can answer an optional "Who sent you here?", and confirms with Face ID. One payment then splits: the café gets $10.20, Ben gets $0.45 back, Ana and Priya (the two friends who recommended the café to him) get $0.693 and $0.297, and the two people who first brought Ana and Priya in get $0.252 and $0.108. Everyone's screen updates live, and the café's dashboard shows where the money went.
 
@@ -139,7 +139,7 @@ Stack: Solidity 0.8.30 with Foundry and OpenZeppelin (197 tests passing, includi
 - Pushed, filtered events (Streams) make a much simpler and more honest backend than polling: one code path for live data, backfill and replay.
 - Most of the work in a consumer payments app is copy and error states, not the contract.
 
-## What makes Vouch unique
+## What makes Kudos unique
 
 **What makes it unique?**
 
@@ -149,7 +149,7 @@ Stack: Solidity 0.8.30 with Foundry and OpenZeppelin (197 tests passing, includi
 - **Two levels, bounded.** The person who brought in your recommender gets a small share (20% of the reward pool). The total is capped by the venue's rate, and there's no buy-in or recruiting.
 - **Works without us.** The customer can submit the payment themselves.
 
-## What's next for Vouch
+## What's next for Kudos
 
 **What would you build next?**
 
@@ -176,8 +176,8 @@ If the form asks these separately, paste the matching paragraph from Field 7:
 | What did you build? | "What it does" → the **What did you build?** paragraphs (up to "A public page explains…") |
 | What problem does it solve? | "What it does" → the **What problem does it solve?** paragraph, plus "Inspiration" |
 | How does it work? | "How we built it" → all bullets |
-| What makes it unique? | "What makes Vouch unique" → all bullets |
-| What would you build next? | "What's next for Vouch" → the numbered list |
+| What makes it unique? | "What makes Kudos unique" → all bullets |
+| What would you build next? | "What's next for Kudos" → the numbered list |
 
 ---
 
@@ -193,7 +193,7 @@ COPY FROM HERE
 
 Arc: every payment is one Arc transaction that receives USDC with an EIP-3009 authorization and pays all recipients in the same call; gas is paid in USDC (about a cent per two-level split). Contract 0xF4B641dc628de05336aa983B07D5d181254ff08e on Arc Testnet; the README section "How we use Arc" has the addresses and measured fees.
 
-QuickNode Streams: Stream vouch-v3-production on Arc Testnet, Logs dataset, a JavaScript filter that keeps only our contract's 10 events, and an HMAC-verified webhook destination. It is the app's only source for "paid" and for every number on screen. The README section "QuickNode Streams" has the configuration, the filter code and why we use it.
+QuickNode Streams: Stream vouch-v3-production-2 (ID e77ce7b6-6642-4cd5-9894-7bb8de5c030a) on Arc Testnet, Logs dataset, a JavaScript filter that keeps only our contract's 10 events, and an HMAC-verified webhook destination. It is the app's only source for "paid" and for every number on screen. The README section "QuickNode Streams" has the configuration, the filter code and why we use it.
 
 END
 

@@ -62,7 +62,7 @@ _If the script fails, see F0 in section 7._
 
 ### 2b. Ben = your iPhone (before recording)
 
-1. Ben must be a **fresh** account. If Safari on your iPhone already has a Vouch account from earlier tests, clear it:
+1. Ben must be a **fresh** account. If Safari on your iPhone already has a Kudos account from earlier tests, clear it:
    Settings → Apps → Safari → Advanced → Website Data → search "vercel" → delete vouch-ubc.vercel.app.
    (This removes the old test account from that phone. It's testnet only.)
    Don't use a Private tab: Ben's wallet would vanish when the tab closes.
@@ -108,7 +108,7 @@ Device key: **L** = laptop, **P** = iPhone (mirrored on the laptop).
 | Time | Say this | On screen | Dev |
 |---|---|---|---|
 | 0:00–0:12 | "Lena runs a café. She pays for ads she can't measure. Her best customers come from friends who recommend her, and those friends get nothing for it." | W1: Lena's Corner dashboard | L |
-| 0:12–0:24 | "Vouch fixes that. Ana has bought here, so she's allowed to recommend it. She sent her friend Ben a link, and Ben saved it." | W3 QR (or W2 Ana's wallet), then Ben's wallet on the iPhone | L → P |
+| 0:12–0:24 | "Kudos fixes that. Ana has bought here, so she's allowed to recommend it. She sent her friend Ben a link, and Ben saved it." | W3 QR (or W2 Ana's wallet), then Ben's wallet on the iPhone | L → P |
 | 0:24–0:34 | "Ben walks in. Lena keys in his order, two dollars, and shows a code." | W1 **tab 2 (counter)**: type 2.00 → "Show code" | L |
 | 0:34–0:52 | "Ben scans it. He sees the price, the money he gets back, and who sent him. One Face ID. No wallet setup, no fees." | iPhone camera → pay screen ("You'll get $0.10 back", "Who sent you here?" → Ana) → "Confirm with Face ID or fingerprint" | P |
 | 0:52–1:08 | "A second or two later, it's settled. Ben got ten cents back. Ana got twenty-two cents. Priya, who brought Ana in, got eight cents. Lena's Corner kept a dollar sixty." | iPhone success screen; W2 Ana's "just arrived" toast; W1 order shows paid | P + L |
@@ -117,7 +117,7 @@ Device key: **L** = laptop, **P** = iPhone (mirrored on the laptop).
 | 1:36–1:54 | "That twelve dollars is one transaction on Arc. Twelve in, six payouts out, to the exact cent. The café can't skip the people who sent the customer. The network fee was about one cent, paid in USDC by our relayer." | Explorer: tx 0x83214e73…, token transfers list | L |
 | 1:54–2:04 | "The rules are public. Terms freeze when a link is shared, rewards are capped by the venue's rate, and each customer earns a reward only once per venue." | /transparency page, scroll slowly | L |
 | 2:04–2:16 | "Every screen is built from a QuickNode Stream. It filters our contract's events on Arc and pushes them to our webhook. A payment only shows as paid once the Stream delivers it." | GitHub README, "QuickNode Streams" section (table + filter) | L |
-| 2:16–2:26 | "Vouch. Word of mouth that pays, the moment it works." | iPhone success screen or the app's home page, plus the URL vouch-ubc.vercel.app | L |
+| 2:16–2:26 | "Kudos. Word of mouth that pays, the moment it works." | iPhone success screen or the app's home page, plus the URL vouch-ubc.vercel.app | L |
 
 Running long? Cut in this order:
 1. The transparency shot (1:54–2:04).
@@ -234,7 +234,7 @@ Need a second take of the payment? Ben gets a reward only once, and Ana's link i
 5. Check the length: **≤ 2:30** target, never over 3:00.
 6. Upload to YouTube:
    - youtube.com → **Create** (camera icon) → **Upload video** → pick the file.
-   - Title: "Vouch: word of mouth that pays (UBC 2026)".
+   - Title: "Kudos: word of mouth that pays (UBC 2026)".
    - Audience: "No, it's not made for kids".
    - Visibility: **Unlisted** → Save.
    - Copy the link.

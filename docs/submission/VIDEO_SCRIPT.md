@@ -1,4 +1,4 @@
-# Demo video script: Vouch (archived draft)
+# Demo video script: Kudos (archived draft)
 
 > **Use [`RECORDING_KIT.md`](RECORDING_KIT.md) instead. It is the source of truth for the video** (final script, capture setup, URLs, checklist, fallbacks, upload).
 >
@@ -31,7 +31,7 @@
 | Time | Shot (screen / device / action) | Voice-over | On-screen caption |
 |---|---|---|---|
 | **0:00–0:14** | Close-up of a café counter or a stock-style shot of the laptop dashboard, empty. | "Lena runs a café. She spends money on ads she can't measure, but her best customers come from friends telling friends, and those friends get nothing for it." | **Ads you can't measure. Word of mouth that pays nobody.** |
-| **0:14–0:24** | Ana's phone: the venue card → **Recommend** → **Make my link** → share sheet. | "Vouch fixes that. Ana loves Lena's café, so she sends Ben a link. Only real customers can recommend a place: Ana has to have bought here first." | **Only verified customers can recommend** |
+| **0:14–0:24** | Ana's phone: the venue card → **Recommend** → **Make my link** → share sheet. | "Kudos fixes that. Ana loves Lena's café, so she sends Ben a link. Only real customers can recommend a place: Ana has to have bought here first." | **Only verified customers can recommend** |
 | **0:24–0:34** | Laptop: **Take an order** → key **2.00** → **Show code**. The QR appears with its countdown ring. | "Ben walks in. Lena keys in his order and shows a code." | **$2.00 order → signed QR code** |
 | **0:34–0:52** | Ben's phone: scan → the pay sheet shows **"You'll get $0.10 back"** and **Who sent you here?** → tap **Ana** → **Confirm with Face ID or fingerprint**. | "Ben scans it. He sees what he pays, the money he'll get back, and he can say who sent him. One Face ID, no wallet setup, no fees." | **One tap. Face ID. No seed phrase, no gas.** |
 | **0:52–1:06** | Split screen: Ben's phone goes from "Arriving" (gray) to the **green check** and split receipt. Ana's phone shows the **"just arrived"** toast. The laptop counter flips to **Paid**. | "In about a second and a half it's settled. Ben got ten cents back, Ana was paid twenty-two cents, and Priya, who brought Ana in, got eight. The café got the rest." | **Settled in ~1.4 s · Café $1.60 · Ben $0.10 · Ana $0.22 · Priya $0.08** |
@@ -40,7 +40,7 @@
 | **1:40–1:52** | `/transparency` page: the formula, then the venue's terms version. | "The terms are frozen when a link is shared, so a venue can't cut the rate afterwards. And every reward is capped by the venue's own rate." | **Frozen terms · capped rewards · one reward per customer** |
 | **1:52–2:00** | Explorer: the self-submit tx `0xfca0e1ae…`. Highlight that **From** is the customer, not our relayer. | "And if our servers disappeared tomorrow, a customer can still submit the payment themselves. No operator needed." | **Works without us: the customer can self-submit** |
 | **2:00–2:16** | Terminal: `streams:verify` output, five identical hashes and **OK**. Then cut to the README's Streams table. | "Every screen is built from QuickNode Streams. A filtered stream of our contract's events is pushed to our webhook in about 0.15 seconds. Replay it from the start and you rebuild exactly the same state, hash for hash." | **QuickNode Streams: pushed in ~0.15 s · replay = same hash** |
-| **2:16–2:28** | Back to the phones side by side, then the Vouch logo + URL. | "Vouch: word of mouth that pays, the moment it works." | **vouch-ubc.vercel.app · Arc Testnet · QuickNode Streams** |
+| **2:16–2:28** | Back to the phones side by side, then the Kudos logo + URL. | "Kudos: word of mouth that pays, the moment it works." | **vouch-ubc.vercel.app · Arc Testnet · QuickNode Streams** |
 
 Total ≈ 2:28. If you run long, cut the 1:40–1:52 transparency shot first (keep its caption over the explorer shot), then shorten the hook.
 

@@ -1,4 +1,4 @@
-# Submission checklist: Vouch (UBC 2026)
+# Submission checklist: Kudos (UBC 2026)
 
 _Updated Fri 2026-11-20 ~01:00 CST by DOCS_SUBMISSION, per Amendments A8 and A9. All times CST (Austin)._
 **Hard deadline: Fri Nov 20, 12:00 PM CST. Target: submitted by 10:00 AM CST.**
@@ -31,7 +31,7 @@ Guides:
 |---|---|---|---|
 | 11 | Consumer Apps: on-chain + user-facing frontend, crypto hidden | ✅ | Face ID sign-up, dollars only; 0 banned words in the prod regression (`docs/qa/phase-5-prod-regression.md`) |
 | 12 | Arc: core on-chain logic + addresses + explanation | ✅ | README "How we use Arc": 4 receipts re-read 2026-11-20 |
-| 13 | Streams: filter + webhook, core data source, explained | ✅ | Stream `vouch-v3-production` (`6b792277-…df8`) |
+| 13 | Streams: filter + webhook, core data source, explained | ✅ | Stream `vouch-v3-production-2` (`e77ce7b6-…030a`; replaced `6b792277-…df8` on 2026-11-20) |
 | 14 | Tick Consumer Applications, Best use of Arc, QuickNode Streams on Devpost | 🟥 | `SUBMIT_STEPS.md` step 7 |
 
 ## Demo readiness (A8 priority 2)

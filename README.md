@@ -1,6 +1,8 @@
-# Vouch
+# Kudos
 
-**Vouch is a pay-per-verified-customer marketing network for local businesses. Customers pay in USDC on Arc, and the sale itself instantly pays the people whose recommendations brought them in.**
+Kudos (working name: Vouch; the contract and URLs keep that name).
+
+**Kudos is a pay-per-verified-customer marketing network for local businesses. Customers pay in USDC on Arc, and the sale itself instantly pays the people whose recommendations brought them in.**
 
 **Christian Dizon, Rutgers University, built solo.**
 
@@ -11,7 +13,7 @@ Built for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Best us
 | **Live app** | https://vouch-ubc.vercel.app (open it on a phone; the venue dashboard also works on a laptop or projector) |
 | **API** | https://api-production-902bc54c.up.railway.app/health |
 | **Contract** | Vouch v3 [`0xF4B641dc628de05336aa983B07D5d181254ff08e`](https://explorer.testnet.arc.io/address/0xF4B641dc628de05336aa983B07D5d181254ff08e) on Arc Testnet (chain 5042002), Blockscout-verified |
-| **Stream** | QuickNode Stream `vouch-v3-production` (ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`) |
+| **Stream** | QuickNode Stream `vouch-v3-production-2` (ID `e77ce7b6-6642-4cd5-9894-7bb8de5c030a`) |
 | **Demo video** | `<VIDEO_URL>` |
 | **How payments split** | https://vouch-ubc.vercel.app/transparency |
 | **Demo venue** | Lena's café dashboard: https://vouch-ubc.vercel.app/venue/0x9a40C2b1Da073Fea51A63B92f868A78969c56289 (sign in first; any new account works) |
@@ -25,7 +27,7 @@ Built for the UBC 2026 Hackathon. Tracks: **Consumer Applications** · **Best us
 
 Small businesses like cafés, barbers and salons spend money on ads they can't attribute. Most of their real growth comes from word of mouth, and the people doing the recommending earn nothing for it. Referral programs exist, but a small business can't build one: it needs software, fraud control and payouts. The platforms that run these programs take a cut and can change the terms whenever they like.
 
-Vouch makes a recommendation pay at the moment it works. The venue sets a reward rate for a customer's first purchase. When a referred customer pays, one transaction splits that payment between the venue, the new customer (as money back) and the people who sent them. The venue pays only for verified customers who actually bought something.
+Kudos makes a recommendation pay at the moment it works. The venue sets a reward rate for a customer's first purchase. When a referred customer pays, one transaction splits that payment between the venue, the new customer (as money back) and the people who sent them. The venue pays only for verified customers who actually bought something.
 
 ## Screenshots
 
@@ -162,14 +164,14 @@ flowchart LR
 
 ## QuickNode Streams
 
-**Streams is Vouch's source of truth for everything that has happened.** The app never takes the backend's word about money. When the relayer submits a payment, the screens show it as *pending*. It becomes *settled* only when the Stream delivers the contract's `PaymentSettled` event. Every number a user sees comes from Streams events: the split receipt, money back, the ambassador record, verified customers, live intros, venue terms and the venue's cost per new customer.
+**Streams is Kudos's source of truth for everything that has happened.** The app never takes the backend's word about money. When the relayer submits a payment, the screens show it as *pending*. It becomes *settled* only when the Stream delivers the contract's `PaymentSettled` event. Every number a user sees comes from Streams events: the split receipt, money back, the ambassador record, verified customers, live intros, venue terms and the venue's cost per new customer.
 
 | Setting | Value |
 |---|---|
-| Stream | `vouch-v3-production`, ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`, created in the QuickNode dashboard (the Streams REST API isn't available on trial plans, D-011) |
+| Stream | `vouch-v3-production-2`, ID `e77ce7b6-6642-4cd5-9894-7bb8de5c030a`, created in the QuickNode dashboard (the Streams REST API isn't available on trial plans, D-011). It replaced `vouch-v3-production` (ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`, on another QuickNode trial account), which delivered everything from the deploy block through block 73,143,834 and was terminated on 2026-11-20 when that trial's credits ran out. The second stream starts at block 73,205,500; no Vouch contract events happened in between (checked with `cast logs`), so nothing was missed. |
 | Network | **Arc Testnet** (`arc-testnet`) |
 | Dataset | **Logs** |
-| Range | From block **72,605,845** (the Vouch v3 deploy block), running continuously. Latest-block delay 0, since Arc has no reorgs. |
+| Range | From block **72,605,845** (the Vouch v3 deploy block) on the first stream, and from **73,205,500** on the second, running continuously. Latest-block delay 0, since Arc has no reorgs. |
 | Filter | JavaScript `main(stream)`, [`docs/streams/filter-vouch.js`](docs/streams/filter-vouch.js) (shown below) |
 | Destination | **Webhook** → `https://api-production-902bc54c.up.railway.app/webhooks/streams`, compression none |
 | Security | QuickNode HMAC: `X-QN-Signature` = hex HMAC-SHA256(token, nonce + timestamp + body). The check is constant-time and fails closed (503 with no token, 401 for a bad or missing signature). Header checks and size caps run before anything is decoded (D-301, D-308). An unsigned POST to the live endpoint gets `401`. <!-- evidence: curl -X POST unsigned → 401, 2026-11-18 by DOCS_SUBMISSION --> |
@@ -409,4 +411,4 @@ AGENTS/           build log: decisions, interfaces, phase log
 
 ---
 
-*Vouch is a hackathon prototype on a testnet. It is not legal, tax or financial advice, and referral rewards may have legal and tax implications that vary by jurisdiction.*
+*Kudos is a hackathon prototype on a testnet. It is not legal, tax or financial advice, and referral rewards may have legal and tax implications that vary by jurisdiction.*

@@ -23,7 +23,7 @@ Devpost's form layout changes between hackathons. Steps marked **(check)** are w
 2. Open the hackathon page: Devpost top bar → your profile → **My hackathons** (check) → **UBC 2026 Hackathon**. Or use the link from the organizers' email/Discord.
 3. Click **"Enter a submission"**. If you already started one, click **"Manage project"** / **"Edit project"** (check) instead.
 4. **Project overview** page (check):
-   - **Project name** → paste Field 1 (`Vouch`).
+   - **Project name** → paste Field 1 (`Kudos`).
    - **Elevator pitch** → paste Field 2 (161 characters, under the 200 limit).
    - Click **Save & continue**.
 5. **Project details** page (check):
@@ -47,7 +47,7 @@ Devpost's form layout changes between hackathons. Steps marked **(check)** are w
    | Demo / deployed app URL | https://vouch-ubc.vercel.app |
    | Video URL | your video link |
    | Contract address | `0xF4B641dc628de05336aa983B07D5d181254ff08e` (Arc Testnet, chain 5042002) |
-   | Stream ID or Streams details | `vouch-v3-production`, ID `6b792277-2c66-4c0c-a141-4d452cddfdf8`; details in the README "QuickNode Streams" section |
+   | Stream ID or Streams details | `vouch-v3-production-2`, ID `e77ce7b6-6642-4cd5-9894-7bb8de5c030a`; details in the README "QuickNode Streams" section |
    | Why it qualifies for Arc / QuickNode | Field 9 justification text |
    | School / university | Rutgers University |
    | Team members | Solo (just you) |
