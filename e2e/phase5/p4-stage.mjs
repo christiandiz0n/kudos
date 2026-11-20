@@ -69,6 +69,7 @@ async function openPersona(dir, kind, { headless, creds, pos } = {}) {
     ...LAUNCH,
     headless,
     ...shape,
+    ...(has("dark") ? { colorScheme: "dark" } : {}), // --dark: W1/W2 (and the W1 counter tab) render in dark mode
     permissions: ["camera"],
     args: [...BAR_ARGS, "--use-fake-ui-for-media-stream", ...(pos ? [`--window-position=${pos}`] : [])],
   });
