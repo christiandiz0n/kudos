@@ -3,6 +3,7 @@
 import { useRef, type KeyboardEvent } from "react";
 import { cn } from "@/design/cn";
 import { Avatar } from "./Avatar";
+import { Icon } from "./Icon";
 
 export interface ChoiceChip {
   value: string;
@@ -58,8 +59,9 @@ export function ChoiceChips({ label, options, value, onChange, className }: Choi
             className={cn(
               "focus-ring inline-flex h-11 items-center gap-2 rounded-full pr-4 text-body-sm font-semibold transition-[background-color,box-shadow,color] duration-[var(--vx-dur-fast)]",
               o.person ? "pl-1.5" : "pl-4",
+              // Selected = soft tint + a 2px brand ring + a check (QE F3): the screen keeps ONE solid blue, its main button.
               selected
-                ? "bg-primary text-on-primary shadow-1"
+                ? "bg-primary-soft text-primary-ink shadow-[inset_0_0_0_2px_var(--vx-primary)]"
                 : o.quiet
                   ? "bg-transparent font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:bg-surface-2"
                   : "bg-surface text-ink shadow-[inset_0_0_0_1px_var(--vx-line)] hover:bg-primary-soft hover:shadow-[inset_0_0_0_1px_var(--vx-primary-soft-2)]",
@@ -67,6 +69,7 @@ export function ChoiceChips({ label, options, value, onChange, className }: Choi
           >
             {o.person ? <Avatar name={o.label} size="sm" /> : null}
             {o.label}
+            {selected ? <Icon name="check" size={16} className="-mr-1 shrink-0" /> : null}
           </button>
         );
       })}

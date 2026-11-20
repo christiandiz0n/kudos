@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { buttonClasses } from "@/components/ui";
+import { Icon, buttonClasses } from "@/components/ui";
 import { safeNext } from "@/lib/nav";
 import { useSession } from "@/state/session";
 import { useDeviceWallet } from "@/state/wallet";
@@ -25,11 +25,16 @@ export function Landing() {
 
   if (wallet === undefined || signedIn) return <RouteLoading />;
   return (
-    <div className="relative flex min-h-full flex-1 flex-col">
-      <Onboarding onDone={() => router.replace(next)} />
-      <Link href="/venue" className={buttonClasses({ variant: "ghost", size: "sm", className: "absolute top-3 right-3" })}>
-        I run a venue
-      </Link>
+    <div className="flex min-h-full flex-1 flex-col">
+      <Onboarding
+        onDone={() => router.replace(next)}
+        headerAction={
+          <Link href="/venue" className={buttonClasses({ variant: "ghost", size: "sm", className: "gap-1.5" })}>
+            <Icon name="store" size={16} />
+            I run a venue
+          </Link>
+        }
+      />
     </div>
   );
 }

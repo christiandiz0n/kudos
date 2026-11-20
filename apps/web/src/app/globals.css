@@ -19,3 +19,30 @@ body {
   outline: 2px solid var(--vx-focus);
   outline-offset: 2px;
 }
+
+/* v2: catch-all so nothing falls back to the browser's amber ring (e.g. scroll containers Chrome makes focusable, QE F5). */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--vx-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* v2: browser surfaces in the palette. */
+::selection {
+  background: var(--vx-primary-soft-2);
+  color: var(--vx-ink);
+}
+html {
+  accent-color: var(--vx-primary);
+  caret-color: var(--vx-primary);
+  scrollbar-color: var(--vx-line-strong) transparent;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}

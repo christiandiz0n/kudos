@@ -1,7 +1,7 @@
 import { cn } from "@/design/cn";
 
 /**
- * The "haptic" moment: green disc pops with a slight overshoot, a ripple rings out once, the check
+ * The "haptic" moment: a brand-blue disc (v2; green only when money arrives to a person) pops with a slight overshoot, a ripple rings out once, the check
  * draws itself. ~0.9s total. Under reduced motion it renders the final state instantly.
  * Pair with navigator.vibrate?.(12) in the caller where supported.
  *
@@ -12,13 +12,17 @@ export function SuccessMark({
   size = 88,
   label = "Payment complete",
   pending = false,
+  tone = "primary",
   className,
 }: {
   size?: number;
   label?: string;
   pending?: boolean;
+  /** `primary` (default): your own payment went through. `accent` (green) only when the money arrives to a person. */
+  tone?: "primary" | "accent";
   className?: string;
 }) {
+  const fill = tone === "accent" ? "bg-accent text-on-accent" : "bg-primary text-on-primary";
   return (
     <span role="img" aria-label={label} className={cn("relative inline-flex", className)} style={{ width: size, height: size }}>
       {pending ? (
@@ -30,8 +34,8 @@ export function SuccessMark({
         </span>
       ) : (
         <span key="done" aria-hidden className="contents">
-          <span className="vx-ripple absolute inset-0 rounded-full bg-accent" />
-          <span className="relative inline-flex size-full animate-vx-pop items-center justify-center rounded-full bg-accent text-on-accent">
+          <span className={cn("vx-ripple absolute inset-0 rounded-full", tone === "accent" ? "bg-accent" : "bg-primary")} />
+          <span className={cn("relative inline-flex size-full animate-vx-pop items-center justify-center rounded-full", fill)}>
             <svg viewBox="0 0 24 24" width={size * 0.5} height={size * 0.5} fill="none">
               <path
                 d="M5 12.5l4.5 4.5L19 7.5"

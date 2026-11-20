@@ -20,7 +20,7 @@ export interface AccountCtx {
   name: string;
 }
 
-export function Onboarding({ invite, onDone }: { invite?: { referrerName: string; venueName: string }; onDone?: () => void }) {
+export function Onboarding({ invite, onDone, headerAction }: { invite?: { referrerName: string; venueName: string }; onDone?: () => void; headerAction?: ReactNode }) {
   const wallet = useDeviceWallet();
   const toasts = useToasts();
   const [name, setName] = useState("");
@@ -83,6 +83,7 @@ export function Onboarding({ invite, onDone }: { invite?: { referrerName: string
       error={error}
       onCreate={create}
       onSignIn={existing}
+      headerAction={headerAction}
     />
   );
 }
