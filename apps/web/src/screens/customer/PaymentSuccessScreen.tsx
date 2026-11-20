@@ -18,7 +18,7 @@
  *   details?                  { receiptId, network, networkFee, explorerUrl? } → collapsed Details drawer only
  *   onDone, onRecommend?      onRecommend only when the person is now a verified customer here
  */
-import { AmountDisplay, Button, DetailRow, Details, Screen, SplitBreakdown, SuccessMark, type SplitPart } from "@/components/ui";
+import { AmountDisplay, Button, DetailRow, Details, Icon, Screen, SplitBreakdown, SuccessMark, type SplitPart } from "@/components/ui";
 import { cn } from "@/design/cn";
 import { formatMoney } from "@/design/money";
 import type { NoRewardReason } from "./PayConfirm";
@@ -78,19 +78,23 @@ export function PaymentSuccessScreen({
   return (
     <Screen
       footer={
-        <div className="flex flex-col gap-2">
+        onRecommend && !pending ? (
+          <div className="flex flex-col gap-2">
+            <Button block size="lg" leadingIcon="heart" onClick={onRecommend}>
+              Recommend {venueName}
+            </Button>
+            <Button block variant="ghost" onClick={onDone}>
+              Done
+            </Button>
+          </div>
+        ) : (
           <Button block size="lg" onClick={onDone}>
             Done
           </Button>
-          {onRecommend && !pending ? (
-            <Button block variant="ghost" leadingIcon="heart" onClick={onRecommend}>
-              Recommend {venueName}
-            </Button>
-          ) : null}
-        </div>
+        )
       }
     >
-      <div className="flex flex-col items-center pt-10 text-center" role="status" aria-live="polite">
+      <div className="flex flex-col items-center pt-8 text-center" role="status" aria-live="polite">
         <SuccessMark pending={pending} label={pending ? `Paying ${formatMoney(amount)} at ${venueName}` : `Paid ${formatMoney(amount)} at ${venueName}`} />
         <p className="mt-6 text-body text-ink-2">{pending ? `Paying ${venueName}…` : `Paid at ${venueName}`}</p>
         <AmountDisplay value={amount} size="display" as="p" />
@@ -130,17 +134,35 @@ export function PaymentSuccessScreen({
         {pending ? <p className="mt-2 text-caption text-ink-3">This takes a few seconds.</p> : null}
       </div>
       {split ? (
-        <SplitBreakdown
-          className="mt-8"
-          total={amount}
-          parts={split}
-          highlightId="you"
-          pending={pending}
-          title={pending ? "Where your money goes" : "Where your money went"}
-        />
+        <section
+          aria-label={pending ? "Where your money goes" : "Where your money went"}
+          aria-busy={pending || undefined}
+          className="mt-7 animate-vx-rise-in rounded-lg bg-surface px-3 py-4 shadow-1 ring-1 ring-line/60"
+        >
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-body-sm font-semibold text-ink">
+              {pending ? "Where your money goes" : "Where your money went"}
+              {pending ? (
+                <span className="inline-flex h-6 items-center gap-1.5 rounded-full bg-surface-2 px-2.5 text-caption font-medium text-ink-2">
+                  <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-current" />
+                  Arriving
+                </span>
+              ) : null}
+            </h2>
+            <AmountDisplay value={amount} size="md" />
+          </div>
+          <SplitBreakdown variant="bar" total={amount} parts={split} pending={pending} />
+          <details className="group mt-3 border-t border-line pt-1">
+            <summary className="focus-ring -mx-1 flex min-h-11 cursor-pointer list-none items-center justify-between rounded-md px-1 text-body-sm font-medium text-primary-ink [&::-webkit-details-marker]:hidden">
+              See who got what
+              <Icon name="chevronDown" size={18} className="transition-transform duration-[var(--vx-dur-fast)] group-open:rotate-180" />
+            </summary>
+            <SplitBreakdown variant="lines" total={amount} parts={split} highlightId="you" pending={pending} className="pt-1" />
+          </details>
+        </section>
       ) : null}
       {details ? (
-        <Details className="mt-6" summary="Receipt details">
+        <Details className="mt-4" summary="Receipt details">
           <DetailRow label="Receipt ID" value={details.receiptId} mono />
           <DetailRow label="Settles on" value={details.network} />
           <DetailRow label="Network fee" value={`${details.networkFee}, paid by Vouch`} />
