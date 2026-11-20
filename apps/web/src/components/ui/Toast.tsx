@@ -65,7 +65,7 @@ export function ToastViewport({ children, inline }: { children: ReactNode; inlin
       aria-relevant="additions"
       className={cn(
         "pointer-events-none flex flex-col gap-2",
-        inline ? "w-full" : "fixed inset-x-0 top-[max(env(safe-area-inset-top),12px)] z-[60] mx-auto w-full max-w-[420px] px-3",
+        inline ? "w-full" : "fixed inset-x-0 top-[max(env(safe-area-inset-top),12px)] z-[60] mx-auto w-full max-w-[420px] px-3 sm:top-[calc(max(2rem,(100dvh-940px)/2)+1rem)]",
       )}
     >
       {children}

@@ -5,6 +5,7 @@ import { parseUsdc } from "@vouch/shared";
 import {
   AmountDisplay,
   AppBar,
+  AppFrame,
   Avatar,
   Badge,
   Button,
@@ -424,76 +425,78 @@ function WideKpis({ p }: { p: VenueDashboardProps }) {
 function WideLayout(p: VenueDashboardProps) {
   const empty = !p.loading && p.payments.length === 0;
   return (
-    <div className="flex h-dvh min-h-[640px] flex-col gap-4 overflow-hidden bg-canvas px-8 py-5">
-      <header className="flex shrink-0 items-center gap-4">
-        <Avatar name={p.venueName} kind="venue" size="lg" />
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-title-1 text-ink">{p.venueName}</h1>
-          <p className="text-body-sm text-ink-3">New customers from recommendations, live</p>
-        </div>
-        {p.transparencyHref ? (
-          <a
-            href={p.transparencyHref}
-            className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-md px-3 text-body-sm font-semibold text-primary-ink hover:bg-primary-soft"
-          >
-            How payments split
-            <Icon name="chevronRight" size={16} />
-          </a>
-        ) : null}
-        <LiveBadge status={p.status} />
-      </header>
-      <StatusNote status={p.status} />
-      <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,370px)] gap-5">
-        <div className="flex min-h-0 flex-col gap-4">
-          <WideKpis p={p} />
-          <Card padding="lg" className="flex min-h-0 flex-1 flex-col">
-            <div className="flex shrink-0 items-center justify-between gap-4">
-              <div className="min-w-0">
-                <h2 className="text-title-3 text-ink">Where the money went</h2>
-                {!empty ? (
-                  <p className="truncate text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p>
-                ) : null}
-              </div>
-              <GraphModeToggle p={p} />
-            </div>
-            <div className="relative min-h-0 flex-1">
-              {p.loading ? (
-                <Skeleton className="absolute inset-0 mt-3" />
-              ) : empty || !p.graph ? (
-                <div className="absolute inset-0 overflow-y-auto">
-                  <GraphEmpty onNewOrder={p.onNewOrder} compact />
+    <div className="h-dvh min-h-[640px] overflow-hidden bg-canvas px-10 xl:px-12">
+      <div className="mx-auto flex h-full w-full max-w-[1200px] flex-col gap-4 py-5">
+        <header className="flex shrink-0 items-center gap-4">
+          <Avatar name={p.venueName} kind="venue" size="lg" />
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-title-1 text-ink">{p.venueName}</h1>
+            <p className="text-body-sm text-ink-3">New customers from recommendations, live</p>
+          </div>
+          {p.transparencyHref ? (
+            <a
+              href={p.transparencyHref}
+              className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-md px-3 text-body-sm font-semibold text-primary-ink hover:bg-primary-soft"
+            >
+              How payments split
+              <Icon name="chevronRight" size={16} />
+            </a>
+          ) : null}
+          <LiveBadge status={p.status} />
+        </header>
+        <StatusNote status={p.status} />
+        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_minmax(320px,370px)] gap-5">
+          <div className="flex min-h-0 flex-col gap-4">
+            <WideKpis p={p} />
+            <Card padding="lg" className="flex min-h-0 flex-1 flex-col">
+              <div className="flex shrink-0 items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <h2 className="text-title-3 text-ink">Where the money went</h2>
+                  {!empty ? (
+                    <p className="truncate text-body-sm text-ink-3">{(p.graphMode ?? "payment") === "payment" ? latestCaption(p) : "Everyone, all time"}</p>
+                  ) : null}
                 </div>
-              ) : (
-                <MoneyGraph
-                  data={p.graph}
-                  highlightPaymentId={p.highlightPaymentId}
-                  mode={p.graphMode ?? "payment"}
-                  orientation="landscape"
-                  className="absolute inset-0 h-full w-full"
-                />
-              )}
+                <GraphModeToggle p={p} />
+              </div>
+              <div className="relative min-h-0 flex-1">
+                {p.loading ? (
+                  <Skeleton className="absolute inset-0 mt-3" />
+                ) : empty || !p.graph ? (
+                  <div className="absolute inset-0 overflow-y-auto">
+                    <GraphEmpty onNewOrder={p.onNewOrder} compact />
+                  </div>
+                ) : (
+                  <MoneyGraph
+                    data={p.graph}
+                    highlightPaymentId={p.highlightPaymentId}
+                    mode={p.graphMode ?? "payment"}
+                    orientation="landscape"
+                    className="absolute inset-0 h-full w-full"
+                  />
+                )}
+              </div>
+            </Card>
+          </div>
+          <Card padding="md" className="flex min-h-0 flex-col overflow-hidden">
+            <div className="flex shrink-0 items-baseline justify-between px-1 pb-1">
+              <h2 className="text-title-3 text-ink">Payments</h2>
+              {!empty && !p.loading ? <span className="text-caption text-ink-3">newest first</span> : null}
             </div>
+            {p.loading ? (
+              <div className="flex flex-col gap-3 py-2">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            ) : empty ? (
+              <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-y-auto px-1" tabIndex={0} aria-label="Payments, scroll for more">
+                <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
+              </div>
+            )}
           </Card>
         </div>
-        <Card padding="md" className="flex min-h-0 flex-col overflow-hidden">
-          <div className="flex shrink-0 items-baseline justify-between px-1 pb-1">
-            <h2 className="text-title-3 text-ink">Payments</h2>
-            {!empty && !p.loading ? <span className="text-caption text-ink-3">newest first</span> : null}
-          </div>
-          {p.loading ? (
-            <div className="flex flex-col gap-3 py-2">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-          ) : empty ? (
-            <p className="px-1 py-3 text-body-sm text-ink-3">Payments appear here the moment they land.</p>
-          ) : (
-            <div className="min-h-0 flex-1 overflow-y-auto px-1" tabIndex={0} aria-label="Payments, scroll for more">
-              <Feed payments={p.payments} max={20} toLabel={p.viewer === "visitor" ? "to the venue" : undefined} />
-            </div>
-          )}
-        </Card>
       </div>
     </div>
   );
@@ -505,12 +508,19 @@ function WideLayout(p: VenueDashboardProps) {
  */
 export function VenueDashboardScreen(p: VenueDashboardProps) {
   const layout = p.layout ?? "auto";
-  if (layout === "phone") return <PhoneLayout {...p} />;
+  if (layout === "phone")
+    return (
+      <AppFrame>
+        <PhoneLayout {...p} />
+      </AppFrame>
+    );
   if (layout === "wide") return <WideLayout {...p} />;
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col lg:hidden">
-        <PhoneLayout {...p} />
+        <AppFrame>
+          <PhoneLayout {...p} />
+        </AppFrame>
       </div>
       <div className="hidden min-h-full flex-1 flex-col lg:flex">
         <WideLayout {...p} />

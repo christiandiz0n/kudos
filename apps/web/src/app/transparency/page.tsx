@@ -3,7 +3,7 @@ import { Transparency } from "./Transparency";
 
 export default function Page() {
   return (
-    <ClientPage>
+    <ClientPage frame="doc">
       <Transparency />
     </ClientPage>
   );

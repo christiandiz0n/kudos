@@ -480,3 +480,58 @@ html:has([data-vx-footer]) {
 .vx-field-input:focus-visible {
   outline: none;
 }
+
+/* ---------- A9 desktop framing (AppFrame). Below 640px nothing here applies: 390px is unchanged. ---------- */
+@media (min-width: 640px) {
+  .vx-app-frame {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background:
+      radial-gradient(1100px 520px at 50% -8%, var(--vx-primary-soft-2), transparent 70%),
+      var(--vx-primary-soft);
+  }
+  /* Phone column: definite height so <Screen/> scrolls inside and its sticky footer stays in the column. */
+  .vx-app-shell {
+    flex: none;
+    width: 460px;
+    height: min(calc(100dvh - 4rem), 940px);
+    min-height: 0;
+    border-radius: 28px;
+    background: var(--vx-canvas);
+    box-shadow: 0 0 0 1px var(--vx-line), var(--vx-shadow-2);
+  }
+  /* clip-path (not just overflow + radius) so animated/composited children can't poke out of the corners. */
+  .vx-app-column {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 28px;
+    clip-path: inset(0 round 28px);
+  }
+  .vx-app-column .h-dvh {
+    height: 100%;
+  }
+  .vx-app-column .min-h-dvh {
+    min-height: 100%;
+  }
+  /* Reading column (transparency): wider, grows with its content, the page scrolls. */
+  .vx-app-frame[data-vx-frame="doc"] {
+    justify-content: flex-start;
+    padding: 3rem 2rem;
+  }
+  .vx-app-shell[data-size="doc"] {
+    width: min(760px, 100%);
+    height: auto;
+    min-height: calc(100dvh - 6rem);
+  }
+  .vx-app-column[data-size="doc"] {
+    min-height: calc(100dvh - 6rem);
+    overflow: visible;
+    padding: 0.5rem 1.5rem 1rem;
+  }
+  .vx-app-column[data-size="doc"] p {
+    max-width: 68ch;
+  }
+}

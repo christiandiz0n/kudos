@@ -40,3 +40,4 @@ export {
   type MoneyGraphData,
   type MoneyGraphPayment,
 } from "./MoneyGraph";
+export { AppFrame } from "./AppFrame";

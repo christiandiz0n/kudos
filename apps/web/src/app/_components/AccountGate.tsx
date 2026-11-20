@@ -5,7 +5,7 @@
  * its context), unlocks an existing device account with Face ID / fingerprint, then renders the route.
  */
 import { useState, type ReactNode } from "react";
-import { Avatar, Button, Screen } from "@/components/ui";
+import { AppFrame, Avatar, Button, Screen } from "@/components/ui";
 import { SignInScreen } from "@/screens/customer/SignInScreen";
 import { createAccount, signIn } from "@/lib/auth";
 import { friendlyError } from "@/lib/api";
@@ -122,7 +122,17 @@ export function AccountGate({ children, invite }: { children: (ctx: AccountCtx) 
   const wallet = useDeviceWallet();
   const session = useSession();
   if (wallet === undefined) return <RouteLoading />;
-  if (!wallet) return <Onboarding invite={invite} />;
-  if (!session || session.address.toLowerCase() !== wallet.address.toLowerCase()) return <Unlock name={wallet.displayName} />;
+  if (!wallet)
+    return (
+      <AppFrame>
+        <Onboarding invite={invite} />
+      </AppFrame>
+    );
+  if (!session || session.address.toLowerCase() !== wallet.address.toLowerCase())
+    return (
+      <AppFrame>
+        <Unlock name={wallet.displayName} />
+      </AppFrame>
+    );
   return <>{children({ address: wallet.address, name: session.user?.displayName || wallet.displayName })}</>;
 }
