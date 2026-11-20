@@ -133,12 +133,12 @@ export function VenueOnboardingScreen(p: VenueOnboardingScreenProps) {
             </li>
           </ul>
           {/* Lightweight split bar (D-017: few elements, big type): what you keep vs the reward slice. */}
-          <div aria-hidden className="mt-4 flex h-3 overflow-hidden rounded-full bg-surface-3">
-            <span className="h-full bg-[var(--vx-line-strong)]" style={{ width: `${100 - p.rewardBps / 100}%` }} />
+          <div aria-hidden className="mt-4 flex h-3 gap-0.5 overflow-hidden rounded-full bg-surface-3">
+            <span className="h-full bg-primary" style={{ width: `${100 - p.rewardBps / 100}%` }} />
             <span className="h-full flex-1 bg-accent" />
           </div>
           <div aria-hidden className="mt-1.5 flex justify-between text-caption text-ink-3">
-            <span>You keep {100 - p.rewardBps / 100}%</span>
+            <span className="font-semibold text-primary-ink">You keep {100 - p.rewardBps / 100}%</span>
             <span className="font-semibold text-accent-ink">Rewards {formatBps(p.rewardBps)}</span>
           </div>
           <p className="mt-3 text-caption text-ink-3">Repeat visits cost nothing.</p>
