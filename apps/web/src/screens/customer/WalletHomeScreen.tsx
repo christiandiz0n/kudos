@@ -137,7 +137,7 @@ export function WalletHomeScreen({
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-body-sm font-semibold text-ink">Liked {canRecommend.venueName}?</p>
-            <p className="text-caption text-ink-2">Send a friend. They get money back on their first visit, and you get paid too.</p>
+            <p className="text-caption text-ink-2">A friend gets money back on their first visit. You get paid too.</p>
           </div>
           <Button size="sm" variant="secondary" onClick={onRecommend}>
             Recommend

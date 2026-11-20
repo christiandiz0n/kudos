@@ -17,7 +17,7 @@
  *   canShare?              navigator.share exists → primary "Share link"; otherwise primary is "Copy link"
  *   onCreate, onShare, onCopy, onBack, onScan (locked state → "Scan to pay")
  */
-import { AmountDisplay, AppBar, Avatar, Button, Card, EmptyState, Icon, IconButton, QrCode, Screen, SegmentedControl, TextField } from "@/components/ui";
+import { AmountDisplay, AppBar, Button, Card, EmptyState, Icon, IconButton, QrCode, Screen, SegmentedControl, TextField } from "@/components/ui";
 
 export type LinkKind = "personal" | "public";
 
@@ -50,6 +50,36 @@ const COPY: Record<LinkKind, { title: string; body: string }> = {
 
 function Header({ p }: { p: RecommendScreenProps }) {
   return <AppBar leading={<IconButton icon="arrowLeft" label="Back" onClick={p.onBack} />} title={`Recommend ${p.venueName}`} large />;
+}
+
+/** What each side gets, in plain words. The one thing to understand before sharing. */
+function GetsCard({ p }: { p: RecommendScreenProps }) {
+  return (
+    <section aria-label="What you both get" className="overflow-hidden rounded-lg bg-surface shadow-1 ring-1 ring-line/60">
+      <div className="flex items-start gap-3 px-4 py-3.5">
+        <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-ink">
+          <Icon name="users" size={20} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-caption font-medium text-ink-3">Your friend gets</p>
+          <p className="text-body font-semibold text-ink">Money back on their first visit</p>
+        </div>
+      </div>
+      <div className="flex items-start gap-3 border-t border-line bg-accent-soft px-4 py-3.5">
+        <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent-ink">
+          <Icon name="heart" size={20} />
+        </span>
+        <div className="min-w-0">
+          <p className="text-caption font-medium text-ink-2">You get</p>
+          <p className="text-body font-semibold text-ink">
+            About <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="md" /> when they spend{" "}
+            <AmountDisplay value={p.exampleEarn.order} size="md" />
+          </p>
+          <p className="text-caption text-ink-2">Paid the moment they pay.</p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export function RecommendScreen(p: RecommendScreenProps) {
@@ -117,22 +147,15 @@ export function RecommendScreen(p: RecommendScreenProps) {
 
   return (
     <Screen header={<Header p={p} />} footer={footer}>
-      <SegmentedControl
-        label="Who is this for?"
-        value={p.kind}
-        onChange={p.onKindChange}
-        options={[
-          { value: "personal", label: "One friend" },
-          { value: "public", label: "Anyone" },
-        ]}
-      />
-      <p className="mt-3 text-body-sm text-ink-2">
-        <span className="font-semibold text-ink">{COPY[p.kind].title}.</span> {COPY[p.kind].body}
-      </p>
-
       {link ? (
-        <Card className="mt-5 flex flex-col items-center gap-4" padding="lg">
-          <div className="rounded-md bg-white p-2">
+        <Card className="mt-2 flex animate-vx-rise-in flex-col items-center gap-4" padding="lg">
+          <p className="flex items-center gap-2 text-body font-semibold text-ink">
+            <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-full bg-primary text-on-primary">
+              <Icon name="check" size={16} />
+            </span>
+            Your link is ready
+          </p>
+          <div className="rounded-md bg-white p-2 ring-1 ring-primary-soft-2">
             <QrCode value={link.url} size={176} label={`Code for your link to ${p.venueName}`} />
           </div>
           <div className="w-full text-center">
@@ -145,29 +168,40 @@ export function RecommendScreen(p: RecommendScreenProps) {
               <span className="truncate">{link.display}</span>
             </p>
           </div>
-          <p className="text-caption text-ink-3">A friend can scan this from your screen.</p>
+          <p className="w-full rounded-md bg-accent-soft px-3 py-2.5 text-center text-body-sm text-ink">
+            Your friend gets money back on their first visit. You get about{" "}
+            <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="sm" className="font-semibold" /> when they spend{" "}
+            <AmountDisplay value={p.exampleEarn.order} size="sm" />.
+          </p>
+          <p className="text-caption text-ink-3">Share it, or let a friend scan this from your screen.</p>
         </Card>
       ) : (
         <>
+          <div className="mt-2">
+            <GetsCard p={p} />
+          </div>
+          <div className="mt-6">
+            <SegmentedControl
+              label="Who is this for?"
+              value={p.kind}
+              onChange={p.onKindChange}
+              options={[
+                { value: "personal", label: "One friend" },
+                { value: "public", label: "Anyone" },
+              ]}
+            />
+            <p className="mt-2.5 text-body-sm text-ink-2">
+              <span className="font-semibold text-ink">{COPY[p.kind].title}.</span> {COPY[p.kind].body}
+            </p>
+          </div>
           <TextField
-            className="mt-6"
+            className="mt-5"
             label="Add a note (optional)"
             placeholder="Best cortado in the neighbourhood"
             value={p.note}
             onChange={(e) => p.onNoteChange(e.target.value)}
             maxLength={120}
           />
-          <p className="mt-6 mb-2 text-body-sm font-semibold text-ink-2">Your friend sees</p>
-          <Card className="flex gap-3">
-            <Avatar name={p.yourName} />
-            <div className="min-w-0 flex-1">
-              <p className="text-body-sm font-semibold text-ink">
-                {p.yourName} vouched for {p.venueName}
-              </p>
-              {p.note ? <p className="mt-0.5 text-body-sm text-ink-2">“{p.note}”</p> : null}
-              <p className="mt-1 text-caption text-ink-3">Money back on their first visit</p>
-            </div>
-          </Card>
         </>
       )}
 
@@ -177,14 +211,6 @@ export function RecommendScreen(p: RecommendScreenProps) {
           {err}
         </p>
       ) : null}
-
-      <Card tone="accent" className="mt-4">
-        <p className="text-body-sm text-ink">
-          When a friend makes their first purchase, you get part of it: about{" "}
-          <AmountDisplay value={p.exampleEarn.earn} variant="positive" size="sm" className="font-semibold" /> on a{" "}
-          <AmountDisplay value={p.exampleEarn.order} size="sm" /> order. Paid the moment they pay.
-        </p>
-      </Card>
     </Screen>
   );
 }

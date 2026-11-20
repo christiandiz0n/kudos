@@ -59,10 +59,10 @@ export function AmbassadorScreen(p: AmbassadorScreenProps) {
           <Avatar name={p.name} size="lg" />
           <div>
             <p className="text-title-3 text-ink">{p.name}</p>
-            <Badge tone="accent">Ambassador</Badge>
+            <Badge tone="primary">Ambassador</Badge>
           </div>
         </div>
-        <Card className="mt-5" padding="lg">
+        <Card className="mt-5 animate-vx-rise-in" padding="lg">
           {p.loading ? (
             <>
               <Skeleton className="h-12 w-20" />
@@ -71,7 +71,7 @@ export function AmbassadorScreen(p: AmbassadorScreenProps) {
             </>
           ) : (
             <>
-              <p className="money text-display text-ink">{p.verifiedCustomers}</p>
+              <p className="money text-display text-primary-ink">{p.verifiedCustomers}</p>
               <p className="mt-1 text-body text-ink">
                 new {p.verifiedCustomers === 1 ? "customer" : "customers"} across <span className="money font-semibold">{p.venueCount}</span>{" "}
                 {p.venueCount === 1 ? "venue" : "venues"}
