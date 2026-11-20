@@ -1,0 +1,177 @@
+[
+  {
+    "file": "e01-venue-dashboard-new.png",
+    "route": "/venue/0xb2d7E3536137de9710Ba0895fFFe4d903fC12797",
+    "state": "new venue dashboard (empty state)",
+    "notes": "registration → dashboard 2682 ms",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e02-counter-empty.png",
+    "route": "/venue/0xb2d7E3536137de9710Ba0895fFFe4d903fC12797/counter",
+    "state": "order entry (empty)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e03-counter-below-min.png",
+    "route": "/venue/0xb2d7E3536137de9710Ba0895fFFe4d903fC12797/counter",
+    "state": "order entry below $0.50 minimum",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e04-counter-050.png",
+    "route": "/venue/0xb2d7E3536137de9710Ba0895fFFe4d903fC12797/counter",
+    "state": "order entry $0.50",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e05-counter-qr.png",
+    "route": "/venue/0xb2d7E3536137de9710Ba0895fFFe4d903fC12797/counter",
+    "state": "QR shown (live countdown)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e10-pay-signed-out.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "scanned code opened signed out (onboarding with venue context)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e11-pay-insufficient.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "insufficient balance (real, $0) with top-up CTA",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e12-pay-relayer-down.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "RELAYER_DOWN (forced via interception)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e13-pay-budget-exhausted.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "RELAYER_BUDGET_EXHAUSTED (forced via interception)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e14-pay-expired-forced.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "ORDER_EXPIRED (forced via interception)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e15-pay-confirm-after-retry.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "pay sheet after 'Try again' (balance faked via interception)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e16-pay-failed.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "payment failed at relay (forced 502 TX_FAILED)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e17-pay-failed-after-relay.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "relayed, then reverted (forced GET /payments/:id failed)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e18-pay-insufficient-at-relay.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "402 INSUFFICIENT_BALANCE at POST /payments (forced)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e19-pay-faceid-cancelled.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "Face ID / fingerprint refused (virtual authenticator UV=false)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e21-pay-repeat-visit.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "already rewarded at this venue → plain payment (forced quote)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e22-pay-first-visit-no-rec.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc7b0535a694",
+    "state": "first visit, no recommendation (balance faked)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e23-pay-expired-real.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xb5cbb309bb5c1db5d9b5e9c0bf00b75b9a462bb9372e49ea649544f6b3006c5a",
+    "state": "expired code (real, ttl 30 s)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e24-pay-malformed.png",
+    "route": "/pay?v=0x123&o=nope",
+    "state": "malformed pay link /pay?v=0x123&o=nope…",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e25-pay-malformed-no-order.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797",
+    "state": "malformed pay link /pay?v=0xb2d7E3536137de9710Ba0895fFFe4d9…",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e25b-pay-malformed-truncated-order.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xdbfd413723cebe265f59d7ae3fc7b8853b20306c3cc9f3afc241cc",
+    "state": "malformed pay link /pay?v=0xb2d7E3536137de9710Ba0895fFFe4d9…",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e25c-pay-unknown-order.png",
+    "route": "/pay?v=0xb2d7E3536137de9710Ba0895fFFe4d903fC12797&o=0xabababababababababababababababababababababababababababababababab",
+    "state": "well-formed link, unknown order",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e26-topup-already-claimed.png",
+    "route": "/wallet",
+    "state": "wallet top-up refused: TOPUP_ALREADY_CLAIMED (forced)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e27-topup-daily-cap.png",
+    "route": "/wallet",
+    "state": "wallet top-up refused: TOPUP_DAILY_CAP_REACHED (forced)",
+    "notes": "",
+    "viewport": "390x844"
+  },
+  {
+    "file": "e28-topup-disabled.png",
+    "route": "/wallet",
+    "state": "wallet top-up refused: TOPUP_DISABLED (forced)",
+    "notes": "",
+    "viewport": "390x844"
+  }
+]

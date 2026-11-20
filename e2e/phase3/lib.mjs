@@ -22,7 +22,7 @@ export const API = (flag("api") ?? process.env.QE_API ?? "https://api-production
 export const ENGINE = flag("engine") ?? process.env.QE_ENGINE ?? "chromium";
 export const WEBKIT = ENGINE === "webkit";
 // WebKit was installed under node_modules only (PLAYWRIGHT_BROWSERS_PATH=0); the registry path is read at require time.
-if (WEBKIT) process.env.PLAYWRIGHT_BROWSERS_PATH = "0";
+if (WEBKIT) process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.QE_PW_BROWSERS ?? "0"; // QE_PW_BROWSERS: reuse another checkout's .local-browsers
 const require = createRequire(join(ROOT, "apps/web/package.json"));
 const pw = require("playwright");
 const OUT = flag("out") ?? process.env.QE_OUT;
