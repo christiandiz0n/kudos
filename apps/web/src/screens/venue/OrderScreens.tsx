@@ -73,12 +73,11 @@ export function OrderEntryScreen(p: OrderEntryScreenProps) {
         </Button>
       }
     >
-      <div className="flex flex-col items-center pt-6 pb-4 text-center">
-        <p className="inline-flex h-7 items-center rounded-full bg-primary-soft px-3 text-caption font-semibold text-primary-ink">New order</p>
+      <div className="flex flex-col items-center pt-8 pb-5 text-center">
         <p
           aria-live="polite"
           aria-label={`Amount ${p.entry ? `$${p.entry}` : "$0"}`}
-          className={cn("money mt-3 text-[4.25rem] leading-none font-semibold tracking-[-0.04em]", p.entry ? "text-ink" : "text-ink-3")}
+          className={cn("money text-[4.5rem] leading-none font-semibold tracking-[-0.04em]", p.entry ? "text-ink" : "text-ink-3")}
         >
           <span className="text-[0.5em] align-[0.6em]">$</span>
           {p.entry || "0"}
@@ -99,7 +98,7 @@ export function OrderEntryScreen(p: OrderEntryScreenProps) {
           )}
         </div>
       </div>
-      <Keypad onKey={p.onKey} disabled={p.creating} />
+      <Keypad onKey={p.onKey} disabled={p.creating} className="gap-2.5" />
       <TextField
         className="mt-4"
         label="Note (optional)"
@@ -156,7 +155,7 @@ export function OrderQRScreen(p: OrderQRScreenProps) {
   const isPaid = p.state === "paid";
   const badge =
     p.state === "paid" ? (
-      <Badge tone="accent">Paid</Badge>
+      <Badge tone="primary">Paid</Badge>
     ) : p.state === "expired" ? (
       <Badge tone="warning">Expired</Badge>
     ) : p.state === "processing" ? (
@@ -185,7 +184,7 @@ export function OrderQRScreen(p: OrderQRScreenProps) {
         {isPaid ? (
           <div className="flex flex-col items-center pt-10">
             <SuccessMark size={104} label={`Paid ${formatMoney(p.amount)}`} />
-            <p className="mt-6 text-body font-semibold text-accent-ink">Paid</p>
+            <p className="mt-6 text-body font-semibold text-primary-ink">Paid</p>
             <p className="money text-[3.5rem] leading-tight font-semibold tracking-[-0.03em] text-ink">{formatMoney(p.amount)}</p>
             {p.orderLabel ? <p className="text-body-sm text-ink-3">{p.orderLabel}</p> : null}
             <p role="status" className="mt-5 max-w-[30ch] text-body text-ink-2">

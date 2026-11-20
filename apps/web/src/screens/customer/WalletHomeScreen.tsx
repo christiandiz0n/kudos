@@ -104,7 +104,7 @@ export function WalletHomeScreen({
         </p>
       ) : null}
 
-      <section aria-label="Balance" aria-busy={loading || undefined} className="mt-3 rounded-xl bg-surface p-5 shadow-2 ring-1 ring-line/60">
+      <section aria-label="Balance" aria-busy={loading || undefined} className="mt-2 rounded-xl bg-surface p-5 shadow-2 ring-1 ring-line/60">
         <p className="text-body-sm font-medium text-ink-2">Your balance</p>
         {loading ? (
           <>
@@ -122,7 +122,7 @@ export function WalletHomeScreen({
             ) : null}
           </>
         )}
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-line pt-4">
+        <div className="mt-5 flex flex-col items-start gap-2 border-t border-line pt-4">
           <Button size="sm" variant="secondary" leadingIcon="plus" loading={toppingUp} loadingLabel="Adding…" onClick={onTopUp} disabled={loading || offline}>
             Top up (testnet demo)
           </Button>
@@ -131,13 +131,10 @@ export function WalletHomeScreen({
       </section>
 
       {canRecommend && !loading ? (
-        <section aria-label="Recommend" className="mt-4 flex items-center gap-3 rounded-lg bg-primary-soft p-4">
-          <span aria-hidden className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-primary-ink shadow-1">
-            <Icon name="heart" size={22} />
-          </span>
+        <section aria-label="Recommend" className="mt-3 flex items-center gap-4 rounded-lg bg-primary-soft py-3.5 pr-3.5 pl-4">
           <div className="min-w-0 flex-1">
-            <p className="text-body-sm font-semibold text-ink">Liked {canRecommend.venueName}?</p>
-            <p className="text-caption text-ink-2">A friend gets money back on their first visit. You get paid too.</p>
+            <p className="text-body font-semibold text-ink">Liked {canRecommend.venueName}?</p>
+            <p className="mt-0.5 text-body-sm text-ink-2">A friend gets money back on their first visit. You get paid too.</p>
           </div>
           <Button size="sm" variant="secondary" onClick={onRecommend}>
             Recommend
@@ -190,7 +187,7 @@ export function WalletHomeScreen({
                   title={a.title}
                   titleLines={2}
                   meta={a.meta}
-                  trailing={<AmountDisplay value={a.amount} variant={pending ? "muted" : "signed"} className={cn(pending && "opacity-80")} />}
+                  trailing={<AmountDisplay value={a.amount} variant={pending ? "muted" : "signed"} />}
                   trailingMeta={
                     pending ? (
                       <Badge className="mt-0.5 h-5 px-2" dot>
